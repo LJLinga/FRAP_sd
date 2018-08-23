@@ -1,3 +1,200 @@
+<<<<<<< HEAD
+=======
+<?php
+
+	require_once("mysql_connect_FA.php");
+	session_start();
+	if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
+
+		header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
+
+	}
+	
+	
+	error_reporting(0); 
+	//****** THESE ARE THE MOST IMPORTANT PARTS - TO AUTHENTICATE THE SHIT THAT WE ARE ABOUT TO DO 
+	$url_array = explode('?', 'http://'.$_SERVER ['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+	$url = $url_array[0];
+
+	require_once 'google-api-php-client/src/Google_Client.php';
+	require_once 'google-api-php-client/src/contrib/Google_DriveService.php';
+	$client = new Google_Client();
+	//THESE CLIENT IDS, USE YOUR CREDENTIALS, GO TO GOOGLE CONSOLE AND CREATE A CREDENTIAL KUNG WALA KA PA 
+
+	$client->setClientId('461399385355-vug45c5jf83aamark0m1li500gs0mrb3.apps.googleusercontent.com');
+	$client->setClientSecret('-p4L8XV3lFeUzOPtQqA-XcXo');
+	$client->setRedirectUri($url);
+	$client->setScopes(array('https://www.googleapis.com/auth/drive'));
+	if (isset($_GET['code'])) {
+		$_SESSION['accessToken'] = $client->authenticate($_GET['code']);
+		header('location:'.$url);exit;
+	} elseif (!isset($_SESSION['accessToken'])) {
+		$client->authenticate();
+
+	}
+	
+	$client->setAccessToken($_SESSION['accessToken']); //gets the authentication token. 
+    $service = new Google_DriveService($client); //gets the service
+	
+	
+	
+	//$sharedFolderId = '1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso'; // id of the AFED File repo folder. 
+	
+	$fileDetailsArray = retrieveEverything($service); //contains the necessary details
+
+	
+	
+	function retrieveEverything($service) { //this one returns the array of the owner of the file + their ID. 
+	  $result = array();
+	  $pageToken = null;
+	  
+		do {
+			$response = $service->files->listFiles(array( //this is an array. okay. 
+				'q' => "mimeType='application/vnd.google-apps.folder'",
+				'pageToken' => $pageToken,
+				'fields' => 'nextPageToken, items(id,title,ownerNames,createdDate,parents)',
+			));
+			
+			//print_r(array_values($response));
+			
+			foreach ($response as $array1) {
+				foreach ($array1 as $info){
+					
+					$file_ID = $info[id];
+					$file_title = $info[title];
+					$file_owners = getOwners($info[ownerNames]);
+					$file_date_created = $info[createdDate];
+					$file_parent_folders = $info[parents];
+					
+					//print_r(array_values($file_parent_folders));
+					if(isInFileRepo($file_parent_folders)){
+						
+						array_push($result,array($file_ID,$file_title, $file_owners, $file_date_created));
+						
+					}
+					/*testing echos 
+					echo "File ID: ".$file_ID."</br>";
+					echo "File Title: ".$file_title."</br>";
+					echo "File Owners: ".$file_owners."</br>";
+					echo "File Date Created:".$file_date_created."</br>";
+					echo "</br></br>";
+					*/
+					
+					
+				}
+				
+				
+			
+				
+			}
+			
+			$pageToken = $repsonse->pageToken;
+		} while ($pageToken != null);
+		
+		return $result;
+	}
+	
+	function getOwners($owners){ //gets an array of names and stitches them all together into one string. 
+		$result = "";
+		
+		foreach($owners as $owner){
+			$result .= $owner;
+		}
+		
+		return $result;
+	}
+	
+	function isInFileRepo($parents){ //gets an array, and gives a boolean and if true, meaning that the file is in the repository and not some wild ass skank 
+		$sharedFolderId = '1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso';
+		
+		foreach($parents as $parentId){
+			if($parentId[id] === $sharedFolderId){
+				return true;
+				
+			}
+			
+		}
+		
+		return false; 
+	}
+	
+	
+	
+	
+	
+	
+	/*
+	function retrieveAllFileNames($service) {
+	  $result = array();
+	  $pageToken = null;
+	  
+		do {
+			$response = $service->files->listFiles(array( //this is an array. okay. 
+				'q' => "mimeType='application/vnd.google-apps.folder'",
+				'pageToken' => $pageToken,
+				'fields' => 'nextPageToken, items(id,title)',
+			));
+			
+
+			//print_r(array_values($response));
+			
+			foreach ($response as $array1) {
+				foreach ($array1 as $file){
+					
+					$file_info = implode(" ",$file);
+					printf("File Info: %s\n", $file_info);
+					echo"</br>";
+				
+					
+					
+					$file_info = implode(" ",$file); // makes it a string to convert it back to an array, because for some reason, walang nareretrieve.
+					$file_info_array = explode(" ",$file_info); // turns it back into an array in order to read the values from the array. 
+					$stringToBePassed = ""; //gets the title, full title duh
+					$file_ID = $file_info_array[0];
+					if(count($file_info_array) > 2){ // if the File Name/Title has spaces, then.... we add them all into one big string. 
+						for($i=1; $i<count($file_info_array); $i++){
+							$stringToBePassed = $stringToBePassed." ".$file_info_array[$i]; // patches together a goddamn title
+						}
+					}
+					else{
+						$stringToBePassed = $stringToBePassed." ".$file_info_array[1]; // patches together a goddamn title
+					}
+					
+					array_push($result,array($file_ID,$stringToBePassed)); //creates a 2d array with the title of the file and the File id. 
+				}
+			/*foreach ($array1 as $file){
+					$file_ID;
+					$file_owners = " ";
+					
+					foreach ($file as $file2){
+						
+						$file_ID = explode(" ",$file2);
+						
+						$file_ID = $file_ID[0];
+						
+						$file_owners = implode(" ",$file2);
+						//echo $file_owners." ";
+						
+					}
+					
+					array_push($result,array($file_ID, $file_owners));
+					
+					
+				}
+				
+			}
+			
+			$pageToken = $repsonse->pageToken;
+		} while ($pageToken != null);
+		
+		return $result;
+	}
+	*/
+	
+?>
+
+
+>>>>>>> 5be9ab9b69de1dcd3d25663c3322691bed45d7fa
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,6 +227,7 @@
 
 </head>
 
+<<<<<<< HEAD
 <?php
 
 session_start();
@@ -41,6 +239,8 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 }*/
  
 ?>
+=======
+>>>>>>> 5be9ab9b69de1dcd3d25663c3322691bed45d7fa
 
 <body>
 
@@ -333,12 +533,17 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
                                     <td align="center" width="250px"><b>Name</b></td>
                                     <td align="center"><b>Owner</b></td>
                                     <td align="center" width="200px"><b>Last Modified</b></td>
+<<<<<<< HEAD
                                     <td align="center" width="200px"><b>Size</b></td>
+=======
+                                    <td align="center" width="200px"><b>Download</b></td>
+>>>>>>> 5be9ab9b69de1dcd3d25663c3322691bed45d7fa
                                 </tr>
                             </thead>
 
                             <tbody>
                                 <?php 
+<<<<<<< HEAD
                                     //foreach ($list as $file) {
                                 ?>
                                 <tr>
@@ -350,6 +555,20 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
                                 </tr>
                                 <?php //} ?>
+=======
+                                    foreach($fileDetailsArray as $detail){
+										
+                                ?>
+                                <tr>
+
+                                <td align="center"><?php echo $detail[1];?></td>
+                                <td align="center"><?php echo $detail[2];?></td>
+                                <td align="center"><?php echo $detail[3];?></td>
+                                <td align="center"><?php echo $detail[0]; ?></td>
+
+                                </tr>
+                                <?php } ?>
+>>>>>>> 5be9ab9b69de1dcd3d25663c3322691bed45d7fa
 
                              
 
@@ -388,3 +607,13 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 </body>
 
 </html>
+<<<<<<< HEAD
+=======
+
+
+
+
+
+
+
+>>>>>>> 5be9ab9b69de1dcd3d25663c3322691bed45d7fa

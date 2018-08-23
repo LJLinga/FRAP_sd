@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
+error_reporting(0); 
 session_start();
  if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
 
