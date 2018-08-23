@@ -508,7 +508,43 @@
                                 </div>
                             </div>
                         </div>
-                        
+                        <div class="col-lg-6">
+                            <div class="panel panel-green">
+
+                                <div class="panel-heading">
+
+                                    <b></b>
+
+                                </div>
+
+                                <div class="panel-body">
+
+                                    <div class="row">
+										<div class="col-lg-3"></div>
+                                        <div class="col-lg-6">
+                                            <form action="ADMIN FILEREPO.php" method="POST">
+												
+                                                <div class="row center" align="center">
+                                                    <div class="col-lg-12">
+													<div class="form-group">
+													<label>Select File Type</label>
+													<select class="form-control">
+														<option>1</option>
+														<option>2</option>
+														<option>3</option>
+														<option>4</option>
+														<option>5</option>
+													</select>
+													</div>
+													</div>
+                                                    <div class="col-lg-12"><input type="submit" name="upload" value="Filter"></div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 <!--                    Data Table Portion                          -->
                        <table id="table" class="table table-bordered table-striped">        
