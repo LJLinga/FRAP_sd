@@ -444,26 +444,12 @@ $success = null;
 
     </li>
 
-    <!--<li>
+    <li>
 
-    <a href="javascript:;" data-toggle="collapse" data-target="#repo"><i class="fa fa-folder-open-o" aria-hidden="true"></i>&nbsp;File Repository<i class="fa fa-fw fa-caret-down"></i></a>
-
-        <ul id="repo" class="collapse">
-
-            <li>
-                <a href="ADMIN FILEREPO.php"><i class="fa fa-files-o" aria-hidden="true"></i>&nbsp;&nbsp;View Documents</a>
-            </li>
-
-            <li>
-
-                <a href="ADMIN FILEREPO upload.php"><i class="fa fa-upload" aria-hidden="true"></i> Upload Documents</a>
-
-            </li>
-
-        </ul>
+    <a href="ADMIN FILEREPO.php"><i class="fa fa-folder-open-o" aria-hidden="true"></i>&nbsp;File Repository</i></a>
 
     </li>
-
+    <!--
     <li>
 
         <a href="ADMIN MANAGE.php"><i class="fa fa-gears" aria-hidden="true"></i> Admin Management</a>

@@ -353,7 +353,14 @@ else {
                                     <div class="col-lg-7">
 
                                     <form action="ADMIN MREPORT report.php" method="POST">
-
+<!--     Date                                                                                                   -->
+                                        <div class='input-group date' id='datetimepicker1'>
+                                            <input type='text' class="form-control" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+<!-- Date End                                                                                                   -->
                                         <select class="form-control" name = "date">
                                         
                                             <option value = "0">This Current Date</option>  
@@ -581,12 +588,14 @@ else {
     <script src="js/bootstrap.min.js"></script>
 
     <script type="text/javascript" src="DataTables/datatables.min.js"></script>
-    <script>
+    <script type="text/javascript">
 
         $(document).ready(function(){
-    
             $('#table').DataTable();
-
+        });
+        //Date Picker script
+        $(function () {
+                $('#datetimepicker1').datetimepicker();
         });
 
     </script>
