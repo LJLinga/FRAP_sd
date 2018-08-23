@@ -192,7 +192,6 @@
 ?>
 
 
->>>>>>> 5be9ab9b69de1dcd3d25663c3322691bed45d7fa
 <!DOCTYPE html>
 <html lang="en">
 
@@ -225,20 +224,7 @@
 
 </head>
 
-<<<<<<< HEAD
-<?php
 
-session_start();
-/*require_once("mysql_connect_FA.php");
-if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
-
-header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
-
-}*/
- 
-?>
-=======
->>>>>>> 5be9ab9b69de1dcd3d25663c3322691bed45d7fa
 
 <body>
 
@@ -531,29 +517,12 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
                                     <td align="center" width="250px"><b>Name</b></td>
                                     <td align="center"><b>Owner</b></td>
                                     <td align="center" width="200px"><b>Last Modified</b></td>
-<<<<<<< HEAD
-                                    <td align="center" width="200px"><b>Size</b></td>
-=======
                                     <td align="center" width="200px"><b>Download</b></td>
->>>>>>> 5be9ab9b69de1dcd3d25663c3322691bed45d7fa
                                 </tr>
                             </thead>
 
                             <tbody>
                                 <?php 
-<<<<<<< HEAD
-                                    //foreach ($list as $file) {
-                                ?>
-                                <tr>
-
-                                <td align="center">File Name<?php //Name?></td>
-                                <td align="center">Owner<?php //owner?></td>
-                                <td align="center">Last Modified<?php //Last Modified?></td>
-                                <td align="center">Size<?php //Size?></td>
-
-                                </tr>
-                                <?php //} ?>
-=======
                                     foreach($fileDetailsArray as $detail){
 										
                                 ?>
@@ -566,7 +535,6 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
                                 </tr>
                                 <?php } ?>
->>>>>>> 5be9ab9b69de1dcd3d25663c3322691bed45d7fa
 
                              
 
@@ -605,13 +573,4 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 </body>
 
 </html>
-<<<<<<< HEAD
-=======
 
-
-
-
-
-
-
->>>>>>> 5be9ab9b69de1dcd3d25663c3322691bed45d7fa
