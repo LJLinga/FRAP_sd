@@ -34,6 +34,10 @@
 
 session_start();
 require_once("mysql_connect_FA.php");
+/*-------FILE REPO STUFF------*/
+$_SESSION['parentFolderID']="";
+$_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
+/*-------FILE REPO STUFF END------*/
 if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
 
 header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");

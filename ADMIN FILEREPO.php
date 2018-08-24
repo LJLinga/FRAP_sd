@@ -1,15 +1,22 @@
 <?php
 
-	require_once("mysql_connect_FA.php");
+	
 	session_start();
+	//!-- IMPORTANT - These session variables are found in the ADMIN FALP manual. The default homepage.
+	//$_SESSION['parentFolderID']="";
+	//$_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
+	echo 	'<script language="javascript">
+				alert("Current Folder: '.$_SESSION['currentFolderID'].' Parent Folder: '.$_SESSION['parentFolderID'].'")
+				</script>';
+	require_once("mysql_connect_FA.php");
 	if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
 
 		header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
 
 	}
 	
+	//error_reporting(0);  //this is what makes notices and warnings disappear like your will to live
 	
-	error_reporting(0); 
 	//****** THESE ARE THE MOST IMPORTANT PARTS - TO AUTHENTICATE THE SHIT THAT WE ARE ABOUT TO DO 
 	$url_array = explode('?', 'http://'.$_SERVER ['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 	$url = $url_array[0];
@@ -36,36 +43,150 @@
 	
 	
 	
-	//$sharedFolderId = '1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso'; // id of the AFED File repo folder. 
+	//$sharedFolderId = '1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso'; // id of the AFED File repo folder. VERY IMPORTANT. 
 	
-	$fileDetailsArray = retrieveEverything($service); //contains the necessary details
+	/*----------------------Link check-------------------------------------------------------------------------------*/
+	if (isset($_GET['run'])){
+		//$linkchoice=$_GET['run'];
+		$linkChoice = substr($_GET['run'],0,4);
+		$idChoice = substr($_GET['run'],4);
+		
+	} 
+	else{
+		$linkChoice='';
+		$fileDetailsArray = retrieveEverything($service); //contains the necessary details ffrom our google drive. Do not forget this holy grail please.
+	} 
 
+	switch($linkChoice){
+
+	case 'next' :
+		$_SESSION['parentFolderID'] = $_SESSION['currentFolderID'];
+		$_SESSION['currentFolderID'] = $idChoice;
+		$fileDetailsArray = retrieveEverything($service); //contains the necessary details ffrom our google drive. Do not forget this holy grail please.
+		/*echo 	'<script language="javascript">
+				alert("'.$idChoice.'")
+				</script>';*/
+		//myFirst();
+		break;
+
+	case 'back' :
+		$_SESSION['currentFolderID'] = $_SESSION['parentFolderID'];
+		$_SESSION['parentFolderID'] = "";
+		$fileDetailsArray = retrieveEverything($service); //contains the necessary details ffrom our google drive. Do not forget this holy grail please.
+		break;
+
+	default :
+		echo 'no run';
+
+	}
 	
+	/*------------------------------SUBMITS, FILES, UPLOAD OR DOWNLOAD AND FINALLY AUDIT ARGUMENTS--------------------------- */
+	 
+	if(isset($_POST['submit'])){
+		
+		//echo"Triggered ako";
+		if($_POST['submit'] =! null){ // This means that you clicked a submit button and its upload (duh)
+			//first check if the field is empty. 
+			if ($_FILES['upload_docu']['size'] == 0 && $_FILES['upload_docu']['error'] == 0){
+				//prints out an alert. 
+				echo '<script language="javascript">';
+
+                echo 'alert("You forgot to upload a file good sir.")';
+
+                echo '</script>';
+   
+			}else{ //then proceed to uploading
+				
+				$toUploadName = $_FILES['upload_docu']['name']; // to Upload Name basically Stores the name of the goddamn file you uploaded
+				$toUploadTempName = $_FILES['upload_docu']['tmp_name'];
+				$toUploadPath = realpath($_FILES['upload_docu']['name']); // this one stores the realpath of the document to be uploaded. 
+				
+				$AFED_Type = $_POST['types']; // gets the type of file the secretary is currently uploading. 
+				
+				$newFolderID = makeNewFolder($AFED_Type, $service); // creates a new folder in the gdrive, as well ass returning the file id of the new folder. 
+				
+				uploadFileInFolder($newFolderID,$toUploadTempName, $toUploadName, $service); //uploads the file in the specified folder which is new folder ID
+				
+				updateAudit_Upload($AFED_Type);
+				/*
+				$query1 = "SELECT FIRSTNAME, LASTNAME
+						from employee
+						where EMP_ID = {$_SESSION['idnum']};";
+				$result1 = mysqli_query($dbc,$query1);
+				$ans = mysqli_fetch_assoc($result1);
+				
+				$name = $ans['FIRSTNAME'].$ans['LASTNAME'];
+				$now = date('Y-m-d H:i:s');
+				//$now = new DateTime('now', new DateTimeZone('Asia/Kolkata'));
+				
+				//echo $name;
+				$desc = $name." uploaded".$AFED_Type. "to AFED File Repository";
+				
+				$query = "INSERT INTO file_audit_table(id,name,description,dateTime)
+
+				VALUES('{$_SESSION['idnum']}','{$name}','{$desc}' ,'{$now}');";
+
+				mysqli_query($dbc,$query);*/
+		
+				
+			
+			}
+			
+			
+		}else{ // meaning youre downloading shit my dude. 
+			
+			// and do not forget to fucking audit okay?????
+		}
+		 
+		 
+		 
+		 
+		 
+	}
+	
+	
+	
+	/*----------------------------------------------HERE ARE THE FUNCTIONS YALL. -------------------------------------------- */
 	
 	function retrieveEverything($service) { //this one returns the array of the owner of the file + their ID. 
 	  $result = array();
 	  $pageToken = null;
 	  
 		do {
-			$response = $service->files->listFiles(array( //this is an array. okay. 
+			if($_SESSION['parentFolderID']== null){
+				$response = $service->files->listFiles(array( //this is an array. okay. 
 				'q' => "mimeType='application/vnd.google-apps.folder'",
 				'pageToken' => $pageToken,
 				'fields' => 'nextPageToken, items(id,title,ownerNames,createdDate,parents)',
-			));
+				));
+			}
+			else{
+				$response = $service->files->listFiles(array( //this is an array. okay. 
+				'q' => "mimeType='application/vnd.google-apps.document'or mimeType='application/vnd.google-apps.photo' or mimeType='application/vnd.google-apps.file' or mimeType='application/vnd.google-apps.unknown'",
+				'pageToken' => $pageToken,
+				'fields' => 'nextPageToken, items(id,title,ownerNames,createdDate,parents)',
+				));
+			}
 			
 			//print_r(array_values($response));
 			
 			foreach ($response as $array1) {
 				foreach ($array1 as $info){
 					
-					$file_ID = $info[id];
-					$file_title = $info[title];
-					$file_owners = getOwners($info[ownerNames]);
-					$file_date_created = $info[createdDate];
-					$file_parent_folders = $info[parents];
+					$file_ID = $info['id'];
+					
+					$file_title = $info['title'];
+					
+					$file_owners = getOwners($info['ownerNames']);
+					
+					$file_date_created = $info['createdDate'];
+					
+					$file_parent_folders = $info['parents'];
 					
 					//print_r(array_values($file_parent_folders));
-					if(isInFileRepo($file_parent_folders)){
+					
+					
+					if(isInFileRepo($file_parent_folders)){ // if the file is in the file repository of FA, then it will be pushed and presented to the user. 
 						
 						array_push($result,array($file_ID,$file_title, $file_owners, $file_date_created));
 						
@@ -78,17 +199,13 @@
 					echo "</br></br>";
 					*/
 					
-					
 				}
-				
-				
-			
-				
 			}
-			
+			//print_r(array_values($response));
 			$pageToken = $repsonse->pageToken;
+			//echo "</br></br></br></br>";
 		} while ($pageToken != null);
-		
+		//echo $pageToken;
 		return $result;
 	}
 	
@@ -103,10 +220,11 @@
 	}
 	
 	function isInFileRepo($parents){ //gets an array, and gives a boolean and if true, meaning that the file is in the repository and not some wild ass skank 
-		$sharedFolderId = '1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso';
+		//$sharedFolderId = '1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso'; //Original code to point to the AFED Inc Directory
+		$sharedFolderId = $_SESSION['currentFolderID'];
 		
 		foreach($parents as $parentId){
-			if($parentId[id] === $sharedFolderId){
+			if($parentId['id'] === $sharedFolderId){
 				return true;
 				
 			}
@@ -116,78 +234,139 @@
 		return false; 
 	}
 	
-	
-	
-	
-	
-	
-	/*
-	function retrieveAllFileNames($service) {
-	  $result = array();
-	  $pageToken = null;
-	  
-		do {
-			$response = $service->files->listFiles(array( //this is an array. okay. 
-				'q' => "mimeType='application/vnd.google-apps.folder'",
-				'pageToken' => $pageToken,
-				'fields' => 'nextPageToken, items(id,title)',
-			));
-			
-
-			//print_r(array_values($response));
-			
-			foreach ($response as $array1) {
-				foreach ($array1 as $file){
-					
-					$file_info = implode(" ",$file);
-					printf("File Info: %s\n", $file_info);
-					echo"</br>";
-				
-					
-					
-					$file_info = implode(" ",$file); // makes it a string to convert it back to an array, because for some reason, walang nareretrieve.
-					$file_info_array = explode(" ",$file_info); // turns it back into an array in order to read the values from the array. 
-					$stringToBePassed = ""; //gets the title, full title duh
-					$file_ID = $file_info_array[0];
-					if(count($file_info_array) > 2){ // if the File Name/Title has spaces, then.... we add them all into one big string. 
-						for($i=1; $i<count($file_info_array); $i++){
-							$stringToBePassed = $stringToBePassed." ".$file_info_array[$i]; // patches together a goddamn title
-						}
-					}
-					else{
-						$stringToBePassed = $stringToBePassed." ".$file_info_array[1]; // patches together a goddamn title
-					}
-					
-					array_push($result,array($file_ID,$stringToBePassed)); //creates a 2d array with the title of the file and the File id. 
-				}
-			/*foreach ($array1 as $file){
-					$file_ID;
-					$file_owners = " ";
-					
-					foreach ($file as $file2){
-						
-						$file_ID = explode(" ",$file2);
-						
-						$file_ID = $file_ID[0];
-						
-						$file_owners = implode(" ",$file2);
-						//echo $file_owners." ";
-						
-					}
-					
-					array_push($result,array($file_ID, $file_owners));
-					
-					
-				}
-				
-			}
-			
-			$pageToken = $repsonse->pageToken;
-		} while ($pageToken != null);
+	function makeNewFolder($title,$service){ //returns the newly created folder id. 
+		$sharedFolderId = '1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso'; // folder id of the shared folder. 
 		
-		return $result;
+		$fileMetadata = new Google_DriveFile(array(
+			'title' => $title,
+			'parents' => array(array('id' => $sharedFolderId)),
+			'mimeType' => 'application/vnd.google-apps.folder'));
+		$folder = $service->files->insert($fileMetadata, array(
+			'fields' => 'id'));
+		$folderId= implode(" ",$folder);
+		
+		return $folderId;
+		
 	}
-	*/
+	
+	function uploadFileInFolder($folderId,$filePath, $fileName, $service){ //accepts a folderID, filepath ,file name and service, where in FOlder id is the parent. 
+		//first get the filename of the newly uploaded file. 
+		
+		//createsa new file to be uploaded in a folder(folderid)
+		
+		$fileMetadata = new Google_DriveFile(array(
+			'title' => $fileName,
+			'parents' => array(array('id' => $folderId))
+		));
+		
+		//get the  file address and file name 
+		$finfo = finfo_open(FILEINFO_MIME_TYPE);
+		$mime_type = finfo_file($finfo, $filePath); //gets the mimetype of the file you want to upload. 
+		
+		//uploads the new $file into the database. 
+		$content = file_get_contents($filePath); // gets the contents of the file path. 
+		
+		$file = $service->files->insert($fileMetadata, array(
+			'data' => $content,
+			'mimeType' => $mime_type,
+			'uploadType' => 'multipart',
+			'fields' => 'id'));
+			
+		$fileID = implode(" ",$file);
+		
+		
+		
+	}
+	
+	function downloadFile($fileId, $service){ //gets the file id and downloads it
+		
+		$fileId = '1ZdR3L3qP4Bkq8noWLJHSr_iBau0DNT4Kli4SxNc2YEo';
+		$response = $driveService->files->export($fileId, 'application/pdf', array(
+			'alt' => 'media'));
+		$content = $response->getBody()->getContents();
+		
+	}
+	
+
+	
+	function updateAudit_Upload($fileName){ //accepts a string, that contains the name of the file that the admin just uploaded. 
+		global $dbc;
+		//get the user
+		//actionID, id, name, description, dateTime
+		//then put in the database what did he do, in this case uploaded.
+		// desc example shoud be : Melton Jo added  _______ - blank is the file type 
+		//getname
+		
+		
+		$query1 = "SELECT FIRSTNAME, LASTNAME
+						from employee
+						where EMP_ID = {$_SESSION['idnum']};";
+		$result1 = mysqli_query($dbc,$query1);
+		$ans = mysqli_fetch_assoc($result1);
+				
+		$name = $ans['FIRSTNAME'].$ans['LASTNAME'];
+		$now = date('Y-m-d H:i:s');
+		//$now = new DateTime('now', new DateTimeZone('Asia/Kolkata'));
+				
+		//echo $name;
+		$desc = $name." uploaded".$fileName. "to AFED File Repository";
+				
+		$query = "INSERT INTO file_audit_table(id,name,description,dateTime)
+
+		VALUES('{$_SESSION['idnum']}','{$name}','{$desc}' ,'{$now}');";
+
+		mysqli_query($dbc,$query);
+		
+	}
+	
+	function updateAudit_Download($fileName){ //accepts a string, that contains the name of the file that the admin just uploaded. 
+		global $dbc;
+		
+		$now  = date("Y-m-d h:i:sa");
+		$name = getName($_SESSION['idnum']);
+		echo "test: ". $name;
+		$desc = $name." downloaded".$fileName. "from AFED File Repository";
+		
+		$query = "INSERT INTO file_audit_table(id,name,description,dateTime)
+
+        values('{$_SESSION['idnum']}','{$name}','{$desc}','{$now}');";
+
+        mysqli_query($dbc,$query);
+		
+	}
+	
+	function getFileUrl($file) {
+		$ctr = 0;
+		$ctr2 = 0;
+		$downloadUrl;
+		foreach ($file as $c){
+			if($ctr == 19){
+				foreach($c as $dlLinks){
+					if($ctr2 == 3){
+						$downloadUrl = $dlLinks;
+					}
+					$ctr2++;
+				}
+				echo "<br></br>";
+			}
+			$ctr++;
+		}
+		return $downloadUrl;
+	}
+	
+	function getName($id){ //gets the id of the current user, returns name
+		global $dbc;
+		$query1 = "SELECT FIRSTNAME, LASTNAME
+                from employee
+                where EMP_ID = {$id};";
+        $result1 = mysqli_query($dbc,$query1);
+        $ans = mysqli_fetch_assoc($result1);
+		
+		$name = $ans['FIRSTNAME'].$ans['LASTNAME'];
+		echo $name;
+		return $name;
+	}
+	
 	
 ?>
 
@@ -472,7 +651,7 @@
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
-                            File Repository
+                            File Repository <?php if($_SESSION['currentFolderID']!="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso") echo '<a href="?run=back">Back</a>'; ?>
                         </h1>
                     
                     </div>
@@ -481,7 +660,7 @@
                 <!-- alert -->
                 <div class="row">
                     <div class="col-lg-12">
-
+					<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" enctype="multipart/form-data">
                         <div class="col-lg-6">
                             <div class="panel panel-green">
 
@@ -496,13 +675,12 @@
                                     <div class="row">
 
                                         <div class="col-lg-6">
-                                            <form action="ADMIN FILEREPO.php" method="POST">
                                                 <div class="col-lg-12" align="center">
-                                                    <input type="file" name="upload_docu"></br>
+                                                    <input type="file" name="upload_docu" id = "upload_docu"></br>
                                                     <div class="col-lg-9"></div>
-                                                    <div class="col-lg-3"><input type="submit" name="upload" value="Upload File"></div>
+                                                    <div class="col-lg-3"><input type="submit" name="submit" value="Upload"></div>
                                                 </div>
-                                            </form>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -522,29 +700,28 @@
                                     <div class="row">
 										<div class="col-lg-3"></div>
                                         <div class="col-lg-6">
-                                            <form action="ADMIN FILEREPO.php" method="POST">
+                                            
 												
                                                 <div class="row center" align="center">
                                                     <div class="col-lg-12">
 													<div class="form-group">
 													<label>Select File Type</label>
-													<select class="form-control">
-														<option>1</option>
-														<option>2</option>
-														<option>3</option>
-														<option>4</option>
-														<option>5</option>
+													<select class="form-control" name = "types" id = "types" >
+														<option selected = "selected">Minutes of the Meeting</option>
+														<option>Resolutions</option>
+														<option>Faculty Member Guidelines Update</option>
+														<option>Other</option>
 													</select>
 													</div>
 													</div>
-                                                    <div class="col-lg-12"><input type="submit" name="upload" value="Filter"></div>
+                                                    <div class="col-lg-12"></div>
                                                 </div>
-                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+					</form>
 
 <!--                    Data Table Portion                          -->
                        <table id="table" class="table table-bordered table-striped">        
@@ -564,10 +741,10 @@
                                 ?>
                                 <tr>
 
-                                <td align="center"><?php echo $detail[1];?></td>
+                                <td align="center"><a href="?run=next<?php echo $detail[0]; ?>"><?php echo $detail[1];?></a></td>
                                 <td align="center"><?php echo $detail[2];?></td>
                                 <td align="center"><?php echo $detail[3];?></td>
-                                <td align="center"><?php echo $detail[0]; ?></td>
+                                <td align="center"><?php echo $detail[0]; ?></td> <!-- this is where the download links are. -->
 
                                 </tr>
                                 <?php } ?>
@@ -588,6 +765,9 @@
 
     </div>
     <!-- /#wrapper -->
+	<script>
+
+    </script>
     
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
