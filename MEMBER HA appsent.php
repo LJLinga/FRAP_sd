@@ -33,6 +33,9 @@
     session_start();
     require_once('mysql_connect_FA.php');
 
+    //get the friggin application sent and keep checking if it has been approved.
+
+
     if ($_SESSION['usertype'] != 1) {
 
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
@@ -254,16 +257,23 @@
 
 
                     </div>
+                    <?php
+                        $query = "SELECT * FROM FATHER WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
+                        $result = mysqli_query($dbc, $query);
+                        $row = mysqli_fetch_array($result);
+
+                        if(!empty($row)){
+                    ?>
 
                     <div class="col-lg-10">
 
                         <p class="healthlabel" align="center">Father Details</p>
 
                         <table class="table table-bordered">
-                            
+
                             <thead>
 
-                                <tr>
+                            <tr>
 
                                 <td align="center"><b>Last Name</b></td>
                                 <td align="center"><b>First Name</b></td>
@@ -272,20 +282,15 @@
                                 <td align="center"><b>Birthday</b></td>
                                 <td align="center"><b>Status</b></td>
 
-                                </tr>
+                            </tr>
 
                             </thead>
 
                             <tbody>
 
-                                <tr>
+                            <tr>
                                 <!-- Modify and replace with idnum -->
-                                <?php 
-                                    $query = "SELECT * FROM FATHER WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
-                                    $result = mysqli_query($dbc, $query);
-                                    $row = mysqli_fetch_array($result);
 
-                                ?>
                                 <td align="center"><?php echo $row["LASTNAME"]; ?></td>
                                 <td align="center"><?php echo $row["FIRSTNAME"]; ?></td>
                                 <td align="center"><?php echo $row["MIDDLENAME"]; ?></td>
@@ -293,16 +298,27 @@
                                 <td align="center"><?php echo $row["BIRTHDATE"]; ?></td>
                                 <td align="center">
                                     <?php
-                                        if($row["STATUS"] == 1) echo"Alive";
-                                        else if ($row["STATUS"] == 0) echo "Deceased";
-                                    ?>        
+                                    if ($row["STATUS"] == 1) echo "Alive";
+                                    else if ($row["STATUS"] == 0) echo "Deceased";
+                                    ?>
                                 </td>
 
-                                </tr>
+                            </tr>
 
                             </tbody>
 
                         </table>
+                        <?php
+                            }
+                        ?>
+
+                        <?php
+                            $query = "SELECT * FROM MOTHER WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
+                            $result = mysqli_query($dbc, $query);
+                            $row = mysqli_fetch_array($result);
+
+                            if(!empty($row)){
+                        ?>
 
                         <p class="healthlabel" align="center">Mother Details</p>
 
@@ -327,11 +343,7 @@
 
                                 <tr>
 
-                                <?php 
-                                    $query = "SELECT * FROM MOTHER WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
-                                    $result = mysqli_query($dbc, $query);
-                                    $row = mysqli_fetch_array($result);
-                                ?>
+
 
                                 <td align="center"><?php echo $row["LASTNAME"]; ?></td>
                                 <td align="center"><?php echo $row["FIRSTNAME"]; ?></td>
@@ -350,60 +362,79 @@
                             </tbody>
 
                         </table>
+                                <?php
+                            }
+                        ?>
 
-                        <p class="healthlabel" align="center">Spouse Details</p>
+                        <?php
+                            $query = "SELECT * FROM SPOUSE S JOIN MEMBER M ON S.MEMBER_ID = M. MEMBER_ID WHERE S.MEMBER_ID =" . $_SESSION['idnum'].";";
+                            $result = mysqli_query($dbc, $query);
+                            $row = mysqli_fetch_array($result);
 
-                        <table class="table table-bordered">
-                            
-                            <thead>
-
-                                <tr>
-
-                                    <td align="center"><b>Last Name</b></td>
-                                    <td align="center"><b>First Name</b></td>
-                                    <td align="center"><b>Middle Name</b></td>
-                                    <td align="center"><b>Sex</b></td>
-                                    <td align="center"><b>Birthday</b></td>
-                                    <td align="center"><b>Status</b></td>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                <tr>
-
-                                <?php 
-                                    $query = "SELECT * FROM SPOUSE S JOIN MEMBER M ON S.MEMBER_ID = M. MEMBER_ID WHERE S.MEMBER_ID =" . $_SESSION['idnum'].";";
-                                    $result = mysqli_query($dbc, $query);
-                                    $row = mysqli_fetch_array($result);
+                            if(!empty($row)) {
                                 ?>
 
-                                <td align="center"><?php echo $row["LASTNAME"]; ?></td>
-                                <td align="center"><?php echo $row["FIRSTNAME"]; ?></td>
-                                <td align="center"><?php echo $row["MIDDLENAME"]; ?></td>
-                                <td align="center">
-                                    <?php
-                                        if($row['SEX'] == 1) echo "Female";
-                                        else if($row['SEX'] === 0) echo "Male";
-                                    ?>
-                                </td>
-                                <td align="center"><?php echo $row["BIRTHDATE"]; ?></td>
-                                <td align="center">
-                                    <?php
-                                        if($row["STATUS"] == 1) echo"Alive";
-                                        else if ($row["STATUS"] === 0) echo "Deceased";
-                                    ?>        
-                                </td>
+                                <p class="healthlabel" align="center">Spouse Details</p>
+
+                                <table class="table table-bordered">
+
+                                    <thead>
+
+                                    <tr>
+
+                                        <td align="center"><b>Last Name</b></td>
+                                        <td align="center"><b>First Name</b></td>
+                                        <td align="center"><b>Middle Name</b></td>
+                                        <td align="center"><b>Sex</b></td>
+                                        <td align="center"><b>Birthday</b></td>
+                                        <td align="center"><b>Status</b></td>
+
+                                    </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                    <tr>
 
 
-                                </tr>
+                                        <td align="center"><?php echo $row["LASTNAME"]; ?></td>
+                                        <td align="center"><?php echo $row["FIRSTNAME"]; ?></td>
+                                        <td align="center"><?php echo $row["MIDDLENAME"]; ?></td>
+                                        <td align="center">
+                                            <?php
+                                            if ($row['SEX'] == 1) echo "Female";
+                                            else if ($row['SEX'] === 0) echo "Male";
+                                            ?>
+                                        </td>
+                                        <td align="center"><?php echo $row["BIRTHDATE"]; ?></td>
+                                        <td align="center">
+                                            <?php
+                                            if ($row["STATUS"] == 1) echo "Alive";
+                                            else if ($row["STATUS"] === 0) echo "Deceased";
+                                            ?>
+                                        </td>
 
-                            </tbody>
 
-                        </table>
+                                    </tr>
 
+                                    </tbody>
+
+                                </table>
+                                <?php
+                            }
+                        ?>
+
+                        <?php
+
+
+                        $query = "SELECT * FROM SIBLINGS WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
+                        $result = mysqli_query($dbc, $query);
+
+                        if(!empty($row)) {
+
+                            foreach ($result as $resultRow) {
+                        ?>
                         <p class="healthlabel" align="center">Siblings Details</p>
 
                         <table class="table table-bordered">
@@ -425,15 +456,6 @@
 
                             <tbody>
 
-                                <?php 
-
-
-                                    $query = "SELECT * FROM SIBLINGS WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
-                                    $result = mysqli_query($dbc, $query);
-                                    
-                                    foreach ($result as $resultRow) {
-                                ?>
-                                    
                                             <tr>
                                                 <td align='center'><?php $resultRow['LASTNAME'] ?></td>
                                                 <td align='center'><?php $resultRow['FIRSTNAME'] ?></td>
@@ -461,6 +483,21 @@
                             </tbody>
 
                         </table>
+                            <?php
+                        }
+                        ?>
+
+                        <?php
+
+
+                        $query = "SELECT * FROM CHILDREN WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
+                        $result = mysqli_query($dbc, $query);
+
+                        if(!empty($row)) {
+
+
+                        foreach ($result as $resultRow) {
+                        ?>
 
                         <p class="healthlabel" align="center">Children Details</p>
 
@@ -485,15 +522,7 @@
 
                                 <tr>
 
-                               <?php 
 
-
-                                    $query = "SELECT * FROM CHILDREN WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
-                                    $result = mysqli_query($dbc, $query);
-                                    
-
-                                    foreach ($result as $resultRow) {
-                                ?>
                                             <tr>
                                                 <td align='center'><?php $resultRow['LASTNAME'] ?></td>
                                                 <td align='center'><?php $resultRow['FIRSTNAME'] ?></td>
@@ -516,7 +545,9 @@
                             </tbody>
 
                         </table>
-
+                            <?php
+                            }
+                        ?>
 
                     </div>
 

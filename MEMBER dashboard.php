@@ -31,8 +31,9 @@
 </head>
 
 <?php
-
+    require_once ("mysql_connect_FA.php");
     session_start();
+    error_reporting(NULL);
 
     if ($_SESSION['usertype'] != 1) {
 
@@ -94,9 +95,20 @@
 
                 </li>
 
-                <li class="dropdown sideicons">
+                <li class="dropdown sideicons"> <!------This is where the Name of the signed in member is ---->
+                    <?php
+                    $query = "SELECT LASTNAME, FIRSTNAME FROM MEMBER 
+                                    
+                    WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
 
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+                    $result = mysqli_query($dbc, $query);
+                    $row = mysqli_fetch_array($result);
+
+                    $displayName = $row['LASTNAME']." , ".$row['FIRSTNAME'][0].". ";
+
+
+                    ?>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $displayName ?><b class="caret"></b></a>
 
                     <ul class="dropdown-menu">
 
@@ -172,12 +184,6 @@
 
                     <li>
 
-                        <a href="MEMBER BANKLOAN list.php"><i class="fa fa-dollar" aria-hidden="true"></i> Bank Loans</a>
-
-                    </li>
-
-                    <li>
-
                     <a href="MEMBER DEDUCTION summary.php"><i class="fa fa-book" aria-hidden="true"></i> Salary Deduction Summary</a>
 
                     </li>
@@ -224,11 +230,6 @@
 
                     </li>
 
-                    <li>
-
-                        <a href="MEMBER FILEREPO.php"><i class="fa fa-folder" aria-hidden="true"></i> File Repository</a>
-
-                    </li>
 
                 </ul>
 
@@ -257,7 +258,7 @@
 
                         <div class="well" align="center">
 
-                            <b>Current Employee Position</b>
+                            <b>Current Employee Department</b>
 
                             <div>
 
@@ -267,7 +268,20 @@
 
                             <div>
 
-                                Faculty - Full Time Probisionary
+                                <?php
+                                    $query = "SELECT M.DATE_HIRED, M.CAMPUS, D.DEPT_NAME 
+                                    FROM MEMBER M
+                                    JOIN ref_department D
+                                    ON M.DEPT_ID = D.DEPT_ID
+                                    WHERE m.MEMBER_ID =" . $_SESSION['idnum'].";";
+
+                                    $result = mysqli_query($dbc, $query);
+                                    $row = mysqli_fetch_array($result);
+                                    echo "Faculty - ";
+                                    echo $row["DEPT_NAME"];
+
+                                ?>
+
 
                             </div>
 
@@ -283,13 +297,17 @@
                             
                             <div>
 
-                                &nbsp;
+                                <br>
 
                             </div>
 
                             <div>
 
-                                March 10, 2016
+                                <?php
+
+                                    echo date('F j, Y', $row["DATE_HIRED"]);
+
+                                ?>
 
                             </div>
 
@@ -311,7 +329,9 @@
 
                             <div>
 
-                                De La Salle University - Manila Campus
+                                <?php
+                                    echo $row["CAMPUS"]
+                                ?>
 
                             </div>
 
@@ -323,9 +343,12 @@
 
                 <hr>
 
+
+
                 <div class="row">
 
-                    <div class="col-lg-3 col-md-6">
+
+                    <div class="col-lg-4 col-md-6">
 
                         <div class="panel panel-green">
 
@@ -351,7 +374,7 @@
 
                             </div>
 
-                            <a href="MEMBER loanpayablesFALP details.php">
+                            <a href="MEMBER%20FALP%20application.php">
                     
                                 <div class="panel-footer">
                     
@@ -368,53 +391,11 @@
                         </div>
                     
                     </div>
-                    
-
-
-                    <div class="col-lg-3 col-md-6">
-
-                        <div class="panel panel-green">
-
-                            <div class="panel-heading">
-
-                                <div class="row">
-
-                                    <div class="col-xs-3">
-
-                                        <i class="fa fa-university fa-5x"></i>
-
-                                    </div>
-
-                                    <div class="col-xs-9 text-right">
-
-                                        <div class="huge">Bank</div>
-                                        <div>Loan Program</div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <a href="MEMBER loanpayablesBANK details.php">
-
-                                <div class="panel-footer">
-
-                                    <span class="pull-left">View Details</span>
-                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-
-                                    <div class="clearfix"></div>
-
-                                </div>
-
-                            </a>
-
-                        </div>
 
 
 
-                    </div>
-                    <div class="col-lg-3 col-md-6">
+
+                    <div class="col-lg-4 col-md-6">
 
                         <div class="panel panel-red">
 
@@ -439,7 +420,7 @@
 
                             </div>
 
-                            <a href="MEMBER healthaidsummary.php">
+                            <a href="MEMBER%20HA%20application.php">
 
                                 <div class="panel-footer">
 
@@ -456,7 +437,7 @@
 
                     </div>
 
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-lg-4 col-md-6">
 
                         <div class="panel panel-primary">
 
@@ -481,7 +462,7 @@
 
                             </div>
 
-                            <a href="MEMBER lifetimesummary.php">
+                            <a href="MEMBER%20LIFETIME%20form.php">
 
                                 <div class="panel-footer">
 

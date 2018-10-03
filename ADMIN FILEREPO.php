@@ -5,9 +5,7 @@
 	//!-- IMPORTANT - These session variables are found in the ADMIN FALP manual. The default homepage.
 	//$_SESSION['parentFolderID']="";
 	//$_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
-	echo 	'<script language="javascript">
-				alert("Current Folder: '.$_SESSION['currentFolderID'].' Parent Folder: '.$_SESSION['parentFolderID'].'")
-				</script>';
+	
 	require_once("mysql_connect_FA.php");
 	if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
 
@@ -15,7 +13,7 @@
 
 	}
 	
-	//error_reporting(0);  //this is what makes notices and warnings disappear like your will to live
+	error_reporting(0);  //this is what makes notices and warnings disappear like your will to live
 	
 	//****** THESE ARE THE MOST IMPORTANT PARTS - TO AUTHENTICATE THE SHIT THAT WE ARE ABOUT TO DO 
 	$url_array = explode('?', 'http://'.$_SERVER ['HTTP_HOST'].$_SERVER['REQUEST_URI']);
@@ -41,11 +39,13 @@
 	$client->setAccessToken($_SESSION['accessToken']); //gets the authentication token. 
     $service = new Google_DriveService($client); //gets the service
 	
-	
+	$fileDetailsArray = retrieveEverything($service);
 	
 	//$sharedFolderId = '1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso'; // id of the AFED File repo folder. VERY IMPORTANT. 
 	
 	/*----------------------Link check-------------------------------------------------------------------------------*/
+	
+	/*
 	if (isset($_GET['run'])){
 		//$linkchoice=$_GET['run'];
 		$linkChoice = substr($_GET['run'],0,4);
@@ -63,12 +63,12 @@
 		$_SESSION['parentFolderID'] = $_SESSION['currentFolderID'];
 		$_SESSION['currentFolderID'] = $idChoice;
 		$fileDetailsArray = retrieveEverything($service); //contains the necessary details ffrom our google drive. Do not forget this holy grail please.
-		/*echo 	'<script language="javascript">
+		echo 	'<script language="javascript">
 				alert("'.$idChoice.'")
-				</script>';*/
+				</script>';
 		//myFirst();
 		break;
-
+	
 	case 'back' :
 		$_SESSION['currentFolderID'] = $_SESSION['parentFolderID'];
 		$_SESSION['parentFolderID'] = "";
@@ -79,13 +79,13 @@
 		echo 'no run';
 
 	}
-	
+	*/
 	/*------------------------------SUBMITS, FILES, UPLOAD OR DOWNLOAD AND FINALLY AUDIT ARGUMENTS--------------------------- */
 	 
 	if(isset($_POST['submit'])){
 		
 		//echo"Triggered ako";
-		if($_POST['submit'] =! null){ // This means that you clicked a submit button and its upload (duh)
+		if($_POST['submit'] != null){ // This means that you clicked a submit button and its upload (duh)
 			//first check if the field is empty. 
 			if ($_FILES['upload_docu']['size'] == 0 && $_FILES['upload_docu']['error'] == 0){
 				//prints out an alert. 
@@ -127,20 +127,13 @@
 				VALUES('{$_SESSION['idnum']}','{$name}','{$desc}' ,'{$now}');";
 
 				mysqli_query($dbc,$query);*/
-		
-				
 			
 			}
-			
 			
 		}else{ // meaning youre downloading shit my dude. 
 			
 			// and do not forget to fucking audit okay?????
 		}
-		 
-		 
-		 
-		 
 		 
 	}
 	
@@ -153,7 +146,7 @@
 	  $pageToken = null;
 	  
 		do {
-			if($_SESSION['parentFolderID']== null){
+			if($_SESSION['parentFolderID']== null){ // if the user is in the root directory then that means we need to get all the folders.
 				$response = $service->files->listFiles(array( //this is an array. okay. 
 				'q' => "mimeType='application/vnd.google-apps.folder'",
 				'pageToken' => $pageToken,
@@ -187,8 +180,9 @@
 					
 					
 					if(isInFileRepo($file_parent_folders)){ // if the file is in the file repository of FA, then it will be pushed and presented to the user. 
-						
+					
 						array_push($result,array($file_ID,$file_title, $file_owners, $file_date_created));
+						
 						
 					}
 					/*testing echos 
@@ -309,7 +303,7 @@
 		//$now = new DateTime('now', new DateTimeZone('Asia/Kolkata'));
 				
 		//echo $name;
-		$desc = $name." uploaded".$fileName. "to AFED File Repository";
+		$desc = $name." uploaded ".$fileName. " to AFED File Repository";
 				
 		$query = "INSERT INTO file_audit_table(id,name,description,dateTime)
 
@@ -325,7 +319,7 @@
 		$now  = date("Y-m-d h:i:sa");
 		$name = getName($_SESSION['idnum']);
 		echo "test: ". $name;
-		$desc = $name." downloaded".$fileName. "from AFED File Repository";
+		$desc = $name." downloaded ".$fileName. " from AFED File Repository";
 		
 		$query = "INSERT INTO file_audit_table(id,name,description,dateTime)
 
@@ -741,7 +735,7 @@
                                 ?>
                                 <tr>
 
-                                <td align="center"><a href="?run=next<?php echo $detail[0]; ?>"><?php echo $detail[1];?></a></td>
+                                <td align="center"><?php echo $detail[1]; ?></td>
                                 <td align="center"><?php echo $detail[2];?></td>
                                 <td align="center"><?php echo $detail[3];?></td>
                                 <td align="center"><?php echo $detail[0]; ?></td> <!-- this is where the download links are. -->

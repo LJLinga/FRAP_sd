@@ -1,0 +1,909 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="5356d799-a39e-4cc3-a9e3-2d52e87b4c03" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN FILEREPO.php" afterPath="$PROJECT_DIR$/ADMIN FILEREPO.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER BANKLOAN appsent.php" afterPath="$PROJECT_DIR$/MEMBER BANKLOAN appsent.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER FALP activity.php" afterPath="$PROJECT_DIR$/MEMBER FALP activity.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER FALP application.php" afterPath="$PROJECT_DIR$/MEMBER FALP application.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER FALP appsent.php" afterPath="$PROJECT_DIR$/MEMBER FALP appsent.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER FALP failed.php" afterPath="$PROJECT_DIR$/MEMBER FALP failed.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER FALP requirements.php" afterPath="$PROJECT_DIR$/MEMBER FALP requirements.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER FALP summary.php" afterPath="$PROJECT_DIR$/MEMBER FALP summary.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER HA appsent.php" afterPath="$PROJECT_DIR$/MEMBER HA appsent.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER HA summary.php" afterPath="$PROJECT_DIR$/MEMBER HA summary.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER LIFETIME form.php" afterPath="$PROJECT_DIR$/MEMBER LIFETIME form.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER dashboard.php" afterPath="$PROJECT_DIR$/MEMBER dashboard.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file leaf-file-name="MEMBER HA summary.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MEMBER HA summary.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="4914">
+              <caret line="234" column="14" lean-forward="false" selection-start-line="234" selection-start-column="14" selection-end-line="234" selection-end-column="14" />
+              <folding>
+                <marker date="1538512775910" expanded="true" signature="3377:3491" ph="SELECT LASTN... MEMBER" />
+                <marker date="1538512775910" expanded="true" signature="9407:9462" ph="SELECT DATE_... HEALTH_AID" />
+                <marker date="1538512775910" expanded="true" signature="11813:11851" ph="SELECT * FRO... FATHER" />
+                <marker date="1538512775910" expanded="true" signature="14222:14260" ph="SELECT * FRO... MOTHER" />
+                <marker date="1538512775910" expanded="true" signature="16607:16645" ph="SELECT * FRO... SPOUSE" />
+                <marker date="1538512775910" expanded="true" signature="18916:18956" ph="SELECT * FRO... SIBLINGS" />
+                <marker date="1538512775910" expanded="true" signature="19525:19986" ph="..." />
+                <marker date="1538512775910" expanded="true" signature="21606:21646" ph="SELECT * FRO... CHILDREN" />
+                <marker date="1538512775910" expanded="true" signature="22215:22676" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MEMBER dashboard.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MEMBER dashboard.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-3527">
+              <caret line="60" column="0" lean-forward="false" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+              <folding>
+                <marker date="1538478242085" expanded="true" signature="3341:3455" ph="SELECT LASTN... MEMBER" />
+                <marker date="1538478242085" expanded="true" signature="9176:9444" ph="SELECT D.DEP... MEMBER" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MEMBER BANKLOAN appsent.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MEMBER BANKLOAN appsent.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="483">
+              <caret line="23" column="5" lean-forward="true" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
+              <folding>
+                <marker date="1538565414296" expanded="true" signature="235:297" ph="SELECT MAX(L... loans" />
+                <marker date="1538565414296" expanded="true" signature="814:855" ph="SELECT MAX(R... bank_requirements" />
+                <marker date="1538565414296" expanded="true" signature="4128:4201" ph="SELECT * fro... loan_plan" />
+                <marker date="1538565414296" expanded="true" signature="4369:4670" ph="INSERT INTO loans... " />
+                <marker date="1538565414296" expanded="true" signature="4751:4835" ph="SELECT MAX(L... loans" />
+                <marker date="1538565414296" expanded="true" signature="12340:12604" ph="INSERT into bank_requirements... " />
+                <marker date="1538565414296" expanded="true" signature="13180:13407" ph="INSERT INTO txn_reference... " />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MEMBER FALP summary.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MEMBER FALP summary.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="336">
+              <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+              <folding>
+                <marker date="1538565480156" expanded="true" signature="269:331" ph="SELECT MAX(L... loans" />
+                <marker date="1538565480156" expanded="true" signature="647:765" ph="SELECT * FRO... LOANS" />
+                <marker date="1538565480156" expanded="true" signature="864:1067" ph="SELECT l2.ST... LOANS" />
+                <marker date="1538565480156" expanded="true" signature="4261:4375" ph="SELECT LASTN... MEMBER" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MEMBER FALP requirements.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MEMBER FALP requirements.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="342">
+              <caret line="50" column="0" lean-forward="true" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+              <folding>
+                <marker date="1538565217608" expanded="true" signature="1586:1648" ph="SELECT MAX(L... loans" />
+                <marker date="1538565217608" expanded="true" signature="4246:4360" ph="SELECT LASTN... MEMBER" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MEMBER FALP activity.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/MEMBER FALP activity.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="174">
+              <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+              <folding>
+                <marker date="1538565356443" expanded="true" signature="266:328" ph="SELECT MAX(L... loans" />
+                <marker date="1538565356443" expanded="true" signature="648:766" ph="SELECT * FRO... LOANS" />
+                <marker date="1538565356443" expanded="true" signature="865:944" ph="SELECT * FRO... txn_reference" />
+                <marker date="1538565356443" expanded="true" signature="4098:4212" ph="SELECT LASTN... MEMBER" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MEMBER FALP failed.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MEMBER FALP failed.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="257" column="0" lean-forward="true" selection-start-line="257" selection-start-column="0" selection-end-line="257" selection-end-column="0" />
+              <folding>
+                <marker date="1538565096416" expanded="true" signature="3383:3439" ph="SELECT LASTN... MEMBER" />
+                <marker date="1538565096416" expanded="true" signature="8777:8852" ph="SELECT MAX(L... MEMBER" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MEMBER FALP application.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MEMBER FALP application.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
+              <folding>
+                <marker date="1538565217285" expanded="true" signature="1445:1507" ph="SELECT MAX(L... loans" />
+                <marker date="1538565217285" expanded="true" signature="2034:2191" ph="SELECT membe... loans" />
+                <marker date="1538565217285" expanded="true" signature="4655:4769" ph="SELECT LASTN... MEMBER" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>check</find>
+      <find>requirementID</find>
+      <find>Bank_Loan</find>
+      <find>falp_requirements</find>
+      <find>/form</find>
+      <find>falp_requirement</find>
+      <find>Bank</find>
+      <find>bank_</find>
+      <find>well</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/index.php" />
+        <option value="$PROJECT_DIR$/MEMBER HA appsent.php" />
+        <option value="$PROJECT_DIR$/MEMBER dashboard.php" />
+        <option value="$PROJECT_DIR$/MEMBER LIFETIME form.php" />
+        <option value="$PROJECT_DIR$/MEMBER HA summary.php" />
+        <option value="$PROJECT_DIR$/MEMBER BANKLOAN requirements.php" />
+        <option value="$PROJECT_DIR$/MEMBER FALP appsent.php" />
+        <option value="$PROJECT_DIR$/MEMBER FALP failed.php" />
+        <option value="$PROJECT_DIR$/MEMBER FALP application.php" />
+        <option value="$PROJECT_DIR$/MEMBER FALP requirements.php" />
+        <option value="$PROJECT_DIR$/MEMBER FALP activity.php" />
+        <option value="$PROJECT_DIR$/MEMBER BANKLOAN appsent.php" />
+        <option value="$PROJECT_DIR$/MEMBER FALP summary.php" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" interpreter_name="PHP 5.6" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
+    <option name="width" value="1938" />
+    <option name="height" value="1048" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scratches" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRAP_sd" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRAP_sd" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="JavaScript Debug.index.php">
+    <configuration default="false" name="index.php" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/FRAP_sd/index.php">
+      <method />
+    </configuration>
+    <configuration default="true" type="CodeceptionConfigurationType" factoryName="Codeception">
+      <PhpTestRunnerSettings />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerJest" factoryName="Jest">
+      <node-interpreter value="project" />
+      <working-dir value="" />
+      <envs />
+      <scope-kind value="ALL" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerProtractor" factoryName="Protractor">
+      <config-file value="" />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" working-dir="">
+      <method />
+    </configuration>
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpBehatConfigurationType" factoryName="Behat">
+      <BehatRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpSpecConfigurationType" factoryName="PHPSpec">
+      <PhpTestRunnerSettings />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.npm" factoryName="npm">
+      <command value="run" />
+      <scripts />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="mocha-javascript-test-runner" factoryName="Mocha">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <working-directory />
+      <pass-parent-env>true</pass-parent-env>
+      <envs />
+      <ui />
+      <extra-mocha-options />
+      <test-kind>DIRECTORY</test-kind>
+      <test-directory />
+      <recursive>false</recursive>
+      <method />
+    </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="JavaScript Debug.index.php" />
+    </list>
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue="JavaScript Debug.index.php" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5356d799-a39e-4cc3-a9e3-2d52e87b4c03" name="Default" comment="" />
+      <created>1538207860019</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1538207860019</updated>
+      <workItem from="1538207861575" duration="7117000" />
+      <workItem from="1538345635471" duration="31211000" />
+      <workItem from="1538548548894" duration="66000" />
+      <workItem from="1538549037022" duration="733000" />
+      <workItem from="1538556694611" duration="7482000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="46609000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-9" y="-9" width="1938" height="1048" extended-state="1" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39956093" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="PHP-CGI Server" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+    <layout-to-restore>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="PHP-CGI Server" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39956093" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="processedProjectFiles" value="true" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/MEMBER HA summary.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4914">
+          <caret line="234" column="14" lean-forward="false" selection-start-line="234" selection-start-column="14" selection-end-line="234" selection-end-column="14" />
+          <folding>
+            <marker date="1538512775910" expanded="true" signature="3377:3491" ph="SELECT LASTN... MEMBER" />
+            <marker date="1538512775910" expanded="true" signature="9407:9462" ph="SELECT DATE_... HEALTH_AID" />
+            <marker date="1538512775910" expanded="true" signature="11813:11851" ph="SELECT * FRO... FATHER" />
+            <marker date="1538512775910" expanded="true" signature="14222:14260" ph="SELECT * FRO... MOTHER" />
+            <marker date="1538512775910" expanded="true" signature="16607:16645" ph="SELECT * FRO... SPOUSE" />
+            <marker date="1538512775910" expanded="true" signature="18916:18956" ph="SELECT * FRO... SIBLINGS" />
+            <marker date="1538512775910" expanded="true" signature="19525:19986" ph="..." />
+            <marker date="1538512775910" expanded="true" signature="21606:21646" ph="SELECT * FRO... CHILDREN" />
+            <marker date="1538512775910" expanded="true" signature="22215:22676" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER dashboard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1260">
+          <caret line="60" column="0" lean-forward="false" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+          <folding>
+            <marker date="1538478242085" expanded="true" signature="3341:3455" ph="SELECT LASTN... MEMBER" />
+            <marker date="1538478242085" expanded="true" signature="9176:9444" ph="SELECT D.DEP... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER BANKLOAN appsent.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2205">
+          <caret line="105" column="32" lean-forward="false" selection-start-line="105" selection-start-column="32" selection-end-line="105" selection-end-column="32" />
+          <folding>
+            <marker date="1538565414296" expanded="true" signature="235:297" ph="SELECT MAX(L... loans" />
+            <marker date="1538565414296" expanded="true" signature="814:855" ph="SELECT MAX(R... bank_requirements" />
+            <marker date="1538565414296" expanded="true" signature="4128:4201" ph="SELECT * fro... loan_plan" />
+            <marker date="1538565414296" expanded="true" signature="4369:4670" ph="INSERT INTO loans... " />
+            <marker date="1538565414296" expanded="true" signature="4751:4835" ph="SELECT MAX(L... loans" />
+            <marker date="1538565414296" expanded="true" signature="12340:12604" ph="INSERT into bank_requirements... " />
+            <marker date="1538565414296" expanded="true" signature="13180:13407" ph="INSERT INTO txn_reference... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER FALP application.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="882">
+          <caret line="42" column="40" lean-forward="false" selection-start-line="42" selection-start-column="40" selection-end-line="42" selection-end-column="40" />
+          <folding>
+            <marker date="1538565217285" expanded="true" signature="1445:1507" ph="SELECT MAX(L... loans" />
+            <marker date="1538565217285" expanded="true" signature="2034:2191" ph="SELECT membe... loans" />
+            <marker date="1538565217285" expanded="true" signature="4655:4769" ph="SELECT LASTN... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER FALP requirements.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2352">
+          <caret line="112" column="53" lean-forward="false" selection-start-line="112" selection-start-column="53" selection-end-line="113" selection-end-column="0" />
+          <folding>
+            <marker date="1538565217608" expanded="true" signature="1586:1648" ph="SELECT MAX(L... loans" />
+            <marker date="1538565217608" expanded="true" signature="4246:4360" ph="SELECT LASTN... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER HA summary.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4914">
+          <caret line="234" column="14" lean-forward="false" selection-start-line="234" selection-start-column="14" selection-end-line="234" selection-end-column="14" />
+          <folding>
+            <marker date="1538512775910" expanded="true" signature="3377:3491" ph="SELECT LASTN... MEMBER" />
+            <marker date="1538512775910" expanded="true" signature="9407:9462" ph="SELECT DATE_... HEALTH_AID" />
+            <marker date="1538512775910" expanded="true" signature="11813:11851" ph="SELECT * FRO... FATHER" />
+            <marker date="1538512775910" expanded="true" signature="14222:14260" ph="SELECT * FRO... MOTHER" />
+            <marker date="1538512775910" expanded="true" signature="16607:16645" ph="SELECT * FRO... SPOUSE" />
+            <marker date="1538512775910" expanded="true" signature="18916:18956" ph="SELECT * FRO... SIBLINGS" />
+            <marker date="1538512775910" expanded="true" signature="19525:19986" ph="..." />
+            <marker date="1538512775910" expanded="true" signature="21606:21646" ph="SELECT * FRO... CHILDREN" />
+            <marker date="1538512775910" expanded="true" signature="22215:22676" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER dashboard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1260">
+          <caret line="60" column="0" lean-forward="false" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+          <folding>
+            <marker date="1538478242085" expanded="true" signature="3341:3455" ph="SELECT LASTN... MEMBER" />
+            <marker date="1538478242085" expanded="true" signature="9176:9444" ph="SELECT D.DEP... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER BANKLOAN appsent.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2205">
+          <caret line="105" column="32" lean-forward="false" selection-start-line="105" selection-start-column="32" selection-end-line="105" selection-end-column="32" />
+          <folding>
+            <marker date="1538565414296" expanded="true" signature="235:297" ph="SELECT MAX(L... loans" />
+            <marker date="1538565414296" expanded="true" signature="814:855" ph="SELECT MAX(R... bank_requirements" />
+            <marker date="1538565414296" expanded="true" signature="4128:4201" ph="SELECT * fro... loan_plan" />
+            <marker date="1538565414296" expanded="true" signature="4369:4670" ph="INSERT INTO loans... " />
+            <marker date="1538565414296" expanded="true" signature="4751:4835" ph="SELECT MAX(L... loans" />
+            <marker date="1538565414296" expanded="true" signature="12340:12604" ph="INSERT into bank_requirements... " />
+            <marker date="1538565414296" expanded="true" signature="13180:13407" ph="INSERT INTO txn_reference... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER FALP application.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="882">
+          <caret line="42" column="40" lean-forward="false" selection-start-line="42" selection-start-column="40" selection-end-line="42" selection-end-column="40" />
+          <folding>
+            <marker date="1538565217285" expanded="true" signature="1445:1507" ph="SELECT MAX(L... loans" />
+            <marker date="1538565217285" expanded="true" signature="2034:2191" ph="SELECT membe... loans" />
+            <marker date="1538565217285" expanded="true" signature="4655:4769" ph="SELECT LASTN... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER FALP requirements.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="945">
+          <caret line="45" column="2" lean-forward="true" selection-start-line="45" selection-start-column="2" selection-end-line="45" selection-end-column="2" />
+          <folding>
+            <marker date="1538565217608" expanded="true" signature="1586:1648" ph="SELECT MAX(L... loans" />
+            <marker date="1538565217608" expanded="true" signature="4246:4360" ph="SELECT LASTN... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER HA summary.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4914">
+          <caret line="234" column="14" lean-forward="false" selection-start-line="234" selection-start-column="14" selection-end-line="234" selection-end-column="14" />
+          <folding>
+            <marker date="1538512775910" expanded="true" signature="3377:3491" ph="SELECT LASTN... MEMBER" />
+            <marker date="1538512775910" expanded="true" signature="9407:9462" ph="SELECT DATE_... HEALTH_AID" />
+            <marker date="1538512775910" expanded="true" signature="11813:11851" ph="SELECT * FRO... FATHER" />
+            <marker date="1538512775910" expanded="true" signature="14222:14260" ph="SELECT * FRO... MOTHER" />
+            <marker date="1538512775910" expanded="true" signature="16607:16645" ph="SELECT * FRO... SPOUSE" />
+            <marker date="1538512775910" expanded="true" signature="18916:18956" ph="SELECT * FRO... SIBLINGS" />
+            <marker date="1538512775910" expanded="true" signature="19525:19986" ph="..." />
+            <marker date="1538512775910" expanded="true" signature="21606:21646" ph="SELECT * FRO... CHILDREN" />
+            <marker date="1538512775910" expanded="true" signature="22215:22676" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER dashboard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1260">
+          <caret line="60" column="0" lean-forward="true" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+          <folding>
+            <marker date="1538478242085" expanded="true" signature="3341:3455" ph="SELECT LASTN... MEMBER" />
+            <marker date="1538478242085" expanded="true" signature="9176:9444" ph="SELECT D.DEP... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER BANKLOAN appsent.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2205">
+          <caret line="105" column="32" lean-forward="false" selection-start-line="105" selection-start-column="32" selection-end-line="105" selection-end-column="32" />
+          <folding>
+            <marker date="1538565414296" expanded="true" signature="235:297" ph="SELECT MAX(L... loans" />
+            <marker date="1538565414296" expanded="true" signature="814:855" ph="SELECT MAX(R... bank_requirements" />
+            <marker date="1538565414296" expanded="true" signature="4128:4201" ph="SELECT * fro... loan_plan" />
+            <marker date="1538565414296" expanded="true" signature="4369:4670" ph="INSERT INTO loans... " />
+            <marker date="1538565414296" expanded="true" signature="4751:4835" ph="SELECT MAX(L... loans" />
+            <marker date="1538565414296" expanded="true" signature="12340:12604" ph="INSERT into bank_requirements... " />
+            <marker date="1538565414296" expanded="true" signature="13180:13407" ph="INSERT INTO txn_reference... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER FALP application.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="882">
+          <caret line="42" column="40" lean-forward="false" selection-start-line="42" selection-start-column="40" selection-end-line="42" selection-end-column="40" />
+          <folding>
+            <marker date="1538565217285" expanded="true" signature="1445:1507" ph="SELECT MAX(L... loans" />
+            <marker date="1538565217285" expanded="true" signature="2034:2191" ph="SELECT membe... loans" />
+            <marker date="1538565217285" expanded="true" signature="4655:4769" ph="SELECT LASTN... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER FALP requirements.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="945">
+          <caret line="45" column="2" lean-forward="true" selection-start-line="45" selection-start-column="2" selection-end-line="45" selection-end-column="2" />
+          <folding>
+            <marker date="1538565217608" expanded="true" signature="1586:1648" ph="SELECT MAX(L... loans" />
+            <marker date="1538565217608" expanded="true" signature="4246:4360" ph="SELECT LASTN... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="798">
+          <caret line="38" column="41" lean-forward="false" selection-start-line="38" selection-start-column="41" selection-end-line="38" selection-end-column="41" />
+          <folding>
+            <marker date="1538225532865" expanded="true" signature="1922:2053" ph="SELECT MEMBE... MEMBER_ACCOUNT" />
+            <marker date="1538225532865" expanded="true" signature="2204:2335" ph="SELECT EMP_I... EMPLOYEE" />
+            <marker date="1538225532865" expanded="true" signature="2558:2648" ph="SELECT MEMBE... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER HA appsent.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="756">
+          <caret line="36" column="0" lean-forward="true" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER dashboard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7140">
+          <caret line="340" column="0" lean-forward="true" selection-start-line="340" selection-start-column="0" selection-end-line="340" selection-end-column="0" />
+          <folding>
+            <marker date="1538478242085" expanded="true" signature="3341:3455" ph="SELECT LASTN... MEMBER" />
+            <marker date="1538478242085" expanded="true" signature="9176:9444" ph="SELECT D.DEP... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mysql_connect_FA.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ADMIN FILEREPO.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1535095412844" expanded="true" signature="10159:10227" ph="SELECT FIRST... employee" />
+            <marker date="1535095412844" expanded="true" signature="10584:10706" ph="INSERT INTO file_audit_table... " />
+            <marker date="1535095412844" expanded="true" signature="11077:11204" ph="INSERT INTO file_audit_table... " />
+            <marker date="1535095412844" expanded="true" signature="11645:11733" ph="SELECT FIRST... employee" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER HA summary.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7350">
+          <caret line="350" column="100" lean-forward="true" selection-start-line="350" selection-start-column="100" selection-end-line="350" selection-end-column="100" />
+          <folding>
+            <marker date="1538512775910" expanded="true" signature="3377:3491" ph="SELECT LASTN... MEMBER" />
+            <marker date="1538512775910" expanded="true" signature="9407:9462" ph="SELECT DATE_... HEALTH_AID" />
+            <marker date="1538512775910" expanded="true" signature="11813:11851" ph="SELECT * FRO... FATHER" />
+            <marker date="1538512775910" expanded="true" signature="14222:14260" ph="SELECT * FRO... MOTHER" />
+            <marker date="1538512775910" expanded="true" signature="16607:16645" ph="SELECT * FRO... SPOUSE" />
+            <marker date="1538512775910" expanded="true" signature="18916:18956" ph="SELECT * FRO... SIBLINGS" />
+            <marker date="1538512775910" expanded="true" signature="19525:19986" ph="..." />
+            <marker date="1538512775910" expanded="true" signature="21606:21646" ph="SELECT * FRO... CHILDREN" />
+            <marker date="1538512775910" expanded="true" signature="22215:22676" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ADMIN FILEREPO.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1535095412844" expanded="true" signature="10159:10227" ph="SELECT FIRST... employee" />
+            <marker date="1535095412844" expanded="true" signature="10584:10706" ph="INSERT INTO file_audit_table... " />
+            <marker date="1535095412844" expanded="true" signature="11077:11204" ph="INSERT INTO file_audit_table... " />
+            <marker date="1535095412844" expanded="true" signature="11645:11733" ph="SELECT FIRST... employee" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mysql_connect_FA.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="798">
+          <caret line="38" column="41" lean-forward="false" selection-start-line="38" selection-start-column="41" selection-end-line="38" selection-end-column="41" />
+          <folding>
+            <marker date="1538225532865" expanded="true" signature="1922:2053" ph="SELECT MEMBE... MEMBER_ACCOUNT" />
+            <marker date="1538225532865" expanded="true" signature="2204:2335" ph="SELECT EMP_I... EMPLOYEE" />
+            <marker date="1538225532865" expanded="true" signature="2558:2648" ph="SELECT MEMBE... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER HA appsent.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="483">
+          <caret line="293" column="79" lean-forward="false" selection-start-line="293" selection-start-column="57" selection-end-line="293" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER LIFETIME form.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="49" column="45" lean-forward="true" selection-start-line="49" selection-start-column="45" selection-end-line="49" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ADMIN BANK appdetails.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1531468533960" expanded="true" signature="386:516" ph="select m.mem... loans" />
+            <marker date="1531468533960" expanded="true" signature="772:1039" ph="select b.ban... loans" />
+            <marker date="1531468533960" expanded="true" signature="1226:1421" ph="select br.IC... loans" />
+            <marker date="1531468533960" expanded="true" signature="1691:1787" ph="UPDATE loans... " />
+            <marker date="1531468533960" expanded="true" signature="1854:2143" ph="INSERT INTO txn_reference... " />
+            <marker date="1531468533960" expanded="true" signature="2861:2940" ph="UPDATE loans... " />
+            <marker date="1531468533960" expanded="true" signature="3062:3334" ph="INSERT INTO txn_reference... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER HA summary.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4914">
+          <caret line="234" column="14" lean-forward="false" selection-start-line="234" selection-start-column="14" selection-end-line="234" selection-end-column="14" />
+          <folding>
+            <marker date="1538512775910" expanded="true" signature="3377:3491" ph="SELECT LASTN... MEMBER" />
+            <marker date="1538512775910" expanded="true" signature="9407:9462" ph="SELECT DATE_... HEALTH_AID" />
+            <marker date="1538512775910" expanded="true" signature="11813:11851" ph="SELECT * FRO... FATHER" />
+            <marker date="1538512775910" expanded="true" signature="14222:14260" ph="SELECT * FRO... MOTHER" />
+            <marker date="1538512775910" expanded="true" signature="16607:16645" ph="SELECT * FRO... SPOUSE" />
+            <marker date="1538512775910" expanded="true" signature="18916:18956" ph="SELECT * FRO... SIBLINGS" />
+            <marker date="1538512775910" expanded="true" signature="19525:19986" ph="..." />
+            <marker date="1538512775910" expanded="true" signature="21606:21646" ph="SELECT * FRO... CHILDREN" />
+            <marker date="1538512775910" expanded="true" signature="22215:22676" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ADMIN BANK applications.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1655">
+          <caret line="249" column="0" lean-forward="true" selection-start-line="249" selection-start-column="0" selection-end-line="249" selection-end-column="0" />
+          <folding>
+            <marker date="1531468533961" expanded="true" signature="10776:11419" ph="SELECT m.fir... loans" />
+            <marker date="1531468533961" expanded="true" signature="11656:12286" ph="..." />
+            <marker date="1531468533961" expanded="true" signature="11701:12241" ph="..." />
+            <marker date="1531468533961" expanded="true" signature="11747:12195" ph="..." />
+            <marker date="1531468533961" expanded="true" signature="12460:12509" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER BANKLOAN calculator.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7497">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1531468534144" expanded="true" signature="257:304" ph="SELECT * fro... loan_plan" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER BANKLOAN activity.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6728">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1531468534143" expanded="true" signature="1300:1426" ph="select TXN_D... txn_reference" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER FALP appsent.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="403">
+          <caret line="565" column="14" lean-forward="true" selection-start-line="377" selection-start-column="8" selection-end-line="565" selection-end-column="14" />
+          <folding>
+            <marker date="1538529617121" expanded="true" signature="423:715" ph="INSERT INTO loans... " />
+            <marker date="1538529617121" expanded="true" signature="766:823" ph="SELECT MAX(l... LOANS" />
+            <marker date="1538529617121" expanded="true" signature="946:1093" ph="INSERT INTO txn_reference... " />
+            <marker date="1538529617121" expanded="true" signature="2308:2392" ph="SELECT MAX(L... loans" />
+            <marker date="1538529617121" expanded="true" signature="2565:2606" ph="SELECT MAX(R... falp_requirements" />
+            <marker date="1538529617121" expanded="true" signature="8630:8902" ph="INSERT into falp_requirements... " />
+            <marker date="1538529617121" expanded="true" signature="9388:9623" ph="INSERT INTO txn_reference... " />
+            <marker date="1538529617121" expanded="true" signature="13129:13243" ph="SELECT LASTN... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER BANKLOAN requirements.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1202">
+          <caret line="520" column="30" lean-forward="false" selection-start-line="520" selection-start-column="30" selection-end-line="520" selection-end-column="30" />
+          <folding>
+            <marker date="1531468534144" expanded="true" signature="254:327" ph="SELECT * fro... loan_plan" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER dashboard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3527">
+          <caret line="60" column="0" lean-forward="false" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+          <folding>
+            <marker date="1538478242085" expanded="true" signature="3341:3455" ph="SELECT LASTN... MEMBER" />
+            <marker date="1538478242085" expanded="true" signature="9176:9444" ph="SELECT D.DEP... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER FALP application.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
+          <folding>
+            <marker date="1538565217285" expanded="true" signature="1445:1507" ph="SELECT MAX(L... loans" />
+            <marker date="1538565217285" expanded="true" signature="2034:2191" ph="SELECT membe... loans" />
+            <marker date="1538565217285" expanded="true" signature="4655:4769" ph="SELECT LASTN... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER BANKLOAN appsent.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="483">
+          <caret line="23" column="5" lean-forward="true" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
+          <folding>
+            <marker date="1538565414296" expanded="true" signature="235:297" ph="SELECT MAX(L... loans" />
+            <marker date="1538565414296" expanded="true" signature="814:855" ph="SELECT MAX(R... bank_requirements" />
+            <marker date="1538565414296" expanded="true" signature="4128:4201" ph="SELECT * fro... loan_plan" />
+            <marker date="1538565414296" expanded="true" signature="4369:4670" ph="INSERT INTO loans... " />
+            <marker date="1538565414296" expanded="true" signature="4751:4835" ph="SELECT MAX(L... loans" />
+            <marker date="1538565414296" expanded="true" signature="12340:12604" ph="INSERT into bank_requirements... " />
+            <marker date="1538565414296" expanded="true" signature="13180:13407" ph="INSERT INTO txn_reference... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER FALP summary.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding>
+            <marker date="1538565480156" expanded="true" signature="269:331" ph="SELECT MAX(L... loans" />
+            <marker date="1538565480156" expanded="true" signature="647:765" ph="SELECT * FRO... LOANS" />
+            <marker date="1538565480156" expanded="true" signature="864:1067" ph="SELECT l2.ST... LOANS" />
+            <marker date="1538565480156" expanded="true" signature="4261:4375" ph="SELECT LASTN... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER FALP requirements.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="50" column="0" lean-forward="true" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+          <folding>
+            <marker date="1538565217608" expanded="true" signature="1586:1648" ph="SELECT MAX(L... loans" />
+            <marker date="1538565217608" expanded="true" signature="4246:4360" ph="SELECT LASTN... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER FALP failed.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="257" column="0" lean-forward="true" selection-start-line="257" selection-start-column="0" selection-end-line="257" selection-end-column="0" />
+          <folding>
+            <marker date="1538565096416" expanded="true" signature="3383:3439" ph="SELECT LASTN... MEMBER" />
+            <marker date="1538565096416" expanded="true" signature="8777:8852" ph="SELECT MAX(L... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER FALP activity.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="174">
+          <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding>
+            <marker date="1538565356443" expanded="true" signature="266:328" ph="SELECT MAX(L... loans" />
+            <marker date="1538565356443" expanded="true" signature="648:766" ph="SELECT * FRO... LOANS" />
+            <marker date="1538565356443" expanded="true" signature="865:944" ph="SELECT * FRO... txn_reference" />
+            <marker date="1538565356443" expanded="true" signature="4098:4212" ph="SELECT LASTN... MEMBER" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

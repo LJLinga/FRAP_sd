@@ -8,7 +8,22 @@ require_once('mysql_connect_FA.php');
         
     }
 
-$query2 = "SELECT MAX(REQ_ID) from bank_requirements";
+    $query = "SELECT MAX(LOAN_ID), LOAN_STATUS from loans where member_id = {$_SESSION['idnum']} ";
+    $result = mysqli_query($dbc,$query);
+
+    $row = mysqli_fetch_assoc($result);
+
+    if($row['LOAN_STATUS'] = 1){ //checks if you have a pending loan
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
+
+    }else if($row['LOAN_STATUS'] = 2) { //checks if you have a loan that is ongoing.
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
+
+    }
+
+$query2 = "SELECT MAX(REQ_ID) from falp_requirements";
 
 $user_id = $_SESSION['idnum'];
 
@@ -156,7 +171,7 @@ $requirementID3 = $requirementID2;
                 
                     // now it makes the directories since there are no more errors
 
-                    $directoryName = "Bank_Loan_Requirements"; // user id 
+                    $directoryName = "FALP_Requirements"; // user id
                      if(!is_dir($directoryName)){
                     //Directory does not exist, so lets create it.
                      mkdir($directoryName, 0755);
@@ -386,7 +401,7 @@ $requirementID3 = $requirementID2;
                     }
 
 
-                
+
         }
 
 

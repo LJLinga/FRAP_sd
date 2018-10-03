@@ -33,7 +33,11 @@
 <?php 
 
     session_start();
+    require_once('mysql_connect_FA.php');
 
+/*****
+ * So what these code do is that they are
+ */
     if (isset($_POST['submit'])) {
 
         $message = NULL;
@@ -65,7 +69,7 @@
                 $idnum = $_SESSION['idnum'];
                 $password = $_SESSION['password'];
 
-                require_once('mysql_connect_FA.php');
+                //require_once('mysql_connect_FA.php');
                 $queryMem = "SELECT MEMBER_ID, PASSWORD, FIRST_CHANGE_PW FROM MEMBER_ACCOUNT WHERE MEMBER_ID = '{$idnum}' AND PASSWORD = PASSWORD('{$password}')";
                 $resultMem = mysqli_query($dbc, $queryMem);
                 $rowMem = mysqli_fetch_array($resultMem);

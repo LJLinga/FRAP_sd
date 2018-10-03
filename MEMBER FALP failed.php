@@ -34,6 +34,8 @@
 
     session_start();
 
+    require_once('mysql_connect_FA.php');
+
     if ($_SESSION['usertype'] != 1) {
 
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
@@ -47,71 +49,79 @@
     <div id="wrapper">
 
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            
+
             <div class="navbar-header"> <!-- Logo -->
-                
+
                 <img src="images/I-FA Logo Edited.png" id="ifalogo">
-            
-            
-            <ul class="nav navbar-right top-nav"> <!-- Top Menu Items / Notifications area -->
-                
-                <li class="dropdown sideicons">
 
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
+                <ul class="nav navbar-right top-nav"> <!-- Top Menu Items / Notifications area -->
 
-                    <ul class="dropdown-menu alert-dropdown">
+                    <li class="dropdown sideicons">
 
-                        <li>
-                            <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
-                        </li>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
 
-                        <li>
-                            <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
-                        </li>
+                        <ul class="dropdown-menu alert-dropdown">
 
-                        <li>
-                            <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
-                        </li>
+                            <li>
+                                <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
+                            </li>
 
-                        <li>
-                            <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
-                        </li>
+                            <li>
+                                <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
+                            </li>
 
-                        <li>
-                            <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
-                        </li>
+                            <li>
+                                <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
+                            </li>
 
-                        <li>
-                            <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
-                        </li>
+                            <li>
+                                <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
+                            </li>
 
-                        <li class="divider"></li>
+                            <li>
+                                <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
+                            </li>
 
-                        <li>
-                            <a href="#">View All</a>
-                        </li>
+                            <li>
+                                <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
+                            </li>
 
-                    </ul>
+                            <li class="divider"></li>
 
-                </li>
+                            <li>
+                                <a href="#">View All</a>
+                            </li>
 
-                <li class="dropdown sideicons">
+                        </ul>
 
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+                    </li>
 
-                    <ul class="dropdown-menu">
+                    <li class="dropdown sideicons"> <!------This is where the Name of the signed in member is ---->
+                        <?php
+                        $query = "SELECT LASTNAME, FIRSTNAME FROM MEMBER WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
 
-                        <li>
+                        $result = mysqli_query($dbc, $query);
+                        $row = mysqli_fetch_array($result);
 
-                            <a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                        $displayName = $row['LASTNAME']." , ".$row['FIRSTNAME'][0].". ";
 
-                        </li>
 
-                    </ul>
+                        ?>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $displayName ?><b class="caret"></b></a>
 
-                </li>
+                        <ul class="dropdown-menu">
 
-            </ul>
+                            <li>
+
+                                <a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+
+                            </li>
+
+                        </ul>
+
+                    </li>
+
+                </ul>
             </div>
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -120,23 +130,23 @@
 
                     <li>
 
-                            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+                        <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
 
-                        </li>
+                    </li>
 
-                        <li class="divider"></li>
+                    <li class="divider"></li>
 
-                        <li>
+                    <li>
 
-                            <a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                        <a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
 
-                        </li>
+                    </li>
 
-                    </ul>
+                </ul>
 
                 </li>
 
-            </ul>
+                </ul>
             </div>
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -173,19 +183,13 @@
 
                     <li>
 
-                        <a href="MEMBER BANKLOAN list.php"><i class="fa fa-dollar" aria-hidden="true"></i> Bank Loans</a>
+                        <a href="MEMBER DEDUCTION summary.php"><i class="fa fa-book" aria-hidden="true"></i> Salary Deduction Summary</a>
 
                     </li>
 
                     <li>
 
-                    <a href="MEMBER DEDUCTION summary.php"><i class="fa fa-book" aria-hidden="true"></i> Salary Deduction Summary</a>
-
-                    </li>
-
-                    <li>
-
-                    <a href="javascript:;" data-toggle="collapse" data-target="#loantrackingdd"><i class="fa fa-money" aria-hidden="true"></i> Loan Tracking <i class="fa fa-fw fa-caret-down"></i></a>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#loantrackingdd"><i class="fa fa-money" aria-hidden="true"></i> Loan Tracking <i class="fa fa-fw fa-caret-down"></i></a>
 
                         <ul id="loantrackingdd" class="collapse">
 
@@ -203,7 +207,7 @@
 
                     <li>
 
-                    <a href="javascript:;" data-toggle="collapse" data-target="#servicessummarydd"><i class="fa fa-university" aria-hidden="true"></i> Services Summary <i class="fa fa-fw fa-caret-down"></i></a>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#servicessummarydd"><i class="fa fa-university" aria-hidden="true"></i> Services Summary <i class="fa fa-fw fa-caret-down"></i></a>
 
                         <ul id="servicessummarydd" class="collapse">
 
@@ -225,11 +229,6 @@
 
                     </li>
 
-                    <li>
-
-                        <a href="MEMBER FILEREPO.php"><i class="fa fa-folder" aria-hidden="true"></i> File Repository</a>
-
-                    </li>
 
                 </ul>
 
@@ -246,8 +245,51 @@
                 
                     <div class="col-lg-12">
 
-                        <h1 class="page-header">Not eligible for another FALP
-                            Still not yet paid 50% of the previous amount(Currently paid <?php echo sprintf('%0.2f', $_SESSION['Paid'])*100; ?> % )</h1>
+                        <br>
+
+                        <br>
+
+                        <div class="well" align="center">
+                            <?php
+                                $query = "SELECT MAX(LOAN_ID), AMOUNT_PAID, LOAN_STATUS FROM MEMBER WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
+
+                                $result = mysqli_query($dbc, $query);
+                                $row = mysqli_fetch_array($result);
+
+                            ?>
+
+                        <h1 class="page-header">
+
+                            <?php
+                                if($row['LOAN_STATUS'] = 1) { //checks if his loan is still pending
+                                    ?>
+                                    Please wait for your loan to get approved, as the admins are still reviewing it!
+
+
+                                    <?php
+                                }else{
+                            ?>
+
+                                Not eligible for another FALP
+
+
+                                Still not yet paid 50% of the previous amount(Currently
+                                paid <?php echo sprintf('%0.2f', $row['AMOUNT_PAID']) * 100; ?> % )</h1>
+
+                                <br>
+
+                                Please wait until you have paid 50% before you can apply for another loan. Thank you!
+
+                                <br>
+
+                                <br>
+                            <?php
+                                }
+                            ?>
+
+                            <a href=MEMBER FALP application.php" class="btn btn-default" role="button">Go Back</a>
+
+                        </div>
                     
                     </div>
 
