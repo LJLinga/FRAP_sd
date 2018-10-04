@@ -24,332 +24,343 @@
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
 </head>
-<?php 
+<?php
 
-    session_start();
-    require_once('mysql_connect_FA.php');
+session_start();
+require_once('mysql_connect_FA.php');
 
-    if ($_SESSION['usertype'] != 1) {
+if ($_SESSION['usertype'] != 1) {
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
-        
+    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
+
+}
+
+$query = "SELECT MAX(RECORD_ID), APP_STATUS from health_aid where member_id = {$_SESSION['idnum']} and APP_STATUS = 1 ";
+$result = mysqli_query($dbc,$query);
+
+$row = mysqli_fetch_assoc($result);
+
+if($row['APP_STATUS'] = 1){ //checks if you have a pending application
+
+    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA appsent.php");
+
+}
+
+$_SESSION['HA_RecordID'] == 0;
+
+$_SESSION['SI_Sibling'] == 0;
+
+//This retrieves the Sibling's maximum
+$querySISIB = "SELECT MAX(SIBLING_ID) as SIBLING_ID FROM SIBLINGS;";
+$resultSISIB = mysqli_query($dbc, $querySISIB);
+$rowSISIB = mysqli_fetch_array($resultSISIB);
+
+//If Null
+If($rowSISIB['SIBLING_ID'] == NULL){
+    $_SESSION['SI_Sibling'] = 1;
+}
+else{
+    $_SESSION['SI_Sibling'] = $rowSISIB['SI_SIBLING'] + 1;
+}
+
+$_SESSION['CI_Child'] == 0;
+
+//This retrieves the Child's maximum
+$queryCIC = "SELECT MAX(CHILD_ID) as CHILD_ID FROM CHILDREN;";
+$resultCIC = mysqli_query($dbc, $queryCIC);
+$rowCIC = mysqli_fetch_array($resultCIC);
+
+//If Null
+If($rowCIC['CHILD_ID'] == NULL){
+    $_SESSION['CI_Child'] = 1;
+}
+else{
+    $_SESSION['CI_Child'] = $rowCIC['CHILD_ID'] + 1;
+}
+
+$message = NULL;
+$idnum = $_SESSION['idnum'];
+$siblingfirstarray = array();
+$siblinglastarray = array();
+$siblingmiddlearray = array();
+$siblingdayarray = array();
+$siblingmontharray = array();
+$siblingyeararray = array();
+$siblingbirthdatearray = array();
+$siblingsexarray = array();
+$siblingstatusarray = array();
+
+$childdayarray = array();
+$childmontharray = array();
+$childyeararray = array();
+$childfirstarray = array();
+$childlastarray = array();
+$childmiddlearray = array();
+$childbirthdatearray = array();
+$childsexarray = array();
+$childstatusarray = array();
+$appstatusid = 1;
+
+
+$queryCiv = "SELECT CIV_STATUS FROM MEMBER WHERE MEMBER_ID = '{$idnum}'";
+$resultCiv = mysqli_query($dbc, $queryCiv);
+$rowCiv = mysqli_fetch_array($resultCiv);
+
+$queryForm = "SELECT H.APP_STATUS FROM HEALTH_AID H JOIN MEMBER M ON H.MEMBER_ID = M.MEMBER_ID WHERE M.MEMBER_ID = '{$idnum}'";
+$resultForm = mysqli_query($dbc, $queryForm);
+$rowForm = mysqli_fetch_array($resultForm);
+
+/* check if empty fields */
+
+if (isset($_POST['submit'])) {
+
+    $flag = 0;
+
+    //Father
+    if (empty($_POST['fatherfirst']) || empty($_POST['fathermiddle']) || empty($_POST['fatherlast']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['fatherfirst']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['fathermiddle']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['fatherlast'])) {
+
+        $message.='<p>You forgot to fill up all name fields or inputed an invalid input on Father\'s info!';
+        $flag++;
+
     }
-	
-    $_SESSION['HA_RecordID'] == 0;
-	
-    $_SESSION['SI_Sibling'] == 0;
 
-    //This retrieves the Sibling's maximum 
-    $querySISIB = "SELECT MAX(SIBLING_ID) as SIBLING_ID FROM SIBLINGS;";
-    $resultSISIB = mysqli_query($dbc, $querySISIB);
-    $rowSISIB = mysqli_fetch_array($resultSISIB);
+    else {
 
-    //If Null
-    If($rowSISIB['SIBLING_ID'] == NULL){
-        $_SESSION['SI_Sibling'] = 1;
-    }
-    else{
-        $_SESSION['SI_Sibling'] = $rowSISIB['SI_SIBLING'] + 1;   
+        $fatherfirst = $_POST['fatherfirst'];
+        $fathermiddle = $_POST['fathermiddle'];
+        $fatherlast = $_POST['fatherlast'];
+
     }
 
-    $_SESSION['CI_Child'] == 0;
+    if (empty($_POST['fathermonth']) || empty($_POST['fatherday']) || empty($_POST['fatheryear'])) {
 
-    //This retrieves the Child's maximum 
-    $queryCIC = "SELECT MAX(CHILD_ID) as CHILD_ID FROM CHILDREN;";
-    $resultCIC = mysqli_query($dbc, $queryCIC);
-    $rowCIC = mysqli_fetch_array($resultCIC);
+        $message.='<p>You forgot to fill up all birth date fields on Father\'s info!';
+        $flag++;
 
-    //If Null
-    If($rowCIC['CHILD_ID'] == NULL){
-        $_SESSION['CI_Child'] = 1;
-    }
-    else{
-        $_SESSION['CI_Child'] = $rowCIC['CHILD_ID'] + 1;   
     }
 
-    $message = NULL;
-    $idnum = $_SESSION['idnum'];
-    $siblingfirstarray = array();
-    $siblinglastarray = array();
-    $siblingmiddlearray = array();
-    $siblingdayarray = array();
-    $siblingmontharray = array();
-    $siblingyeararray = array();
-    $siblingbirthdatearray = array();
-    $siblingsexarray = array();
-    $siblingstatusarray = array();
-	
-    $childdayarray = array();
-    $childmontharray = array();
-    $childyeararray = array();
-    $childfirstarray = array();
-    $childlastarray = array();
-    $childmiddlearray = array();
-    $childbirthdatearray = array();
-    $childsexarray = array();
-    $childstatusarray = array();
-    $appstatusid = 1;
+    else {
 
-    
-    $queryCiv = "SELECT CIV_STATUS FROM MEMBER WHERE MEMBER_ID = '{$idnum}'";
-    $resultCiv = mysqli_query($dbc, $queryCiv);
-    $rowCiv = mysqli_fetch_array($resultCiv);
+        $fatherbirthdate = $_POST['fatheryear'] . "-" . $_POST['fathermonth'] . "-" . $_POST['fatherday'];
 
-    $queryForm = "SELECT H.APP_STATUS FROM HEALTH_AID H JOIN MEMBER M ON H.MEMBER_ID = M.MEMBER_ID WHERE M.MEMBER_ID = '{$idnum}'";
-    $resultForm = mysqli_query($dbc, $queryForm);
-    $rowForm = mysqli_fetch_array($resultForm);
+    }
 
-    /* check if empty fields */
+    //Mother
+    if (empty($_POST['motherfirst']) || empty($_POST['mothermiddle']) || empty($_POST['motherlast']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['motherfirst']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['mothermiddle']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['motherlast'])) {
 
-    if (isset($_POST['submit'])) {
+        $message.='<p>You forgot to fill up all name fields or inputed an invalid input on Mother\'s info!';
+        $flag++;
 
-        $flag = 0;
+    }
 
-        //Father
-        if (empty($_POST['fatherfirst']) || empty($_POST['fathermiddle']) || empty($_POST['fatherlast']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['fatherfirst']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['fathermiddle']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['fatherlast'])) {
+    else {
 
-            $message.='<p>You forgot to fill up all name fields or inputed an invalid input on Father\'s info!';
+        $motherfirst = $_POST['motherfirst'];
+        $mothermiddle = $_POST['mothermiddle'];
+        $motherlast = $_POST['motherlast'];
+
+    }
+
+    if (empty($_POST['mothermonth']) || empty($_POST['motherday']) || empty($_POST['motheryear'])) {
+
+        $message.='<p>You forgot to fill up all birth date fields on Mother\'s info!';
+        $flag++;
+
+    }
+
+    else {
+
+        $motherbirthdate = $_POST['motheryear'] . "-" . $_POST['mothermonth'] . "-" . $_POST['motherday'];
+
+    }
+    //Spouse - If the member is married
+    if($rowCiv['CIV_STATUS'] == 2){
+        if (empty($_POST['spousefirst']) || empty($_POST['spousemiddle']) || empty($_POST['spouselast']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['spousefirst']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['spousemiddle']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['spouselast'])) {
+
+            $message.='<p>You forgot to fill up all name fields or inputed an invalid input on Spouse\'s info!';
             $flag++;
 
         }
 
         else {
 
-            $fatherfirst = $_POST['fatherfirst'];
-            $fathermiddle = $_POST['fathermiddle'];
-            $fatherlast = $_POST['fatherlast'];
+            $spousefirst = $_POST['spousefirst'];
+            $spousemiddle = $_POST['spousemiddle'];
+            $spouselast = $_POST['spouselast'];
 
         }
 
-        if (empty($_POST['fathermonth']) || empty($_POST['fatherday']) || empty($_POST['fatheryear'])) {
+        if (empty($_POST['spousemonth']) || empty($_POST['spouseday']) || empty($_POST['spouseyear'])) {
 
-            $message.='<p>You forgot to fill up all birth date fields on Father\'s info!';
+            $message.='<p>You forgot to fill up all birth date fields on Spouse\'s info!';
             $flag++;
 
         }
 
         else {
 
-            $fatherbirthdate = $_POST['fatheryear'] . "-" . $_POST['fathermonth'] . "-" . $_POST['fatherday'];
+            $spousebirthdate = $_POST['spouseyear'] . "-" . $_POST['spousemonth'] . "-" . $_POST['spouseday'];
 
         }
+    }
 
-        //Mother
-        if (empty($_POST['motherfirst']) || empty($_POST['mothermiddle']) || empty($_POST['motherlast']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['motherfirst']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['mothermiddle']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['motherlast'])) {
+    if (!isset($_POST['hasSibling'])) {
 
-            $message.='<p>You forgot to fill up all name fields or inputed an invalid input on Mother\'s info!';
-            $flag++;
+        foreach ($_POST['siblingfirst'] as $siblingfirst) {
 
-        }
+            if (empty($siblingfirst) || !preg_match("/^[a-zA-Z ]*$/", $siblingfirst)) {
 
-        else {
-
-            $motherfirst = $_POST['motherfirst'];
-            $mothermiddle = $_POST['mothermiddle'];
-            $motherlast = $_POST['motherlast'];
-
-        }
-
-        if (empty($_POST['mothermonth']) || empty($_POST['motherday']) || empty($_POST['motheryear'])) {
-
-            $message.='<p>You forgot to fill up all birth date fields on Mother\'s info!';
-            $flag++;
-
-        }
-
-        else {
-
-            $motherbirthdate = $_POST['motheryear'] . "-" . $_POST['mothermonth'] . "-" . $_POST['motherday'];
-
-        }
-        //Spouse - If the member is married
-        if($rowCiv['CIV_STATUS'] == 2){
-            if (empty($_POST['spousefirst']) || empty($_POST['spousemiddle']) || empty($_POST['spouselast']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['spousefirst']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['spousemiddle']) || !preg_match("/^[a-zA-Z ]*$/", $_POST['spouselast'])) {
-
-                $message.='<p>You forgot to fill up all name fields or inputed an invalid input on Spouse\'s info!';
+                echo $siblingfirst + " first ";
+                $message.='<p>You forgot to fill up a first name field or inputed an invalid input on siblings\'s info!';
                 $flag++;
+                break;
 
             }
 
             else {
 
-                $spousefirst = $_POST['spousefirst'];
-                $spousemiddle = $_POST['spousemiddle'];
-                $spouselast = $_POST['spouselast'];
+                array_push($siblingfirstarray, $siblingfirst);
 
             }
 
-            if (empty($_POST['spousemonth']) || empty($_POST['spouseday']) || empty($_POST['spouseyear'])) {
+        }
 
-                $message.='<p>You forgot to fill up all birth date fields on Spouse\'s info!';
+        foreach ($_POST['siblinglast'] as $siblinglast) {
+
+            if (empty($siblinglast) || !preg_match("/^[a-zA-Z ]*$/", $siblinglast)) {
+
+                $message.='<p>You forgot to fill up a last name field or inputed an invalid input on siblings\'s info!';
                 $flag++;
+                break;
 
             }
 
             else {
 
-                $spousebirthdate = $_POST['spouseyear'] . "-" . $_POST['spousemonth'] . "-" . $_POST['spouseday'];
+                array_push($siblinglastarray, $siblinglast);
 
             }
+
         }
 
-        if (!isset($_POST['hasSibling'])) {
+        foreach ($_POST['siblingmiddle'] as $siblingmiddle) {
 
-            foreach ($_POST['siblingfirst'] as $siblingfirst) {
+            if (empty($siblingmiddle) || !preg_match("/^[a-zA-Z ]*$/", $siblingmiddle)) {
 
-                if (empty($siblingfirst) || !preg_match("/^[a-zA-Z ]*$/", $siblingfirst)) {
-
-                    echo $siblingfirst + " first ";
-                    $message.='<p>You forgot to fill up a first name field or inputed an invalid input on siblings\'s info!';
-                    $flag++;
-                    break;
-
-                }
-
-                else {
-
-                    array_push($siblingfirstarray, $siblingfirst);
-
-                }
+                $message.='<p>You forgot to fill up a middle name field or inputed an invalid input on siblings\'s info!';
+                $flag++;
+                break;
 
             }
 
-            foreach ($_POST['siblinglast'] as $siblinglast) {
+            else {
 
-                if (empty($siblinglast) || !preg_match("/^[a-zA-Z ]*$/", $siblinglast)) {
-
-                    $message.='<p>You forgot to fill up a last name field or inputed an invalid input on siblings\'s info!';
-                    $flag++;
-                    break;
-
-                }
-
-                else {
-
-                    array_push($siblinglastarray, $siblinglast);
-
-                }
+                array_push($siblingmiddlearray, $siblingmiddle);
 
             }
 
-            foreach ($_POST['siblingmiddle'] as $siblingmiddle) {
-
-                if (empty($siblingmiddle) || !preg_match("/^[a-zA-Z ]*$/", $siblingmiddle)) {
-
-                    $message.='<p>You forgot to fill up a middle name field or inputed an invalid input on siblings\'s info!';
-                    $flag++;
-                    break;
-
-                }
-
-                else {
-
-                    array_push($siblingmiddlearray, $siblingmiddle);
-
-                }
-
-            }
-
-            foreach ($_POST['siblingmonth'] as $siblingmonth) {
-
-                if (empty($siblingmonth)) {
-
-                    $message.='<p>You forgot to fill up a month field on siblings\'s info!';
-                    $flag++;
-                    break;
-
-                }
-
-                else {
-
-                    array_push($siblingmontharray, $siblingmonth);
-
-                }
-
-            }
-
-            foreach ($_POST['siblingday'] as $siblingday) {
-
-                if (empty($siblingday)) {
-
-                    $message.='<p>You forgot to fill up a day field on siblings\'s info!';
-                    $flag++;
-                    break;
-
-                }
-
-                else {
-
-                    array_push($siblingdayarray, $siblingday);
-
-                }
-
-            }
-
-            foreach ($_POST['siblingyear'] as $siblingyear) {
-
-                if (empty($siblingyear)) {
-
-                    $message.='<p>You forgot to fill up a year field on siblings\'s info!';
-                    $flag++;
-                    break;
-
-                }
-
-                else {
-
-                    array_push($siblingyeararray, $siblingyear);
-
-                }
-
-            }
-			
-			foreach ($_POST['siblingsex'] as $siblingsex) {
-
-                if (empty($siblingsex)) {
-
-                    $message.='<p>You forgot to choose the sex on sibling\'s info!';
-                    $flag++;
-                    break;
-
-                }
-
-                else {
-
-                    array_push($siblingsexarray, $siblingsex);
-
-                }
-
-            }
-			
-			foreach ($_POST['siblingstatus'] as $siblingstatus) {
-
-                if (empty($siblingstatus)) {
-
-                    $message.='<p>You forgot to choose the status on siblings\'s info!';
-                    $flag++;
-                    break;
-
-                }
-
-                else {
-                    array_push($siblingstatusarray, $siblingstatus);
-
-                }
-
-            }
         }
+
+        foreach ($_POST['siblingmonth'] as $siblingmonth) {
+
+            if (empty($siblingmonth)) {
+
+                $message.='<p>You forgot to fill up a month field on siblings\'s info!';
+                $flag++;
+                break;
+
+            }
+
+            else {
+
+                array_push($siblingmontharray, $siblingmonth);
+
+            }
+
+        }
+
+        foreach ($_POST['siblingday'] as $siblingday) {
+
+            if (empty($siblingday)) {
+
+                $message.='<p>You forgot to fill up a day field on siblings\'s info!';
+                $flag++;
+                break;
+
+            }
+
+            else {
+
+                array_push($siblingdayarray, $siblingday);
+
+            }
+
+        }
+
+        foreach ($_POST['siblingyear'] as $siblingyear) {
+
+            if (empty($siblingyear)) {
+
+                $message.='<p>You forgot to fill up a year field on siblings\'s info!';
+                $flag++;
+                break;
+
+            }
+
+            else {
+
+                array_push($siblingyeararray, $siblingyear);
+
+            }
+
+        }
+
+        foreach ($_POST['siblingsex'] as $siblingsex) {
+
+            if (empty($siblingsex)) {
+
+                $message.='<p>You forgot to choose the sex on sibling\'s info!';
+                $flag++;
+                break;
+
+            }
+
+            else {
+
+                array_push($siblingsexarray, $siblingsex);
+
+            }
+
+        }
+
+        foreach ($_POST['siblingstatus'] as $siblingstatus) {
+
+            if (empty($siblingstatus)) {
+
+                $message.='<p>You forgot to choose the status on siblings\'s info!';
+                $flag++;
+                break;
+
+            }
+
+            else {
+                array_push($siblingstatusarray, $siblingstatus);
+
+            }
+
+        }
+    }
 
     if ($rowCiv['CIV_STATUS'] != 1) {
 
         if (!isset($_POST['hasChild'])) {
-			
-			foreach ($_POST['childstatus'] as $childstatus) {
+
+            foreach ($_POST['childstatus'] as $childstatus) {
 
                 if (empty($childstatus)) {
 
@@ -474,8 +485,8 @@
                 }
 
             }
-			
-			foreach ($_POST['childsex'] as $childsex) {
+
+            foreach ($_POST['childsex'] as $childsex) {
 
                 if (empty($childsex)) {
 
@@ -497,160 +508,162 @@
 
     }
 
-        if ($flag == 0) {
+    if ($flag == 0) {
 
-            $idnum = $_SESSION['idnum'];
+        $idnum = $_SESSION['idnum'];
 
-            for ($x = 0; $x < count($siblingmontharray); $x++) {
+        for ($x = 0; $x < count($siblingmontharray); $x++) {
 
-                $siblingbirthday = $siblingyeararray[$x] . "-" . $siblingmontharray[$x] . "-" . $siblingdayarray[$x];
+            $siblingbirthday = $siblingyeararray[$x] . "-" . $siblingmontharray[$x] . "-" . $siblingdayarray[$x];
 
-                array_push($siblingbirthdatearray, $siblingbirthday);
-
-            }
-
-            for ($y = 0; $y < count($childmontharray); $y++) {
-
-                $childbirthday = $childyeararray[$y] . "-" . $childmontharray[$y] . "-" . $childdayarray[$y];
-
-                array_push($childbirthdatearray, $childbirthday);
-
-            }
-				
-            $queryMem = "INSERT INTO HEALTH_AID (MEMBER_ID, APP_STATUS, DATE_APPLIED, DATE_APPROVED, EMP_ID) 
-
-            VALUES('{$idnum}', '1', NOW(), NULL, NULL); ";
-
-            $resultMem = mysqli_query($dbc, $queryMem);
-		
-            //Insert into transaction table
-            $queryTnx = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, LOAN_REF, EMP_ID, SERVICE_TYPE) 
-            VALUES({$idnum}, '1', 'Health Aid Application', 0, NOW(), NULL, NULL, '2'); ";
-            $resultTnx = mysqli_query($dbc, $queryTnx);
-
-
-			//This retrieves the Health Aid Table's maximum 
-			$queryHARI = "SELECT MAX(RECORD_ID) as RECORD_ID FROM HEALTH_AID;";
-			$resultHARI = mysqli_query($dbc, $queryHARI);
-			$rowHARI = mysqli_fetch_array($resultHARI);
-			$_SESSION['HA_RecordID'] = $rowHARI['RECORD_ID'];
-			
-			
-            /* father insert */
-
-                $fatherstatus = $_POST['fatherstatus'];
-
-                $queryFather = "INSERT INTO FATHER (RECORD_ID, MEMBER_ID, LASTNAME, FIRSTNAME, MIDDLENAME, BIRTHDATE, STATUS) 
-
-                VALUES ('{$_SESSION['HA_RecordID']}', '{$idnum}', '{$fatherlast}', '{$fatherfirst}', '{$fathermiddle}', CAST('{$fatherbirthdate}' AS DATE), '{$fatherstatus}');";
-
-                $resultFather = mysqli_query($dbc, $queryFather);
-
-            /* mother insert */
-
-                $motherstatus = $_POST['motherstatus'];
-
-                $queryMother = "INSERT INTO MOTHER (RECORD_ID, MEMBER_ID, LASTNAME, FIRSTNAME, MIDDLENAME, BIRTHDATE, STATUS) 
-
-                VALUES ('{$_SESSION['HA_RecordID']}','{$idnum}', '{$motherlast}', '{$motherfirst}', '{$mothermiddle}', CAST('{$motherbirthdate}' AS DATE), '{$motherstatus}');";
-
-                $resultMother = mysqli_query($dbc, $queryMother);
-				
-			/* spouse insert */
-
-                $spousestatus = $_POST['spousestatus'];
-
-                $querySpouse = "INSERT INTO SPOUSE (RECORD_ID, MEMBER_ID, LASTNAME, FIRSTNAME, MIDDLENAME, BIRTHDATE, STATUS) 
-
-                VALUES ('{$_SESSION['HA_RecordID']}','{$idnum}', '{$spouselast}', '{$spousefirst}', '{$spousemiddle}', CAST('{$spousebirthdate}' AS DATE), '{$spousestatus}');";
-
-                $resultSpouse = mysqli_query($dbc, $querySpouse);
-
-            /* sibling insert */
-
-                for ($s = 0; $s < count($siblinglastarray); $s++) {
-
-                    $siblingf = $siblingfirstarray[$s];
-                    $siblingl = $siblinglastarray[$s];
-                    $siblingm = $siblingmiddlearray[$s];
-                    $siblings = $siblingsexarray[$s];
-                    $siblingb = $siblingbirthdatearray[$s];
-                    $siblingst = $siblingstatusarray[$s];
-
-                    $querySibling = "INSERT INTO SIBLINGS (SIBLING_ID, MEMBER_ID, RECORD_ID, LASTNAME, FIRSTNAME, MIDDLENAME, BIRTHDATE, STATUS, SEX)
-
-                    VALUES ('{$_SESSION['SI_Sibling']}','{$idnum}','{$_SESSION['HA_RecordID']}','{$siblingl}', '{$siblingf}', '{$siblingm}', CAST('{$siblingb}' AS DATE), '{$siblingst}', '{$siblings}');";
-
-                    $resultSibling = mysqli_query($dbc, $querySibling);
-					
-					$_SESSION['SI_Sibling']++;
-                }
-
-            /* children insert */
-
-            if ($rowCiv['CIV_STATUS'] != 1) {
-
-                for ($c = 0; $c < count($childlastarray); $c++) {
-
-                    $childf = $childfirstarray[$c];
-                    $childl = $childlastarray[$c];
-                    $childm = $childmiddlearray[$c];
-                    $childb = $childbirthdatearray[$c];
-					$childs = $childsexarray[$c];
-                    $childst = $childstatusarray[$c];
-					
-                    $queryChild = "INSERT INTO CHILDREN (CHILD_ID, MEMBER_ID, RECORD_ID, LASTNAME, FIRSTNAME, MIDDLENAME, BIRTHDATE, STATUS, SEX)
-
-                    VALUES ('{$_SESSION['CI_Child']}','{$idnum}','{$_SESSION['HA_RecordID']}', '{$childl}', '{$childf}', '{$childm}', CAST('{$childb}' AS DATE),'{$childst}', '{$childs}');";
-
-                    $resultChild = mysqli_query($dbc, $queryChild);
-
-					$_SESSION['CI_Child']++;
-                }
-
-            }
-
-            $queryTransaction = "INSERT INTO TRANSACTIONS (MEMBER_ID, AMOUNT, TXN_DATE, TXN_TYPE, TXN_STATUS) 
-                             VALUES ({$_SESSION['idnum']}, 0, NOW(), 1, 'Health Aid Application Submitted')";
-
-            $resultTransaction = mysqli_query($dbc, $queryTransaction);
+            array_push($siblingbirthdatearray, $siblingbirthday);
 
         }
 
+        for ($y = 0; $y < count($childmontharray); $y++) {
+
+            $childbirthday = $childyeararray[$y] . "-" . $childmontharray[$y] . "-" . $childdayarray[$y];
+
+            array_push($childbirthdatearray, $childbirthday);
+
+        }
+
+        $queryMem = "INSERT INTO HEALTH_AID (MEMBER_ID, APP_STATUS, DATE_APPLIED, DATE_APPROVED, EMP_ID) 
+
+            VALUES('{$idnum}', '1', NOW(), NULL, NULL); ";
+
+        $resultMem = mysqli_query($dbc, $queryMem);
+
+
+
+
+        //This retrieves the Health Aid Table's maximum
+        $queryHARI = "SELECT MAX(RECORD_ID) as RECORD_ID FROM HEALTH_AID;";
+        $resultHARI = mysqli_query($dbc, $queryHARI);
+        $rowHARI = mysqli_fetch_array($resultHARI);
+        $_SESSION['HA_RecordID'] = $rowHARI['RECORD_ID'];
+
+        //Insert into transaction table
+        $queryTnx = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, LOAN_REF, EMP_ID, SERVICE_ID) 
+            VALUES({$idnum}, '1', 'Health Aid Application', 0, NOW(),  {$_SESSION['HA_RecordID']}, NULL, '2'); ";
+        $resultTnx = mysqli_query($dbc, $queryTnx);
+
+
+
+        /* father insert */
+
+        $fatherstatus = $_POST['fatherstatus'];
+
+        $queryFather = "INSERT INTO FATHER (RECORD_ID, MEMBER_ID, LASTNAME, FIRSTNAME, MIDDLENAME, BIRTHDATE, STATUS) 
+
+                VALUES ('{$_SESSION['HA_RecordID']}', '{$idnum}', '{$fatherlast}', '{$fatherfirst}', '{$fathermiddle}', CAST('{$fatherbirthdate}' AS DATE), '{$fatherstatus}');";
+
+        $resultFather = mysqli_query($dbc, $queryFather);
+
+        /* mother insert */
+
+        $motherstatus = $_POST['motherstatus'];
+
+        $queryMother = "INSERT INTO MOTHER (RECORD_ID, MEMBER_ID, LASTNAME, FIRSTNAME, MIDDLENAME, BIRTHDATE, STATUS) 
+
+                VALUES ('{$_SESSION['HA_RecordID']}','{$idnum}', '{$motherlast}', '{$motherfirst}', '{$mothermiddle}', CAST('{$motherbirthdate}' AS DATE), '{$motherstatus}');";
+
+        $resultMother = mysqli_query($dbc, $queryMother);
+
+        /* spouse insert */
+
+        $spousestatus = $_POST['spousestatus'];
+
+        $querySpouse = "INSERT INTO SPOUSE (RECORD_ID, MEMBER_ID, LASTNAME, FIRSTNAME, MIDDLENAME, BIRTHDATE, STATUS) 
+
+                VALUES ('{$_SESSION['HA_RecordID']}','{$idnum}', '{$spouselast}', '{$spousefirst}', '{$spousemiddle}', CAST('{$spousebirthdate}' AS DATE), '{$spousestatus}');";
+
+        $resultSpouse = mysqli_query($dbc, $querySpouse);
+
+        /* sibling insert */
+
+        for ($s = 0; $s < count($siblinglastarray); $s++) {
+
+            $siblingf = $siblingfirstarray[$s];
+            $siblingl = $siblinglastarray[$s];
+            $siblingm = $siblingmiddlearray[$s];
+            $siblings = $siblingsexarray[$s];
+            $siblingb = $siblingbirthdatearray[$s];
+            $siblingst = $siblingstatusarray[$s];
+
+            $querySibling = "INSERT INTO SIBLINGS ( MEMBER_ID, RECORD_ID, LASTNAME, FIRSTNAME, MIDDLENAME, BIRTHDATE, STATUS, SEX)
+
+                    VALUES ('{$idnum}','{$_SESSION['HA_RecordID']}','{$siblingl}', '{$siblingf}', '{$siblingm}', CAST('{$siblingb}' AS DATE), '{$siblingst}', '{$siblings}');";
+
+            $resultSibling = mysqli_query($dbc, $querySibling);
+
+            $_SESSION['SI_Sibling']++;
+        }
+
+        /* children insert */
+
+        if ($rowCiv['CIV_STATUS'] != 1) {
+
+            for ($c = 0; $c < count($childlastarray); $c++) {
+
+                $childf = $childfirstarray[$c];
+                $childl = $childlastarray[$c];
+                $childm = $childmiddlearray[$c];
+                $childb = $childbirthdatearray[$c];
+                $childs = $childsexarray[$c];
+                $childst = $childstatusarray[$c];
+
+                $queryChild = "INSERT INTO CHILDREN ( MEMBER_ID, RECORD_ID, LASTNAME, FIRSTNAME, MIDDLENAME, BIRTHDATE, STATUS, SEX)
+
+                    VALUES ('{$idnum}','{$_SESSION['HA_RecordID']}', '{$childl}', '{$childf}', '{$childm}', CAST('{$childb}' AS DATE),'{$childst}', '{$childs}');";
+
+                $resultChild = mysqli_query($dbc, $queryChild);
+
+                $_SESSION['CI_Child']++;
+            }
+
+        }
+
+        $queryTransaction = "INSERT INTO TRANSACTIONS (MEMBER_ID, AMOUNT, TXN_DATE, TXN_TYPE, TXN_STATUS) 
+                             VALUES ({$_SESSION['idnum']}, 0, NOW(), 1, 'Health Aid Application Submitted')";
+
+        $resultTransaction = mysqli_query($dbc, $queryTransaction);
+
     }
 
-    if ($rowForm['APP_STATUS'] == 1) { /* PENDING */
+}
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/member HA appsent.php");
+if ($rowForm['APP_STATUS'] == 1) { /* PENDING */
 
-    }
+    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/member HA appsent.php");
 
-    else if ($rowForm['APP_STATUS'] == 2) { /* ACCEPTED */
+}
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/member HA summary.php");
+else if ($rowForm['APP_STATUS'] == 2) { /* ACCEPTED */
 
-    }
+    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/member HA summary.php");
 
-    else if ($rowForm['APP_STATUS'] == 3) { /* REJECTED */
+}
 
-        $message .=  "Your last application for Health Aid Benefits was rejected. You can apply for another one.";
+else if ($rowForm['APP_STATUS'] == 3) { /* REJECTED */
 
-    }
+    $message .=  "Your last application for Health Aid Benefits was rejected. You can apply for another one.";
+
+}
 
 ?>
 <body>
 
-    <div id="wrapper">
+<div id="wrapper">
 
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            
-            <div class="navbar-header"> <!-- Logo -->
-                
-                <img src="images/I-FA Logo Edited.png" id="ifalogo">
-            
-            
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+
+        <div class="navbar-header"> <!-- Logo -->
+
+            <img src="images/I-FA Logo Edited.png" id="ifalogo">
+
             <ul class="nav navbar-right top-nav"> <!-- Top Menu Items / Notifications area -->
-                
+
                 <li class="dropdown sideicons">
 
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
@@ -691,19 +704,22 @@
 
                 </li>
 
-                <li class="dropdown sideicons">
+                <li class="dropdown sideicons"> <!------This is where the Name of the signed in member is ---->
+                    <?php
+                    $query = "SELECT LASTNAME, FIRSTNAME FROM MEMBER 
+                                    
+                    WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
 
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+                    $result = mysqli_query($dbc, $query);
+                    $row = mysqli_fetch_array($result);
+
+                    $displayName = $row['LASTNAME']." , ".$row['FIRSTNAME'][0].". ";
+
+
+                    ?>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $displayName ?><b class="caret"></b></a>
 
                     <ul class="dropdown-menu">
-
-                        <li>
-
-                            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
-
-                        </li>
-
-                        <li class="divider"></li>
 
                         <li>
 
@@ -716,119 +732,127 @@
                 </li>
 
             </ul>
-            </div>
-            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
+        </div>
+        <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
 
-                <ul class="nav navbar-nav side-nav">
+            <ul class="nav navbar-nav side-nav">
 
-                    <li id="top">
+                <li>
 
-                        <a href="MEMBER dashboard.php"><i class="fa fa-area-chart" aria-hidden="true"></i> Overview</a>
+                    <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
 
-                    </li>
+                </li>
 
-                    <li>
+                <li class="divider"></li>
 
-                        <a href="javascript:;" data-toggle="collapse" data-target="#applicationformsdd"><i class="fa fa-wpforms" aria-hidden="true"></i> Application Forms <i class="fa fa-fw fa-caret-down"></i></a>
+                <li>
 
-                        <ul id="applicationformsdd" class="collapse">
+                    <a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
 
-                            <li>
-                                <a href="MEMBER FALP application.php"><i class="fa fa-institution" aria-hidden="true"></i>&nbsp;&nbsp;FALP Application</a>
-                            </li>
+                </li>
 
-                            <li>
-                                <a href="MEMBER HA application.php"><i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;&nbsp;Health Aid Application</a>
-                            </li>
+            </ul>
 
-                            <li>
-                                <a href="MEMBER LIFETIME form.php"><i class="fa fa-handshake-o" aria-hidden="true"></i>&nbsp;&nbsp;Lifetime Member Application</a>
-                            </li>
+            </li>
 
-                        </ul>
+            </ul>
+        </div>
+        <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
 
-                    </li>
+            <ul class="nav navbar-nav side-nav">
 
-                    <li>
+                <li id="top">
 
-                        <a href="MEMBER BANKLOAN list.php"><i class="fa fa-dollar" aria-hidden="true"></i> Bank Loans</a>
+                    <a href="MEMBER dashboard.php"><i class="fa fa-area-chart" aria-hidden="true"></i> Overview</a>
 
-                    </li>
+                </li>
 
-                    <li>
+                <li>
+
+                    <a href="javascript:;" data-toggle="collapse" data-target="#applicationformsdd"><i class="fa fa-wpforms" aria-hidden="true"></i> Application Forms <i class="fa fa-fw fa-caret-down"></i></a>
+
+                    <ul id="applicationformsdd" class="collapse">
+
+                        <li>
+                            <a href="MEMBER FALP application.php"><i class="fa fa-institution" aria-hidden="true"></i>&nbsp;&nbsp;FALP Application</a>
+                        </li>
+
+                        <li>
+                            <a href="MEMBER HA application.php"><i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;&nbsp;Health Aid Application</a>
+                        </li>
+
+                        <li>
+                            <a href="MEMBER LIFETIME form.php"><i class="fa fa-handshake-o" aria-hidden="true"></i>&nbsp;&nbsp;Lifetime Member Application</a>
+                        </li>
+
+                    </ul>
+
+                </li>
+
+                <li>
 
                     <a href="MEMBER DEDUCTION summary.php"><i class="fa fa-book" aria-hidden="true"></i> Salary Deduction Summary</a>
 
-                    </li>
+                </li>
 
-                    <li>
+                <li>
 
                     <a href="javascript:;" data-toggle="collapse" data-target="#loantrackingdd"><i class="fa fa-money" aria-hidden="true"></i> Loan Tracking <i class="fa fa-fw fa-caret-down"></i></a>
 
-                        <ul id="loantrackingdd" class="collapse">
+                    <ul id="loantrackingdd" class="collapse">
 
-                            <li>
-                                <a href="MEMBER FALP summary.php"><i class="fa fa-institution" aria-hidden="true"></i>&nbsp;&nbsp;FALP Loan</a>
-                            </li>
+                        <li>
+                            <a href="MEMBER FALP summary.php"><i class="fa fa-institution" aria-hidden="true"></i>&nbsp;&nbsp;FALP Loan</a>
+                        </li>
 
-                            <li>
-                                <a href="MEMBER BANKLOAN summary.php"><i class="fa fa-dollar" aria-hidden="true"></i>&nbsp;&nbsp;Bank Loan</a>
-                            </li>
 
-                        </ul>
+                    </ul>
 
-                    </li>
+                </li>
 
-                    <li>
+                <li>
 
                     <a href="javascript:;" data-toggle="collapse" data-target="#servicessummarydd"><i class="fa fa-university" aria-hidden="true"></i> Services Summary <i class="fa fa-fw fa-caret-down"></i></a>
 
-                        <ul id="servicessummarydd" class="collapse">
+                    <ul id="servicessummarydd" class="collapse">
 
-                            <li>
-                                <a href="MEMBER HA summary.php"><i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;&nbsp;Health Aid Summary</a>
-                            </li>
+                        <li>
+                            <a href="MEMBER HA summary.php"><i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;&nbsp;Health Aid Summary</a>
+                        </li>
 
-                            <li>
-                                <a href="MEMBER LIFETIME summary.php"><i class="fa fa-handshake-o" aria-hidden="true"></i>&nbsp;&nbsp;Lifetime Membership Summary</a>
-                            </li>
 
-                        </ul>
+                    </ul>
 
-                    </li>
+                </li>
 
-                    <li>
+                <li>
 
-                        <a href="MEMBER AUDITRAIL.php"><i class="fa fa-backward" aria-hidden="true"></i> Audit Trail</a>
+                    <a href="MEMBER AUDITRAIL.php"><i class="fa fa-backward" aria-hidden="true"></i> Audit Trail</a>
 
-                    </li>
+                </li>
 
-                    <li>
 
-                        <a href="MEMBER FILEREPO.php"><i class="fa fa-folder" aria-hidden="true"></i> File Repository</a>
+            </ul>
 
-                    </li>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
 
-                </ul>
+    <div id="page-wrapper">
 
-            </div>
-            <!-- /.navbar-collapse -->
-        </nav>
+        <div class="container-fluid">
 
-        <div id="page-wrapper">
+            <div class="row"> <!-- Title & Breadcrumb -->
 
-            <div class="container-fluid">
-
-                <div class="row"> <!-- Title & Breadcrumb -->
-                    
-                    <div class="col-lg-12">
-                        <h1 class="page-header">Health Aid Application Form</h1>
-                    </div>
-
+                <div class="col-lg-12">
+                    <h1 class="page-header">Health Aid Application Form</h1>
                 </div>
 
-                <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>"> <!-- SERVER SELF -->
+            </div>
+
+            <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>"> <!-- SERVER SELF -->
 
                 <div class="row">
 
@@ -837,18 +861,18 @@
                         <h3 class="healthfieldlabel">Father's Information</h3>
 
                         <label>
-                        <span class="labelspan">Father's First Name<big class="req"> *</big></span>
-                        <input type="text" class="form-control memname" placeholder="Name" name="fatherfirst" value="<?php if (isset($_POST['fatherfirst'])) {echo $_POST['fatherfirst'];}?> ">
+                            <span class="labelspan">Father's First Name<big class="req"> *</big></span>
+                            <input type="text" class="form-control memname" placeholder="Name" name="fatherfirst" value="<?php if (isset($_POST['fatherfirst'])) {echo $_POST['fatherfirst'];}?> ">
                         </label>
 
                         <label>
-                        <span class="labelspan">Father's Middle Name<big class="req"> *</big></span>
-                        <input type="text" class="form-control memname" placeholder="Name" name="fathermiddle" value="<?php if (isset($_POST['fathermiddle'])) {echo $_POST['fathermiddle'];}?> ">
+                            <span class="labelspan">Father's Middle Name<big class="req"> *</big></span>
+                            <input type="text" class="form-control memname" placeholder="Name" name="fathermiddle" value="<?php if (isset($_POST['fathermiddle'])) {echo $_POST['fathermiddle'];}?> ">
                         </label>
 
                         <label>
-                        <span class="labelspan">Father's Last Name<big class="req"> *</big></span>
-                        <input type="text" class="form-control memname" placeholder="Name" name="fatherlast" value="<?php if (isset($_POST['fatherlast'])) {echo $_POST['fatherlast'];}?> ">
+                            <span class="labelspan">Father's Last Name<big class="req"> *</big></span>
+                            <input type="text" class="form-control memname" placeholder="Name" name="fatherlast" value="<?php if (isset($_POST['fatherlast'])) {echo $_POST['fatherlast'];}?> ">
                         </label>
 
                     </div>
@@ -860,60 +884,60 @@
                     <div class="col-lg-12">
 
                         <label>
-                        <p class="dbirthlabel"><b>Date of Birth</b></p>
-                        <select name="fathermonth" class="form-control datedropdown health">
-							<option value="">Select Month</option>
-                            <option value=""> ----- </option>
-							
-							<?php
-								if(isset($_POST['fathermonth'])){
-									for($m = 1; $m <= 12; $m++){
-										$mon = null;
-										switch($m){
-											case 1:
-												$mon = "January";
-												break;
-											case 2:
-												$mon = "February";
-												break;
-											case 3:
-												$mon = "March";
-												break;
-											case 4:
-												$mon = "April";
-												break;
-											case 5:
-												$mon = "May";
-												break;
-											case 6:
-												$mon = "June";
-												break;
-											case 7:
-												$mon = "July";
-												break;
-											case 8:
-												$mon = "August";
-												break;
-											case 9:
-												$mon = "September";
-												break;
-											case 10:
-												$mon = "October";
-												break;
-											case 11:
-												$mon = "November";
-												break;
-											case 12:
-												$mon = "December";
-												break;
-										}
-										if($m == $_POST['fathermonth']) echo "<option value='". $m ."' selected>". $mon ."</option>";
-										else echo "<option value='". $m ."'>". $mon ."</option>";
-									}
-									
-								}
-								else {
-									echo"
+                            <p class="dbirthlabel"><b>Date of Birth</b></p>
+                            <select name="fathermonth" class="form-control datedropdown health">
+                                <option value="">Select Month</option>
+                                <option value=""> ----- </option>
+
+                                <?php
+                                if(isset($_POST['fathermonth'])){
+                                    for($m = 1; $m <= 12; $m++){
+                                        $mon = null;
+                                        switch($m){
+                                            case 1:
+                                                $mon = "January";
+                                                break;
+                                            case 2:
+                                                $mon = "February";
+                                                break;
+                                            case 3:
+                                                $mon = "March";
+                                                break;
+                                            case 4:
+                                                $mon = "April";
+                                                break;
+                                            case 5:
+                                                $mon = "May";
+                                                break;
+                                            case 6:
+                                                $mon = "June";
+                                                break;
+                                            case 7:
+                                                $mon = "July";
+                                                break;
+                                            case 8:
+                                                $mon = "August";
+                                                break;
+                                            case 9:
+                                                $mon = "September";
+                                                break;
+                                            case 10:
+                                                $mon = "October";
+                                                break;
+                                            case 11:
+                                                $mon = "November";
+                                                break;
+                                            case 12:
+                                                $mon = "December";
+                                                break;
+                                        }
+                                        if($m == $_POST['fathermonth']) echo "<option value='". $m ."' selected>". $mon ."</option>";
+                                        else echo "<option value='". $m ."'>". $mon ."</option>";
+                                    }
+
+                                }
+                                else {
+                                    echo"
 										<option value='1'>January</option>
 										<option value='2'>February</option>
 										<option value='3'>March</option>
@@ -927,73 +951,73 @@
 										<option value='11'>November</option>
 										<option value='12'>December</option>
 									";
-								}
-							?>
-                            
-                      
+                                }
+                                ?>
 
-                        </select>
+
+
+                            </select>
                         </label>
 
                         <label>
-                        <select name="fatherday" class="form-control datedropdown health">
+                            <select name="fatherday" class="form-control datedropdown health">
 
-                            <option value="">Select Day</option>
-                            <option value=""> ----- </option>
+                                <option value="">Select Day</option>
+                                <option value=""> ----- </option>
 
-                            <?php for($x = 1; $x <= 31; $x++) { 
-								if(isset($_POST['fatherday']) && $x == $_POST['fatherday']){
-									echo "<option value='". $x ."' selected>". $x ."</option>";
-								}
-								else echo "<option value='". $x ."'>". $x ."</option>";
-                             } 
-							?>
-							
-                        </select>
+                                <?php for($x = 1; $x <= 31; $x++) {
+                                    if(isset($_POST['fatherday']) && $x == $_POST['fatherday']){
+                                        echo "<option value='". $x ."' selected>". $x ."</option>";
+                                    }
+                                    else echo "<option value='". $x ."'>". $x ."</option>";
+                                }
+                                ?>
+
+                            </select>
                         </label>
 
                         <label class="yeardrop">
-                        <select name="fatheryear" class="form-control datedropdown health">
+                            <select name="fatheryear" class="form-control datedropdown health">
 
-                            <option value="">Select Year</option>
-                            <option value=""> ----- </option>
+                                <option value="">Select Year</option>
+                                <option value=""> ----- </option>
 
-                            <?php for($y = date("Y"); $y >= 1900; $y--) { 
-							
-								if(isset($_POST['fatheryear']) && $x == $_POST['fatheryear']){
-									echo "<option value='". $y ."' selected>". $y ."</option>";
-								}
-								else echo "<option value='". $y ."'>". $y ."</option>";
-                                
-							}
-                            ?>
+                                <?php for($y = date("Y"); $y >= 1900; $y--) {
 
-                        </select>
+                                    if(isset($_POST['fatheryear']) && $x == $_POST['fatheryear']){
+                                        echo "<option value='". $y ."' selected>". $y ."</option>";
+                                    }
+                                    else echo "<option value='". $y ."'>". $y ."</option>";
+
+                                }
+                                ?>
+
+                            </select>
                         </label>
 
                         <label>
-                        <p class="dbirthlabel">Father's Status</p>
-                        <select name="fatherstatus" class="form-control datedropdown health">
-							<?php  
-								if(isset($_POST['fatherstatus'])){
-									Switch ($_POST['fatherstatus']){
-										case 1:
-											echo "<option value='1' selected>Normal</option>";
-											echo "<option value='0'>Deceased</option>";
-											break;
-										case 0:
-											echo "<option value='1'>Normal</option>";
-											echo "<option value='0' selected>Deceased</option>";
-											break;
-									}
-								}
-								else{
-									echo "<option value='1'>Normal</option>";
-									echo "<option value='0'>Deceased</option>";
-								}
-							?>
+                            <p class="dbirthlabel">Father's Status</p>
+                            <select name="fatherstatus" class="form-control datedropdown health">
+                                <?php
+                                if(isset($_POST['fatherstatus'])){
+                                    Switch ($_POST['fatherstatus']){
+                                        case 1:
+                                            echo "<option value='1' selected>Normal</option>";
+                                            echo "<option value='0'>Deceased</option>";
+                                            break;
+                                        case 0:
+                                            echo "<option value='1'>Normal</option>";
+                                            echo "<option value='0' selected>Deceased</option>";
+                                            break;
+                                    }
+                                }
+                                else{
+                                    echo "<option value='1'>Normal</option>";
+                                    echo "<option value='0'>Deceased</option>";
+                                }
+                                ?>
 
-                        </select>
+                            </select>
                         </label>
 
                     </div>
@@ -1009,18 +1033,18 @@
                         <h3 class="healthfieldlabel">Mother's Information</h3>
 
                         <label>
-                        <span class="labelspan">Mother's First Name<big class="req"> *</big></span>
-                        <input type="text" class="form-control memname" placeholder="Name" name="motherfirst" value="<?php if (isset($_POST['motherfirst'])) {echo $_POST['motherfirst'];}?> ">
+                            <span class="labelspan">Mother's First Name<big class="req"> *</big></span>
+                            <input type="text" class="form-control memname" placeholder="Name" name="motherfirst" value="<?php if (isset($_POST['motherfirst'])) {echo $_POST['motherfirst'];}?> ">
                         </label>
 
                         <label>
-                        <span class="labelspan">Mother's Middle Name<big class="req"> *</big></span>
-                        <input type="text" class="form-control memname" placeholder="Name" name="mothermiddle" value="<?php if (isset($_POST['mothermiddle'])) {echo $_POST['mothermiddle'];}?> ">
+                            <span class="labelspan">Mother's Middle Name<big class="req"> *</big></span>
+                            <input type="text" class="form-control memname" placeholder="Name" name="mothermiddle" value="<?php if (isset($_POST['mothermiddle'])) {echo $_POST['mothermiddle'];}?> ">
                         </label>
 
                         <label>
-                        <span class="labelspan">Mother's Last Name<big class="req"> *</big></span>
-                        <input type="text" class="form-control memname" placeholder="Name" name="motherlast" value="<?php if (isset($_POST['motherlast'])) {echo $_POST['motherlast'];}?> ">
+                            <span class="labelspan">Mother's Last Name<big class="req"> *</big></span>
+                            <input type="text" class="form-control memname" placeholder="Name" name="motherlast" value="<?php if (isset($_POST['motherlast'])) {echo $_POST['motherlast'];}?> ">
                         </label>
 
                     </div>
@@ -1032,60 +1056,60 @@
                     <div class="col-lg-12">
 
                         <label>
-                        <p class="dbirthlabel"><b>Date of Birth</b></p>
-                        <select name="mothermonth" class="form-control datedropdown health">
+                            <p class="dbirthlabel"><b>Date of Birth</b></p>
+                            <select name="mothermonth" class="form-control datedropdown health">
 
-                            <option value="">Select Month</option>
-                            <option value=""> ----- </option>
-							<?php
-								if(isset($_POST['mothermonth'])){
-									for($m = 1; $m <= 12; $m++){
-										$mon = null;
-										switch($m){
-											case 1:
-												$mon = "January";
-												break;
-											case 2:
-												$mon = "February";
-												break;
-											case 3:
-												$mon = "March";
-												break;
-											case 4:
-												$mon = "April";
-												break;
-											case 5:
-												$mon = "May";
-												break;
-											case 6:
-												$mon = "June";
-												break;
-											case 7:
-												$mon = "July";
-												break;
-											case 8:
-												$mon = "August";
-												break;
-											case 9:
-												$mon = "September";
-												break;
-											case 10:
-												$mon = "October";
-												break;
-											case 11:
-												$mon = "November";
-												break;
-											case 12:
-												$mon = "December";
-												break;
-										}
-										if($m == $_POST['mothermonth']) echo "<option value='". $m ."' selected>". $mon ."</option>";
-										else echo "<option value='". $m ."'>". $mon ."</option>";
-									}
-									
-								}
-								else {
-									echo"
+                                <option value="">Select Month</option>
+                                <option value=""> ----- </option>
+                                <?php
+                                if(isset($_POST['mothermonth'])){
+                                    for($m = 1; $m <= 12; $m++){
+                                        $mon = null;
+                                        switch($m){
+                                            case 1:
+                                                $mon = "January";
+                                                break;
+                                            case 2:
+                                                $mon = "February";
+                                                break;
+                                            case 3:
+                                                $mon = "March";
+                                                break;
+                                            case 4:
+                                                $mon = "April";
+                                                break;
+                                            case 5:
+                                                $mon = "May";
+                                                break;
+                                            case 6:
+                                                $mon = "June";
+                                                break;
+                                            case 7:
+                                                $mon = "July";
+                                                break;
+                                            case 8:
+                                                $mon = "August";
+                                                break;
+                                            case 9:
+                                                $mon = "September";
+                                                break;
+                                            case 10:
+                                                $mon = "October";
+                                                break;
+                                            case 11:
+                                                $mon = "November";
+                                                break;
+                                            case 12:
+                                                $mon = "December";
+                                                break;
+                                        }
+                                        if($m == $_POST['mothermonth']) echo "<option value='". $m ."' selected>". $mon ."</option>";
+                                        else echo "<option value='". $m ."'>". $mon ."</option>";
+                                    }
+
+                                }
+                                else {
+                                    echo"
 										<option value='1'>January</option>
 										<option value='2'>February</option>
 										<option value='3'>March</option>
@@ -1099,72 +1123,72 @@
 										<option value='11'>November</option>
 										<option value='12'>December</option>
 									";
-								}
-							?>
+                                }
+                                ?>
 
-                        </select>
+                            </select>
                         </label>
 
                         <label>
-                        <select name="motherday" class="form-control datedropdown health">
+                            <select name="motherday" class="form-control datedropdown health">
 
-                            <option value="">Select Day</option>
-                            <option value=""> ----- </option>
+                                <option value="">Select Day</option>
+                                <option value=""> ----- </option>
 
-                             <?php for($x = 1; $x <= 31; $x++) { 
-								if(isset($_POST['motherday']) && $x == $_POST['motherday']){
-									echo "<option value='". $x ."' selected>". $x ."</option>";
-								}
-								else echo "<option value='". $x ."'>". $x ."</option>";
-                             } 
-							?>
+                                <?php for($x = 1; $x <= 31; $x++) {
+                                    if(isset($_POST['motherday']) && $x == $_POST['motherday']){
+                                        echo "<option value='". $x ."' selected>". $x ."</option>";
+                                    }
+                                    else echo "<option value='". $x ."'>". $x ."</option>";
+                                }
+                                ?>
 
-                        </select>
+                            </select>
                         </label>
 
                         <label class="yeardrop">
-                        <select name="motheryear" class="form-control datedropdown health">
+                            <select name="motheryear" class="form-control datedropdown health">
 
-                            <option value="">Select Year</option>
-                            <option value=""> ----- </option>
+                                <option value="">Select Year</option>
+                                <option value=""> ----- </option>
 
-                            <?php for($y = date("Y"); $y >= 1900; $y--) { 
-							
-								if(isset($_POST['motheryear']) && $x == $_POST['motheryear']){
-									echo "<option value='". $y ."' selected>". $y ."</option>";
-								}
-								else echo "<option value='". $y ."'>". $y ."</option>";
-                                
-							}
-                            ?>
+                                <?php for($y = date("Y"); $y >= 1900; $y--) {
 
-                        </select>
+                                    if(isset($_POST['motheryear']) && $x == $_POST['motheryear']){
+                                        echo "<option value='". $y ."' selected>". $y ."</option>";
+                                    }
+                                    else echo "<option value='". $y ."'>". $y ."</option>";
+
+                                }
+                                ?>
+
+                            </select>
                         </label>
 
                         <label>
-                        <p class="dbirthlabel">Mother's Status</p>
-                        <select name="motherstatus" class="form-control datedropdown health">
+                            <p class="dbirthlabel">Mother's Status</p>
+                            <select name="motherstatus" class="form-control datedropdown health">
 
-                            <?php  
-								if(isset($_POST['motherstatus'])){
-									Switch ($_POST['motherstatus']){
-										case 1:
-											echo "<option value='1' selected>Normal</option>";
-											echo "<option value='0'>Deceased</option>";
-											break;
-										case 0:
-											echo "<option value='1'>Normal</option>";
-											echo "<option value='0' selected>Deceased</option>";
-											break;
-									}
-								}
-								else{
-									echo "<option value='1'>Normal</option>";
-									echo "<option value='0'>Deceased</option>";
-								}
-							?>
+                                <?php
+                                if(isset($_POST['motherstatus'])){
+                                    Switch ($_POST['motherstatus']){
+                                        case 1:
+                                            echo "<option value='1' selected>Normal</option>";
+                                            echo "<option value='0'>Deceased</option>";
+                                            break;
+                                        case 0:
+                                            echo "<option value='1'>Normal</option>";
+                                            echo "<option value='0' selected>Deceased</option>";
+                                            break;
+                                    }
+                                }
+                                else{
+                                    echo "<option value='1'>Normal</option>";
+                                    echo "<option value='0'>Deceased</option>";
+                                }
+                                ?>
 
-                        </select>
+                            </select>
                         </label>
 
                     </div>
@@ -1175,7 +1199,7 @@
 
                 <!-- If the member is married -->
                 <?php if($rowCiv['CIV_STATUS'] == 2){
-                echo"
+                    echo"
 
                     <div class='row'>
 
@@ -1212,55 +1236,55 @@
 							<option value=''>Select Month</option>
                                 <option value=''> ----- </option>
 					";
-                                
-								if(isset($_POST['spousemonth'])){
-									for($m = 1; $m <= 12; $m++){
-										$mon = null;
-										switch($m){
-											case 1:
-												$mon = "January";
-												break;
-											case 2:
-												$mon = "February";
-												break;
-											case 3:
-												$mon = "March";
-												break;
-											case 4:
-												$mon = "April";
-												break;
-											case 5:
-												$mon = "May";
-												break;
-											case 6:
-												$mon = "June";
-												break;
-											case 7:
-												$mon = "July";
-												break;
-											case 8:
-												$mon = "August";
-												break;
-											case 9:
-												$mon = "September";
-												break;
-											case 10:
-												$mon = "October";
-												break;
-											case 11:
-												$mon = "November";
-												break;
-											case 12:
-												$mon = "December";
-												break;
-										}
-										if($m == $_POST['spousemonth']) echo "<option value='". $m ."' selected>". $mon ."</option>";
-										else echo "<option value='". $m ."'>". $mon ."</option>";
-									}
-									
-								}
-								else {
-									echo"
+
+                    if(isset($_POST['spousemonth'])){
+                        for($m = 1; $m <= 12; $m++){
+                            $mon = null;
+                            switch($m){
+                                case 1:
+                                    $mon = "January";
+                                    break;
+                                case 2:
+                                    $mon = "February";
+                                    break;
+                                case 3:
+                                    $mon = "March";
+                                    break;
+                                case 4:
+                                    $mon = "April";
+                                    break;
+                                case 5:
+                                    $mon = "May";
+                                    break;
+                                case 6:
+                                    $mon = "June";
+                                    break;
+                                case 7:
+                                    $mon = "July";
+                                    break;
+                                case 8:
+                                    $mon = "August";
+                                    break;
+                                case 9:
+                                    $mon = "September";
+                                    break;
+                                case 10:
+                                    $mon = "October";
+                                    break;
+                                case 11:
+                                    $mon = "November";
+                                    break;
+                                case 12:
+                                    $mon = "December";
+                                    break;
+                            }
+                            if($m == $_POST['spousemonth']) echo "<option value='". $m ."' selected>". $mon ."</option>";
+                            else echo "<option value='". $m ."'>". $mon ."</option>";
+                        }
+
+                    }
+                    else {
+                        echo"
 										<option value='1'>January</option>
 										<option value='2'>February</option>
 										<option value='3'>March</option>
@@ -1274,8 +1298,8 @@
 										<option value='11'>November</option>
 										<option value='12'>December</option>
 									";
-								}
-				echo "
+                    }
+                    echo "
                             </select>
                             </label>
 
@@ -1285,14 +1309,14 @@
                                 <option value=''>Select Day</option>
                                 <option value=''> ----- </option>
                 ";?>
-                            <?php for($x = 1; $x <= 31; $x++) { 
-								if(isset($_POST['spouseday']) && $x == $_POST['spouseday']){
-									echo "<option value='". $x ."' selected>". $x ."</option>";
-								}
-								else echo "<option value='". $x ."'>". $x ."</option>";
-                             } 
-							?>
-                <?php echo"
+                    <?php for($x = 1; $x <= 31; $x++) {
+                        if(isset($_POST['spouseday']) && $x == $_POST['spouseday']){
+                            echo "<option value='". $x ."' selected>". $x ."</option>";
+                        }
+                        else echo "<option value='". $x ."'>". $x ."</option>";
+                    }
+                    ?>
+                    <?php echo"
                             </select>
                             </label>
 
@@ -1302,16 +1326,16 @@
                                 <option value=''>Select Year</option>
                                 <option value=''> ----- </option>
                 ";?>
-                            <?php for($y = date("Y"); $y >= 1900; $y--) { 
-							
-								if(isset($_POST['spouseyear']) && $x == $_POST['spouseyear']){
-									echo "<option value='". $y ."' selected>". $y ."</option>";
-								}
-								else echo "<option value='". $y ."'>". $y ."</option>";
-                                
-							}
-                            ?>
-                <?php echo"
+                    <?php for($y = date("Y"); $y >= 1900; $y--) {
+
+                        if(isset($_POST['spouseyear']) && $x == $_POST['spouseyear']){
+                            echo "<option value='". $y ."' selected>". $y ."</option>";
+                        }
+                        else echo "<option value='". $y ."'>". $y ."</option>";
+
+                    }
+                    ?>
+                    <?php echo"
                             </select>
                             </label>
 
@@ -1319,25 +1343,25 @@
                             <p class='dbirthlabel'>Spouse's Status</p>
                             <select name='spousestatus' class='form-control datedropdown health'>
 				";
-                        
-								if(isset($_POST['spousestatus'])){
-									Switch ($_POST['spousestatus']){
-										case 1:
-											echo "<option value='1' selected>Normal</option>";
-											echo "<option value='0'>Deceased</option>";
-											break;
-										case 0:
-											echo "<option value='1'>Normal</option>";
-											echo "<option value='0' selected>Deceased</option>";
-											break;
-									}
-								}
-								else{
-									echo "<option value='1'>Normal</option>";
-									echo "<option value='0'>Deceased</option>";
-								}
-		
-				echo"
+
+                    if(isset($_POST['spousestatus'])){
+                        Switch ($_POST['spousestatus']){
+                            case 1:
+                                echo "<option value='1' selected>Normal</option>";
+                                echo "<option value='0'>Deceased</option>";
+                                break;
+                            case 0:
+                                echo "<option value='1'>Normal</option>";
+                                echo "<option value='0' selected>Deceased</option>";
+                                break;
+                        }
+                    }
+                    else{
+                        echo "<option value='1'>Normal</option>";
+                        echo "<option value='0'>Deceased</option>";
+                    }
+
+                    echo"
                             </select>
                             </label>
 
@@ -1366,97 +1390,97 @@
 
                         <p>
 
-                        <input type="checkbox" name="hasChild" value="1"> I don't have children<p>
+                            <input type="checkbox" name="hasChild" value="1"> I don't have children<p>
 
                     </div>
 
                 </div>
 
                 <div id="childform">
-                <div class="childfields">
+                    <div class="childfields">
 
-                <div class="row">
+                        <div class="row">
 
-                    <div class="col-lg-12">
+                            <div class="col-lg-12">
 
-                        <label>
-                        <span class="labelspan">Children's First Name<big class="req"> *</big></span>
-                        <input type="text" class="form-control memname" placeholder="Name" name="childfirst[]" value="<?php if (isset($_POST['childfirst[]'])) {echo $_POST['childfirst[]'];}?> ">
-                        </label>
+                                <label>
+                                    <span class="labelspan">Children's First Name<big class="req"> *</big></span>
+                                    <input type="text" class="form-control memname" placeholder="Name" name="childfirst[]" value="<?php if (isset($_POST['childfirst[]'])) {echo $_POST['childfirst[]'];}?> ">
+                                </label>
 
-                        <label>
-                        <span class="labelspan">Children's Last Name<big class="req"> *</big></span>
-                        <input type="text" class="form-control memname" placeholder="Name" name="childlast[]" value="<?php if (isset($_POST['childlast[]'])) {echo $_POST['childlast[]'];}?> ">
-                        </label>
+                                <label>
+                                    <span class="labelspan">Children's Last Name<big class="req"> *</big></span>
+                                    <input type="text" class="form-control memname" placeholder="Name" name="childlast[]" value="<?php if (isset($_POST['childlast[]'])) {echo $_POST['childlast[]'];}?> ">
+                                </label>
 
-                        <label>
-                        <span class="labelspan">Children's Middle Name<big class="req"> *</big></span>
-                        <input type="text" class="form-control memname" placeholder="Name" name="childmiddle[]" value="<?php if (isset($_POST['childmiddle[]'])) {echo $_POST['childmiddle[]'];}?> ">
-                        </label>
+                                <label>
+                                    <span class="labelspan">Children's Middle Name<big class="req"> *</big></span>
+                                    <input type="text" class="form-control memname" placeholder="Name" name="childmiddle[]" value="<?php if (isset($_POST['childmiddle[]'])) {echo $_POST['childmiddle[]'];}?> ">
+                                </label>
 
-                    </div>
+                            </div>
 
-                </div>
+                        </div>
 
-                <div class="row">
+                        <div class="row">
 
-                    <div class="col-lg-12">
+                            <div class="col-lg-12">
 
-                        <label>
-                        <p class="dbirthlabel"><b>Date of Birth</b></p>
-                        <select name="childmonth[]" class="form-control datedropdown health">
+                                <label>
+                                    <p class="dbirthlabel"><b>Date of Birth</b></p>
+                                    <select name="childmonth[]" class="form-control datedropdown health">
 
-                            <option value="">Select Month</option>
-                            <option value=""> ----- </option>
-                            <?php
-								if(isset($_POST['childmonth'])){
-									for($m = 1; $m <= 12; $m++){
-										$mon = null;
-										switch($m){
-											case 1:
-												$mon = "January";
-												break;
-											case 2:
-												$mon = "February";
-												break;
-											case 3:
-												$mon = "March";
-												break;
-											case 4:
-												$mon = "April";
-												break;
-											case 5:
-												$mon = "May";
-												break;
-											case 6:
-												$mon = "June";
-												break;
-											case 7:
-												$mon = "July";
-												break;
-											case 8:
-												$mon = "August";
-												break;
-											case 9:
-												$mon = "September";
-												break;
-											case 10:
-												$mon = "October";
-												break;
-											case 11:
-												$mon = "November";
-												break;
-											case 12:
-												$mon = "December";
-												break;
-										}
-										if($m == $_POST['childmonth']) echo "<option value='". $m ."' selected>". $mon ."</option>";
-										else echo "<option value='". $m ."'>". $mon ."</option>";
-									}
-									
-								}
-								else {
-									echo"
+                                        <option value="">Select Month</option>
+                                        <option value=""> ----- </option>
+                                        <?php
+                                        if(isset($_POST['childmonth'])){
+                                            for($m = 1; $m <= 12; $m++){
+                                                $mon = null;
+                                                switch($m){
+                                                    case 1:
+                                                        $mon = "January";
+                                                        break;
+                                                    case 2:
+                                                        $mon = "February";
+                                                        break;
+                                                    case 3:
+                                                        $mon = "March";
+                                                        break;
+                                                    case 4:
+                                                        $mon = "April";
+                                                        break;
+                                                    case 5:
+                                                        $mon = "May";
+                                                        break;
+                                                    case 6:
+                                                        $mon = "June";
+                                                        break;
+                                                    case 7:
+                                                        $mon = "July";
+                                                        break;
+                                                    case 8:
+                                                        $mon = "August";
+                                                        break;
+                                                    case 9:
+                                                        $mon = "September";
+                                                        break;
+                                                    case 10:
+                                                        $mon = "October";
+                                                        break;
+                                                    case 11:
+                                                        $mon = "November";
+                                                        break;
+                                                    case 12:
+                                                        $mon = "December";
+                                                        break;
+                                                }
+                                                if($m == $_POST['childmonth']) echo "<option value='". $m ."' selected>". $mon ."</option>";
+                                                else echo "<option value='". $m ."'>". $mon ."</option>";
+                                            }
+
+                                        }
+                                        else {
+                                            echo"
 										<option value='1'>January</option>
 										<option value='2'>February</option>
 										<option value='3'>March</option>
@@ -1470,71 +1494,71 @@
 										<option value='11'>November</option>
 										<option value='12'>December</option>
 									";
-								}
-							?>
+                                        }
+                                        ?>
 
-                        </select>
-                        </label>
+                                    </select>
+                                </label>
 
-                        <label>
-                        <select name="childday[]" class="form-control datedropdown health">
+                                <label>
+                                    <select name="childday[]" class="form-control datedropdown health">
 
-                            <option value="">Select Day</option>
-                            <option value=""> ----- </option>
+                                        <option value="">Select Day</option>
+                                        <option value=""> ----- </option>
 
-                             <?php for($x = 1; $x <= 31; $x++) { 
-								if(isset($_POST['childday']) && $x == $_POST['childday']){
-									echo "<option value='". $x ."' selected>". $x ."</option>";
-								}
-								else echo "<option value='". $x ."'>". $x ."</option>";
-                             } 
-							?>
+                                        <?php for($x = 1; $x <= 31; $x++) {
+                                            if(isset($_POST['childday']) && $x == $_POST['childday']){
+                                                echo "<option value='". $x ."' selected>". $x ."</option>";
+                                            }
+                                            else echo "<option value='". $x ."'>". $x ."</option>";
+                                        }
+                                        ?>
 
-                        </select>
-                        </label>
+                                    </select>
+                                </label>
 
-                        <label class="yeardrop">
-                        <select name="childyear[]" class="form-control datedropdown health">
+                                <label class="yeardrop">
+                                    <select name="childyear[]" class="form-control datedropdown health">
 
-                            <option value="">Select Year</option>
-                            <option value=""> ----- </option>
+                                        <option value="">Select Year</option>
+                                        <option value=""> ----- </option>
 
-                            <?php for($y = date("Y"); $y >= 1900; $y--) { 
-							
-								if(isset($_POST['childyear']) && $x == $_POST['childyear']){
-									echo "<option value='". $y ."' selected>". $y ."</option>";
-								}
-								else echo "<option value='". $y ."'>". $y ."</option>";
-                                
-							}
-                            ?>
+                                        <?php for($y = date("Y"); $y >= 1900; $y--) {
 
-                        </select>
-                        </label>
+                                            if(isset($_POST['childyear']) && $x == $_POST['childyear']){
+                                                echo "<option value='". $y ."' selected>". $y ."</option>";
+                                            }
+                                            else echo "<option value='". $y ."'>". $y ."</option>";
 
-                        <label class="yeardrop">
-                        <p class="dbirthlabel">Children's Sex</p>
-                        <select name="childsex[]" class="form-control datedropdown health">
+                                        }
+                                        ?>
 
-                            <option value="1">Male</option>
-                            <option value="2">Female</option>
+                                    </select>
+                                </label>
 
-                        </select>
-                        </label>
+                                <label class="yeardrop">
+                                    <p class="dbirthlabel">Children's Sex</p>
+                                    <select name="childsex[]" class="form-control datedropdown health">
 
-                        <label class="yeardrop">
-                        <p class="dbirthlabel">Children's Status</p>
-                        <select name="childstatus[]" class="form-control datedropdown health">
+                                        <option value="1">Male</option>
+                                        <option value="0">Female</option>
 
-                            <option value="1" selected>Normal</option>
-                            <option value="0">Deceased</option>
+                                    </select>
+                                </label>
 
-                        </select>
-                        </label>
+                                <label class="yeardrop">
+                                    <p class="dbirthlabel">Children's Status</p>
+                                    <select name="childstatus[]" class="form-control datedropdown health">
 
-                    </div>
+                                        <option value="1" selected>Normal</option>
+                                        <option value="0">Deceased</option>
 
-                    </div>
+                                    </select>
+                                </label>
+
+                            </div>
+
+                        </div>
                     </div>
 
                 </div>
@@ -1548,11 +1572,11 @@
 
                     </div>
 
-               </div>
+                </div>
 
-               <hr>
+                <hr>
 
-               <div class="row">
+                <div class="row">
 
                     <div class="col-lg-12">
 
@@ -1570,97 +1594,97 @@
 
                         <p>
 
-                        <input type="checkbox" name="hasSibling" value="1"> I don't have siblings<p>
+                            <input type="checkbox" name="hasSibling" value="1"> I don't have siblings<p>
 
                     </div>
 
                 </div>
 
                 <div id="siblingform">
-                <div class="siblingfields">
+                    <div class="siblingfields">
 
-                <div class="row">
+                        <div class="row">
 
-                    <div class="col-lg-12">
+                            <div class="col-lg-12">
 
-                        <label>
-                        <span class="labelspan">Sibling's First Name<big class="req"> *</big></span>
-                        <input type="text" class="form-control memname" placeholder="Name" name="siblingfirst[]" value="<?php if (isset($_POST['siblingfirst[]'])) {echo $_POST['siblingfirst[]'];}?> ">
-                        </label>
+                                <label>
+                                    <span class="labelspan">Sibling's First Name<big class="req"> *</big></span>
+                                    <input type="text" class="form-control memname" placeholder="Name" name="siblingfirst[]" value="<?php if (isset($_POST['siblingfirst[]'])) {echo $_POST['siblingfirst[]'];}?> ">
+                                </label>
 
-                        <label>
-                        <span class="labelspan">Sibling's Last Name<big class="req"> *</big></span>
-                        <input type="text" class="form-control memname" placeholder="Name" name="siblinglast[]" value="<?php if (isset($_POST['siblinglast[]'])) {echo $_POST['siblinglast[]'];}?> ">
-                        </label>
+                                <label>
+                                    <span class="labelspan">Sibling's Last Name<big class="req"> *</big></span>
+                                    <input type="text" class="form-control memname" placeholder="Name" name="siblinglast[]" value="<?php if (isset($_POST['siblinglast[]'])) {echo $_POST['siblinglast[]'];}?> ">
+                                </label>
 
-                        <label>
-                        <span class="labelspan">Sibling's Middle Name<big class="req"> *</big></span>
-                        <input type="text" class="form-control memname" placeholder="Name" name="siblingmiddle[]" value="<?php if (isset($_POST['siblingmiddle[]'])) {echo $_POST['siblingmiddle[]'];}?> ">
-                        </label>
+                                <label>
+                                    <span class="labelspan">Sibling's Middle Name<big class="req"> *</big></span>
+                                    <input type="text" class="form-control memname" placeholder="Name" name="siblingmiddle[]" value="<?php if (isset($_POST['siblingmiddle[]'])) {echo $_POST['siblingmiddle[]'];}?> ">
+                                </label>
 
-                    </div>
+                            </div>
 
-                </div>
+                        </div>
 
-                <div class="row">
+                        <div class="row">
 
-                    <div class="col-lg-12">
+                            <div class="col-lg-12">
 
-                        <label>
-                        <p class="dbirthlabel"><b>Date of Birth</b></p>
-                        <select name="siblingmonth[]" class="form-control datedropdown health">
+                                <label>
+                                    <p class="dbirthlabel"><b>Date of Birth</b></p>
+                                    <select name="siblingmonth[]" class="form-control datedropdown health">
 
-                            <option value="">Select Month</option>
-                            <option value=""> ----- </option>
-                            <?php
-								if(isset($_POST['siblingmonth'])){
-									for($m = 1; $m <= 12; $m++){
-										$mon = null;
-										switch($m){
-											case 1:
-												$mon = "January";
-												break;
-											case 2:
-												$mon = "February";
-												break;
-											case 3:
-												$mon = "March";
-												break;
-											case 4:
-												$mon = "April";
-												break;
-											case 5:
-												$mon = "May";
-												break;
-											case 6:
-												$mon = "June";
-												break;
-											case 7:
-												$mon = "July";
-												break;
-											case 8:
-												$mon = "August";
-												break;
-											case 9:
-												$mon = "September";
-												break;
-											case 10:
-												$mon = "October";
-												break;
-											case 11:
-												$mon = "November";
-												break;
-											case 12:
-												$mon = "December";
-												break;
-										}
-										if($m == $_POST['siblingmonth']) echo "<option value='". $m ."' selected>". $mon ."</option>";
-										else echo "<option value='". $m ."'>". $mon ."</option>";
-									}
-									
-								}
-								else {
-									echo"
+                                        <option value="">Select Month</option>
+                                        <option value=""> ----- </option>
+                                        <?php
+                                        if(isset($_POST['siblingmonth'])){
+                                            for($m = 1; $m <= 12; $m++){
+                                                $mon = null;
+                                                switch($m){
+                                                    case 1:
+                                                        $mon = "January";
+                                                        break;
+                                                    case 2:
+                                                        $mon = "February";
+                                                        break;
+                                                    case 3:
+                                                        $mon = "March";
+                                                        break;
+                                                    case 4:
+                                                        $mon = "April";
+                                                        break;
+                                                    case 5:
+                                                        $mon = "May";
+                                                        break;
+                                                    case 6:
+                                                        $mon = "June";
+                                                        break;
+                                                    case 7:
+                                                        $mon = "July";
+                                                        break;
+                                                    case 8:
+                                                        $mon = "August";
+                                                        break;
+                                                    case 9:
+                                                        $mon = "September";
+                                                        break;
+                                                    case 10:
+                                                        $mon = "October";
+                                                        break;
+                                                    case 11:
+                                                        $mon = "November";
+                                                        break;
+                                                    case 12:
+                                                        $mon = "December";
+                                                        break;
+                                                }
+                                                if($m == $_POST['siblingmonth']) echo "<option value='". $m ."' selected>". $mon ."</option>";
+                                                else echo "<option value='". $m ."'>". $mon ."</option>";
+                                            }
+
+                                        }
+                                        else {
+                                            echo"
 										<option value='1'>January</option>
 										<option value='2'>February</option>
 										<option value='3'>March</option>
@@ -1674,73 +1698,73 @@
 										<option value='11'>November</option>
 										<option value='12'>December</option>
 									";
-								}
-							?>
+                                        }
+                                        ?>
 
-                        </select>
-                        </label>
+                                    </select>
+                                </label>
 
-                        <label>
-                        <select name="siblingday[]" class="form-control datedropdown health">
+                                <label>
+                                    <select name="siblingday[]" class="form-control datedropdown health">
 
-                            <option value="">Select Day</option>
-                            <option value=""> ----- </option>
+                                        <option value="">Select Day</option>
+                                        <option value=""> ----- </option>
 
-                            <?php for($x = 1; $x <= 31; $x++) { 
-								if(isset($_POST['siblingday']) && $x == $_POST['siblingday']){
-									echo "<option value='". $x ."' selected>". $x ."</option>";
-								}
-								else echo "<option value='". $x ."'>". $x ."</option>";
-                             } 
-							?>
+                                        <?php for($x = 1; $x <= 31; $x++) {
+                                            if(isset($_POST['siblingday']) && $x == $_POST['siblingday']){
+                                                echo "<option value='". $x ."' selected>". $x ."</option>";
+                                            }
+                                            else echo "<option value='". $x ."'>". $x ."</option>";
+                                        }
+                                        ?>
 
-                        </select>
-                        </label>
+                                    </select>
+                                </label>
 
-                        <label class="yeardrop">
-                        <select name="siblingyear[]" class="form-control datedropdown health">
-						
-							<option value="">Select Year</option>
-                            <option value=""> ----- </option>
-						
-                            <?php for($y = date("Y"); $y >= 1900; $y--) { 
-							
-								if(isset($_POST['siblingyear']) && $x == $_POST['siblingyear']){
-									echo "<option value='". $y ."' selected>". $y ."</option>";
-								}
-								else echo "<option value='". $y ."'>". $y ."</option>";
-                                
-							}
-                            ?>
+                                <label class="yeardrop">
+                                    <select name="siblingyear[]" class="form-control datedropdown health">
 
-                        </select>
-                        </label>
+                                        <option value="">Select Year</option>
+                                        <option value=""> ----- </option>
 
-                        <label class="yeardrop">
-                        <p class="dbirthlabel">Sibling's Sex</p>
-                        <select name="siblingsex[]" class="form-control datedropdown health">
+                                        <?php for($y = date("Y"); $y >= 1900; $y--) {
 
-                            <option value="1">Male</option>
-                            <option value="2">Female</option>
+                                            if(isset($_POST['siblingyear']) && $x == $_POST['siblingyear']){
+                                                echo "<option value='". $y ."' selected>". $y ."</option>";
+                                            }
+                                            else echo "<option value='". $y ."'>". $y ."</option>";
 
-                        </select>
-                        </label>
+                                        }
+                                        ?>
 
-                        <label class="yeardrop">
-                        <p class="dbirthlabel">Sibling's Status</p>
-                        <select name="siblingstatus[]" class="form-control datedropdown health">
+                                    </select>
+                                </label>
 
-                            <option value="1" selected>Normal</option>
-                            <option value="0">Deceased</option>
+                                <label class="yeardrop">
+                                    <p class="dbirthlabel">Sibling's Sex</p>
+                                    <select name="siblingsex[]" class="form-control datedropdown health">
 
-                        </select>
-                        </label>
+                                        <option value="1">Male</option>
+                                        <option value="0">Female</option>
+
+                                    </select>
+                                </label>
+
+                                <label class="yeardrop">
+                                    <p class="dbirthlabel">Sibling's Status</p>
+                                    <select name="siblingstatus[]" class="form-control datedropdown health">
+
+                                        <option value="1" selected>Normal</option>
+                                        <option value="0">Deceased</option>
+
+                                    </select>
+                                </label>
+
+                            </div>
+
+                        </div>
 
                     </div>
-
-                </div>
-
-                </div>
                 </div>
 
                 <div class="row">
@@ -1752,7 +1776,7 @@
 
                     </div>
 
-               </div>
+                </div>
 
                 <div class="row">
 
@@ -1769,95 +1793,95 @@
 
             </form>
 
-            </div>
-            <!-- /.container-fluid -->
-
         </div>
-        <!-- /#page-wrapper -->
+        <!-- /.container-fluid -->
 
     </div>
-    <!-- /#wrapper -->
+    <!-- /#page-wrapper -->
 
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
+</div>
+<!-- /#wrapper -->
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+<!-- jQuery -->
+<script src="js/jquery.js"></script>
 
-            <script>
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
 
-            $(document).ready(function(){
+<script>
 
-                var iS = 1;
-                var iC = 1;
-                var sibfields = $('.siblingfields:first');
-                var childfields = $('.childfields:first');
+    $(document).ready(function(){
 
-                /* adding child and sibling fields */
+        var iS = 1;
+        var iC = 1;
+        var sibfields = $('.siblingfields:first');
+        var childfields = $('.childfields:first');
 
-                $('body').on('click', '.addsibling', function() {
+        /* adding child and sibling fields */
 
-                    iS++;
+        $('body').on('click', '.addsibling', function() {
 
-                    var section = sibfields.clone().find(':input').each(function() {
+            iS++;
 
-                        var newId = this.id + iS;
+            var section = sibfields.clone().find(':input').each(function() {
 
-                        this.id = newId;
+                var newId = this.id + iS;
 
-                    }).end().appendTo('#siblingform');
+                this.id = newId;
 
-                    return false;
+            }).end().appendTo('#siblingform');
 
-                });
+            return false;
 
-                $('body').on('click', '.addchild', function() {
+        });
 
-                    iC++;
+        $('body').on('click', '.addchild', function() {
 
-                    var section2 = childfields.clone().find(':input').each(function() {
+            iC++;
 
-                        var newId2 = this.id + iC;
+            var section2 = childfields.clone().find(':input').each(function() {
 
-                        this.id = newId2;
+                var newId2 = this.id + iC;
 
-                    }).end().appendTo('#childform');
+                this.id = newId2;
 
-                    return false;
+            }).end().appendTo('#childform');
 
-                });
+            return false;
 
-                /* removing child and sibling fields */
+        });
 
-                $('#siblingform').on('click', '.removesibling', function() {
+        /* removing child and sibling fields */
 
-                    $this.parent().fadeOut(300, function() {
+        $('#siblingform').on('click', '.removesibling', function() {
 
-                        $(this).parent().parent().empty();
-                        return false;
+            $this.parent().fadeOut(300, function() {
 
-                    });
-
-                    return false;
-
-                });
-
-                $('#childform').on('click', '.removechild', function() {
-
-                    $this.parent().fadeOut(300, function() {
-
-                        $(this).parent().parent().empty();
-                        return false;
-
-                    });
-
-                    return false;
-
-                });
+                $(this).parent().parent().empty();
+                return false;
 
             });
 
-        </script>
+            return false;
+
+        });
+
+        $('#childform').on('click', '.removechild', function() {
+
+            $this.parent().fadeOut(300, function() {
+
+                $(this).parent().parent().empty();
+                return false;
+
+            });
+
+            return false;
+
+        });
+
+    });
+
+</script>
 
 </body>
 

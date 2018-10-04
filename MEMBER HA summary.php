@@ -39,6 +39,24 @@
         
     }
 
+    $query = "SELECT app_status FROM health_aid
+                                        
+                        WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
+
+    $result = mysqli_query($dbc, $query);
+    $row = mysqli_fetch_array($result);
+
+    //checks if you have not applied for one yet.
+    if(empty($row)){
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
+
+    }else if($row['APP_STATUS'] = 1){
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA appsent.php");
+
+    }
+
 ?>
 <body>
 
@@ -195,9 +213,6 @@
                                 <a href="MEMBER FALP summary.php"><i class="fa fa-institution" aria-hidden="true"></i>&nbsp;&nbsp;FALP Loan</a>
                             </li>
 
-                            <li>
-                                <a href="MEMBER BANKLOAN summary.php"><i class="fa fa-dollar" aria-hidden="true"></i>&nbsp;&nbsp;Bank Loan</a>
-                            </li>
 
                         </ul>
 
@@ -213,9 +228,6 @@
                                 <a href="MEMBER HA summary.php"><i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;&nbsp;Health Aid Summary</a>
                             </li>
 
-                            <li>
-                                <a href="MEMBER LIFETIME summary.php"><i class="fa fa-handshake-o" aria-hidden="true"></i>&nbsp;&nbsp;Lifetime Membership Summary</a>
-                            </li>
 
                         </ul>
 
@@ -231,6 +243,8 @@
                 </ul>
 
             </div>
+            <!-- /.navbar-collapse -->
+        </nav>
             <!-- /.navbar-collapse -->
         </nav>
 
@@ -311,270 +325,313 @@
 
                             </div>
 
+                            <?php
+                                $query = "SELECT * FROM FATHER WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
+                                $result = mysqli_query($dbc, $query);
+                                $row = mysqli_fetch_array($result);
+
+                                $today = date("Y-m-d");
+                                $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
+                                $diff->format('%y'); //Displays computed age
+
+                                if(!empty($row)){
+                            ?>
+
                             <div class="col-lg-10 col-2">
 
-                                    <div class="panel panel-primary">
+                                <div class="panel panel-primary">
 
-                                        <div class="panel-heading">
+                                    <div class="panel-heading">
 
-                                            Father's Information
-
-                                        </div>
-
-                                        <div class="panel-body">
-
-                                            <table class="table table-bordered">
-                                
-                                                <thread>
-
-                                                    <tr>
-
-                                                    <td align="center"><b>Name</b></td>
-                                                    <td align="center"><b>Age</b></td>
-                                                    <td align="center"><b>Birthday</b></td>
-
-                                                    </tr>
-
-                                                </thread>
-
-                                                <tbody>
-
-                                                    <tr>
-                                                    <?php 
-                                                        $query = "SELECT * FROM FATHER WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
-                                                        $result = mysqli_query($dbc, $query);
-                                                        $row = mysqli_fetch_array($result);
-
-                                                        $today = date("Y-m-d");
-                                                        $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
-                                                        $diff->format('%y'); //Displays computed age
-                                                    ?>
-                                                    <td align="center"><?php echo $row['FIRSTNAME']. " ". $row['LASTNAME']; ?></td>
-                                                    <td align="center"><?php echo $diff->format('%y'); ?></td>
-                                                    <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
-
-                                                    </tr>
-
-                                                </tbody>
-
-                                            </table>
-
-                                        </div>
+                                        Father's Information
 
                                     </div>
 
-                                    <div class="panel panel-primary">
+                                    <div class="panel-body">
 
-                                        <div class="panel-heading">
+                                        <table class="table table-bordered">
 
-                                            Mother's Information
+                                            <thread>
 
-                                        </div>
-
-                                        <div class="panel-body">
-
-                                            <table class="table table-bordered">
-                                
-                                                <thread>
-
-                                                    <tr>
+                                                <tr>
 
                                                     <td align="center"><b>Name</b></td>
                                                     <td align="center"><b>Age</b></td>
                                                     <td align="center"><b>Birthday</b></td>
 
-                                                    </tr>
+                                                </tr>
 
-                                                </thread>
+                                            </thread>
 
-                                                <tbody>
+                                            <tbody>
 
-                                                    <tr>
+                                            <tr>
 
-                                                    <?php 
-                                                        $query = "SELECT * FROM MOTHER WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
-                                                        $result = mysqli_query($dbc, $query);
-                                                        $row = mysqli_fetch_array($result);
+                                                <td align="center"><?php echo $row['FIRSTNAME'] . " " . $row['LASTNAME']; ?></td>
+                                                <td align="center"><?php echo $diff->format('%y'); ?></td>
+                                                <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
 
-                                                        $today = date("Y-m-d");
-                                                        $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
-                                                        $diff->format('%y');
-                                                    ?>
-                                                    <td align="center"><?php echo $row['FIRSTNAME']. " ". $row['LASTNAME']; ?></td>
-                                                    <td align="center"><?php echo $diff->format('%y'); ?></td>
-                                                    <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
+                                            </tr>
 
-                                                    </tr>
+                                            </tbody>
 
-                                                </tbody>
-
-                                            </table>
-
-                                        </div>
+                                        </table>
 
                                     </div>
 
-                                    <div class="panel panel-primary">
+                                </div>
+                                <?php
+                                }
+                                ?>
 
-                                        <div class="panel-heading">
 
-                                            Spouse's Information
+                                <?php
 
-                                        </div>
+                                    $query = "SELECT * FROM MOTHER WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
+                                    $result = mysqli_query($dbc, $query);
+                                    $row = mysqli_fetch_array($result);
 
-                                        <div class="panel-body">
+                                    $today = date("Y-m-d");
+                                    $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
+                                    $diff->format('%y');
 
-                                            <table class="table table-bordered">
-                                
-                                                <thread>
+                                    if(!empty($row)) {
+                                        ?>
+
+
+                                        <div class="panel panel-primary">
+
+                                            <div class="panel-heading">
+
+                                                Mother's Information
+
+                                            </div>
+
+                                            <div class="panel-body">
+
+                                                <table class="table table-bordered">
+
+                                                    <thread>
+
+                                                        <tr>
+
+                                                            <td align="center"><b>Name</b></td>
+                                                            <td align="center"><b>Age</b></td>
+                                                            <td align="center"><b>Birthday</b></td>
+
+                                                        </tr>
+
+                                                    </thread>
+
+                                                    <tbody>
 
                                                     <tr>
 
-                                                    <td align="center"><b>Name</b></td>
-                                                    <td align="center"><b>Age</b></td>
-                                                    <td align="center"><b>Birthday</b></td>
+
+                                                        <td align="center"><?php echo $row['FIRSTNAME'] . " " . $row['LASTNAME']; ?></td>
+                                                        <td align="center"><?php echo $diff->format('%y'); ?></td>
+                                                        <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
 
                                                     </tr>
 
-                                                </thread>
+                                                    </tbody>
 
-                                                <tbody>
+                                                </table>
+
+                                            </div>
+
+                                        </div>
+                                        <?php
+                                    }
+                                ?>
+
+                                <?php
+                                    $query = "SELECT * FROM SPOUSE WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
+                                    $result = mysqli_query($dbc, $query);
+                                    $row = mysqli_fetch_array($result);
+
+                                    $today = date("Y-m-d");
+                                    $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
+
+                                    if(!empty($row)) {
+                                        ?>
+
+                                        <div class="panel panel-primary">
+
+                                            <div class="panel-heading">
+
+                                                Spouse's Information
+
+                                            </div>
+
+                                            <div class="panel-body">
+
+                                                <table class="table table-bordered">
+
+                                                    <thread>
+
+                                                        <tr>
+
+                                                            <td align="center"><b>Name</b></td>
+                                                            <td align="center"><b>Age</b></td>
+                                                            <td align="center"><b>Birthday</b></td>
+
+                                                        </tr>
+
+                                                    </thread>
+
+                                                    <tbody>
 
                                                     <tr>
 
-                                                    <?php 
-                                                        $query = "SELECT * FROM SPOUSE WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
-                                                        $result = mysqli_query($dbc, $query);
-                                                        $row = mysqli_fetch_array($result);
 
-                                                        $today = date("Y-m-d");
-                                                        $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
-                                                    ?>
-                                                    <td align="center"><?php echo $row['FIRSTNAME']. " ". $row['LASTNAME']; ?></td>
-                                                    <td align="center"><?php echo $diff->format('%y'); ?></td>
-                                                    <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
+                                                        <td align="center"><?php echo $row['FIRSTNAME'] . " " . $row['LASTNAME']; ?></td>
+                                                        <td align="center"><?php echo $diff->format('%y'); ?></td>
+                                                        <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
 
                                                     </tr>
 
-                                                </tbody>
+                                                    </tbody>
 
-                                            </table>
+                                                </table>
 
-                                        </div>
-
-                                    </div>
-
-                                    <div class="panel panel-primary">
-
-                                        <div class="panel-heading">
-
-                                            Sibling's Information
+                                            </div>
 
                                         </div>
+                                        <?php
+                                    }
+                                ?>
 
-                                        <div class="panel-body">
+                                <?php
+                                    $query = "SELECT * FROM SIBLINGS WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
+                                    $result = mysqli_query($dbc, $query);
 
-                                            <table class="table table-bordered">
-                                
-                                                <thread>
+                                    if(!empty($result)) {
+                                        ?>
+
+
+                                        <div class="panel panel-primary">
+
+                                            <div class="panel-heading">
+
+                                                Sibling's Information
+
+                                            </div>
+
+                                            <div class="panel-body">
+
+                                                <table class="table table-bordered">
+
+                                                    <thread>
+
+                                                        <tr>
+
+                                                            <td align="center"><b>Name</b></td>
+                                                            <td align="center"><b>Age</b></td>
+                                                            <td align="center"><b>Birthday</b></td>
+
+                                                        </tr>
+
+                                                    </thread>
+
+                                                    <tbody>
 
                                                     <tr>
 
-                                                    <td align="center"><b>Name</b></td>
-                                                    <td align="center"><b>Age</b></td>
-                                                    <td align="center"><b>Birthday</b></td>
+                                                        <?php
 
-                                                    </tr>
-
-                                                </thread>
-
-                                                <tbody>
-
-                                                    <tr>
-
-                                                    <?php 
-                                                        $query = "SELECT * FROM SIBLINGS WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
-                                                        $result = mysqli_query($dbc, $query);
 
                                                         foreach ($result as $resultRow) {
                                                             $today = date("Y-m-d");
                                                             $diff = date_diff(date_create($resultRow['BIRTHDATE']), date_create($today));
 
-                                                            echo"
+                                                            echo "
                                                                 <tr>
-                                                                    <td align='center'>". $resultRow['FIRSTNAME'] ." ". $resultRow['LASTNAME'] ."</td>
-                                                                    <td align='center'>". $diff->format('%y') ."</td>
-                                                                    <td align='center'>". $resultRow['BIRTHDATE'] ."</td>
+                                                                    <td align='center'>" . $resultRow['FIRSTNAME'] . " " . $resultRow['LASTNAME'] . "</td>
+                                                                    <td align='center'>" . $diff->format('%y') . "</td>
+                                                                    <td align='center'>" . $resultRow['BIRTHDATE'] . "</td>
                                                                 </tr>
                                                             ";
                                                         }
-                                                    ?>
+                                                        ?>
 
                                                     </tr>
 
-                                                </tbody>
+                                                    </tbody>
 
-                                            </table>
+                                                </table>
 
-                                        </div>
-
-                                    </div>
-
-                                    <div class="panel panel-primary">
-
-                                        <div class="panel-heading">
-
-                                            Children's Information
+                                            </div>
 
                                         </div>
+                                        <?php
+                                    }
+                                ?>
 
-                                        <div class="panel-body">
+                                <?php
+                                    $query = "SELECT * FROM CHILDREN WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
+                                    $result = mysqli_query($dbc, $query);
 
-                                            <table class="table table-bordered">
-                                
-                                                <thread>
+                                    if(!empty($result)) {
+                                        ?>
+
+
+                                        <div class="panel panel-primary">
+
+                                            <div class="panel-heading">
+
+                                                Children's Information
+
+                                            </div>
+
+                                            <div class="panel-body">
+
+                                                <table class="table table-bordered">
+
+                                                    <thread>
+
+                                                        <tr>
+
+                                                            <td align="center"><b>Name</b></td>
+                                                            <td align="center"><b>Age</b></td>
+                                                            <td align="center"><b>Birthday</b></td>
+
+                                                        </tr>
+
+                                                    </thread>
+
+                                                    <tbody>
 
                                                     <tr>
 
-                                                    <td align="center"><b>Name</b></td>
-                                                    <td align="center"><b>Age</b></td>
-                                                    <td align="center"><b>Birthday</b></td>
-
-                                                    </tr>
-
-                                                </thread>
-
-                                                <tbody>
-
-                                                    <tr>
-
-                                                    <?php 
-                                                        $query = "SELECT * FROM CHILDREN WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
-                                                        $result = mysqli_query($dbc, $query);
+                                                        <?php
 
                                                         foreach ($result as $resultRow) {
                                                             $today = date("Y-m-d");
                                                             $diff = date_diff(date_create($resultRow['BIRTHDATE']), date_create($today));
 
-                                                            echo"
+                                                            echo "
                                                                 <tr>
-                                                                    <td align='center'>". $resultRow['FIRSTNAME'] ." ". $resultRow['LASTNAME'] ."</td>
-                                                                    <td align='center'>". $diff->format('%y') ."</td>
-                                                                    <td align='center'>". $resultRow['BIRTHDATE'] ."</td>
+                                                                    <td align='center'>" . $resultRow['FIRSTNAME'] . " " . $resultRow['LASTNAME'] . "</td>
+                                                                    <td align='center'>" . $diff->format('%y') . "</td>
+                                                                    <td align='center'>" . $resultRow['BIRTHDATE'] . "</td>
                                                                 </tr>
                                                             ";
                                                         }
-                                                    ?>
+                                                        ?>
 
                                                     </tr>
 
-                                                </tbody>
+                                                    </tbody>
 
-                                            </table>
+                                                </table>
+
+                                            </div>
 
                                         </div>
-
-                                    </div>
+                                        <?php
+                                    }
+                                ?>
 
                                 </div>
 

@@ -33,6 +33,7 @@
 <?php
 
     session_start();
+    error_reporting(null);
     require_once("mysql_connect_FA.php");
 
     if ($_SESSION['usertype'] != 1) {
@@ -239,9 +240,6 @@
                             <a href="MEMBER FALP summary.php"><i class="fa fa-institution" aria-hidden="true"></i>&nbsp;&nbsp;FALP Loan</a>
                         </li>
 
-                        <li>
-                            <a href="MEMBER BANKLOAN summary.php"><i class="fa fa-dollar" aria-hidden="true"></i>&nbsp;&nbsp;Bank Loan</a>
-                        </li>
 
                     </ul>
 
@@ -257,9 +255,6 @@
                             <a href="MEMBER HA summary.php"><i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;&nbsp;Health Aid Summary</a>
                         </li>
 
-                        <li>
-                            <a href="MEMBER LIFETIME summary.php"><i class="fa fa-handshake-o" aria-hidden="true"></i>&nbsp;&nbsp;Lifetime Membership Summary</a>
-                        </li>
 
                     </ul>
 
@@ -275,6 +270,8 @@
             </ul>
 
         </div>
+        <!-- /.navbar-collapse -->
+    </nav>
         <!-- /.navbar-collapse -->
     </nav>
 
@@ -357,7 +354,7 @@
 
                         <div align="center">
 
-                            <a href="MEMBER dashboard.php" class="btn btn-success" role="button">OK</a>
+                            <a href="MEMBER dashboard.php" class="btn btn-success" role="button">Return to Dashboard</a>
 
                         </div>
 

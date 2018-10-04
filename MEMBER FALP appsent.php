@@ -17,17 +17,24 @@ require_once('mysql_connect_FA.php');
 
     mysqli_query($dbc,$query);
 
+    //heres the code to insert into the transaction referrence (audit trail)  database.
+
     $query = "SELECT MAX(loan_ID) as 'ID' FROM LOANS WHERE MEMBER_ID = {$_SESSION['idnum']};";
 
     $result = mysqli_query($dbc,$query);
 
     $ans = mysqli_fetch_assoc($result);
 
+    $desc = "Applied for FALP"; //always change the description
 
-    $query = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE,AMOUNT,SERVICE_TYPE,TXN_DATE,LOAN_REF)
-    values({$_SESSION['idnum']},1,0,3,DATE(now()),{$ans['ID']});";
+    $amount = $_POST['amount'];
 
-    mysqli_query($dbc,$query);
+    $query2 = "INSERT INTO txn_reference(MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, LOAN_REF, SERVICE_ID)
+                             values ({$_SESSION['idnum']}, 1, {$desc}, {$amount}, DATE(now()), {$ans['ID']}, 3  )";
+    // SERVICE ID : 1 - Membership, 2 - Health Aid, 3 - FALP
+    // TXN_TYPE : 1 - Application 2 - Deduction
+    mysqli_query($dbc,$query2);
+
 
 //function for making the pathways
     function normalizePath($path)
@@ -341,6 +348,7 @@ require_once('mysql_connect_FA.php');
 
 
 
+
 ?>
 <head>
 
@@ -526,9 +534,6 @@ require_once('mysql_connect_FA.php');
                                 <a href="MEMBER FALP summary.php"><i class="fa fa-institution" aria-hidden="true"></i>&nbsp;&nbsp;FALP Loan</a>
                             </li>
 
-                            <li>
-                                <a href="MEMBER BANKLOAN summary.php"><i class="fa fa-dollar" aria-hidden="true"></i>&nbsp;&nbsp;Bank Loan</a>
-                            </li>
 
                         </ul>
 
@@ -544,9 +549,6 @@ require_once('mysql_connect_FA.php');
                                 <a href="MEMBER HA summary.php"><i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;&nbsp;Health Aid Summary</a>
                             </li>
 
-                            <li>
-                                <a href="MEMBER LIFETIME summary.php"><i class="fa fa-handshake-o" aria-hidden="true"></i>&nbsp;&nbsp;Lifetime Membership Summary</a>
-                            </li>
 
                         </ul>
 
