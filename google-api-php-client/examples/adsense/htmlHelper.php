@@ -194,7 +194,7 @@ function generateChartHtml($data, $columns, $type, $options) {
     <div id="vis_div" style="width: 600px; height: 400px;"></div>
     <script type="text/javascript">
       var data = new google.visualization.DataTable();
-      $columnsHtml
+      $columnsHtml;
       data.addRows($data);
       var wrapper = new google.visualization.ChartWrapper({
         chartType: '$type',

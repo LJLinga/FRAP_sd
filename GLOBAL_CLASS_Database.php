@@ -6,13 +6,13 @@
  * Date: 10/10/2018
  * Time: 4:59 PM
  */
-class DB_CLASS_Database
+class GLOBAL_CLASS_Database
 {
     private $host = 'localhost';
     private $database = 'mydb';
     private $username = 'root';
     private $password = '1234';
-    public $conn;
+    public $connection;
 
     public function __construct()
     {

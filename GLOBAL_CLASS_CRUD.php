@@ -6,8 +6,8 @@
  * Date: 10/10/2018
  * Time: 7:53 PM
  */
-include_once 'DB_CLASS_Database.php';
-class DB_CLASS_CRUD extends DB_CLASS_Database {
+include_once 'GLOBAL_CLASS_Database.php';
+class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
 
     public function __construct(){
         parent::__construct();

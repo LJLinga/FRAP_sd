@@ -6,8 +6,8 @@
  * Time: 3:48 PM
  */
 
-include_once('DB_CLASS_CRUD.php');
-$crud = new DB_CLASS_CRUD();
+include_once('GLOBAL_CLASS_CRUD.php');
+$crud = new GLOBAL_CLASS_CRUD();
 
 if(isset($_POST['btnAddPost'])){
 
@@ -34,7 +34,9 @@ if(isset($_POST['btnAddPost'])){
     }
 }
 
-include 'CMS_TEMPLATE_Navigation.php';
+$page_title = 'Santinig - Add Post';
+include 'GLOBAL_TEMPLATE_Header.php';
+include 'LOAN_TEMPLATE_NAVIGATION_Membership.php';
 ?>
     <div id="page-wrapper">
         <div class="container-fluid">
@@ -82,6 +84,6 @@ include 'CMS_TEMPLATE_Navigation.php';
         </div>
     </div>
     <!-- /#page-wrapper -->
-<?php include 'CMS_TEMPLATE_Footer.php' ?>
+<?php include 'GLOBAL_TEMPLATE_Footer.php' ?>
 
 
