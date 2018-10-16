@@ -1,59 +1,99 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: nicol
+ * Date: 10/10/2018
+ * Time: 3:48 PM
+ */
 
+include_once('GLOBAL_CLASS_CRUD.php');
+$crud = new GLOBAL_CLASS_CRUD();
 
+$page_title = 'Santinig - Posts Dashboard';
 include 'GLOBAL_TEMPLATE_Header.php';
 include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
 ?>
 
-<table id="example" class="dataTable table-responsive" style="width:100%">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Position</th>
-        <th>Office</th>
-        <th>Age</th>
-        <th>Start date</th>
-        <th>Salary</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>Tiger Nixon</td>
-        <td>System Architect</td>
-        <td>Edinburgh</td>
-        <td>61</td>
-        <td>2011/04/25</td>
-        <td>$320,800</td>
-    </tr>
-    <tr>
-        <td>Garrett Winters</td>
-        <td>Accountant</td>
-        <td>Tokyo</td>
-        <td>63</td>
-        <td>2011/07/25</td>
-        <td>$170,750</td>
-    </tr>
-    <tr>
-        <td>Ashton Cox</td>
-        <td>Junior Technical Author</td>
-        <td>San Francisco</td>
-        <td>66</td>
-        <td>2009/01/12</td>
-        <td>$86,000</td>
-    </tr>
-    </tbody>
-    <tfoot>
-    <tr>
-        <th>Name</th>
-        <th>Position</th>
-        <th>Office</th>
-        <th>Age</th>
-        <th>Start date</th>
-        <th>Salary</th>
-    </tr>
-    </tfoot>
-</table>
+<div id="page-wrapper">
 
+    <div class="container-fluid">
+
+        <div class="row">
+
+            <div class="col-lg-12">
+
+                <h1 class="page-header">
+                    Santinig Posts
+                </h1>
+
+            </div>
+
+        </div>
+        <!-- alert -->
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="row">
+
+                    <div class="col-lg-12">
+
+                        <form action="" method="POST"> <!-- SERVER SELF -->
+
+                            <table id="table" class="table table-bordered table-striped">
+
+                                <thead>
+
+                                <tr>
+
+                                    <td align="center" width="200px"><b>Title</b></td>
+                                    <td align="center" width="500px"><b>Snippet</b></td>
+                                    <td align="center" width="200px"><b>Author</b></td>
+                                    <td align="center" width="200px"><b>Publisher</b></td>
+                                    <td align="center" width="200px"><b>Actions</b></td>
+
+                                </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                <?php
+
+                                $rows = $crud->getData("SELECT * FROM mydb.posts");
+                                foreach ($rows as $key => $row){
+                                    ?>
+                                    <tr>
+
+                                        <td align="center"><?php echo $row['title'];?></td>
+                                        <td align="center"><?php echo $row['body'];?> </td>
+                                        <td align="center"><?php echo $row['authorId'];?></td>
+                                        <td align="center">"No Table Yet"</td>
+                                        <td align="center"><button type="submit" name="details" class="btn btn-success" value=<?php echo $row['id'];?>>Details</button>&nbsp;&nbsp;&nbsp;</td>
+
+                                    </tr>
+                                <?php }?>
+
+                                </tbody>
+
+                            </table>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
 <script>
     $("#example").DataTable();
 </script>

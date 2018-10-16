@@ -111,6 +111,10 @@
                         <a href=""><i class="fa fa-pencil" aria-hidden="true"></i> Add Post</a>
                     </li>
 
+                    <li>
+                        <a href=""><i class="fa fa-archive" aria-hidden="true"></i> Archived Posts</a>
+                    </li>
+
                 </ul>
 
             </li>
