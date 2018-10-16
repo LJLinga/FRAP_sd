@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5356d799-a39e-4cc3-a9e3-2d52e87b4c03" name="Default" comment="made the navigation and footer html templates">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php" afterPath="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" afterPath="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataTables/datatables.css" afterPath="$PROJECT_DIR$/DataTables/datatables.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataTables/datatables.js" afterPath="$PROJECT_DIR$/DataTables/datatables.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataTables/datatables.min.css" afterPath="$PROJECT_DIR$/DataTables/datatables.min.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataTables/datatables.min.js" afterPath="$PROJECT_DIR$/DataTables/datatables.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php" afterPath="$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -109,14 +106,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="CMS_VIEW_PostsDashboard.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CMS_VIEW_PostsDashboard.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="74" column="263" lean-forward="false" selection-start-line="74" selection-start-column="263" selection-end-line="74" selection-end-column="263" />
+            <state relative-caret-position="123">
+              <caret line="86" column="143" lean-forward="false" selection-start-line="86" selection-start-column="143" selection-end-line="86" selection-end-column="143" />
               <folding>
                 <element signature="e#6#89#0#PHP" expanded="true" />
-                <marker date="1539705453883" expanded="true" signature="2032:2237" ph="SELECT p.id,... posts" />
+                <marker date="1539705674787" expanded="true" signature="2032:2237" ph="SELECT p.id,... posts" />
               </folding>
             </state>
           </provider>
@@ -203,11 +200,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GLOBAL_TEMPLATE_Header.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="GLOBAL_TEMPLATE_Header.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="7" lean-forward="false" selection-start-line="16" selection-start-column="7" selection-end-line="16" selection-end-column="7" />
+            <state relative-caret-position="391">
+              <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -303,10 +300,10 @@
         <option value="$PROJECT_DIR$/ADMIN PREPORT new.php" />
         <option value="$PROJECT_DIR$/DataTables/datatables.css" />
         <option value="$PROJECT_DIR$/DataTables/datatables.js" />
-        <option value="$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php" />
         <option value="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Edito.php" />
         <option value="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php" />
         <option value="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" />
+        <option value="$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php" />
       </list>
     </option>
   </component>
@@ -401,6 +398,54 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="DataTables" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataTables-1.10.18" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRAP_sd" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRAP_sd" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataTables" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataTables-1.10.18" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRAP_sd" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRAP_sd" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataTables" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataTables-1.10.18" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="css" />
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
           </PATH>
@@ -551,12 +596,12 @@
       <workItem from="1539157397927" duration="1762000" />
       <workItem from="1539174622580" duration="12882000" />
       <workItem from="1539264923722" duration="8188000" />
-      <workItem from="1539686808938" duration="9829000" />
+      <workItem from="1539686808938" duration="11281000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="98968000" />
+    <option name="totallyTimeSpent" value="100420000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1144,14 +1189,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="7" lean-forward="false" selection-start-line="16" selection-start-column="7" selection-end-line="16" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="344">
@@ -1162,12 +1199,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="74" column="263" lean-forward="false" selection-start-line="74" selection-start-column="263" selection-end-line="74" selection-end-column="263" />
+        <state relative-caret-position="123">
+          <caret line="86" column="143" lean-forward="false" selection-start-line="86" selection-start-column="143" selection-end-line="86" selection-end-column="143" />
           <folding>
             <element signature="e#6#89#0#PHP" expanded="true" />
-            <marker date="1539705453883" expanded="true" signature="2032:2237" ph="SELECT p.id,... posts" />
+            <marker date="1539705674787" expanded="true" signature="2032:2237" ph="SELECT p.id,... posts" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -13,13 +13,18 @@
     <link href="css/montserrat.css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/sb-admin.css" rel="stylesheet">
-    <link href="DataTables/datatables.css" rel="stylesheet">
+    <link href="DataTables/datatables.min.css" rel="stylesheet">
+    <link href="DataTables/DataTables-1.10.18/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <script src="DataTables/datatables.js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
+
+    <script src="DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js"></script>
+    <script src="DataTables/DataTables-1.10.18/js/dataTables.bootstrap.min.js"></script>
+    <script src="DataTables/datatables.min.js"></script>
 
 </head>
 

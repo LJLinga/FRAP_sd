@@ -82,7 +82,10 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                                         <td align="center"><?php echo $row['name'] ;?></td>
                                         <td align="center">"No Table Yet"</td>
                                         <td align="center"><?php echo $row['status'] ;?></td>
-                                        <td align="center"><button type="submit" name="details" class="btn btn-success" value=<?php echo $row['id'];?>>Details</button>&nbsp;&nbsp;&nbsp;</td>
+                                        <td align="center">
+                                            <button type="submit" name="edit" class="btn btn-default" value=<?php echo $row['id'];?>>Edit</button>
+                                            <button type="submit" name="publish" class="btn btn-primary" value=<?php echo $row['id'];?>>Publish</button>&nbsp;&nbsp;
+                                        </td>
 
                                     </tr>
                                 <?php }?>
