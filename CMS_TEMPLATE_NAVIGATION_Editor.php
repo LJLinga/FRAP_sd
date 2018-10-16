@@ -112,7 +112,7 @@
                     </li>
 
                     <li>
-                        <a href=""><i class="fa fa-archive" aria-hidden="true"></i> Archived Posts</a>
+                        <a href="CMS_VIEW_ArchivedPosts.php"><i class="fa fa-archive" aria-hidden="true"></i> Archived Posts</a>
                     </li>
 
                 </ul>

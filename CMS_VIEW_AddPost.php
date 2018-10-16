@@ -36,7 +36,7 @@ if(isset($_POST['btnAddPost'])){
 
 $page_title = 'Santinig - Add Post';
 include 'GLOBAL_TEMPLATE_Header.php';
-include 'LOAN_TEMPLATE_NAVIGATION_Membership.php';
+include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
 ?>
     <div id="page-wrapper">
         <div class="container-fluid">

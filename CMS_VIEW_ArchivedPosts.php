@@ -9,7 +9,7 @@
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 
-$page_title = 'Santinig - Posts Dashboard';
+$page_title = 'Santinig - Archived Posts';
 include 'GLOBAL_TEMPLATE_Header.php';
 include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
 ?>
@@ -34,7 +34,7 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
             <div class="col-lg-12">
 
                 <h1 class="page-header">
-                    Santinig Posts
+                    Archived Posts
                 </h1>
 
             </div>
@@ -71,7 +71,7 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
 
                                 <?php
 
-                                $rows = $crud->getData("SELECT p.id, p.title, p.body, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status FROM mydb.posts p JOIN mydb.authors a ON p.authorId = a.id JOIN mydb.post_status s ON s.id = p.statusId WHERE s.id = 1 || s.id = 2;");
+                                $rows = $crud->getData("SELECT p.id, p.title, p.body, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status FROM mydb.posts p JOIN mydb.authors a ON p.authorId = a.id JOIN mydb.post_status s ON s.id = p.statusId WHERE s.id = 3 ;");
                                 foreach ($rows as $key => $row){
                                     ?>
                                     <tr>
@@ -82,8 +82,8 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                                         <td align="center">"No Table Yet"</td>
                                         <td align="center"><?php echo $row['status'] ;?></td>
                                         <td align="center">
-                                            <button type="submit" name="edit" class="btn btn-default" value=<?php echo $row['id'];?>>Edit</button>
-                                            <button type="submit" name="publish" class="btn btn-primary" value=<?php echo $row['id'];?>>Publish</button>&nbsp;&nbsp;
+                                            <button type="submit" name="restore" class="btn btn-default" value=<?php echo $row['id'];?>>Restore</button>
+                                            <button type="submit" name="delete" class="btn btn-primary" value=<?php echo $row['id'];?>>Delete</button>&nbsp;&nbsp;
                                         </td>
 
                                     </tr>

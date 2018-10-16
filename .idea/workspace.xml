@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5356d799-a39e-4cc3-a9e3-2d52e87b4c03" name="Default" comment="made the navigation and footer html templates">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CMS_VIEW_ArchivedPosts.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php" afterPath="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMS_VIEW_AddPost.php" afterPath="$PROJECT_DIR$/CMS_VIEW_AddPost.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" afterPath="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php" afterPath="$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php" />
     </list>
@@ -109,11 +112,25 @@
       <file leaf-file-name="CMS_VIEW_PostsDashboard.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="123">
-              <caret line="86" column="143" lean-forward="false" selection-start-line="86" selection-start-column="143" selection-end-line="86" selection-end-column="143" />
+            <state relative-caret-position="204">
+              <caret line="62" column="87" lean-forward="true" selection-start-line="62" selection-start-column="87" selection-end-line="62" selection-end-column="87" />
               <folding>
                 <element signature="e#6#89#0#PHP" expanded="true" />
-                <marker date="1539705674787" expanded="true" signature="2032:2237" ph="SELECT p.id,... posts" />
+                <marker date="1539707402672" expanded="true" signature="2024:2226" ph="SELECT p.id,... posts" />
+                <marker date="1539707402672" expanded="true" signature="2024:2253" ph="SELECT p.id,... posts" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CMS_VIEW_ArchivedPosts.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CMS_VIEW_ArchivedPosts.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="340">
+              <caret line="20" column="44" lean-forward="false" selection-start-line="20" selection-start-column="44" selection-end-line="20" selection-end-column="44" />
+              <folding>
+                <element signature="e#6#89#0#PHP" expanded="true" />
+                <marker date="1539707525846" expanded="true" signature="2023:2240" ph="SELECT p.id,... posts" />
               </folding>
             </state>
           </provider>
@@ -153,11 +170,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CMS_TEMPLATE_NAVIGATION_Editor.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="MEMBER AUDITRAIL.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MEMBER AUDITRAIL.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1853">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <marker date="1539231887477" expanded="true" signature="3457:3513" ph="SELECT LASTN... MEMBER" />
+                <marker date="1539231887477" expanded="true" signature="9037:9448" ph="SELECT tr.TX... txn_reference" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CMS_TEMPLATE_NAVIGATION_Editor.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="344">
-              <caret line="110" column="53" lean-forward="false" selection-start-line="110" selection-start-column="53" selection-end-line="110" selection-end-column="53" />
+            <state relative-caret-position="463">
+              <caret line="114" column="59" lean-forward="false" selection-start-line="114" selection-start-column="59" selection-end-line="114" selection-end-column="59" />
               <folding />
             </state>
           </provider>
@@ -166,13 +196,13 @@
       <file leaf-file-name="CMS_VIEW_AddPost.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CMS_VIEW_AddPost.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="21" column="114" lean-forward="true" selection-start-line="21" selection-start-column="8" selection-end-line="21" selection-end-column="114" />
+            <state relative-caret-position="341">
+              <caret line="71" column="49" lean-forward="false" selection-start-line="71" selection-start-column="49" selection-end-line="71" selection-end-column="49" />
               <folding>
                 <element signature="e#6#89#0#PHP" expanded="true" />
-                <marker date="1539272036607" expanded="true" signature="416:493" ph="INSERT INTO posts... " />
-                <marker date="1539272036607" expanded="true" signature="669:805" ph="UPDATE posts... " />
-                <marker date="1539272036607" expanded="true" signature="1462:1552" ph="..." />
+                <marker date="1539707563372" expanded="true" signature="416:493" ph="INSERT INTO posts... " />
+                <marker date="1539707563372" expanded="true" signature="669:805" ph="UPDATE posts... " />
+                <marker date="1539707563372" expanded="true" signature="1457:1547" ph="..." />
               </folding>
             </state>
           </provider>
@@ -188,36 +218,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ADMIN addaccount.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ADMIN addaccount.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-442">
-              <caret line="17" column="32" lean-forward="false" selection-start-line="17" selection-start-column="32" selection-end-line="17" selection-end-column="32" />
-              <folding>
-                <marker date="1539272036552" expanded="true" signature="284:489" ph="insert into employee... " />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GLOBAL_TEMPLATE_Header.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GLOBAL_TEMPLATE_Header.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="391">
-              <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+              <caret line="23" column="40" lean-forward="false" selection-start-line="23" selection-start-column="40" selection-end-line="23" selection-end-column="40" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="datatables.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DataTables/datatables.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-68">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <marker date="1529025136000" expanded="true" signature="5260:5262" ph="{...}" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -253,10 +259,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/DB_CLASS_CRUD.php" />
         <option value="$PROJECT_DIR$/CMS_TEMPLATE_Navigation.php" />
         <option value="$PROJECT_DIR$/CMS_TEMPLATE_Header.php" />
-        <option value="$PROJECT_DIR$/CMS_VIEW_AddPost.php" />
         <option value="$PROJECT_DIR$/mysql_connect_FA.php" />
         <option value="$PROJECT_DIR$/GLOBAL_CLASS_CRUD.php" />
         <option value="$PROJECT_DIR$/GLOBAL_TEMPLATE_Footer.php" />
@@ -301,9 +305,11 @@
         <option value="$PROJECT_DIR$/DataTables/datatables.css" />
         <option value="$PROJECT_DIR$/DataTables/datatables.js" />
         <option value="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Edito.php" />
-        <option value="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php" />
-        <option value="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" />
         <option value="$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php" />
+        <option value="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" />
+        <option value="$PROJECT_DIR$/CMS_VIEW_ArchivedPosts.php" />
+        <option value="$PROJECT_DIR$/CMS_VIEW_AddPost.php" />
+        <option value="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php" />
       </list>
     </option>
   </component>
@@ -315,8 +321,8 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" interpreter_name="XAMPP PHP" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="21" />
-    <option name="y" value="33" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
     <option name="width" value="1616" />
     <option name="height" value="876" />
   </component>
@@ -596,12 +602,12 @@
       <workItem from="1539157397927" duration="1762000" />
       <workItem from="1539174622580" duration="12882000" />
       <workItem from="1539264923722" duration="8188000" />
-      <workItem from="1539686808938" duration="11281000" />
+      <workItem from="1539686808938" duration="11983000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="100420000" />
+    <option name="totallyTimeSpent" value="101122000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -613,7 +619,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="21" y="33" width="1616" height="876" extended-state="0" />
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -678,24 +684,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/ADMIN HEALTHAID applications.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="23" column="46" lean-forward="false" selection-start-line="23" selection-start-column="46" selection-end-line="23" selection-end-column="46" />
-          <folding>
-            <marker date="1539272036688" expanded="true" signature="416:485" ph="SELECT MEMBE... LOANS" />
-            <marker date="1539272036688" expanded="true" signature="2580:2790" ph="SELECT HA.DA... MEMBER" />
-            <marker date="1539272036688" expanded="true" signature="3108:3874" ph="..." />
-            <marker date="1539272036688" expanded="false" signature="3658:3664" ph=" " />
-            <marker date="1539272036688" expanded="false" signature="3664:3670" ph=" " />
-            <marker date="1539272036688" expanded="false" signature="3670:3676" ph=" " />
-            <marker date="1539272036688" expanded="false" signature="3794:3800" ph=" " />
-            <marker date="1539272036688" expanded="false" signature="3800:3806" ph=" " />
-            <marker date="1539272036688" expanded="false" signature="3806:3812" ph=" " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ADMIN LIFETIME addmember.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="208">
@@ -1030,17 +1018,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MEMBER AUDITRAIL.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1539231887477" expanded="true" signature="3457:3513" ph="SELECT LASTN... MEMBER" />
-            <marker date="1539231887477" expanded="true" signature="9037:9448" ph="SELECT tr.TX... txn_reference" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ADMIN BANK addbank.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="731">
@@ -1168,19 +1145,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMS_VIEW_AddPost.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="21" column="114" lean-forward="true" selection-start-line="21" selection-start-column="8" selection-end-line="21" selection-end-column="114" />
-          <folding>
-            <element signature="e#6#89#0#PHP" expanded="true" />
-            <marker date="1539272036607" expanded="true" signature="416:493" ph="INSERT INTO posts... " />
-            <marker date="1539272036607" expanded="true" signature="669:805" ph="UPDATE posts... " />
-            <marker date="1539272036607" expanded="true" signature="1462:1552" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/LOAN_TEMPLATES_NAVIGATION_Dashboard.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-595">
@@ -1189,29 +1153,65 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php">
+    <entry file="file://$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="110" column="53" lean-forward="false" selection-start-line="110" selection-start-column="53" selection-end-line="110" selection-end-column="53" />
+        <state relative-caret-position="391">
+          <caret line="23" column="40" lean-forward="false" selection-start-line="23" selection-start-column="40" selection-end-line="23" selection-end-column="40" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER AUDITRAIL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1853">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1539231887477" expanded="true" signature="3457:3513" ph="SELECT LASTN... MEMBER" />
+            <marker date="1539231887477" expanded="true" signature="9037:9448" ph="SELECT tr.TX... txn_reference" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="123">
-          <caret line="86" column="143" lean-forward="false" selection-start-line="86" selection-start-column="143" selection-end-line="86" selection-end-column="143" />
+        <state relative-caret-position="204">
+          <caret line="62" column="87" lean-forward="true" selection-start-line="62" selection-start-column="87" selection-end-line="62" selection-end-column="87" />
           <folding>
             <element signature="e#6#89#0#PHP" expanded="true" />
-            <marker date="1539705674787" expanded="true" signature="2032:2237" ph="SELECT p.id,... posts" />
+            <marker date="1539707402672" expanded="true" signature="2024:2226" ph="SELECT p.id,... posts" />
+            <marker date="1539707402672" expanded="true" signature="2024:2253" ph="SELECT p.id,... posts" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php">
+    <entry file="file://$PROJECT_DIR$/CMS_VIEW_ArchivedPosts.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+        <state relative-caret-position="340">
+          <caret line="20" column="44" lean-forward="false" selection-start-line="20" selection-start-column="44" selection-end-line="20" selection-end-column="44" />
+          <folding>
+            <element signature="e#6#89#0#PHP" expanded="true" />
+            <marker date="1539707525846" expanded="true" signature="2023:2240" ph="SELECT p.id,... posts" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMS_VIEW_AddPost.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="341">
+          <caret line="71" column="49" lean-forward="false" selection-start-line="71" selection-start-column="49" selection-end-line="71" selection-end-column="49" />
+          <folding>
+            <element signature="e#6#89#0#PHP" expanded="true" />
+            <marker date="1539707563372" expanded="true" signature="416:493" ph="INSERT INTO posts... " />
+            <marker date="1539707563372" expanded="true" signature="669:805" ph="UPDATE posts... " />
+            <marker date="1539707563372" expanded="true" signature="1457:1547" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="463">
+          <caret line="114" column="59" lean-forward="false" selection-start-line="114" selection-start-column="59" selection-end-line="114" selection-end-column="59" />
           <folding />
         </state>
       </provider>
