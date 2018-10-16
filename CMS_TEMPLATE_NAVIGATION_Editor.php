@@ -104,11 +104,11 @@
                 <ul id="posts" class="collapse">
 
                     <li>
-                        <a href=""><i class="fa fa-file-text" aria-hidden="true"></i> View Posts</a>
+                        <a href="CMS_VIEW_PostsDashboard.php"><i class="fa fa-file-text" aria-hidden="true"></i> View Posts</a>
                     </li>
 
                     <li>
-                        <a href=""><i class="fa fa-pencil" aria-hidden="true"></i> Add Post</a>
+                        <a href="CMS_VIEW_AddPost.php"><i class="fa fa-pencil" aria-hidden="true"></i> Add Post</a>
                     </li>
 
                     <li>

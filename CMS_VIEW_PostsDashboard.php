@@ -14,6 +14,18 @@ include 'GLOBAL_TEMPLATE_Header.php';
 include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
 ?>
 
+<script>
+    // Basic example
+    $(document).ready(function () {
+        $('#table').DataTable({
+            "searching": true
+            "paging": "simple_numbers" // false to disable pagination (or any other option)
+        });
+        $('.dataTable_length').addClass('bs-select');
+
+    });
+</script>
+
 <div id="page-wrapper">
 
     <div class="container-fluid">
@@ -39,17 +51,18 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
 
                         <form action="" method="POST"> <!-- SERVER SELF -->
 
-                            <table id="table" class="table table-bordered table-striped">
+                            <table id="table" class="table table-striped table-bordered table-sm">
 
                                 <thead>
 
                                 <tr>
 
-                                    <td align="center" width="200px"><b>Title</b></td>
-                                    <td align="center" width="500px"><b>Snippet</b></td>
-                                    <td align="center" width="200px"><b>Author</b></td>
-                                    <td align="center" width="200px"><b>Publisher</b></td>
-                                    <td align="center" width="200px"><b>Actions</b></td>
+                                    <th align="center" width="200px"><b>Title</b></th>
+                                    <th align="center" width="500px"><b>Snippet</b></th>
+                                    <th align="center" width="200px"><b>Author</b></th>
+                                    <th align="center" width="200px"><b>Publisher</b></th>
+                                    <th align="center" width="200px"><b>Status</b></th>
+                                    <th align="center" width="200px"><b>Actions</b></th>
 
                                 </tr>
 
@@ -59,15 +72,16 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
 
                                 <?php
 
-                                $rows = $crud->getData("SELECT * FROM mydb.posts");
+                                $rows = $crud->getData("SELECT p.id, p.title, p.body, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status FROM mydb.posts p JOIN mydb.authors a ON p.authorId = a.id JOIN mydb.post_status s WHERE s.id = p.statusId ;");
                                 foreach ($rows as $key => $row){
                                     ?>
                                     <tr>
 
                                         <td align="center"><?php echo $row['title'];?></td>
                                         <td align="center"><?php echo $row['body'];?> </td>
-                                        <td align="center"><?php echo $row['authorId'];?></td>
+                                        <td align="center"><?php echo $row['name'] ;?></td>
                                         <td align="center">"No Table Yet"</td>
+                                        <td align="center"><?php echo $row['status'] ;?></td>
                                         <td align="center"><button type="submit" name="details" class="btn btn-success" value=<?php echo $row['id'];?>>Details</button>&nbsp;&nbsp;&nbsp;</td>
 
                                     </tr>
@@ -94,6 +108,4 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
 
 </div>
 <!-- /#wrapper -->
-<script>
-    $("#example").DataTable();
-</script>
+

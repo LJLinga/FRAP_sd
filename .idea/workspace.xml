@@ -4,6 +4,10 @@
     <list default="true" id="5356d799-a39e-4cc3-a9e3-2d52e87b4c03" name="Default" comment="made the navigation and footer html templates">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php" afterPath="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" afterPath="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataTables/datatables.css" afterPath="$PROJECT_DIR$/DataTables/datatables.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataTables/datatables.js" afterPath="$PROJECT_DIR$/DataTables/datatables.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataTables/datatables.min.css" afterPath="$PROJECT_DIR$/DataTables/datatables.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataTables/datatables.min.js" afterPath="$PROJECT_DIR$/DataTables/datatables.min.js" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -108,12 +112,11 @@
       <file leaf-file-name="CMS_VIEW_PostsDashboard.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" column="32" lean-forward="true" selection-start-line="9" selection-start-column="32" selection-end-line="9" selection-end-column="32" />
+            <state relative-caret-position="374">
+              <caret line="74" column="263" lean-forward="false" selection-start-line="74" selection-start-column="263" selection-end-line="74" selection-end-column="263" />
               <folding>
                 <element signature="e#6#89#0#PHP" expanded="true" />
-                <marker date="1539694625804" expanded="true" signature="1629:1653" ph="SELECT * FRO... posts" />
-                <marker date="1539694625804" expanded="true" signature="2716:2723" ph="..." />
+                <marker date="1539705453883" expanded="true" signature="2032:2237" ph="SELECT p.id,... posts" />
               </folding>
             </state>
           </provider>
@@ -156,8 +159,8 @@
       <file leaf-file-name="CMS_TEMPLATE_NAVIGATION_Editor.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="412">
-              <caret line="114" column="58" lean-forward="false" selection-start-line="114" selection-start-column="58" selection-end-line="114" selection-end-column="58" />
+            <state relative-caret-position="344">
+              <caret line="110" column="53" lean-forward="false" selection-start-line="110" selection-start-column="53" selection-end-line="110" selection-end-column="53" />
               <folding />
             </state>
           </provider>
@@ -181,8 +184,8 @@
       <file leaf-file-name="LOAN_TEMPLATES_NAVIGATION_Dashboard.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/LOAN_TEMPLATES_NAVIGATION_Dashboard.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="242" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="259" selection-end-column="6" />
+            <state relative-caret-position="-595">
+              <caret line="11" column="53" lean-forward="false" selection-start-line="11" selection-start-column="53" selection-end-line="11" selection-end-column="53" />
               <folding />
             </state>
           </provider>
@@ -203,8 +206,8 @@
       <file leaf-file-name="GLOBAL_TEMPLATE_Header.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="19" column="41" lean-forward="false" selection-start-line="19" selection-start-column="41" selection-end-line="19" selection-end-column="41" />
+            <state relative-caret-position="272">
+              <caret line="16" column="7" lean-forward="false" selection-start-line="16" selection-start-column="7" selection-end-line="16" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -215,7 +218,9 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-68">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
+              <folding>
+                <marker date="1529025136000" expanded="true" signature="5260:5262" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -546,12 +551,12 @@
       <workItem from="1539157397927" duration="1762000" />
       <workItem from="1539174622580" duration="12882000" />
       <workItem from="1539264923722" duration="8188000" />
-      <workItem from="1539686808938" duration="6157000" />
+      <workItem from="1539686808938" duration="9829000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="95296000" />
+    <option name="totallyTimeSpent" value="98968000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1055,7 +1060,7 @@
         <state relative-caret-position="-170">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1529024116000" expanded="true" signature="0:266" ph="/*...*/" />
+            <marker date="1529025136000" expanded="true" signature="0:254" ph="/*...*/" />
           </folding>
         </state>
       </provider>
@@ -1065,7 +1070,7 @@
         <state relative-caret-position="-4607">
           <caret line="668" column="10" lean-forward="false" selection-start-line="668" selection-start-column="10" selection-end-line="668" selection-end-column="10" />
           <folding>
-            <marker date="1529024116000" expanded="false" signature="0:266" ph="/*...*/" />
+            <marker date="1529025136000" expanded="false" signature="0:254" ph="/*...*/" />
           </folding>
         </state>
       </provider>
@@ -1074,15 +1079,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-68">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="41" lean-forward="false" selection-start-line="19" selection-start-column="41" selection-end-line="19" selection-end-column="41" />
-          <folding />
+          <folding>
+            <marker date="1529025136000" expanded="true" signature="5260:5262" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1096,39 +1095,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/LOAN_TEMPLATES_NAVIGATION_Dashboard.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="242" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="259" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Downloads/startbootstrap-sb-admin-gh-pages/startbootstrap-sb-admin-gh-pages/tables.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="146" column="44" lean-forward="true" selection-start-line="141" selection-start-column="10" selection-end-line="146" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CMS_VIEW_AddPost.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="21" column="114" lean-forward="true" selection-start-line="21" selection-start-column="8" selection-end-line="21" selection-end-column="114" />
-          <folding>
-            <element signature="e#6#89#0#PHP" expanded="true" />
-            <marker date="1539272036607" expanded="true" signature="416:493" ph="INSERT INTO posts... " />
-            <marker date="1539272036607" expanded="true" signature="669:805" ph="UPDATE posts... " />
-            <marker date="1539272036607" expanded="true" signature="1462:1552" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="412">
-          <caret line="114" column="58" lean-forward="false" selection-start-line="114" selection-start-column="58" selection-end-line="114" selection-end-column="58" />
           <folding />
         </state>
       </provider>
@@ -1153,14 +1123,50 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php">
+    <entry file="file://$PROJECT_DIR$/CMS_VIEW_AddPost.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="32" lean-forward="true" selection-start-line="9" selection-start-column="32" selection-end-line="9" selection-end-column="32" />
+        <state relative-caret-position="357">
+          <caret line="21" column="114" lean-forward="true" selection-start-line="21" selection-start-column="8" selection-end-line="21" selection-end-column="114" />
           <folding>
             <element signature="e#6#89#0#PHP" expanded="true" />
-            <marker date="1539694625804" expanded="true" signature="1629:1653" ph="SELECT * FRO... posts" />
-            <marker date="1539694625804" expanded="true" signature="2716:2723" ph="..." />
+            <marker date="1539272036607" expanded="true" signature="416:493" ph="INSERT INTO posts... " />
+            <marker date="1539272036607" expanded="true" signature="669:805" ph="UPDATE posts... " />
+            <marker date="1539272036607" expanded="true" signature="1462:1552" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LOAN_TEMPLATES_NAVIGATION_Dashboard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-595">
+          <caret line="11" column="53" lean-forward="false" selection-start-line="11" selection-start-column="53" selection-end-line="11" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="7" lean-forward="false" selection-start-line="16" selection-start-column="7" selection-end-line="16" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="344">
+          <caret line="110" column="53" lean-forward="false" selection-start-line="110" selection-start-column="53" selection-end-line="110" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="74" column="263" lean-forward="false" selection-start-line="74" selection-start-column="263" selection-end-line="74" selection-end-column="263" />
+          <folding>
+            <element signature="e#6#89#0#PHP" expanded="true" />
+            <marker date="1539705453883" expanded="true" signature="2032:2237" ph="SELECT p.id,... posts" />
           </folding>
         </state>
       </provider>
