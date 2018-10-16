@@ -2,76 +2,197 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5356d799-a39e-4cc3-a9e3-2d52e87b4c03" name="Default" comment="made the navigation and footer html templates">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/LOAN_TEMPLATES_NAVIGATION_Dashboard.php" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/SANTINIG Add Post.php" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/CMS_TEMPLATE_Footer.php" afterPath="$PROJECT_DIR$/GLOBAL_TEMPLATE_Footer.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/CMS_TEMPLATE_Navigation.php" afterPath="$PROJECT_DIR$/LOAN_TEMPLATE_NAVIGATION_Membership.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/DB_CLASS_CRUD.php" afterPath="$PROJECT_DIR$/GLOBAL_CLASS_CRUD.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/DB_CLASS_Database.php" afterPath="$PROJECT_DIR$/GLOBAL_CLASS_Database.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/css/autoFill.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/css/autoFill.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/css/autoFill.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/css/autoFill.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/css/autoFill.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/css/autoFill.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/css/autoFill.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/css/autoFill.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/css/autoFill.semanticui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/css/autoFill.semanticui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/js/autoFill.bootstrap.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/js/autoFill.bootstrap.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/js/autoFill.foundation.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/js/autoFill.foundation.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/js/autoFill.jqueryui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/js/autoFill.jqueryui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/js/autoFill.semanticui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/js/autoFill.semanticui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/js/dataTables.autoFill.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/js/dataTables.autoFill.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/css/buttons.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/css/buttons.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/css/buttons.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/css/buttons.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/css/buttons.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/css/buttons.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/css/buttons.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/css/buttons.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/css/buttons.semanticui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/css/buttons.semanticui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/css/common.scss" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/css/mixins.scss" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/buttons.bootstrap.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/buttons.bootstrap.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/buttons.colVis.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/buttons.colVis.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/buttons.flash.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/buttons.flash.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/buttons.foundation.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/buttons.foundation.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/buttons.html5.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/buttons.html5.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/buttons.jqueryui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/buttons.jqueryui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/buttons.print.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/buttons.print.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/buttons.semanticui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/buttons.semanticui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/dataTables.buttons.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/js/dataTables.buttons.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Buttons-1.3.1/swf/flashExport.swf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/ColReorder-1.3.3/css/colReorder.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/ColReorder-1.3.3/css/colReorder.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/ColReorder-1.3.3/css/colReorder.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/ColReorder-1.3.3/css/colReorder.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/ColReorder-1.3.3/css/colReorder.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/ColReorder-1.3.3/css/colReorder.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/ColReorder-1.3.3/css/colReorder.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/ColReorder-1.3.3/css/colReorder.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/ColReorder-1.3.3/js/dataTables.colReorder.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/ColReorder-1.3.3/js/dataTables.colReorder.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/css/dataTables.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/css/dataTables.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/css/dataTables.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/css/dataTables.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/css/dataTables.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/css/dataTables.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/css/dataTables.semanticui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/css/dataTables.semanticui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/css/jquery.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/css/jquery.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/css/jquery.dataTables_themeroller.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/images/sort_asc.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/images/sort_asc_disabled.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/images/sort_both.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/images/sort_desc.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/images/sort_desc_disabled.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/js/dataTables.bootstrap.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/js/dataTables.bootstrap.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/js/dataTables.foundation.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/js/dataTables.foundation.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/js/dataTables.jqueryui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/js/dataTables.jqueryui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/js/dataTables.semanticui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/js/dataTables.semanticui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/js/jquery.dataTables.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/js/jquery.dataTables.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedColumns-3.2.2/css/fixedColumns.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedColumns-3.2.2/css/fixedColumns.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedColumns-3.2.2/css/fixedColumns.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedColumns-3.2.2/css/fixedColumns.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedColumns-3.2.2/css/fixedColumns.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedColumns-3.2.2/css/fixedColumns.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedColumns-3.2.2/css/fixedColumns.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedColumns-3.2.2/css/fixedColumns.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedColumns-3.2.2/js/dataTables.fixedColumns.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedColumns-3.2.2/js/dataTables.fixedColumns.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedHeader-3.1.2/css/fixedHeader.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedHeader-3.1.2/css/fixedHeader.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedHeader-3.1.2/css/fixedHeader.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedHeader-3.1.2/css/fixedHeader.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedHeader-3.1.2/css/fixedHeader.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedHeader-3.1.2/css/fixedHeader.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedHeader-3.1.2/css/fixedHeader.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedHeader-3.1.2/css/fixedHeader.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedHeader-3.1.2/js/dataTables.fixedHeader.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/FixedHeader-3.1.2/js/dataTables.fixedHeader.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/KeyTable-2.2.1/css/keyTable.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/KeyTable-2.2.1/css/keyTable.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/KeyTable-2.2.1/css/keyTable.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/KeyTable-2.2.1/css/keyTable.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/KeyTable-2.2.1/css/keyTable.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/KeyTable-2.2.1/css/keyTable.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/KeyTable-2.2.1/css/keyTable.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/KeyTable-2.2.1/css/keyTable.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/KeyTable-2.2.1/css/keyTable.semanticui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/KeyTable-2.2.1/css/keyTable.semanticui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/KeyTable-2.2.1/js/dataTables.keyTable.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/KeyTable-2.2.1/js/dataTables.keyTable.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Responsive-2.1.1/css/responsive.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Responsive-2.1.1/css/responsive.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Responsive-2.1.1/css/responsive.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Responsive-2.1.1/css/responsive.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Responsive-2.1.1/css/responsive.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Responsive-2.1.1/css/responsive.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Responsive-2.1.1/css/responsive.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Responsive-2.1.1/css/responsive.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Responsive-2.1.1/js/dataTables.responsive.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Responsive-2.1.1/js/dataTables.responsive.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Responsive-2.1.1/js/responsive.bootstrap.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Responsive-2.1.1/js/responsive.bootstrap.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Responsive-2.1.1/js/responsive.foundation.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Responsive-2.1.1/js/responsive.foundation.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Responsive-2.1.1/js/responsive.jqueryui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Responsive-2.1.1/js/responsive.jqueryui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowGroup-1.0.0/css/rowGroup.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowGroup-1.0.0/css/rowGroup.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowGroup-1.0.0/css/rowGroup.bootstrap4.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowGroup-1.0.0/css/rowGroup.bootstrap4.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowGroup-1.0.0/css/rowGroup.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowGroup-1.0.0/css/rowGroup.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowGroup-1.0.0/css/rowGroup.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowGroup-1.0.0/css/rowGroup.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowGroup-1.0.0/css/rowGroup.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowGroup-1.0.0/css/rowGroup.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowGroup-1.0.0/css/rowGroup.semanticui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowGroup-1.0.0/css/rowGroup.semanticui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowGroup-1.0.0/js/dataTables.rowGroup.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowGroup-1.0.0/js/dataTables.rowGroup.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowReorder-1.2.0/css/rowReorder.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowReorder-1.2.0/css/rowReorder.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowReorder-1.2.0/css/rowReorder.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowReorder-1.2.0/css/rowReorder.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowReorder-1.2.0/css/rowReorder.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowReorder-1.2.0/css/rowReorder.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowReorder-1.2.0/css/rowReorder.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowReorder-1.2.0/css/rowReorder.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowReorder-1.2.0/css/rowReorder.semanticui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowReorder-1.2.0/css/rowReorder.semanticui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowReorder-1.2.0/js/dataTables.rowReorder.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/RowReorder-1.2.0/js/dataTables.rowReorder.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Scroller-1.4.2/css/scroller.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Scroller-1.4.2/css/scroller.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Scroller-1.4.2/css/scroller.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Scroller-1.4.2/css/scroller.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Scroller-1.4.2/css/scroller.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Scroller-1.4.2/css/scroller.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Scroller-1.4.2/css/scroller.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Scroller-1.4.2/css/scroller.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Scroller-1.4.2/js/dataTables.scroller.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Scroller-1.4.2/js/dataTables.scroller.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Select-1.2.2/css/select.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Select-1.2.2/css/select.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Select-1.2.2/css/select.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Select-1.2.2/css/select.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Select-1.2.2/css/select.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Select-1.2.2/css/select.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Select-1.2.2/css/select.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Select-1.2.2/css/select.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Select-1.2.2/css/select.semanticui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Select-1.2.2/css/select.semanticui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Select-1.2.2/js/dataTables.select.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/Select-1.2.2/js/dataTables.select.min.js" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN BANK addbank.php" afterPath="$PROJECT_DIR$/ADMIN BANK addbank.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN BANK addplan.php" afterPath="$PROJECT_DIR$/ADMIN BANK addplan.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN BANK appdetails.php" afterPath="$PROJECT_DIR$/ADMIN BANK appdetails.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN BANK applications.php" afterPath="$PROJECT_DIR$/ADMIN BANK applications.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN BANK editbank.php" afterPath="$PROJECT_DIR$/ADMIN BANK editbank.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN BANK editplan.php" afterPath="$PROJECT_DIR$/ADMIN BANK editplan.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN BANK viewactive.php" afterPath="$PROJECT_DIR$/ADMIN BANK viewactive.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN BANK viewactivity.php" afterPath="$PROJECT_DIR$/ADMIN BANK viewactivity.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN BANK viewdetails.php" afterPath="$PROJECT_DIR$/ADMIN BANK viewdetails.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN DREPORT detailed.php" afterPath="$PROJECT_DIR$/ADMIN DREPORT detailed.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN DREPORT general.php" afterPath="$PROJECT_DIR$/ADMIN DREPORT general.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN FALP appdetails.php" afterPath="$PROJECT_DIR$/ADMIN FALP appdetails.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN FALP applications.php" afterPath="$PROJECT_DIR$/ADMIN FALP applications.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN FALP manual.php" afterPath="$PROJECT_DIR$/ADMIN FALP manual.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN FALP viewactive.php" afterPath="$PROJECT_DIR$/ADMIN FALP viewactive.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN FALP viewactivity.php" afterPath="$PROJECT_DIR$/ADMIN FALP viewactivity.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN FALP viewdetails.php" afterPath="$PROJECT_DIR$/ADMIN FALP viewdetails.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN FILEREPO.php" afterPath="$PROJECT_DIR$/ADMIN FILEREPO.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN HEALTHAID appdetails.php" afterPath="$PROJECT_DIR$/ADMIN HEALTHAID appdetails.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN HEALTHAID applications.php" afterPath="$PROJECT_DIR$/ADMIN HEALTHAID applications.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN LIFETIME addmember.php" afterPath="$PROJECT_DIR$/ADMIN LIFETIME addmember.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN LIFETIME appdetails.php" afterPath="$PROJECT_DIR$/ADMIN LIFETIME appdetails.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN MANAGE acl.php" afterPath="$PROJECT_DIR$/ADMIN MANAGE acl.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN MANAGE.php" afterPath="$PROJECT_DIR$/ADMIN MANAGE.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN MEMBERS viewdetails.php" afterPath="$PROJECT_DIR$/ADMIN MEMBERS viewdetails.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN MEMBERS viewmembers.php" afterPath="$PROJECT_DIR$/ADMIN MEMBERS viewmembers.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN MEMBERS viewstatus.php" afterPath="$PROJECT_DIR$/ADMIN MEMBERS viewstatus.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN MEMBERSHIP appdetails.php" afterPath="$PROJECT_DIR$/ADMIN MEMBERSHIP appdetails.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN MEMBERSHIP applications.php" afterPath="$PROJECT_DIR$/ADMIN MEMBERSHIP applications.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN MREPORT report.php" afterPath="$PROJECT_DIR$/ADMIN MREPORT report.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN PREPORT completed.php" afterPath="$PROJECT_DIR$/ADMIN PREPORT completed.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN PREPORT new.php" afterPath="$PROJECT_DIR$/ADMIN PREPORT new.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN addaccount.php" afterPath="$PROJECT_DIR$/ADMIN addaccount.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ADMIN dashboard.php" afterPath="$PROJECT_DIR$/ADMIN dashboard.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMS_VIEW_AddPost.php" afterPath="$PROJECT_DIR$/CMS_VIEW_AddPost.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/js/dataTables.autoFill.js" afterPath="$PROJECT_DIR$/DataTables/AutoFill-2.2.0/js/dataTables.autoFill.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/js/jquery.dataTables.js" afterPath="$PROJECT_DIR$/DataTables/DataTables-1.10.15/js/jquery.dataTables.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" afterPath="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataTables/datatables.css" afterPath="$PROJECT_DIR$/DataTables/datatables.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataTables/datatables.js" afterPath="$PROJECT_DIR$/DataTables/datatables.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER AUDITRAIL.php" afterPath="$PROJECT_DIR$/MEMBER AUDITRAIL.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER BANKLOAN activity.php" afterPath="$PROJECT_DIR$/MEMBER BANKLOAN activity.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER BANKLOAN appsent.php" afterPath="$PROJECT_DIR$/MEMBER BANKLOAN appsent.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER BANKLOAN calculator.php" afterPath="$PROJECT_DIR$/MEMBER BANKLOAN calculator.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER BANKLOAN pending.php" afterPath="$PROJECT_DIR$/MEMBER BANKLOAN pending.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER BANKLOAN requirements.php" afterPath="$PROJECT_DIR$/MEMBER BANKLOAN requirements.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER BANKLOAN summary.php" afterPath="$PROJECT_DIR$/MEMBER BANKLOAN summary.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER DEDUCTION summary.php" afterPath="$PROJECT_DIR$/MEMBER DEDUCTION summary.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER FALP activity.php" afterPath="$PROJECT_DIR$/MEMBER FALP activity.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER FALP application.php" afterPath="$PROJECT_DIR$/MEMBER FALP application.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER FALP appsent.php" afterPath="$PROJECT_DIR$/MEMBER FALP appsent.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER FALP failed.php" afterPath="$PROJECT_DIR$/MEMBER FALP failed.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER FALP requirements.php" afterPath="$PROJECT_DIR$/MEMBER FALP requirements.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER FALP summary.php" afterPath="$PROJECT_DIR$/MEMBER FALP summary.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER FILEREPO.html" afterPath="$PROJECT_DIR$/MEMBER FILEREPO.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER HA application.php" afterPath="$PROJECT_DIR$/MEMBER HA application.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER HA appsent.php" afterPath="$PROJECT_DIR$/MEMBER HA appsent.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER HA summary.php" afterPath="$PROJECT_DIR$/MEMBER HA summary.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER LIFETIME form.php" afterPath="$PROJECT_DIR$/MEMBER LIFETIME form.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MEMBER dashboard.php" afterPath="$PROJECT_DIR$/MEMBER dashboard.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/google-api-php-client/examples/adsense/htmlHelper.php" afterPath="$PROJECT_DIR$/google-api-php-client/examples/adsense/htmlHelper.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/bootstrap.js" afterPath="$PROJECT_DIR$/js/bootstrap.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/jquery-ui-1.12.1.custom/jquery-ui.js" afterPath="$PROJECT_DIR$/js/jquery-ui-1.12.1.custom/jquery-ui.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/plugins/flot/jquery.flot.pie.js" afterPath="$PROJECT_DIR$/js/plugins/flot/jquery.flot.pie.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataTables/datatables.min.css" afterPath="$PROJECT_DIR$/DataTables/datatables.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataTables/datatables.min.js" afterPath="$PROJECT_DIR$/DataTables/datatables.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php" afterPath="$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -173,31 +294,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="ADMIN MANAGE acl.php" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Downloads/FRAP_sd-master/FRAP_sd-master/ADMIN MANAGE acl.php">
+      <file leaf-file-name="CMS_VIEW_PostsDashboard.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="714">
+              <caret line="42" column="9" lean-forward="false" selection-start-line="42" selection-start-column="9" selection-end-line="42" selection-end-column="9" />
+              <folding>
+                <element signature="n#style#0;n#table#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ADMIN MANAGE.php" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Downloads/FRAP_sd-master/FRAP_sd-master/ADMIN MANAGE.php">
+      <file leaf-file-name="CMS_TEMPLATE_NAVIGATION_Editor.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="251" column="0" lean-forward="true" selection-start-line="251" selection-start-column="0" selection-end-line="251" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LOAN_TEMPLATE_NAVIGATION_Membership.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/LOAN_TEMPLATE_NAVIGATION_Membership.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="619">
-              <caret line="102" column="28" lean-forward="false" selection-start-line="102" selection-start-column="28" selection-end-line="102" selection-end-column="28" />
+            <state relative-caret-position="616">
+              <caret line="101" column="109" lean-forward="false" selection-start-line="101" selection-start-column="109" selection-end-line="101" selection-end-column="109" />
               <folding />
             </state>
           </provider>
@@ -206,103 +319,84 @@
       <file leaf-file-name="LOAN_TEMPLATES_NAVIGATION_Dashboard.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/LOAN_TEMPLATES_NAVIGATION_Dashboard.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4403">
-              <caret line="259" column="6" lean-forward="false" selection-start-line="259" selection-start-column="6" selection-end-line="259" selection-end-column="6" />
+            <state relative-caret-position="336">
+              <caret line="242" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="259" selection-end-column="6" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MEMBER AUDITRAIL.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/MEMBER AUDITRAIL.php">
+      <file leaf-file-name="datatables.min.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DataTables/datatables.min.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1081">
+            <state relative-caret-position="-170">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
-                <marker date="1539231887477" expanded="true" signature="3457:3513" ph="SELECT LASTN... MEMBER" />
-                <marker date="1539231887477" expanded="true" signature="9037:9448" ph="SELECT tr.TX... txn_reference" />
+                <marker date="1529024116000" expanded="true" signature="0:266" ph="/*...*/" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ADMIN PREPORT new.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ADMIN PREPORT new.php">
+      <file leaf-file-name="ADMIN addaccount.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ADMIN addaccount.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="143">
-              <caret line="270" column="0" lean-forward="true" selection-start-line="270" selection-start-column="0" selection-end-line="270" selection-end-column="0" />
+            <state relative-caret-position="-442">
+              <caret line="17" column="32" lean-forward="false" selection-start-line="17" selection-start-column="32" selection-end-line="17" selection-end-column="32" />
               <folding>
-                <marker date="1539272540471" expanded="true" signature="615:1010" ph="SELECT m.mem... member" />
-                <marker date="1539272540471" expanded="true" signature="826:896" ph="SELECT max(d... loans" />
-                <marker date="1539272540471" expanded="true" signature="1281:1666" ph="SELECT m.mem... member" />
-                <marker date="1539272540471" expanded="true" signature="1701:2114" ph="SELECT m.mem... member" />
-                <marker date="1539272540471" expanded="true" signature="1930:2000" ph="SELECT max(d... loans" />
-                <marker date="1539272540471" expanded="true" signature="3622:3838" ph="SELECT DISTI... " />
+                <marker date="1539272036552" expanded="true" signature="284:489" ph="insert into employee... " />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ADMIN PREPORT completed.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ADMIN PREPORT completed.php">
+      <file leaf-file-name="GLOBAL_TEMPLATE_Header.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="252" column="22" lean-forward="false" selection-start-line="252" selection-start-column="22" selection-end-line="252" selection-end-column="22" />
-              <folding>
-                <marker date="1539272515485" expanded="true" signature="521:830" ph="SELECT m.mem... loans" />
-                <marker date="1539272515485" expanded="true" signature="719:764" ph="SELECT max(d... loans" />
-                <marker date="1539272515485" expanded="true" signature="1115:1448" ph="SELECT m.mem... loans" />
-                <marker date="1539272515485" expanded="true" signature="1483:1792" ph="SELECT m.mem... loans" />
-                <marker date="1539272515485" expanded="true" signature="1681:1726" ph="SELECT max(d... loans" />
-                <marker date="1539272515485" expanded="true" signature="3307:3559" ph="SELECT DISTI... " />
-              </folding>
+            <state relative-caret-position="323">
+              <caret line="19" column="41" lean-forward="false" selection-start-line="19" selection-start-column="41" selection-end-line="19" selection-end-column="41" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ADMIN MEMBERSHIP applications.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ADMIN MEMBERSHIP applications.php">
+      <file leaf-file-name="sb-admin.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/css/sb-admin.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="59" column="32" lean-forward="true" selection-start-line="59" selection-start-column="32" selection-end-line="59" selection-end-column="32" />
-              <folding>
-                <marker date="1539272036387" expanded="true" signature="1432:1688" ph="SELECT M.MEM... MEMBER" />
-              </folding>
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ADMIN MEMBERSHIP appdetails.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ADMIN MEMBERSHIP appdetails.php">
+      <file leaf-file-name="montserrat.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/css/montserrat.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="76" column="50" lean-forward="true" selection-start-line="74" selection-start-column="0" selection-end-line="76" selection-end-column="50" />
-              <folding>
-                <marker date="1539272036305" expanded="true" signature="283:755" ph="SELECT M.MEM... MEMBER" />
-                <marker date="1539272036305" expanded="true" signature="1356:1537" ph="UPDATE MEMBE... " />
-                <marker date="1539272036305" expanded="true" signature="1622:1861" ph="INSERT INTO TXN_REFERENCE... " />
-                <marker date="1539272036305" expanded="true" signature="1994:2074" ph="DELETE FROM " />
-                <marker date="1539272036305" expanded="true" signature="2162:2234" ph="DELETE FROM " />
-              </folding>
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ADMIN MREPORT report.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ADMIN MREPORT report.php">
+      <file leaf-file-name="datatables.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DataTables/datatables.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="37" column="52" lean-forward="false" selection-start-line="37" selection-start-column="52" selection-end-line="37" selection-end-column="52" />
+            <state relative-caret-position="-68">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="datatables.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DataTables/datatables.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-4607">
+              <caret line="668" column="10" lean-forward="false" selection-start-line="668" selection-start-column="10" selection-end-line="668" selection-end-column="10" />
               <folding>
-                <marker date="1539272484701" expanded="true" signature="353:487" ph="SELECT max(d... txn_reference" />
-                <marker date="1539272484701" expanded="true" signature="885:1019" ph="SELECT max(d... txn_reference" />
-                <marker date="1539272484701" expanded="true" signature="3399:3570" ph="SELECT DISTI... " />
-                <marker date="1539272484701" expanded="true" signature="8055:8705" ph="SELECT s.SER... service_type" />
-                <marker date="1539272484701" expanded="true" signature="8409:8477" ph="SELECT max(t... txn_reference" />
-                <marker date="1539272484701" expanded="true" signature="9964:10614" ph="SELECT s.SER... service_type" />
-                <marker date="1539272484701" expanded="true" signature="10318:10386" ph="SELECT max(t... txn_reference" />
-                <marker date="1539272484701" expanded="true" signature="11884:12534" ph="SELECT s.SER... service_type" />
-                <marker date="1539272484701" expanded="true" signature="12238:12306" ph="SELECT max(t... txn_reference" />
+                <marker date="1529024116000" expanded="false" signature="0:266" ph="/*...*/" />
               </folding>
             </state>
           </provider>
@@ -339,11 +433,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/SANTINIG.php" />
-        <option value="$PROJECT_DIR$/SANTINIG Add Post.php" />
-        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/6e619851-9d49-4a67-9c3c-6bcfbc6e9eaf/console.sql" />
-        <option value="$PROJECT_DIR$/CMS_TEMPLATE_Footer.php" />
-        <option value="$PROJECT_DIR$/DB_CLASS_Database.php" />
         <option value="$PROJECT_DIR$/DB_CLASS_CRUD.php" />
         <option value="$PROJECT_DIR$/CMS_TEMPLATE_Navigation.php" />
         <option value="$PROJECT_DIR$/CMS_TEMPLATE_Header.php" />
@@ -351,7 +440,6 @@
         <option value="$PROJECT_DIR$/mysql_connect_FA.php" />
         <option value="$PROJECT_DIR$/GLOBAL_CLASS_CRUD.php" />
         <option value="$PROJECT_DIR$/GLOBAL_TEMPLATE_Footer.php" />
-        <option value="$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php" />
         <option value="$PROJECT_DIR$/ADMIN BANK addbank.php" />
         <option value="$PROJECT_DIR$/ADMIN BANK addplan.php" />
         <option value="$PROJECT_DIR$/ADMIN BANK editbank.php" />
@@ -390,6 +478,12 @@
         <option value="$PROJECT_DIR$/ADMIN MREPORT report.php" />
         <option value="$PROJECT_DIR$/ADMIN PREPORT completed.php" />
         <option value="$PROJECT_DIR$/ADMIN PREPORT new.php" />
+        <option value="$PROJECT_DIR$/DataTables/datatables.css" />
+        <option value="$PROJECT_DIR$/DataTables/datatables.js" />
+        <option value="$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php" />
+        <option value="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Edito.php" />
+        <option value="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php" />
+        <option value="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" />
       </list>
     </option>
   </component>
@@ -401,8 +495,8 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" interpreter_name="XAMPP PHP" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="245" />
+    <option name="y" value="329" />
     <option name="width" value="1616" />
     <option name="height" value="876" />
   </component>
@@ -424,6 +518,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -436,16 +531,79 @@
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRAP_sd" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRAP_sd" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataTables" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="datatables.js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NestingTreeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRAP_sd" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRAP_sd" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataTables" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="datatables.css" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NestingTreeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRAP_sd" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRAP_sd" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataTables" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRAP_sd" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRAP_sd" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="css" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="settings.github" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
     <property name="com.intellij.database.dataSource.DataSourceTemplate" value="MySQL" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
   </component>
@@ -461,8 +619,11 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.index.php">
+  <component name="RunManager" selected="JavaScript Debug.CMS_VIEW_PostsDashboard.php">
     <configuration default="false" name="index.php" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/FRAP_sd/index.php">
+      <method />
+    </configuration>
+    <configuration default="false" name="CMS_VIEW_PostsDashboard.php" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/FRAP_sd/CMS_VIEW_PostsDashboard.php">
       <method />
     </configuration>
     <configuration default="true" type="CodeceptionConfigurationType" factoryName="Codeception">
@@ -532,12 +693,14 @@
       <recursive>false</recursive>
       <method />
     </configuration>
-    <list size="1">
+    <list size="2">
       <item index="0" class="java.lang.String" itemvalue="JavaScript Debug.index.php" />
+      <item index="1" class="java.lang.String" itemvalue="JavaScript Debug.CMS_VIEW_PostsDashboard.php" />
     </list>
     <recent_temporary>
-      <list size="1">
-        <item index="0" class="java.lang.String" itemvalue="JavaScript Debug.index.php" />
+      <list size="2">
+        <item index="0" class="java.lang.String" itemvalue="JavaScript Debug.CMS_VIEW_PostsDashboard.php" />
+        <item index="1" class="java.lang.String" itemvalue="JavaScript Debug.index.php" />
       </list>
     </recent_temporary>
   </component>
@@ -564,12 +727,13 @@
       <workItem from="1539069587373" duration="3198000" />
       <workItem from="1539157397927" duration="1762000" />
       <workItem from="1539174622580" duration="12882000" />
-      <workItem from="1539264923722" duration="7814000" />
+      <workItem from="1539264923722" duration="8188000" />
+      <workItem from="1539686808938" duration="4434000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="88765000" />
+    <option name="totallyTimeSpent" value="93573000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -581,43 +745,44 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
+    <frame x="245" y="329" width="1616" height="876" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="PHP-CGI Server" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="PHP-CGI Server" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2225" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3268229" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4461153" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.07049608" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39956093" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294271" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294271" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294271" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="PHP-CGI Server" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="PHP-CGI Server" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.07049608" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4461153" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -645,165 +810,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/CMS_VIEW_AddPost.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="22" column="36" lean-forward="true" selection-start-line="22" selection-start-column="36" selection-end-line="22" selection-end-column="36" />
-          <folding>
-            <element signature="e#6#89#0#PHP" expanded="true" />
-            <marker date="1539272036607" expanded="true" signature="416:493" ph="INSERT INTO posts... " />
-            <marker date="1539272036607" expanded="true" signature="669:805" ph="UPDATE posts... " />
-            <marker date="1539272036607" expanded="true" signature="1462:1552" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/GLOBAL_CLASS_Database.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="19" column="11" lean-forward="true" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/GLOBAL_TEMPLATE_Footer.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="11" lean-forward="false" selection-start-line="2" selection-start-column="11" selection-end-line="2" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ADMIN BANK addplan.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2407">
-          <caret line="92" column="43" lean-forward="true" selection-start-line="90" selection-start-column="4" selection-end-line="92" selection-end-column="43" />
-          <folding>
-            <marker date="1539272036866" expanded="true" signature="2678:2954" ph="INSERT INTO LOAN_PLAN... " />
-            <marker date="1539272036866" expanded="true" signature="3705:3795" ph="..." />
-            <marker date="1539272036866" expanded="true" signature="5133:5171" ph="SELECT * FRO... BANKS" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ADMIN BANK appdetails.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="145" column="31" lean-forward="false" selection-start-line="145" selection-start-column="31" selection-end-line="145" selection-end-column="31" />
-          <folding>
-            <marker date="1539272036635" expanded="true" signature="386:516" ph="select m.mem... loans" />
-            <marker date="1539272036635" expanded="true" signature="772:1039" ph="select b.ban... loans" />
-            <marker date="1539272036635" expanded="true" signature="1226:1421" ph="select br.IC... loans" />
-            <marker date="1539272036635" expanded="true" signature="1691:1787" ph="UPDATE loans... " />
-            <marker date="1539272036635" expanded="true" signature="1854:2143" ph="INSERT INTO txn_reference... " />
-            <marker date="1539272036635" expanded="true" signature="2861:2940" ph="UPDATE loans... " />
-            <marker date="1539272036635" expanded="true" signature="3062:3334" ph="INSERT INTO txn_reference... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ADMIN BANK applications.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="23" column="31" lean-forward="false" selection-start-line="23" selection-start-column="31" selection-end-line="23" selection-end-column="31" />
-          <folding>
-            <marker date="1539272036443" expanded="true" signature="1612:2255" ph="SELECT m.fir... loans" />
-            <marker date="1539272036443" expanded="true" signature="2492:3122" ph="..." />
-            <marker date="1539272036443" expanded="true" signature="2537:3077" ph="..." />
-            <marker date="1539272036443" expanded="true" signature="2583:3031" ph="..." />
-            <marker date="1539272036443" expanded="true" signature="3296:3345" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ADMIN BANK addbank.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="43" column="2" lean-forward="false" selection-start-line="43" selection-start-column="2" selection-end-line="43" selection-end-column="2" />
-          <folding>
-            <marker date="1539272036818" expanded="true" signature="925:1112" ph="INSERT INTO BANKS... " />
-            <marker date="1539272036818" expanded="true" signature="1903:1993" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ADMIN FALP applications.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="89">
-          <caret line="24" column="5" lean-forward="true" selection-start-line="24" selection-start-column="5" selection-end-line="24" selection-end-column="5" />
-          <folding>
-            <marker date="1539272036215" expanded="true" signature="556:600" ph="SELECT MEMBE... LOANS" />
-            <marker date="1539272036215" expanded="true" signature="2611:2881" ph="SELECT L.DAT... MEMBER" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ADMIN FALP viewactivity.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="262">
-          <caret line="134" column="22" lean-forward="false" selection-start-line="134" selection-start-column="22" selection-end-line="134" selection-end-column="22" />
-          <folding>
-            <marker date="1539272036412" expanded="true" signature="235:359" ph="SELECT * FRO... LOANS" />
-            <marker date="1539272036412" expanded="true" signature="447:595" ph="SELECT TXN_D... txn_reference" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ADMIN BANK viewactive.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="23" column="39" lean-forward="false" selection-start-line="23" selection-start-column="39" selection-end-line="23" selection-end-column="39" />
-          <folding>
-            <marker date="1539272036714" expanded="true" signature="1554:2223" ph="SELECT m.fir... loans" />
-            <marker date="1539272036714" expanded="true" signature="2460:3087" ph="..." />
-            <marker date="1539272036714" expanded="true" signature="2505:3042" ph="..." />
-            <marker date="1539272036714" expanded="true" signature="2551:2996" ph="..." />
-            <marker date="1539272036714" expanded="true" signature="3262:3311" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ADMIN BANK editplan.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="40" column="32" lean-forward="false" selection-start-line="40" selection-start-column="32" selection-end-line="40" selection-end-column="32" />
-          <folding>
-            <marker date="1539272036113" expanded="true" signature="320:404" ph="UPDATE loan_... " />
-            <marker date="1539272036113" expanded="true" signature="537:621" ph="UPDATE loan_... " />
-            <marker date="1539272036113" expanded="true" signature="758:933" ph="SELECT LOAN_... loan_plan" />
-            <marker date="1539272036113" expanded="true" signature="967:1225" ph="SELECT LOAN_... loan_plan" />
-            <marker date="1539272036113" expanded="true" signature="1105:1154" ph="SELECT bank_... Banks" />
-            <marker date="1539272036113" expanded="true" signature="2618:2793" ph="SELECT * fro... banks" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ADMIN BANK editbank.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="38" column="2" lean-forward="false" selection-start-line="38" selection-start-column="2" selection-end-line="38" selection-end-column="2" />
-          <folding>
-            <marker date="1539272037064" expanded="true" signature="572:678" ph="UPDATE BANKS... " />
-            <marker date="1539272037064" expanded="true" signature="975:1082" ph="UPDATE BANKS... " />
-            <marker date="1539272037064" expanded="true" signature="1964:2054" ph="..." />
-            <marker date="1539272037064" expanded="true" signature="3345:3408" ph="SELECT BANK_... BANKS" />
-            <marker date="1539272037064" expanded="true" signature="3699:3747" ph="SELECT COUNT... LOAN_PLAN" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ADMIN FALP viewdetails.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="11" column="27" lean-forward="true" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
-          <folding>
-            <marker date="1539272036149" expanded="true" signature="667:907" ph="SELECT m.fir... LOANS" />
-            <marker date="1539272036149" expanded="true" signature="2244:2397" ph="SELECT * FRO... LOANS" />
-            <marker date="1539272036149" expanded="true" signature="2605:2844" ph="SELECT l2.ST... LOANS" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ADMIN FILEREPO.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="58">
@@ -861,14 +867,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/MEMBER BANKLOAN appsent.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-7786">
@@ -895,16 +893,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ADMIN addaccount.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-153">
-          <caret line="17" column="32" lean-forward="false" selection-start-line="17" selection-start-column="32" selection-end-line="17" selection-end-column="32" />
-          <folding>
-            <marker date="1539272036552" expanded="true" signature="284:489" ph="insert into employee... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ADMIN FALP appdetails.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2050">
@@ -922,14 +910,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/LOANS_TEMPLATE_MEMBERSHIP_Navigation.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="6" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/LOANS_TEMPLATE_MEMBERSHIP_Navigation.php" />
     <entry file="file://$PROJECT_DIR$/ADMIN MEMBERS viewstatus.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
@@ -979,29 +960,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Downloads/FRAP_sd-master/FRAP_sd-master/ADMIN BANK addplan.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1538637321000" expanded="true" signature="2712:2988" ph="INSERT INTO LOAN_PLAN... " />
-            <marker date="1538637321000" expanded="true" signature="12794:12884" ph="..." />
-            <marker date="1538637321000" expanded="true" signature="14222:14260" ph="SELECT * FRO... BANKS" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Downloads/FRAP_sd-master/FRAP_sd-master/ADMIN BANK addbank.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3791">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1538637321000" expanded="true" signature="1992:2179" ph="INSERT INTO BANKS... " />
-            <marker date="1538637321000" expanded="true" signature="10990:11080" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/Downloads/FRAP_sd-master/FRAP_sd-master/ADMIN BANK addplan.php" />
+    <entry file="file://$USER_HOME$/Downloads/FRAP_sd-master/FRAP_sd-master/ADMIN BANK addbank.php" />
     <entry file="file://$PROJECT_DIR$/ADMIN BANK viewdetails.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1853">
@@ -1012,14 +972,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Downloads/FRAP_sd-master/FRAP_sd-master/ADMIN dashboard.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="51" column="8" lean-forward="true" selection-start-line="51" selection-start-column="8" selection-end-line="310" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/Downloads/FRAP_sd-master/FRAP_sd-master/ADMIN dashboard.php" />
     <entry file="file://$PROJECT_DIR$/ADMIN dashboard.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -1086,17 +1039,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Downloads/FRAP_sd-master/FRAP_sd-master/ADMIN FALP applications.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="210" column="9" lean-forward="false" selection-start-line="210" selection-start-column="9" selection-end-line="210" selection-end-column="9" />
-          <folding>
-            <marker date="1539272203771" expanded="true" signature="1705:1749" ph="SELECT MEMBE... LOANS" />
-            <marker date="1539272203771" expanded="true" signature="8619:8889" ph="SELECT L.DAT... MEMBER" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/Downloads/FRAP_sd-master/FRAP_sd-master/ADMIN FALP applications.php" />
     <entry file="file://$PROJECT_DIR$/ADMIN BANK viewactivity.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
@@ -1159,27 +1102,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Downloads/FRAP_sd-master/FRAP_sd-master/ADMIN HEALTHAID appdetails.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5134">
-          <caret line="8" column="31" lean-forward="true" selection-start-line="8" selection-start-column="31" selection-end-line="8" selection-end-column="31" />
-          <folding>
-            <marker date="1538637321000" expanded="true" signature="1614:1727" ph="UPDATE HEALT... " />
-            <marker date="1538637321000" expanded="true" signature="1877:2101" ph="INSERT INTO TXN_REFERENCE... " />
-            <marker date="1538637321000" expanded="true" signature="2316:2406" ph="UPDATE HEALT... " />
-            <marker date="1538637321000" expanded="true" signature="2556:2782" ph="INSERT INTO TXN_REFERENCE... " />
-            <marker date="1538637321000" expanded="true" signature="12176:12367" ph="SELECT M.FIR... MEMBER" />
-            <marker date="1538637321000" expanded="true" signature="14521:14559" ph="SELECT * FRO... FATHER" />
-            <marker date="1538637321000" expanded="true" signature="17429:17467" ph="SELECT * FRO... MOTHER" />
-            <marker date="1538637321000" expanded="true" signature="20293:20331" ph="SELECT * FRO... SPOUSE" />
-            <marker date="1538637321000" expanded="true" signature="23232:23272" ph="SELECT * FRO... SIBLINGS" />
-            <marker date="1538637321000" expanded="true" signature="23843:24306" ph="..." />
-            <marker date="1538637321000" expanded="true" signature="26879:26919" ph="SELECT * FRO... CHILDREN" />
-            <marker date="1538637321000" expanded="true" signature="27487:27954" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/Downloads/FRAP_sd-master/FRAP_sd-master/ADMIN HEALTHAID appdetails.php" />
     <entry file="file://$PROJECT_DIR$/ADMIN MANAGE acl.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1265">
@@ -1188,42 +1111,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Downloads/FRAP_sd-master/FRAP_sd-master/ADMIN MANAGE acl.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Downloads/FRAP_sd-master/FRAP_sd-master/ADMIN MANAGE.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="251" column="0" lean-forward="true" selection-start-line="251" selection-start-column="0" selection-end-line="251" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LOAN_TEMPLATE_NAVIGATION_Membership.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="619">
-          <caret line="102" column="28" lean-forward="false" selection-start-line="102" selection-start-column="28" selection-end-line="102" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LOAN_TEMPLATES_NAVIGATION_Dashboard.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4403">
-          <caret line="259" column="6" lean-forward="false" selection-start-line="259" selection-start-column="6" selection-end-line="259" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/Downloads/FRAP_sd-master/FRAP_sd-master/ADMIN MANAGE acl.php" />
+    <entry file="file://$USER_HOME$/Downloads/FRAP_sd-master/FRAP_sd-master/ADMIN MANAGE.php" />
     <entry file="file://$PROJECT_DIR$/ADMIN MEMBERSHIP appdetails.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="76" column="50" lean-forward="true" selection-start-line="74" selection-start-column="0" selection-end-line="76" selection-end-column="50" />
+        <state relative-caret-position="1292">
+          <caret line="76" column="50" lean-forward="false" selection-start-line="74" selection-start-column="0" selection-end-line="76" selection-end-column="50" />
           <folding>
             <marker date="1539272036305" expanded="true" signature="283:755" ph="SELECT M.MEM... MEMBER" />
             <marker date="1539272036305" expanded="true" signature="1356:1537" ph="UPDATE MEMBE... " />
@@ -1236,8 +1129,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ADMIN MEMBERSHIP applications.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="59" column="32" lean-forward="true" selection-start-line="59" selection-start-column="32" selection-end-line="59" selection-end-column="32" />
+        <state relative-caret-position="1003">
+          <caret line="59" column="32" lean-forward="false" selection-start-line="59" selection-start-column="32" selection-end-line="59" selection-end-column="32" />
           <folding>
             <marker date="1539272036387" expanded="true" signature="1432:1688" ph="SELECT M.MEM... MEMBER" />
           </folding>
@@ -1246,7 +1139,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ADMIN MREPORT report.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
+        <state relative-caret-position="629">
           <caret line="37" column="52" lean-forward="false" selection-start-line="37" selection-start-column="52" selection-end-line="37" selection-end-column="52" />
           <folding>
             <marker date="1539272484701" expanded="true" signature="353:487" ph="SELECT max(d... txn_reference" />
@@ -1264,7 +1157,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ADMIN PREPORT completed.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
+        <state relative-caret-position="4284">
           <caret line="252" column="22" lean-forward="false" selection-start-line="252" selection-start-column="22" selection-end-line="252" selection-end-column="22" />
           <folding>
             <marker date="1539272515485" expanded="true" signature="521:830" ph="SELECT m.mem... loans" />
@@ -1279,8 +1172,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ADMIN PREPORT new.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="143">
-          <caret line="270" column="0" lean-forward="true" selection-start-line="270" selection-start-column="0" selection-end-line="270" selection-end-column="0" />
+        <state relative-caret-position="4590">
+          <caret line="270" column="0" lean-forward="false" selection-start-line="270" selection-start-column="0" selection-end-line="270" selection-end-column="0" />
           <folding>
             <marker date="1539272540471" expanded="true" signature="615:1010" ph="SELECT m.mem... member" />
             <marker date="1539272540471" expanded="true" signature="826:896" ph="SELECT max(d... loans" />
@@ -1294,7 +1187,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/MEMBER AUDITRAIL.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1081">
+        <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <marker date="1539231887477" expanded="true" signature="3457:3513" ph="SELECT LASTN... MEMBER" />
@@ -1303,5 +1196,172 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/ADMIN BANK addbank.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="731">
+          <caret line="43" column="2" lean-forward="false" selection-start-line="43" selection-start-column="2" selection-end-line="43" selection-end-column="2" />
+          <folding>
+            <marker date="1539272036818" expanded="true" signature="925:1112" ph="INSERT INTO BANKS... " />
+            <marker date="1539272036818" expanded="true" signature="1903:1993" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LOAN_TEMPLATE_NAVIGATION_Membership.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1734">
+          <caret line="102" column="28" lean-forward="false" selection-start-line="102" selection-start-column="28" selection-end-line="102" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Downloads/startbootstrap-sb-admin-2-gh-pages/startbootstrap-sb-admin-2-gh-pages/pages/tables.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="49">
+          <caret line="805" column="28" lean-forward="false" selection-start-line="375" selection-start-column="8" selection-end-line="816" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMS_VIEW_AddPost.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="33" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
+          <folding>
+            <element signature="e#6#89#0#PHP" expanded="true" />
+            <marker date="1539272036607" expanded="true" signature="416:493" ph="INSERT INTO posts... " />
+            <marker date="1539272036607" expanded="true" signature="669:805" ph="UPDATE posts... " />
+            <marker date="1539272036607" expanded="true" signature="1462:1552" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Downloads/startbootstrap-sb-admin-gh-pages/startbootstrap-sb-admin-gh-pages/tables.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/signup.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/sb-admin-rtl.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/sb-admin.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/montserrat.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DataTables/datatables.min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-170">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1529024116000" expanded="true" signature="0:266" ph="/*...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DataTables/datatables.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4607">
+          <caret line="668" column="10" lean-forward="false" selection-start-line="668" selection-start-column="10" selection-end-line="668" selection-end-column="10" />
+          <folding>
+            <marker date="1529024116000" expanded="false" signature="0:266" ph="/*...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DataTables/datatables.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-68">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="41" lean-forward="false" selection-start-line="19" selection-start-column="41" selection-end-line="19" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ADMIN addaccount.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-442">
+          <caret line="17" column="32" lean-forward="false" selection-start-line="17" selection-start-column="32" selection-end-line="17" selection-end-column="32" />
+          <folding>
+            <marker date="1539272036552" expanded="true" signature="284:489" ph="insert into employee... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LOAN_TEMPLATES_NAVIGATION_Dashboard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="242" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="259" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="616">
+          <caret line="101" column="109" lean-forward="false" selection-start-line="101" selection-start-column="109" selection-end-line="101" selection-end-column="109" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="714">
+          <caret line="42" column="9" lean-forward="false" selection-start-line="42" selection-start-column="9" selection-end-line="42" selection-end-column="9" />
+          <folding>
+            <element signature="n#style#0;n#table#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>
