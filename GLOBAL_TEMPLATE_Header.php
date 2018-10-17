@@ -20,12 +20,9 @@
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
 
-    <link href="DataTables/datatables.min.css" rel="stylesheet">
-    <link href="DataTables/DataTables-1.10.18/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css">
-    <script src="DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js"></script>
-    <script src="DataTables/DataTables-1.10.18/js/dataTables.bootstrap.min.js"></script>
-    <script src="DataTables/datatables.min.js"></script>
-
+    <link href="datatables/dataTables.bootstrap4.css" rel="stylesheet">
+    <script src="datatables/jquery.dataTables.js"></script>
+    <script src="datatables/dataTables.bootstrap4.js"></script>
 </head>
 
 <body>

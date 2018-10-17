@@ -2,10 +2,257 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5356d799-a39e-4cc3-a9e3-2d52e87b4c03" name="Default" comment="made the navigation and footer html templates">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CMS_VIEW_ArchivedPosts.php" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/css/dataTables.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/css/dataTables.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/css/dataTables.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/css/dataTables.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/css/dataTables.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/css/dataTables.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/css/dataTables.semanticui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/css/dataTables.semanticui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/css/jquery.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/css/jquery.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/images/sort_asc.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/images/sort_asc_disabled.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/images/sort_both.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/images/sort_desc.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/images/sort_desc_disabled.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/js/dataTables.bootstrap.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/js/dataTables.bootstrap.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/js/dataTables.foundation.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/js/dataTables.foundation.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/js/dataTables.jqueryui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/js/dataTables.jqueryui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/js/dataTables.semanticui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/js/dataTables.semanticui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/js/jquery.dataTables.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/datatables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/datatables.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/datatables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DataTables/datatables.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/css/autoFill.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/css/autoFill.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/css/autoFill.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/css/autoFill.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/css/autoFill.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/css/autoFill.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/css/autoFill.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/css/autoFill.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/css/autoFill.semanticui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/css/autoFill.semanticui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/js/autoFill.bootstrap.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/js/autoFill.bootstrap.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/js/autoFill.foundation.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/js/autoFill.foundation.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/js/autoFill.jqueryui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/js/autoFill.jqueryui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/js/autoFill.semanticui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/js/autoFill.semanticui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/js/dataTables.autoFill.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/AutoFill-2.2.0/js/dataTables.autoFill.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/css/buttons.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/css/buttons.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/css/buttons.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/css/buttons.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/css/buttons.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/css/buttons.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/css/buttons.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/css/buttons.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/css/buttons.semanticui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/css/buttons.semanticui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/css/common.scss" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/css/mixins.scss" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/buttons.bootstrap.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/buttons.bootstrap.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/buttons.colVis.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/buttons.colVis.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/buttons.flash.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/buttons.flash.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/buttons.foundation.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/buttons.foundation.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/buttons.html5.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/buttons.html5.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/buttons.jqueryui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/buttons.jqueryui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/buttons.print.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/buttons.print.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/buttons.semanticui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/buttons.semanticui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/dataTables.buttons.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/js/dataTables.buttons.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Buttons-1.3.1/swf/flashExport.swf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/ColReorder-1.3.3/css/colReorder.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/ColReorder-1.3.3/css/colReorder.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/ColReorder-1.3.3/css/colReorder.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/ColReorder-1.3.3/css/colReorder.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/ColReorder-1.3.3/css/colReorder.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/ColReorder-1.3.3/css/colReorder.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/ColReorder-1.3.3/css/colReorder.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/ColReorder-1.3.3/css/colReorder.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/ColReorder-1.3.3/js/dataTables.colReorder.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/ColReorder-1.3.3/js/dataTables.colReorder.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/css/dataTables.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/css/dataTables.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/css/dataTables.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/css/dataTables.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/css/dataTables.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/css/dataTables.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/css/dataTables.semanticui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/css/dataTables.semanticui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/css/jquery.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/css/jquery.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/css/jquery.dataTables_themeroller.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/images/sort_asc.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/images/sort_asc_disabled.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/images/sort_both.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/images/sort_desc.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/images/sort_desc_disabled.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/js/dataTables.bootstrap.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/js/dataTables.bootstrap.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/js/dataTables.foundation.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/js/dataTables.foundation.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/js/dataTables.jqueryui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/js/dataTables.jqueryui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/js/dataTables.semanticui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/js/dataTables.semanticui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/js/jquery.dataTables.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.15/js/jquery.dataTables.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/css/dataTables.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/css/dataTables.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/css/dataTables.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/css/dataTables.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/css/dataTables.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/css/dataTables.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/css/dataTables.semanticui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/css/dataTables.semanticui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/css/jquery.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/css/jquery.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/images/sort_asc.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/images/sort_asc_disabled.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/images/sort_both.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/images/sort_desc.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/images/sort_desc_disabled.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/js/dataTables.bootstrap.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/js/dataTables.bootstrap.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/js/dataTables.foundation.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/js/dataTables.foundation.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/js/dataTables.jqueryui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/js/dataTables.jqueryui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/js/dataTables.semanticui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/js/dataTables.semanticui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/js/jquery.dataTables.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedColumns-3.2.2/css/fixedColumns.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedColumns-3.2.2/css/fixedColumns.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedColumns-3.2.2/css/fixedColumns.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedColumns-3.2.2/css/fixedColumns.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedColumns-3.2.2/css/fixedColumns.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedColumns-3.2.2/css/fixedColumns.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedColumns-3.2.2/css/fixedColumns.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedColumns-3.2.2/css/fixedColumns.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedColumns-3.2.2/js/dataTables.fixedColumns.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedColumns-3.2.2/js/dataTables.fixedColumns.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedHeader-3.1.2/css/fixedHeader.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedHeader-3.1.2/css/fixedHeader.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedHeader-3.1.2/css/fixedHeader.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedHeader-3.1.2/css/fixedHeader.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedHeader-3.1.2/css/fixedHeader.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedHeader-3.1.2/css/fixedHeader.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedHeader-3.1.2/css/fixedHeader.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedHeader-3.1.2/css/fixedHeader.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedHeader-3.1.2/js/dataTables.fixedHeader.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/FixedHeader-3.1.2/js/dataTables.fixedHeader.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/KeyTable-2.2.1/css/keyTable.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/KeyTable-2.2.1/css/keyTable.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/KeyTable-2.2.1/css/keyTable.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/KeyTable-2.2.1/css/keyTable.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/KeyTable-2.2.1/css/keyTable.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/KeyTable-2.2.1/css/keyTable.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/KeyTable-2.2.1/css/keyTable.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/KeyTable-2.2.1/css/keyTable.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/KeyTable-2.2.1/css/keyTable.semanticui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/KeyTable-2.2.1/css/keyTable.semanticui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/KeyTable-2.2.1/js/dataTables.keyTable.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/KeyTable-2.2.1/js/dataTables.keyTable.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Responsive-2.1.1/css/responsive.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Responsive-2.1.1/css/responsive.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Responsive-2.1.1/css/responsive.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Responsive-2.1.1/css/responsive.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Responsive-2.1.1/css/responsive.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Responsive-2.1.1/css/responsive.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Responsive-2.1.1/css/responsive.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Responsive-2.1.1/css/responsive.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Responsive-2.1.1/js/dataTables.responsive.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Responsive-2.1.1/js/dataTables.responsive.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Responsive-2.1.1/js/responsive.bootstrap.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Responsive-2.1.1/js/responsive.bootstrap.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Responsive-2.1.1/js/responsive.foundation.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Responsive-2.1.1/js/responsive.foundation.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Responsive-2.1.1/js/responsive.jqueryui.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Responsive-2.1.1/js/responsive.jqueryui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowGroup-1.0.0/css/rowGroup.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowGroup-1.0.0/css/rowGroup.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowGroup-1.0.0/css/rowGroup.bootstrap4.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowGroup-1.0.0/css/rowGroup.bootstrap4.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowGroup-1.0.0/css/rowGroup.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowGroup-1.0.0/css/rowGroup.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowGroup-1.0.0/css/rowGroup.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowGroup-1.0.0/css/rowGroup.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowGroup-1.0.0/css/rowGroup.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowGroup-1.0.0/css/rowGroup.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowGroup-1.0.0/css/rowGroup.semanticui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowGroup-1.0.0/css/rowGroup.semanticui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowGroup-1.0.0/js/dataTables.rowGroup.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowGroup-1.0.0/js/dataTables.rowGroup.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowReorder-1.2.0/css/rowReorder.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowReorder-1.2.0/css/rowReorder.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowReorder-1.2.0/css/rowReorder.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowReorder-1.2.0/css/rowReorder.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowReorder-1.2.0/css/rowReorder.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowReorder-1.2.0/css/rowReorder.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowReorder-1.2.0/css/rowReorder.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowReorder-1.2.0/css/rowReorder.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowReorder-1.2.0/css/rowReorder.semanticui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowReorder-1.2.0/css/rowReorder.semanticui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowReorder-1.2.0/js/dataTables.rowReorder.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/RowReorder-1.2.0/js/dataTables.rowReorder.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Scroller-1.4.2/css/scroller.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Scroller-1.4.2/css/scroller.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Scroller-1.4.2/css/scroller.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Scroller-1.4.2/css/scroller.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Scroller-1.4.2/css/scroller.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Scroller-1.4.2/css/scroller.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Scroller-1.4.2/css/scroller.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Scroller-1.4.2/css/scroller.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Scroller-1.4.2/js/dataTables.scroller.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Scroller-1.4.2/js/dataTables.scroller.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Select-1.2.2/css/select.bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Select-1.2.2/css/select.bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Select-1.2.2/css/select.dataTables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Select-1.2.2/css/select.dataTables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Select-1.2.2/css/select.foundation.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Select-1.2.2/css/select.foundation.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Select-1.2.2/css/select.jqueryui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Select-1.2.2/css/select.jqueryui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Select-1.2.2/css/select.semanticui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Select-1.2.2/css/select.semanticui.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Select-1.2.2/js/dataTables.select.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/Select-1.2.2/js/dataTables.select.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/datatables.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/datatables.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/datatables.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OLD_DataTables/datatables.min.js" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php" afterPath="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMS_VIEW_AddPost.php" afterPath="$PROJECT_DIR$/CMS_VIEW_AddPost.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMS_VIEW_ArchivedPosts.php" afterPath="$PROJECT_DIR$/CMS_VIEW_ArchivedPosts.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" afterPath="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php" afterPath="$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php" />
     </list>
@@ -113,36 +360,10 @@
         <entry file="file://$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="204">
-              <caret line="62" column="87" lean-forward="true" selection-start-line="62" selection-start-column="87" selection-end-line="62" selection-end-column="87" />
+              <caret line="12" column="37" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
               <folding>
                 <element signature="e#6#89#0#PHP" expanded="true" />
-                <marker date="1539707402672" expanded="true" signature="2024:2226" ph="SELECT p.id,... posts" />
-                <marker date="1539707402672" expanded="true" signature="2024:2253" ph="SELECT p.id,... posts" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CMS_VIEW_ArchivedPosts.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CMS_VIEW_ArchivedPosts.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="20" column="44" lean-forward="false" selection-start-line="20" selection-start-column="44" selection-end-line="20" selection-end-column="44" />
-              <folding>
-                <element signature="e#6#89#0#PHP" expanded="true" />
-                <marker date="1539707525846" expanded="true" signature="2023:2240" ph="SELECT p.id,... posts" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GLOBAL_CLASS_CRUD.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/GLOBAL_CLASS_CRUD.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-85">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <marker date="1539266683934" expanded="true" signature="882:912" ph="DELETE FROM " />
+                <marker date="1539754250605" expanded="true" signature="2201:2430" ph="SELECT p.id,... posts" />
               </folding>
             </state>
           </provider>
@@ -151,8 +372,8 @@
       <file leaf-file-name="ADMIN MEMBERS viewmembers.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ADMIN MEMBERS viewmembers.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="12" column="66" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="12" selection-end-column="66" />
+            <state relative-caret-position="255">
+              <caret line="34" column="22" lean-forward="true" selection-start-line="24" selection-start-column="16" selection-end-line="34" selection-end-column="22" />
               <folding>
                 <marker date="1539272036834" expanded="true" signature="270:379" ph="SELECT * FRO... member" />
               </folding>
@@ -160,49 +381,44 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tables.html" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Downloads/startbootstrap-sb-admin-gh-pages/startbootstrap-sb-admin-gh-pages/tables.html">
+      <file leaf-file-name="tables.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../test/tables.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="146" column="44" lean-forward="true" selection-start-line="141" selection-start-column="10" selection-end-line="146" selection-end-column="44" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MEMBER AUDITRAIL.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/MEMBER AUDITRAIL.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1853">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="221">
+              <caret line="144" column="32" lean-forward="true" selection-start-line="144" selection-start-column="6" selection-end-line="144" selection-end-column="32" />
               <folding>
-                <marker date="1539231887477" expanded="true" signature="3457:3513" ph="SELECT LASTN... MEMBER" />
-                <marker date="1539231887477" expanded="true" signature="9037:9448" ph="SELECT tr.TX... txn_reference" />
+                <marker date="1539752781262" expanded="true" signature="7519:7748" ph="SELECT p.id,... posts" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CMS_TEMPLATE_NAVIGATION_Editor.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php">
+      <file leaf-file-name="CMS_VIEW_ArchivedPosts.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/CMS_VIEW_ArchivedPosts.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="463">
-              <caret line="114" column="59" lean-forward="false" selection-start-line="114" selection-start-column="59" selection-end-line="114" selection-end-column="59" />
-              <folding />
+            <state relative-caret-position="476">
+              <caret line="65" column="265" lean-forward="false" selection-start-line="65" selection-start-column="265" selection-end-line="65" selection-end-column="265" />
+              <folding>
+                <element signature="e#6#89#0#PHP" expanded="true" />
+                <marker date="1539754319553" expanded="true" signature="2200:2417" ph="SELECT p.id,... posts" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CMS_VIEW_AddPost.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CMS_VIEW_AddPost.php">
+      <file leaf-file-name="MEMBER BANKLOAN appsent.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MEMBER BANKLOAN appsent.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="341">
-              <caret line="71" column="49" lean-forward="false" selection-start-line="71" selection-start-column="49" selection-end-line="71" selection-end-column="49" />
+            <state relative-caret-position="208">
+              <caret line="458" column="75" lean-forward="false" selection-start-line="458" selection-start-column="75" selection-end-line="458" selection-end-column="75" />
               <folding>
-                <element signature="e#6#89#0#PHP" expanded="true" />
-                <marker date="1539707563372" expanded="true" signature="416:493" ph="INSERT INTO posts... " />
-                <marker date="1539707563372" expanded="true" signature="669:805" ph="UPDATE posts... " />
-                <marker date="1539707563372" expanded="true" signature="1457:1547" ph="..." />
+                <marker date="1539231891172" expanded="true" signature="235:297" ph="SELECT MAX(L... loans" />
+                <marker date="1539231891172" expanded="true" signature="814:855" ph="SELECT MAX(R... falp_requirements" />
+                <marker date="1539231891172" expanded="true" signature="4128:4201" ph="SELECT * fro... loan_plan" />
+                <marker date="1539231891172" expanded="true" signature="4369:4670" ph="INSERT INTO loans... " />
+                <marker date="1539231891172" expanded="true" signature="4751:4835" ph="SELECT MAX(L... loans" />
+                <marker date="1539231891172" expanded="true" signature="12340:12604" ph="INSERT into bank_requirements... " />
+                <marker date="1539231891172" expanded="true" signature="13180:13407" ph="INSERT INTO txn_reference... " />
               </folding>
             </state>
           </provider>
@@ -211,7 +427,7 @@
       <file leaf-file-name="LOAN_TEMPLATES_NAVIGATION_Dashboard.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/LOAN_TEMPLATES_NAVIGATION_Dashboard.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-595">
+            <state relative-caret-position="187">
               <caret line="11" column="53" lean-forward="false" selection-start-line="11" selection-start-column="53" selection-end-line="11" selection-end-column="53" />
               <folding />
             </state>
@@ -221,8 +437,38 @@
       <file leaf-file-name="GLOBAL_TEMPLATE_Header.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="23" column="40" lean-forward="false" selection-start-line="23" selection-start-column="40" selection-end-line="23" selection-end-column="40" />
+            <state relative-caret-position="425">
+              <caret line="25" column="7" lean-forward="true" selection-start-line="25" selection-start-column="7" selection-end-line="25" selection-end-column="7" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="dataTables.bootstrap4.css" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/Downloads/startbootstrap-sb-admin-gh-pages/startbootstrap-sb-admin-gh-pages/vendor/datatables/dataTables.bootstrap4.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="34">
+              <caret line="2" column="29" lean-forward="false" selection-start-line="2" selection-start-column="28" selection-end-line="2" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sb-admin.js" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/Downloads/startbootstrap-sb-admin-gh-pages/startbootstrap-sb-admin-gh-pages/js/sb-admin.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="datatables-demo.js" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/Downloads/startbootstrap-sb-admin-gh-pages/startbootstrap-sb-admin-gh-pages/js/demo/datatables-demo.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -305,11 +551,11 @@
         <option value="$PROJECT_DIR$/DataTables/datatables.css" />
         <option value="$PROJECT_DIR$/DataTables/datatables.js" />
         <option value="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Edito.php" />
+        <option value="$PROJECT_DIR$/CMS_VIEW_AddPost.php" />
+        <option value="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php" />
         <option value="$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php" />
         <option value="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" />
         <option value="$PROJECT_DIR$/CMS_VIEW_ArchivedPosts.php" />
-        <option value="$PROJECT_DIR$/CMS_VIEW_AddPost.php" />
-        <option value="$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php" />
       </list>
     </option>
   </component>
@@ -367,50 +613,6 @@
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="DataTables" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="datatables.js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NestingTreeNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FRAP_sd" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FRAP_sd" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DataTables" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="datatables.css" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NestingTreeNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FRAP_sd" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FRAP_sd" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DataTables" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DataTables-1.10.18" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="js" />
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
@@ -425,33 +627,7 @@
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="DataTables" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DataTables-1.10.18" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FRAP_sd" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FRAP_sd" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DataTables" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DataTables-1.10.18" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="css" />
+              <option name="myItemId" value="datatables" />
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
           </PATH>
@@ -476,7 +652,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../test" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
     <property name="com.intellij.database.dataSource.DataSourceTemplate" value="MySQL" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
@@ -602,12 +778,12 @@
       <workItem from="1539157397927" duration="1762000" />
       <workItem from="1539174622580" duration="12882000" />
       <workItem from="1539264923722" duration="8188000" />
-      <workItem from="1539686808938" duration="11983000" />
+      <workItem from="1539686808938" duration="18636000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="101122000" />
+    <option name="totallyTimeSpent" value="107775000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -651,7 +827,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.07049608" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.07049608" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -684,105 +860,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/ADMIN LIFETIME addmember.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="25" column="2" lean-forward="false" selection-start-line="25" selection-start-column="2" selection-end-line="25" selection-end-column="2" />
-          <folding>
-            <marker date="1539272036578" expanded="true" signature="243:506" ph="SELECT M.MEM... MEMBER" />
-            <marker date="1539272036578" expanded="true" signature="2631:2810" ph="SELECT MEMBE... LIFETIME" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ADMIN LIFETIME appdetails.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="109">
-          <caret line="257" column="0" lean-forward="true" selection-start-line="257" selection-start-column="0" selection-end-line="257" selection-end-column="0" />
-          <folding>
-            <marker date="1539272036478" expanded="true" signature="244:718" ph="SELECT M.MEM... MEMBER" />
-            <marker date="1539272036478" expanded="true" signature="1410:1659" ph="INSERT INTO LIFETIME... " />
-            <marker date="1539272036478" expanded="true" signature="1751:2004" ph="INSERT INTO TXN_REFERENCE... " />
-            <marker date="1539272036478" expanded="true" signature="2178:2375" ph="INSERT INTO LIFETIME... " />
-            <marker date="1539272036478" expanded="true" signature="2468:2721" ph="INSERT INTO TXN_REFERENCE... " />
-            <marker date="1539272036478" expanded="true" signature="2869:3066" ph="INSERT INTO LIFETIME... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MEMBER BANKLOAN appsent.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-7786">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1539231891172" expanded="true" signature="235:297" ph="SELECT MAX(L... loans" />
-            <marker date="1539231891172" expanded="true" signature="814:855" ph="SELECT MAX(R... falp_requirements" />
-            <marker date="1539231891172" expanded="true" signature="4128:4201" ph="SELECT * fro... loan_plan" />
-            <marker date="1539231891172" expanded="true" signature="4369:4670" ph="INSERT INTO loans... " />
-            <marker date="1539231891172" expanded="true" signature="4751:4835" ph="SELECT MAX(L... loans" />
-            <marker date="1539231891172" expanded="true" signature="12340:12604" ph="INSERT into bank_requirements... " />
-            <marker date="1539231891172" expanded="true" signature="13180:13407" ph="INSERT INTO txn_reference... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MEMBER BANKLOAN activity.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-527">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1539231888473" expanded="true" signature="1300:1426" ph="select TXN_D... txn_reference" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ADMIN FALP appdetails.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2050">
-          <caret line="41" column="34" lean-forward="false" selection-start-line="41" selection-start-column="34" selection-end-line="41" selection-end-column="34" />
-          <folding>
-            <marker date="1539272037171" expanded="true" signature="508:548" ph="SELECT AMOUN... LOANS" />
-            <marker date="1539272037171" expanded="true" signature="763:887" ph="UPDATE LOANS... " />
-            <marker date="1539272037171" expanded="true" signature="1036:1271" ph="INSERT INTO TXN_REFERENCE... " />
-            <marker date="1539272037171" expanded="true" signature="1533:1657" ph="UPDATE LOANS... " />
-            <marker date="1539272037171" expanded="true" signature="1806:2041" ph="INSERT INTO TXN_REFERENCE... " />
-            <marker date="1539272037171" expanded="true" signature="2787:2877" ph="..." />
-            <marker date="1539272037171" expanded="true" signature="3803:3874" ph="SELECT FIRST... MEMBER" />
-            <marker date="1539272037171" expanded="true" signature="5087:5167" ph="SELECT AMOUN... LOANS" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LOANS_TEMPLATE_MEMBERSHIP_Navigation.php" />
-    <entry file="file://$PROJECT_DIR$/ADMIN MEMBERS viewstatus.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="25" column="41" lean-forward="false" selection-start-line="25" selection-start-column="41" selection-end-line="25" selection-end-column="41" />
-          <folding>
-            <marker date="1539272036247" expanded="true" signature="270:1103" ph="SELECT m.mem... member" />
-            <marker date="1539272036247" expanded="true" signature="456:501" ph="SELECT * fro... health_aid" />
-            <marker date="1539272036247" expanded="true" signature="575:721" ph="SELECT membe... Loans" />
-            <marker date="1539272036247" expanded="true" signature="793:940" ph="SELECT membe... Loans" />
-            <marker date="1539272036247" expanded="true" signature="1014:1057" ph="SELECT * fro... lifetime" />
-            <marker date="1539272036247" expanded="true" signature="1755:3375" ph="..." />
-            <marker date="1539272036247" expanded="true" signature="1799:3375" ph="..." />
-            <marker date="1539272036247" expanded="true" signature="1841:3375" ph="..." />
-            <marker date="1539272036247" expanded="true" signature="1894:3375" ph="..." />
-            <marker date="1539272036247" expanded="true" signature="1959:3375" ph="..." />
-            <marker date="1539272036247" expanded="true" signature="2075:3375" ph="..." />
-            <marker date="1539272036247" expanded="true" signature="2156:2863" ph="..." />
-            <marker date="1539272036247" expanded="true" signature="2202:2817" ph="..." />
-            <marker date="1539272036247" expanded="true" signature="2908:3375" ph="..." />
-            <marker date="1539272036247" expanded="true" signature="2954:3375" ph="..." />
-            <marker date="1539272036247" expanded="true" signature="4349:4415" ph="..." />
-            <marker date="1539272036247" expanded="true" signature="4725:4791" ph="..." />
-            <marker date="1539272036247" expanded="true" signature="5101:5165" ph="..." />
-            <marker date="1539272036247" expanded="true" signature="5475:5538" ph="..." />
-            <marker date="1539272036247" expanded="true" signature="6601:6622" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ADMIN MEMBERS viewdetails.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="183">
@@ -1029,14 +1106,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/LOAN_TEMPLATE_NAVIGATION_Membership.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1734">
-          <caret line="102" column="28" lean-forward="false" selection-start-line="102" selection-start-column="28" selection-end-line="102" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Downloads/startbootstrap-sb-admin-2-gh-pages/startbootstrap-sb-admin-2-gh-pages/pages/tables.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="49">
@@ -1081,9 +1150,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-170">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1529025136000" expanded="true" signature="0:254" ph="/*...*/" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1091,9 +1158,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-4607">
           <caret line="668" column="10" lean-forward="false" selection-start-line="668" selection-start-column="10" selection-end-line="668" selection-end-column="10" />
-          <folding>
-            <marker date="1529025136000" expanded="false" signature="0:254" ph="/*...*/" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1101,9 +1166,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-68">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1529025136000" expanded="true" signature="5260:5262" ph="{...}" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1125,72 +1188,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ADMIN MEMBERS viewmembers.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="12" column="66" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="12" selection-end-column="66" />
-          <folding>
-            <marker date="1539272036834" expanded="true" signature="270:379" ph="SELECT * FRO... member" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/GLOBAL_CLASS_CRUD.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-85">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <marker date="1539266683934" expanded="true" signature="882:912" ph="DELETE FROM " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LOAN_TEMPLATES_NAVIGATION_Dashboard.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-595">
-          <caret line="11" column="53" lean-forward="false" selection-start-line="11" selection-start-column="53" selection-end-line="11" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="40" lean-forward="false" selection-start-line="23" selection-start-column="40" selection-end-line="23" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MEMBER AUDITRAIL.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1853">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1539231887477" expanded="true" signature="3457:3513" ph="SELECT LASTN... MEMBER" />
-            <marker date="1539231887477" expanded="true" signature="9037:9448" ph="SELECT tr.TX... txn_reference" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="62" column="87" lean-forward="true" selection-start-line="62" selection-start-column="87" selection-end-line="62" selection-end-column="87" />
-          <folding>
-            <element signature="e#6#89#0#PHP" expanded="true" />
-            <marker date="1539707402672" expanded="true" signature="2024:2226" ph="SELECT p.id,... posts" />
-            <marker date="1539707402672" expanded="true" signature="2024:2253" ph="SELECT p.id,... posts" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CMS_VIEW_ArchivedPosts.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="44" lean-forward="false" selection-start-line="20" selection-start-column="44" selection-end-line="20" selection-end-column="44" />
-          <folding>
-            <element signature="e#6#89#0#PHP" expanded="true" />
-            <marker date="1539707525846" expanded="true" signature="2023:2240" ph="SELECT p.id,... posts" />
           </folding>
         </state>
       </provider>
@@ -1210,9 +1213,142 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/CMS_TEMPLATE_NAVIGATION_Editor.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="463">
+        <state relative-caret-position="548">
           <caret line="114" column="59" lean-forward="false" selection-start-line="114" selection-start-column="59" selection-end-line="114" selection-end-column="59" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LOAN_TEMPLATE_NAVIGATION_Membership.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1496">
+          <caret line="102" column="28" lean-forward="false" selection-start-line="102" selection-start-column="28" selection-end-line="102" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER AUDITRAIL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2822">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1539231887477" expanded="true" signature="3457:3513" ph="SELECT LASTN... MEMBER" />
+            <marker date="1539231887477" expanded="true" signature="9037:9448" ph="SELECT tr.TX... txn_reference" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MEMBER BANKLOAN appsent.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="458" column="75" lean-forward="false" selection-start-line="458" selection-start-column="75" selection-end-line="458" selection-end-column="75" />
+          <folding>
+            <marker date="1539231891172" expanded="true" signature="235:297" ph="SELECT MAX(L... loans" />
+            <marker date="1539231891172" expanded="true" signature="814:855" ph="SELECT MAX(R... falp_requirements" />
+            <marker date="1539231891172" expanded="true" signature="4128:4201" ph="SELECT * fro... loan_plan" />
+            <marker date="1539231891172" expanded="true" signature="4369:4670" ph="INSERT INTO loans... " />
+            <marker date="1539231891172" expanded="true" signature="4751:4835" ph="SELECT MAX(L... loans" />
+            <marker date="1539231891172" expanded="true" signature="12340:12604" ph="INSERT into bank_requirements... " />
+            <marker date="1539231891172" expanded="true" signature="13180:13407" ph="INSERT INTO txn_reference... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Downloads/startbootstrap-sb-admin-gh-pages/startbootstrap-sb-admin-gh-pages/js/sb-admin.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Downloads/startbootstrap-sb-admin-gh-pages/startbootstrap-sb-admin-gh-pages/vendor/datatables/dataTables.bootstrap4.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="29" lean-forward="false" selection-start-line="2" selection-start-column="28" selection-end-line="2" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LOAN_TEMPLATES_NAVIGATION_Dashboard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="53" lean-forward="false" selection-start-line="11" selection-start-column="53" selection-end-line="11" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Downloads/startbootstrap-sb-admin-gh-pages/startbootstrap-sb-admin-gh-pages/vendor/jquery/jquery.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Downloads/startbootstrap-sb-admin-gh-pages/startbootstrap-sb-admin-gh-pages/js/demo/datatables-demo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GLOBAL_TEMPLATE_Header.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="25" column="7" lean-forward="true" selection-start-line="25" selection-start-column="7" selection-end-line="25" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../test/tables.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="144" column="32" lean-forward="true" selection-start-line="144" selection-start-column="6" selection-end-line="144" selection-end-column="32" />
+          <folding>
+            <marker date="1539752781262" expanded="true" signature="7519:7748" ph="SELECT p.id,... posts" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ADMIN MEMBERS viewmembers.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="34" column="22" lean-forward="true" selection-start-line="24" selection-start-column="16" selection-end-line="34" selection-end-column="22" />
+          <folding>
+            <marker date="1539272036834" expanded="true" signature="270:379" ph="SELECT * FRO... member" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="37" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
+          <folding>
+            <element signature="e#6#89#0#PHP" expanded="true" />
+            <marker date="1539754250605" expanded="true" signature="2201:2430" ph="SELECT p.id,... posts" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMS_VIEW_ArchivedPosts.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="65" column="265" lean-forward="false" selection-start-line="65" selection-start-column="265" selection-end-line="65" selection-end-column="265" />
+          <folding>
+            <element signature="e#6#89#0#PHP" expanded="true" />
+            <marker date="1539754319553" expanded="true" signature="2200:2417" ph="SELECT p.id,... posts" />
+          </folding>
         </state>
       </provider>
     </entry>

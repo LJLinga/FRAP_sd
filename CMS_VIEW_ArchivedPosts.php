@@ -15,98 +15,85 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
 ?>
 
 <script>
-    $(document).ready(function () {
-        $('#table').DataTable({
-            "searching": true
-            "paging": "simple_numbers" // false to disable pagination (or any other option)
-        });
-        $('.dataTable_length').addClass('bs-select');
-
+    $(document).ready(function() {
+        $('#dataTable').DataTable();
     });
 </script>
 
-<div id="page-wrapper">
+<div id="content-wrapper">
 
     <div class="container-fluid">
 
         <div class="row">
-
             <div class="col-lg-12">
-
                 <h1 class="page-header">
                     Archived Posts
                 </h1>
-
             </div>
-
         </div>
-        <!-- alert -->
-        <div class="row">
-            <div class="col-lg-12">
 
-                <div class="row">
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
 
-                    <div class="col-lg-12">
+                            <th align="center" width="200px"><b>Title</b></th>
+                            <th align="center" width="500px"><b>Snippet</b></th>
+                            <th align="center" width="200px"><b>Author</b></th>
+                            <th align="center" width="200px"><b>Publisher</b></th>
+                            <th align="center" width="200px"><b>Status</b></th>
+                            <th align="center" width="200px"><b>Actions</b></th>
 
-                        <form action="" method="POST"> <!-- SERVER SELF -->
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
 
-                            <table id="table" name="table" class="table table-striped table-bordered table-sm">
+                            <th align="center" width="200px"><b>Title</b></th>
+                            <th align="center" width="500px"><b>Snippet</b></th>
+                            <th align="center" width="200px"><b>Author</b></th>
+                            <th align="center" width="200px"><b>Publisher</b></th>
+                            <th align="center" width="200px"><b>Status</b></th>
+                            <th align="center" width="200px"><b>Actions</b></th>
 
-                                <thead>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        <?php
 
-                                <tr>
+                        $rows = $crud->getData("SELECT p.id, p.title, p.body, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status FROM mydb.posts p JOIN mydb.authors a ON p.authorId = a.id JOIN mydb.post_status s ON s.id = p.statusId WHERE s.id = 3;");
+                        foreach ($rows as $key => $row){
+                            ?>
+                            <tr>
 
-                                    <th align="center" width="200px"><b>Title</b></th>
-                                    <th align="center" width="500px"><b>Snippet</b></th>
-                                    <th align="center" width="200px"><b>Author</b></th>
-                                    <th align="center" width="200px"><b>Publisher</b></th>
-                                    <th align="center" width="200px"><b>Status</b></th>
-                                    <th align="center" width="200px"><b>Actions</b></th>
+                                <td align="center"><?php echo $row['title'];?></td>
+                                <td align="center"><?php echo $row['body'];?> </td>
+                                <td align="center"><?php echo $row['name'] ;?></td>
+                                <td align="center">"No Table Yet"</td>
+                                <td align="center"><?php echo $row['status'] ;?></td>
+                                <td align="center">
+                                    <button type="submit" name="edit" class="btn btn-default" value=<?php echo $row['id'];?>>Edit</button>
+                                    <button type="submit" name="publish" class="btn btn-primary" value=<?php echo $row['id'];?>>Publish</button>&nbsp;&nbsp;
+                                    <button type="submit" name="archive" class="btn btn-danger" value=<?php echo $row['id'];?>>Archive</button>&nbsp;&nbsp;
+                                </td>
 
-                                </tr>
-
-                                </thead>
-
-                                <tbody>
-
-                                <?php
-
-                                $rows = $crud->getData("SELECT p.id, p.title, p.body, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status FROM mydb.posts p JOIN mydb.authors a ON p.authorId = a.id JOIN mydb.post_status s ON s.id = p.statusId WHERE s.id = 3 ;");
-                                foreach ($rows as $key => $row){
-                                    ?>
-                                    <tr>
-
-                                        <td align="center"><?php echo $row['title'];?></td>
-                                        <td align="center"><?php echo $row['body'];?> </td>
-                                        <td align="center"><?php echo $row['name'] ;?></td>
-                                        <td align="center">"No Table Yet"</td>
-                                        <td align="center"><?php echo $row['status'] ;?></td>
-                                        <td align="center">
-                                            <button type="submit" name="restore" class="btn btn-default" value=<?php echo $row['id'];?>>Restore</button>
-                                            <button type="submit" name="delete" class="btn btn-primary" value=<?php echo $row['id'];?>>Delete</button>&nbsp;&nbsp;
-                                        </td>
-
-                                    </tr>
-                                <?php }?>
-
-                                </tbody>
-
-                            </table>
-
-                        </form>
-
-                    </div>
-
+                            </tr>
+                        <?php }?>
+                        </tbody>
+                    </table>
                 </div>
-
             </div>
-
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
         </div>
 
     </div>
+    <!-- /.container-fluid -->
+
 
 </div>
-<!-- /#page-wrapper -->
+<!-- /.content-wrapper -->
 
 </div>
 <!-- /#wrapper -->
