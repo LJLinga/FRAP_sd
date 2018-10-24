@@ -9,42 +9,54 @@
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 
-if(isset($_POST['btnAddPost'])){
+$mode = "add";
+$head = "Add Post";
 
-    //$postId = $_POST['postId'];
-    $postId = "";
-    $authorId = $_POST['userId'];
-    $title = $_POST['title'];
-    $body = $_POST['body'];
+if(isset($_POST['edit'])){
+    $mode = "edit";
 
-    if($postId==null || $postId==""){
+    $postId = $_POST['edit'];
+    $rows = $crud->getData("SELECT title, body FROM posts WHERE id='$postId'");
+    foreach ($rows as $key => $row) {
+        $title = $row['title'];
+        $body = $row['body'];
+    }
+    $head = "Edit: ".$title;
+}
+if(isset($_POST['btnSubmit'])){
 
-        $result = $crud->execute("INSERT INTO posts(authorId, title, body) values('$authorId','$title','$body')");
-        echo 'Added new post! <br>';
-        echo $_POST['userId'].', '.$_POST['title'].', '.$_POST['body'];
+    $postId = $_POST['hidPostId'];
+    $insertTitle = $_POST['post_title'];
+    $insertBody = $_POST['post_content'];
 
-    }else if($postId!=""){
-
-        $result = $crud->execute("UPDATE posts SET
-                      title = '$title',
-                      body = '$body'
-                      WHERE id = '$postId' ");
-        echo 'Updated the post! <br>';
-        echo $_POST['userId'].', '.$_POST['title'].', '.$_POST['body'];
+    if($_POST['hidMode']=="add"){
+        $crud->execute("INSERT INTO posts (title, body, authorId, statusId) values ($insertTitle, $insertBody, 1,1)");
+    }elseif($_POST['hidMode']=="edit"){
+        $crud->execute("UPDATE posts SET title=$insertTitle, body=$insertBody WHERE id=$postId ");
     }
 }
+
 
 $page_title = 'Santinig - Add Post';
 include 'GLOBAL_TEMPLATE_Header.php';
 include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
 ?>
+<script>
+    function alertBox(){
+        alert("Replace this alert with modal for document selection.");
+    }
+    function submit(){
+        alert("Replace ");
+    }
+
+</script>
     <div id="page-wrapper">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">
-                        Add Post
-                    </h1>
+                    <h3 class="page-header">
+                        <?php echo $head; ?>
+                    </h3>
                     <?php
                     if(isset($message)){
                         echo"  
@@ -55,32 +67,49 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                     }
                     ?>
                 </div>
-
             </div>
-            <!-- alert -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <p><i>Fields with <big class="req">*</big> are required to be filled out and those without are optional.</i></p>
-                    <!--Insert success page-->
-                    <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                        <input type="hidden" name="postId" id="postId" value="<?php echo $_POST['postId']; ?>">
-                        <input type="hidden" name="userId" id="userId" value="1">
-                        <div class="addaccountdiv">
-                            <label class="signfieldlabel">Title</label><big class="req"> *</big>
-                            <input type="text" name="title" id="title" class="form-control signupfield" placeholder="Post Title" required>
-                        </div><br>
-                        <div class="addaccountdiv">
-                            <label class="signfieldlabel">Content</label><big class="req"> *</big>
-                            <input type="textarea" name="body" id="body" class="form-control signupfield" placeholder="Write content here..." required>
-                        </div><br>
-                        <div id="subbutton">
-                            <button type="submit" class="btn btn-success" name="btnAddPost">
-                                Submit
-                            </button>
+            <!--Insert success page-->
+            <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                <div class="row">
+                    <div class="column col-lg-6">
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label for="post_title">Title</label>
+                            <input id="post_title" name="post_title" type="text" placeholder="Put your post title here..." class="form-control input-md" value="<?php if(isset($title)){ echo $title; }; ?>" required>
                         </div>
-                    </form>
+
+                        <!-- Textarea -->
+                        <div class="form-group">
+                            <label for="post_content">Content</label>
+                            <textarea class="form-control input-md" id="post_content" name="post_content" style="height:250px;" value="<?php if(isset($body)){ echo $body; }; ?>" required><?php if(isset($body)){ echo $body; }; ?></textarea>
+                        </div>
+                    </div>
+                    <div class="column col-lg-4">
+                        <!-- Button -->
+                        <div class="form-group">
+                            <label for="reference">References</label>
+                            <div id="reference">
+                                <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
+                                <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label  for="customFile">Upload attachment</label>
+                            <input type="file" class="" id="customFile">
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <input type="hidden" id="hidMode" name="hidMode" value="<?php echo $mode; ?>">
+                        <input type="hidden" id="hidPostId" name="hidPostId" value="<?php if(isset($postId)){ echo $postId; }; ?>">
+                        <button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
     <!-- /#page-wrapper -->

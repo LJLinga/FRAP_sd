@@ -119,6 +119,28 @@
 
             </li>
 
+            <li>
+
+                <a href="javascript:;" data-toggle="collapse" data-target="#events"><i class="fa fa-fw fa-gear aria-hidden="true"></i>Manage Events<i class="fa fa-fw fa-caret-down"></i></a>
+
+                <ul id="events" class="collapse">
+
+                    <li>
+                        <a href="#"><i class="fa fa-file-text" aria-hidden="true"></i> View Events</a>
+                    </li>
+
+                    <li>
+                        <a href="#"><i class="fa fa-pencil" aria-hidden="true"></i> Add Event</a>
+                    </li>
+
+                    <li>
+                        <a href="#"><i class="fa fa-archive" aria-hidden="true"></i> Finished Events</a>
+                    </li>
+
+                </ul>
+
+            </li>
+
         </ul>
 
     </div>

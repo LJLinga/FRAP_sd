@@ -26,9 +26,9 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
 
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">
+                <h3 class="page-header">
                     Santinig Posts
-                </h1>
+                </h3>
             </div>
         </div>
 
@@ -40,10 +40,9 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                         <tr>
 
                             <th align="center" width="200px"><b>Title</b></th>
-                            <th align="center" width="500px"><b>Snippet</b></th>
+                            <th align="center" width="400px"><b>Snippet</b></th>
                             <th align="center" width="200px"><b>Author</b></th>
-                            <th align="center" width="200px"><b>Publisher</b></th>
-                            <th align="center" width="200px"><b>Status</b></th>
+                            <th align="center" width="100px"><b>Status</b></th>
                             <th align="center" width="200px"><b>Actions</b></th>
 
                         </tr>
@@ -52,10 +51,9 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                         <tr>
 
                             <th align="center" width="200px"><b>Title</b></th>
-                            <th align="center" width="500px"><b>Snippet</b></th>
+                            <th align="center" width="400px"><b>Snippet</b></th>
                             <th align="center" width="200px"><b>Author</b></th>
-                            <th align="center" width="200px"><b>Publisher</b></th>
-                            <th align="center" width="200px"><b>Status</b></th>
+                            <th align="center" width="100px"><b>Status</b></th>
                             <th align="center" width="200px"><b>Actions</b></th>
 
                         </tr>
@@ -63,20 +61,20 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                         <tbody>
                         <?php
 
-                        $rows = $crud->getData("SELECT p.id, p.title, p.body, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status FROM mydb.posts p JOIN mydb.authors a ON p.authorId = a.id JOIN mydb.post_status s ON s.id = p.statusId WHERE s.id = 1 || s.id = 2;");
-                        foreach ($rows as $key => $row){
-                            ?>
+                            $rows = $crud->getData("SELECT p.id, p.title, p.body, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status FROM mydb.posts p JOIN mydb.authors a ON p.authorId = a.id JOIN mydb.post_status s ON s.id = p.statusId WHERE s.id = 1 || s.id = 2;");
+                            foreach ($rows as $key => $row){
+                                ?>
                             <tr>
 
                                 <td align="center"><?php echo $row['title'];?></td>
-                                <td align="center"><?php echo $row['body'];?> </td>
+                                <td align="center" class="nowrap"><?php echo $row['body'];?> </td>
                                 <td align="center"><?php echo $row['name'] ;?></td>
-                                <td align="center">"No Table Yet"</td>
                                 <td align="center"><?php echo $row['status'] ;?></td>
-                                <td align="center">
-                                    <button type="submit" name="edit" class="btn btn-default" value=<?php echo $row['id'];?>>Edit</button>
-                                    <button type="submit" name="publish" class="btn btn-primary" value=<?php echo $row['id'];?>>Publish</button>&nbsp;&nbsp;
-                                    <button type="submit" name="archive" class="btn btn-danger" value=<?php echo $row['id'];?>>Archive</button>&nbsp;&nbsp;
+                                <td align="center" class="nowrap">
+                                    <form method="post" action="CMS_VIEW_AddPost.php">
+                                        <button type="submit" name="edit" class="btn btn-default" value=<?php echo $row['id'];?>>Edit</button>&nbsp;&nbsp;
+                                        <button type="button" name="archive" class="btn btn-danger" value=<?php echo $row['id'];?>>Archive</button>&nbsp;&nbsp;
+                                    </form>
                                 </td>
 
                             </tr>
