@@ -145,7 +145,7 @@ $directories = mysqli_fetch_array($result3,MYSQLI_ASSOC);
 
     $page_title = 'Loans - Bank Application Details';
     include 'GLOBAL_TEMPLATE_Header.php';
-    include 'LOAN_TEMPLATE_NAVIGATION_Membership.php';
+    include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 
 ?>
         <div id="page-wrapper">

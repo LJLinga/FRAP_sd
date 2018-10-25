@@ -74,7 +74,7 @@
 
 $page_title = 'Loans - Membership Application Details';
 include 'GLOBAL_TEMPLATE_Header.php';
-include 'LOAN_TEMPLATE_NAVIGATION_Membership.php';
+include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 
 ?>
         <div id="page-wrapper">

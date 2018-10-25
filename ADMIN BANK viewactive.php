@@ -23,7 +23,7 @@ $_SESSION['bank_loan_id'] = '';
 
 $page_title = 'Loans - View Active Bank';
 include 'GLOBAL_TEMPLATE_Header.php';
-include 'LOAN_TEMPLATE_NAVIGATION_Membership.php';
+include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
 
         <div id="page-wrapper">

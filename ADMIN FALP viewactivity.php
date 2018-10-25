@@ -17,7 +17,7 @@ $result = mysqli_query($dbc,$query1);
 
 $page_title = 'Loans - View Activity';
 include 'GLOBAL_TEMPLATE_Header.php';
-include 'LOAN_TEMPLATE_NAVIGATION_Membership.php';
+include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
         <div id="page-wrapper">
 

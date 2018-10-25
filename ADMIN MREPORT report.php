@@ -37,7 +37,7 @@ else {
     }
     $page_title = 'Loans - Collected Membership Fees';
     include 'GLOBAL_TEMPLATE_Header.php';
-    include 'LOAN_TEMPLATE_NAVIGATION_Membership.php';
+    include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 }
 ?>
 

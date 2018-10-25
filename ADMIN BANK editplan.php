@@ -40,7 +40,7 @@ $result = mysqli_query($dbc,$query);
 
 $page_title = 'Loans - Edit Bank Plan';
 include 'GLOBAL_TEMPLATE_Header.php';
-include 'LOAN_TEMPLATE_NAVIGATION_Membership.php';
+include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
         <div id="page-wrapper">
 

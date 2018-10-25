@@ -11,7 +11,7 @@
     require_once('mysql_connect_FA.php');
     $page_title = 'Admin - Dashboard';
     include 'GLOBAL_TEMPLATE_Header.php';
-    include 'LOAN_TEMPLATES_NAVIGATION_Dashboard.php';
+    include 'LOAN_TEMPLATES_NAVIGATION_Member.php';
 ?>
         <div id="page-wrapper">
 

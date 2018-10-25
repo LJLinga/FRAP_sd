@@ -12,6 +12,23 @@ $crud = new GLOBAL_CLASS_CRUD();
 $mode = "add";
 $head = "Add Post";
 
+if(isset($_POST['btnSubmit'])){
+    $mode = "edit";
+
+    $title = $_POST['post_title'];
+    $body = $_POST['post_content'];
+
+    $head = " Edit: ".$title;
+
+    if($_POST['hidMode']=="add"){
+        $crud->execute("INSERT INTO posts (title, body, authorId, statusId) values ($title, $body, 1,1)");
+        header("Location: CMS_VIEW_PostsDashboard.php");
+    }elseif($_POST['hidMode']=="edit"){
+        $postId = $_POST['hidPostId'];
+        $crud->execute("UPDATE posts SET title=$title, body=$body WHERE id=$postId ");
+    }
+}
+
 if(isset($_POST['edit'])){
     $mode = "edit";
 
@@ -23,18 +40,7 @@ if(isset($_POST['edit'])){
     }
     $head = "Edit: ".$title;
 }
-if(isset($_POST['btnSubmit'])){
 
-    $postId = $_POST['hidPostId'];
-    $insertTitle = $_POST['post_title'];
-    $insertBody = $_POST['post_content'];
-
-    if($_POST['hidMode']=="add"){
-        $crud->execute("INSERT INTO posts (title, body, authorId, statusId) values ($insertTitle, $insertBody, 1,1)");
-    }elseif($_POST['hidMode']=="edit"){
-        $crud->execute("UPDATE posts SET title=$insertTitle, body=$insertBody WHERE id=$postId ");
-    }
-}
 
 
 $page_title = 'Santinig - Add Post';

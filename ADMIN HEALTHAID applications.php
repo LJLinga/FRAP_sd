@@ -23,7 +23,7 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
     $page_title = 'Loans - Health Applications';
     include 'GLOBAL_TEMPLATE_Header.php';
-    include 'LOAN_TEMPLATE_NAVIGATION_Membership.php';
+    include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
         <div id="page-wrapper">
 

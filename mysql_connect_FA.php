@@ -4,7 +4,7 @@
 
 	if (!$dbc) {
 
-		die('Could not connect: '.mysql_error());
+		die('Could not connect: ');
 
 	}
 

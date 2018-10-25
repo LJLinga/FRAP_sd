@@ -11,7 +11,7 @@ require_once("mysql_connect_FA.php");
 
 $page_title = 'Loans - View Details';
 include 'GLOBAL_TEMPLATE_Header.php';
-include 'LOAN_TEMPLATE_NAVIGATION_Membership.php';
+include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
         <div id="page-wrapper">
 
