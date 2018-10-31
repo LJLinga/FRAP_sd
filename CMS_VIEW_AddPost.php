@@ -9,9 +9,13 @@
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 
+//hardcoded value for userType, will add MYSQL verification query
+$userType = 'editor';
+
 $mode = "add";
 $head = "Add Post";
 
+//if the user came from a submit from the same page
 if(isset($_POST['btnSubmit'])){
     $mode = "edit";
 
@@ -26,9 +30,11 @@ if(isset($_POST['btnSubmit'])){
     }elseif($_POST['hidMode']=="edit"){
         $postId = $_POST['hidPostId'];
         $crud->execute("UPDATE posts SET title=$title, body=$body WHERE id=$postId ");
+
     }
 }
 
+// if user came from the posts dashboard
 if(isset($_POST['edit'])){
     $mode = "edit";
 
@@ -40,6 +46,8 @@ if(isset($_POST['edit'])){
     }
     $head = "Edit: ".$title;
 }
+
+//check if post has been published before
 
 
 
@@ -61,7 +69,14 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header">
-                        <?php echo $head; ?>
+                        <?php
+                            echo $head;
+                            if($userType == 'editor'){
+                                if($mode == 'edit'){
+                                    echo '<p></p><button type="button" class="btn btn-primary">Save and Publish</button>';
+                                }
+                            }
+                        ?>
                     </h3>
                     <?php
                     if(isset($message)){
@@ -110,8 +125,16 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                     <div class="col-lg-6">
                         <input type="hidden" id="hidMode" name="hidMode" value="<?php echo $mode; ?>">
                         <input type="hidden" id="hidPostId" name="hidPostId" value="<?php if(isset($postId)){ echo $postId; }; ?>">
+                        <?php
+                            if($userType == 'editor'){
+                                $btnSubmitLabel = 'Save and Publish';
+                            }else{
+                                $btnSubmitLabel = 'Save';
+                            }
+
+                        ?>
                         <button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit">
-                            Save
+                            <?php echo $btnSubmitLabel; ?>
                         </button>
                     </div>
                 </div>

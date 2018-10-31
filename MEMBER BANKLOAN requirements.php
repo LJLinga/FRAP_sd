@@ -16,9 +16,6 @@ $query1 = "SELECT *
 $result1 = mysqli_query($dbc,$query1);
 $ans = mysqli_fetch_assoc($result1);
 
-
-
-
 ?>
 
 <!DOCTYPE html>
