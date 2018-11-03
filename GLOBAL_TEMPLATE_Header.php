@@ -28,10 +28,6 @@
     <link href="js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet">
     <link href="js/jquery-ui-1.12.1.custom/jquery-ui.structure.min.css" rel="stylesheet">
     <link href="js/jquery-ui-1.12.1.custom/jquery-ui.theme.min.css" rel="stylesheet">
-
-    <!-- Custom Jquery for Aesthetics -->
-    <script src="js/aesthetics.js"></script>
-
 </head>
 
 <body>

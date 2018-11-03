@@ -12,7 +12,9 @@ include 'EDMS_TEMPLATE_NAVIGATION_DocumentDashboard.php';
 ?>
 
 <script>
-    $('#table_id').DataTable();
+    $(document).ready(function() {
+        $('#dataTable').DataTable();
+    });
 </script>
 
 <div id="page-wrapper">
@@ -23,7 +25,7 @@ include 'EDMS_TEMPLATE_NAVIGATION_DocumentDashboard.php';
                     <div class="col-lg-12">
                         <h1 class="page-header">Documents</h1>
 
-                        <table width="100%" border="0" align="center" id="table_id" class="displayMPB">
+                        <table class="table table-bordered" align="center" id="dataTable">
                             <thead>
                                 <tr>
                                     <th>File Name</th>

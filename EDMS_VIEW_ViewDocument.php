@@ -6,11 +6,11 @@
  * Time: 3:48 PM
  */
 
-include 'GLOBAL_TEMPLATE_Header.php.php';
+include 'GLOBAL_TEMPLATE_Header.php';
 include 'EDMS_TEMPLATE_MenuHeader.php';
 include 'EDMS_TEMPLATE_NAVIGATION_ViewDocument.php';
 ?>
-<script src="js/aesthetics.js"></script>
+<script src="js/aesthetics.js"></script>s
 
 <div id="page-wrapper">
     <div class="container-fluid">
