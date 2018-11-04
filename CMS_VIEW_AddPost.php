@@ -15,7 +15,15 @@ $userType = 'editor';
 $mode = "add";
 $head = "Add Post";
 
-//if the user came from a submit from the same page
+
+//I was attempting to make the AddPost also become EditPost
+//If coming from the Posts Dashboard, this is edit, if from Add Post this is add.
+//If new post was submitted, refreesh nalang to Posts Dashboard
+//Modify posts dashboard to show most recent post first based on date (SQL)
+//Add the Author credentials to the posts
+
+
+//if the user came from a submit from the same page YOU CAN REMOVE THIS IF NEEDED
 if(isset($_POST['btnSubmit'])){
     $mode = "edit";
 
