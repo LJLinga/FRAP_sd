@@ -40,7 +40,6 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                         <tr>
 
                             <th align="center" width="200px"><b>Title</b></th>
-                            <th align="center" width="400px"><b>Snippet</b></th>
                             <th align="center" width="200px"><b>Author</b></th>
                             <th align="center" width="100px"><b>Status</b></th>
                             <th align="center" width="200px"><b>Actions</b></th>
@@ -51,7 +50,6 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                         <tr>
 
                             <th align="center" width="200px"><b>Title</b></th>
-                            <th align="center" width="400px"><b>Snippet</b></th>
                             <th align="center" width="200px"><b>Author</b></th>
                             <th align="center" width="100px"><b>Status</b></th>
                             <th align="center" width="200px"><b>Actions</b></th>
@@ -61,13 +59,12 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                         <tbody>
                         <?php
 
-                            $rows = $crud->getData("SELECT p.id, p.title, p.body, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status FROM mydb.posts p JOIN mydb.authors a ON p.authorId = a.id JOIN mydb.post_status s ON s.id = p.statusId WHERE s.id = 1 || s.id = 2;");
+                            $rows = $crud->getData("SELECT p.id, p.title, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status FROM mydb.posts p JOIN mydb.authors a ON p.authorId = a.id JOIN mydb.post_status s ON s.id = p.statusId WHERE s.id = 1 || s.id = 2;");
                             foreach ($rows as $key => $row){
                                 ?>
                             <tr>
 
                                 <td align="center"><?php echo $row['title'];?></td>
-                                <td align="center" class="nowrap"><?php echo $row['body'];?> </td>
                                 <td align="center"><?php echo $row['name'] ;?></td>
                                 <td align="center"><?php echo $row['status'] ;?></td>
                                 <td align="center" class="nowrap">

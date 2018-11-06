@@ -14,16 +14,17 @@ $userType = 'editor';
 
 $mode = "add";
 $head = "Add Post";
+$body = "";
 
 
 //I was attempting to make the AddPost also become EditPost
 //If coming from the Posts Dashboard, this is edit, if from Add Post this is add.
 //If new post was submitted, refreesh nalang to Posts Dashboard
 //Modify posts dashboard to show most recent post first based on date (SQL)
-//Add the Author credentials to the posts
+//Add the Author credentials to the post
 
 
-//if the user came from a submit from the same page YOU CAN REMOVE THIS IF NEEDED
+//If the user came from a submit from the same page YOU CAN REMOVE THIS IF NEEDED
 if(isset($_POST['btnSubmit'])){
     $mode = "edit";
 
@@ -34,11 +35,10 @@ if(isset($_POST['btnSubmit'])){
 
     if($_POST['hidMode']=="add"){
         $crud->execute("INSERT INTO posts (title, body, authorId, statusId) values ($title, $body, 1,1)");
-        header("Location: CMS_VIEW_PostsDashboard.php");
+        //header("Location: CMS_VIEW_PostsDashboard.php");
     }elseif($_POST['hidMode']=="edit"){
         $postId = $_POST['hidPostId'];
         $crud->execute("UPDATE posts SET title=$title, body=$body WHERE id=$postId ");
-
     }
 }
 
@@ -63,15 +63,54 @@ $page_title = 'Santinig - Add Post';
 include 'GLOBAL_TEMPLATE_Header.php';
 include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
 ?>
+
+<link href="quill/quill.snow.css" rel="stylesheet">
+<script src="quill/quill.js"></script>
+
 <script>
+
+    $(document).ready( function(){
+
+        var preloaded = "<?php echo $body; ?>";
+
+        var quill = new Quill('#editor', {
+            modules: {
+                toolbar: '#editorToolbar'
+            },
+            theme: 'snow'
+        });
+
+        quill.setContents({
+            "ops":[
+                {"insert": preloaded}
+            ]
+        });
+
+        var form = document.querySelector('form');
+        form.onsubmit = function() {
+            // Populate hidden form on submit
+            var about = document.querySelector('input[name=post_content]');
+            about.value = JSON.stringify(quill.getContents());
+
+            console.log("Submitted", $(form).serialize(), $(form).serializeArray());
+
+            // No back end to actually submit to!
+            alert('Open the console to see the submit data!')
+            return false;
+        };
+
+    });
+
+
     function alertBox(){
         alert("Replace this alert with modal for document selection.");
-    }
+    };
     function submit(){
         alert("Replace ");
-    }
+    };
 
 </script>
+
     <div id="page-wrapper">
         <div class="container-fluid">
             <div class="row">
@@ -82,6 +121,11 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                             if($userType == 'editor'){
                                 if($mode == 'edit'){
                                     echo '<p></p><button type="button" class="btn btn-primary">Save and Publish</button>';
+                                    echo ' <button type="button" class="btn btn-default">Preview Article</button>';
+                                }
+                            }else{
+                                if($mode == 'edit'){
+                                    echo '<p></p><button type="button" class="btn btn-default">Preview Article</button>';
                                 }
                             }
                         ?>
@@ -110,7 +154,56 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                         <!-- Textarea -->
                         <div class="form-group">
                             <label for="post_content">Content</label>
-                            <textarea class="form-control input-md" id="post_content" name="post_content" style="height:250px;" value="<?php if(isset($body)){ echo $body; }; ?>" required><?php if(isset($body)){ echo $body; }; ?></textarea>
+                            <div id="editorToolbar">
+                                <span class="ql-formats">
+                                  <select class="ql-font"></select>
+                                  <select class="ql-size"></select>
+                                </span>
+                                <span class="ql-formats">
+                                  <button class="ql-bold"></button>
+                                  <button class="ql-italic"></button>
+                                  <button class="ql-underline"></button>
+                                  <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                  <select class="ql-color"></select>
+                                  <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                  <button class="ql-script" value="sub"></button>
+                                  <button class="ql-script" value="super"></button>
+                                </span>
+                                <span class="ql-formats">
+                                  <button class="ql-header" value="1"></button>
+                                  <button class="ql-header" value="2"></button>
+                                  <button class="ql-blockquote"></button>
+                                  <button class="ql-code-block"></button>
+                                </span>
+                                <span class="ql-formats">
+                                  <button class="ql-list" value="ordered"></button>
+                                  <button class="ql-list" value="bullet"></button>
+                                  <button class="ql-indent" value="-1"></button>
+                                  <button class="ql-indent" value="+1"></button>
+                                </span>
+                                <span class="ql-formats">
+                                  <button class="ql-direction" value="rtl"></button>
+                                  <select class="ql-align"></select>
+                                </span>
+                                <span class="ql-formats">
+                                  <button class="ql-link"></button>
+                                  <button class="ql-image"></button>
+                                  <button class="ql-video"></button>
+                                  <button class="ql-formula"></button>
+                                </span>
+                                <span class="ql-formats">
+                                  <button class="ql-clean"></button>
+                                </span>
+                            </div>
+                            <div id="editor" class="height: 500px">
+                                <?php //echo $body;
+                                ?>
+                            </div>
+                            <input type="hidden" name="post_content" id="post_content">
                         </div>
                     </div>
                     <div class="column col-lg-4">
@@ -121,6 +214,7 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                                 <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
                                 <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
                             </div>
+                            <?php echo $body; ?>
                         </div>
 
                         <div class="form-group">
@@ -131,7 +225,7 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
-                        <input type="hidden" id="hidMode" name="hidMode" value="<?php echo $mode; ?>">
+                        <input type="hidden" id="hidMode" name="hidMode" value="add">
                         <input type="hidden" id="hidPostId" name="hidPostId" value="<?php if(isset($postId)){ echo $postId; }; ?>">
                         <?php
                             if($userType == 'editor'){
@@ -139,7 +233,6 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                             }else{
                                 $btnSubmitLabel = 'Save';
                             }
-
                         ?>
                         <button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit">
                             <?php echo $btnSubmitLabel; ?>
