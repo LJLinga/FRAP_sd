@@ -31,7 +31,19 @@
                         </ul>
                     </li>
                     <li class="dropdown sideicons">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Jo, Melton <b class="caret"></b></a>
+                        <?php
+                        $query = "SELECT LASTNAME, FIRSTNAME FROM employee
+                                    
+                        WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
+
+                        $result = mysqli_query($dbc, $query);
+                        $row = mysqli_fetch_array($result);
+
+                        $displayName = $row['LASTNAME']." , ".$row['FIRSTNAME'][0].". ";
+
+                        ?>
+
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $displayName ?> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
@@ -61,6 +73,21 @@
                             </li>
                         </ul>
                     </li>
+
+                    <li>
+                        <a href="javascript:" data-toggle="collapse" data-target="#applications"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;Applications<i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="applications" class="collapse">
+                            <li>
+                                <a href="ADMIN%20FALP%20applications.php"><i class="fa fa-dollar" aria-hidden="true"></i>   FALP Applications</a>
+                            </li>
+
+                            <li>
+                                <a href="ADMIN%20HEALTHAID%20applications.php"><i class="fa fa-dollar" aria-hidden="true"></i>  Health Aid Applications</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
                     <li>
                         <a href="javascript:" data-toggle="collapse" data-target="#dreports"><i class="fa fa-minus" aria-hidden="true"></i>&nbsp;Deduction Reports<i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="dreports" class="collapse">

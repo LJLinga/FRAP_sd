@@ -9,6 +9,9 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
 }
 
+
+
+
 $query = "SELECT * FROM member m join ref_department d
           on m.dept_id = d.dept_id where m.membership_status = 2";
 $result = mysqli_query($dbc,$query);
