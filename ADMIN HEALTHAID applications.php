@@ -85,7 +85,7 @@
 
                                         <?php
 
-                                            $query = "SELECT HA.DATE_APPLIED, HA.RECORD_ID  M.MEMBER_ID, M.FIRSTNAME, M.LASTNAME, RD.DEPT_NAME 
+                                            $query = "SELECT HA.DATE_APPLIED, HA.RECORD_ID,  M.MEMBER_ID, M.FIRSTNAME, M.LASTNAME, RD.DEPT_NAME 
                                                       FROM MEMBER M 
                                                       JOIN HEALTH_AID HA 
                                                       ON M.MEMBER_ID = HA.MEMBER_ID 
