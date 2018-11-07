@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5356d799-a39e-4cc3-a9e3-2d52e87b4c03" name="Default" comment="made the navigation and footer html templates">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMS_VIEW_AddPost.php" afterPath="$PROJECT_DIR$/CMS_VIEW_AddPost.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" afterPath="$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMS_VIEW_ViewPost.php" afterPath="$PROJECT_DIR$/CMS_VIEW_ViewPost.php" />
-    </list>
+    <list default="true" id="5356d799-a39e-4cc3-a9e3-2d52e87b4c03" name="Default" comment="made the navigation and footer html templates" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -128,8 +123,8 @@
       <file leaf-file-name="CMS_VIEW_AddPost.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CMS_VIEW_AddPost.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="94">
-              <caret line="216" column="45" lean-forward="false" selection-start-line="216" selection-start-column="45" selection-end-line="216" selection-end-column="45" />
+            <state relative-caret-position="-1680">
+              <caret line="41" column="5" lean-forward="true" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="5" />
               <folding>
                 <marker date="1541511990055" expanded="true" signature="923:1002" ph="INSERT INTO posts... " />
                 <marker date="1541511990055" expanded="true" signature="1168:1219" ph="UPDATE posts... " />
@@ -528,12 +523,12 @@
       <workItem from="1540956412045" duration="423000" />
       <workItem from="1540956867161" duration="6388000" />
       <workItem from="1541241720310" duration="977000" />
-      <workItem from="1541317403597" duration="15875000" />
+      <workItem from="1541317403597" duration="16065000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="172082000" />
+    <option name="totallyTimeSpent" value="172272000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -924,16 +919,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="68" column="85" lean-forward="true" selection-start-line="68" selection-start-column="85" selection-end-line="68" selection-end-column="85" />
-          <folding>
-            <marker date="1541499143532" expanded="true" signature="1877:2098" ph="SELECT p.id,... posts" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CMS_VIEW_ArchivedPosts.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="686">
@@ -973,10 +958,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/CMS_VIEW_PostsDashboard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="348">
+          <caret line="68" column="85" lean-forward="true" selection-start-line="68" selection-start-column="85" selection-end-line="68" selection-end-column="85" />
+          <folding>
+            <marker date="1541499143532" expanded="true" signature="1877:2098" ph="SELECT p.id,... posts" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/CMS_VIEW_AddPost.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="94">
-          <caret line="216" column="45" lean-forward="false" selection-start-line="216" selection-start-column="45" selection-end-line="216" selection-end-column="45" />
+        <state relative-caret-position="-1680">
+          <caret line="41" column="5" lean-forward="true" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="5" />
           <folding>
             <marker date="1541511990055" expanded="true" signature="923:1002" ph="INSERT INTO posts... " />
             <marker date="1541511990055" expanded="true" signature="1168:1219" ph="UPDATE posts... " />
