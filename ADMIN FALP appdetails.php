@@ -48,7 +48,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
             <div class="container-fluid">
 
                 <div class="row">
-                
+
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
@@ -64,7 +64,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                             }
                         ?>
                     </div>
-                    
+
                 </div>
                 <!-- alert -->
                 <div class="row">
@@ -85,7 +85,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                         </div>
 
                                         <div class="panel-body"><p>
-                                            <?php 
+                                            <?php
                                                 $query = "SELECT FIRSTNAME, LASTNAME, MIDDLENAME FROM MEMBER M WHERE MEMBER_ID = ". $_SESSION['showFMID'] .";";
                                                 $result = mysqli_query($dbc, $query);
                                                 $row = mysqli_fetch_array($result);
@@ -95,7 +95,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                             <b>First Name:</b><?php echo $row['FIRSTNAME']; ?> <p>
                                             <b>Last Name:</b><?php echo $row['LASTNAME']; ?> <p>
                                             <b>Middle Name:</b><?php echo $row['MIDDLENAME']; ?> <p>
-                                            
+
                                         </div>
 
                                     </div>
@@ -109,7 +109,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                         </div>
 
                                         <div class="panel-body"><p>
-                                            <?php 
+                                            <?php
                                                 $query = "SELECT AMOUNT, PAYABLE, PAYMENT_TERMS, PER_PAYMENT FROM LOANS WHERE MEMBER_ID = ". $_SESSION['showFMID'] .";";
                                                 $result = mysqli_query($dbc, $query);
                                                 $row = mysqli_fetch_array($result);
@@ -170,7 +170,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
     <script>
 
         $(document).ready(function(){
-    
+
             $('#table').DataTable();
 
         });

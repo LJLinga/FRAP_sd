@@ -8,16 +8,17 @@ if ($_SESSION['usertype'] == 1) {
 header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
 
 }
+
 if(isset($_POST['action'])){
     if($_POST['action']=="Reactivate Account"){
         $query1 = "UPDATE member
                   set USER_STATUS = 1
-                  where MEMBER_ID = {$_POST['details']}  ";
+                  where MEMBER_ID = {$_SESSION['currID']}  ";
     }
     else if($_POST['action']=="Deactivate Account"){
         $query1 = "UPDATE member
                   set USER_STATUS = 4
-                  where MEMBER_ID = {$_POST['details']}  ";
+                  where MEMBER_ID = {$_SESSION['currID']}  ";
     }
     mysqli_query($dbc,$query1);
 
@@ -26,7 +27,7 @@ $query = "SELECT * FROM member m join ref_department d
           on m.dept_id = d.dept_id 
           join civ_status c
           on m.civ_status = c.status_id
-          where m.member_id = {$_POST['details']}";
+          where m.member_id = {$_SESSION['currID']}";
 $result = mysqli_query($dbc,$query);
 $ans = mysqli_fetch_assoc($result);
 
@@ -115,7 +116,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                             <b>Business Phone Number: <?php echo $ans['BUSINESS_NUM']?></b> <p>
                                             <b>Home Address: <?php echo $ans['HOME_ADDRESS']?></b> <p>
                                             <b>Business Address: <?php echo $ans['BUSINESS_ADDRESS']?></b> <p>
-                                            <input type = "text" name = "details" value = <?php echo $_POST['details']?> hidden>
+                                            <input type = "text" name = "details" value = <?php echo $_SESSION['currID']?> hidden>
                                         </div>
 
                                     </div>

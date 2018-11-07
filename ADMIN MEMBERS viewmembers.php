@@ -11,10 +11,17 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
 
 
+if(isset($_POST['details'])){
 
-$query = "SELECT * FROM member m join ref_department d
-          on m.dept_id = d.dept_id where m.membership_status = 2";
-$result = mysqli_query($dbc,$query);
+    $_SESSION['currID'] = "";
+
+    $_SESSION['currID'] = $_POST['details'];
+
+    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN MEMBERS viewdetails.php");
+
+}
+
+
 
 $page_title = 'Loans - View Members';
 include 'GLOBAL_TEMPLATE_Header.php';
@@ -44,7 +51,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 
                             <div class="col-lg-12">
 
-                                <form action="ADMIN MEMBERS viewdetails.php" method="POST"> <!-- SERVER SELF -->
+                                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST"> <!-- SERVER SELF -->
 
                                 <table id="table" class="table table-bordered table-striped">
                                     
@@ -63,17 +70,25 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                     </thead>
 
                                     <tbody>
-                                        <?php 
-                                        while($row = mysqli_fetch_assoc($result)){
+                                        <?php
+
+                                        $query = "SELECT m.MEMBER_ID, m.FIRSTNAME, m.LASTNAME, m.DATE_APPROVED,  d.DEPT_NAME
+                                        FROM member m 
+                                        join ref_department d
+                                        on m.dept_id = d.dept_id where m.membership_status = 2";
+                                        $result = mysqli_query($dbc,$query);
+
+
+                                        foreach ($result as $rows) {
 
                                             ?>
                                         <tr>
 
-                                        <td align="center"><?php echo $row['MEMBER_ID'];?></td>
-                                        <td align="center"><?php echo $row['FIRSTNAME']." ".$row['LASTNAME'];?> </td>
-                                        <td align="center"><?php echo $row['DEPT_NAME'];?></td>
-                                        <td align="center"><?php echo $row['DATE_APPROVED'];?></td>
-                                        <td align="center">&nbsp;&nbsp;&nbsp;<button type="submit" name="details" class="btn btn-success" value=<?php echo $row['MEMBER_ID'];?>>Details</button>&nbsp;&nbsp;&nbsp;</td>
+                                        <td align="center"><?php echo $rows['MEMBER_ID'];?></td>
+                                        <td align="center"><?php echo $rows['FIRSTNAME']." ".$rows['LASTNAME'];?> </td>
+                                        <td align="center"><?php echo $rows['DEPT_NAME'];?></td>
+                                        <td align="center"><?php echo $rows['DATE_APPROVED'];?></td>
+                                        <td align="center">&nbsp;&nbsp;&nbsp;<button type="submit" name="details" class="btn btn-success" value=<?php echo $rows['MEMBER_ID'];?>>Details</button>&nbsp;&nbsp;&nbsp;</td>
 
                                         </tr>
                                         <?php }?>

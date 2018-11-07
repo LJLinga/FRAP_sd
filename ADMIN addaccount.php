@@ -2,11 +2,15 @@
 
 session_start();
 require_once("mysql_connect_FA.php");
+
 if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
 
-header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
+    header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
 
 }
+
+
+
 $success = null;
 if(isset($_POST['submit'])){
     $query="insert into employee(EMP_ID,PASSWORD,FIRSTNAME,LASTNAME,DATE_CREATED,ACC_STATUS,FIRST_CHANGE_PW)

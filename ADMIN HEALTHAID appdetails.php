@@ -2,7 +2,7 @@
     session_start();
     if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
 
-header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
+    header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
 
 }
 
@@ -14,13 +14,16 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
     if(isset($_POST['action'])){
         if($_POST['action'] == "Accept Application"){
             //Change the status into Approved (APP_STATUS =2)
-            $query = "UPDATE HEALTH_AID SET APP_STATUS = '2', DATE_APPROVED = NOW(), EMP_ID =". $_SESSION['idnum'] ." WHERE MEMBER_ID =" . $_SESSION['showHAID'].";";
+            $query = "UPDATE HEALTH_AID SET APP_STATUS = '2', DATE_APPROVED = NOW(), EMP_ID =". $_SESSION['idnum'] ."
+                      WHERE MEMBER_ID =" . $_SESSION['showHAMID']." && RECORD_ID =" . $_SESSION['showHAID']."  ;";
             $result = mysqli_query($dbc, $query);
 
            //Insert into transaction table
-            $queryTnx = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, LOAN_REF, EMP_ID, SERVICE_TYPE) 
-            VALUES({$_SESSION['showHAMID']}, '1', 'Health Aid Approved', 0, NOW(), NULL, {$_SESSION['idnum']}, '2'); ";
+            $queryTnx = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, LOAN_REF, EMP_ID, SERVICE_ID) 
+                                            VALUES({$_SESSION['showHAMID']}, '1', 'Health Aid Approved', 0, NOW(), {$_SESSION['showHAID']}, {$_SESSION['idnum']}, '2'); ";
             $resultTnx = mysqli_query($dbc, $queryTnx);
+
+            header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/ADMIN HEALTHAID applications.php");
 
         }
         else if($_POST['action'] == "Reject Application"){
@@ -29,10 +32,16 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
             $result = mysqli_query($dbc, $query);
 
            //Insert into transaction table
-            $queryTnx = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, LOAN_REF, EMP_ID, SERVICE_TYPE) 
-            VALUES('{$_SESSION['showHAMID']}', '1', 'Health Aid Rejected', 0, NOW(), NULL, {$_SESSION['idnum']}, '2'); ";
+            $queryTnx = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, LOAN_REF, EMP_ID, SERVICE_ID) 
+                                VALUES({$_SESSION['showHAMID']}, '1', 'Health Aid Rejected', 0, NOW(), {$_SESSION['showHAID']}, {$_SESSION['idnum']}, '2'); ";
             $resultTnx = mysqli_query($dbc, $queryTnx);
+
+            header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/ADMIN HEALTHAID applications.php");
+
         }
+
+
+
     }
 
 
@@ -41,6 +50,19 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
     include 'GLOBAL_TEMPLATE_Header.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
+
+<!---
+<script>
+    $(document).ready(function(){
+        $('input[name=action]').on('click', function(){
+            console.log("Are you sure?");
+            confirm("Are you sure?");
+        });
+    });
+</script>
+
+--->
+
         <div id="page-wrapper">
 
             <div class="container-fluid">
@@ -82,12 +104,12 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
                                                           ON M.MEMBER_ID = HA.MEMBER_ID 
                                                           JOIN REF_DEPARTMENT RD 
                                                           ON M.DEPT_ID = RD.DEPT_ID 
-                                                          WHERE M.MEMBER_ID = ". $_SESSION['showHAID'] .";";
+                                                          WHERE M.MEMBER_ID = ". $_SESSION['showHAMID'] .";";
                                                 $result = mysqli_query($dbc, $query);
                                                 $row = mysqli_fetch_array($result);
                                             ?>
 
-                                            <b>ID Number:</b> <?php echo $_SESSION['showHAID'] ?> <p>
+                                            <b>ID Number:</b> <?php echo $_SESSION['showHAMID'] ?> <p>
                                             <b>First Name:</b> <?php echo $row['FIRSTNAME'] ?> <p>
                                             <b>Last Name:</b> <?php echo $row['LASTNAME'] ?> <p>
                                             <b>Middle Name:</b> <?php echo $row['MIDDLENAME'] ?> <p>
@@ -96,6 +118,18 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
                                         </div>
 
                                     </div>
+
+                                    <?php
+                                        $query = "SELECT * FROM FATHER WHERE RECORD_ID =" . $_SESSION['showHAID'].";";
+                                        $result = mysqli_query($dbc, $query);
+                                        $row = mysqli_fetch_array($result);
+
+                                        if(!empty($row)){
+
+
+                                        $today = date("Y-m-d");
+                                        $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
+                                    ?>
 
                                     <div class="panel panel-primary">
 
@@ -107,7 +141,7 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
                                         <div class="panel-body"><p>
 
-                                            <table class="table table-bordered">
+                                            <table id="table" class="table table-bordered">
                                 
                                                 <thread>
 
@@ -127,22 +161,16 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
                                                     <tr>
 
-                                                    <?php 
-                                                        $query = "SELECT * FROM FATHER WHERE MEMBER_ID =" . $_SESSION['showHAID'].";";
-                                                        $result = mysqli_query($dbc, $query);
-                                                        $row = mysqli_fetch_array($result);
-
-                                                        $today = date("Y-m-d");
-                                                        $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
-                                                    ?>
-
-                                                    <td align="center"><?php echo $row['FIRSTNAME'] . " " . $row['LASTNAME']; ?></td>
-                                                    <td align="center"><?php echo $diff->format('%y'); ?></td>
-                                                    <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
-                                                    <td align="center">
-                                                        <?php
-                                                            if($row["STATUS"] == 1) echo"Alive";
+                                                        <td align="center"><?php echo $row['FIRSTNAME'] . " " . $row['LASTNAME']; ?></td>
+                                                        <td align="center"><?php echo $diff->format('%y'); ?></td>
+                                                        <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
+                                                        <td align="center">
+                                                            <?php
+                                                            if ($row["STATUS"] == 1) echo "Alive";
                                                             else if ($row["STATUS"] == 0) echo "Deceased";
+
+
+                                                            }
                                                         ?>
                                                     </td>
 
@@ -155,6 +183,18 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
                                         </div>
 
                                     </div>
+
+                                    <?php
+                                        $query = "SELECT * FROM MOTHER WHERE RECORD_ID =" . $_SESSION['showHAID'].";";
+                                        $result = mysqli_query($dbc, $query);
+                                        $row = mysqli_fetch_array($result);
+
+                                        if(!empty($row)){
+
+                                        $today = date("Y-m-d");
+                                        $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
+                                    ?>
+
 
                                     <div class="panel panel-primary">
 
@@ -185,23 +225,16 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
                                                 <tbody>
 
                                                     <tr>
-
-                                                    <?php 
-                                                        $query = "SELECT * FROM MOTHER WHERE MEMBER_ID =" . $_SESSION['showHAID'].";";
-                                                        $result = mysqli_query($dbc, $query);
-                                                        $row = mysqli_fetch_array($result);
-
-                                                        $today = date("Y-m-d");
-                                                        $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
-                                                    ?>
-
-                                                    <td align="center"><?php echo $row['FIRSTNAME'] . " " . $row['LASTNAME']; ?></td>
-                                                    <td align="center"><?php echo $diff->format('%y'); ?></td>
-                                                    <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
-                                                    <td align="center">
-                                                        <?php
-                                                            if($row["STATUS"] == 1) echo"Alive";
+                                                        <td align="center"><?php echo $row['FIRSTNAME'] . " " . $row['LASTNAME']; ?></td>
+                                                        <td align="center"><?php echo $diff->format('%y'); ?></td>
+                                                        <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
+                                                        <td align="center">
+                                                            <?php
+                                                            if ($row["STATUS"] == 1) echo "Alive";
                                                             else if ($row["STATUS"] == 0) echo "Deceased";
+
+
+                                                            }
                                                         ?>
                                                     </td>
 
@@ -214,6 +247,17 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
                                         </div>
 
                                     </div>
+
+                                    <?php
+                                        $query = "SELECT * FROM SPOUSE WHERE RECORD_ID =" . $_SESSION['showHAID'].";";
+                                        $result = mysqli_query($dbc, $query);
+                                        $row = mysqli_fetch_array($result);
+
+                                        if(!empty($row)){
+
+                                        $today = date("Y-m-d");
+                                        $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
+                                    ?>
 
                                     <div class="panel panel-primary">
 
@@ -245,22 +289,17 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
                                                     <tr>
 
-                                                    <?php 
-                                                        $query = "SELECT * FROM SPOUSE WHERE MEMBER_ID =" . $_SESSION['showHAID'].";";
-                                                        $result = mysqli_query($dbc, $query);
-                                                        $row = mysqli_fetch_array($result);
 
-                                                        $today = date("Y-m-d");
-                                                        $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
-                                                    ?>
 
-                                                    <td align="center"><?php echo $row['FIRSTNAME'] . " " . $row['LASTNAME']; ?></td>
-                                                    <td align="center"><?php echo $diff->format('%y'); ?></td>
-                                                    <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
-                                                    <td align="center">
-                                                        <?php
-                                                            if($row["STATUS"] == 1) echo"Alive";
+                                                        <td align="center"><?php echo $row['FIRSTNAME'] . " " . $row['LASTNAME']; ?></td>
+                                                        <td align="center"><?php echo $diff->format('%y'); ?></td>
+                                                        <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
+                                                        <td align="center">
+                                                            <?php
+                                                            if ($row["STATUS"] == 1) echo "Alive";
                                                             else if ($row["STATUS"] == 0) echo "Deceased";
+
+                                                            }
                                                         ?>
                                                     </td>
 
@@ -273,6 +312,12 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
                                         </div>
 
                                     </div>
+                                    <?php
+                                        $query = "SELECT * FROM SIBLINGS WHERE RECORD_ID =" . $_SESSION['showHAID'].";";
+                                        $result = mysqli_query($dbc, $query);
+
+                                        if(!empty(mysqli_fetch_array($result))) {
+                                    ?>
 
                                     <div class="panel panel-primary">
 
@@ -303,29 +348,30 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
                                                 <tbody>
 
-                                                    <?php 
-                                                        $query = "SELECT * FROM SIBLINGS WHERE MEMBER_ID =" . $_SESSION['showHAID'].";";
-                                                        $result = mysqli_query($dbc, $query);
+                                                    <?php
+
                                                         foreach ($result as $resultRow) {
                                                             $today = date("Y-m-d");
                                                             $diff = date_diff(date_create($resultRow['BIRTHDATE']), date_create($today));
 
-                                                            echo"    
+                                                            echo "    
                                                             <tr>
-                                                                <td align='center'>". $resultRow['FIRSTNAME'] ." ". $resultRow['LASTNAME'] ."</td>
-                                                                <td align='center'>". $diff->format('%y') ."</td>
-                                                                <td align='center'>". $resultRow['BIRTHDATE'] ."</td>
-                                                                <td align='center'>"; 
-                                                                    if($resultRow["STATUS"] == 1) echo"Alive";
-                                                                    else if ($resultRow["STATUS"] == 0) echo "Deceased";
-                                                            echo"</td>
-                                                                <td align='center'>"; 
-                                                                if($resultRow['SEX']=1) echo "Male";
-                                                                else echo "Female";                                                                 
-                                                                echo "</td>
+                                                                <td align='center'>" . $resultRow['FIRSTNAME'] . " " . $resultRow['LASTNAME'] . "</td>
+                                                                <td align='center'>" . $diff->format('%y') . "</td>
+                                                                <td align='center'>" . $resultRow['BIRTHDATE'] . "</td>
+                                                                <td align='center'>";
+                                                            if ($resultRow["STATUS"] == 1) echo "Alive";
+                                                            else if ($resultRow["STATUS"] == 0) echo "Deceased";
+                                                            echo "</td>
+                                                                <td align='center'>";
+                                                            if ($resultRow['SEX'] = 1) echo "Male";
+                                                            else echo "Female";
+                                                            echo "</td>
                                                             </tr>    
                                                             ";
                                                         }
+
+                                                    }
                                                     ?>
 
 
@@ -336,6 +382,14 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
                                         </div>
 
                                     </div>
+
+                                    <?php
+                                    $query = "SELECT * FROM CHILDREN WHERE RECORD_ID =" . $_SESSION['showHAID'].";";
+                                    $result = mysqli_query($dbc, $query);
+
+                                    if(!empty(mysqli_fetch_array($result))) {
+
+                                    ?>
 
                                     <div class="panel panel-primary">
 
@@ -366,32 +420,30 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
                                                 <tbody>
 
-                                                    
-
                                                     <?php 
-                                                        $query = "SELECT * FROM CHILDREN WHERE MEMBER_ID =" . $_SESSION['showHAID'].";";
-                                                        $result = mysqli_query($dbc, $query);
 
                                                         foreach ($result as $resultRow) {
                                                             $today = date("Y-m-d");
                                                             $diff = date_diff(date_create($resultRow['BIRTHDATE']), date_create($today));
 
-                                                            echo"
+                                                            echo "
                                                             <tr>    
-                                                                <td align='center'>". $resultRow['FIRSTNAME'] ." ". $resultRow['LASTNAME'] ."</td>
-                                                                <td align='center'>". $diff->format('%y') ."</td>
-                                                                <td align='center'>". $resultRow['BIRTHDATE'] ."</td>
-                                                                <td align='center'>"; 
-                                                                    if($resultRow["STATUS"] == 1) echo"Alive";
-                                                                    else if ($resultRow["STATUS"] == 0) echo "Deceased";
-                                                            echo"</td>
-                                                                <td align='center'>"; 
-                                                                if($resultRow['SEX']=1) echo "Male";
-                                                                else echo "Female";                                                                 
-                                                                echo "</td>
+                                                                <td align='center'>" . $resultRow['FIRSTNAME'] . " " . $resultRow['LASTNAME'] . "</td>
+                                                                <td align='center'>" . $diff->format('%y') . "</td>
+                                                                <td align='center'>" . $resultRow['BIRTHDATE'] . "</td>
+                                                                <td align='center'>";
+                                                            if ($resultRow["STATUS"] == 1) echo "Alive";
+                                                            else if ($resultRow["STATUS"] == 0) echo "Deceased";
+                                                            echo "</td>
+                                                                <td align='center'>";
+                                                            if ($resultRow['SEX'] = 1) echo "Male";
+                                                            else echo "Female";
+                                                            echo "</td>
                                                             </tr>    
                                                             ";
                                                         }
+
+                                                    }
                                                     ?>
 
                                                     
@@ -437,13 +489,7 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
     </div>
     <!-- /#wrapper -->
 
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-
-    <script type="text/javascript" src="DataTables/datatables.min.js"></script>
     <script>
 
         $(document).ready(function(){

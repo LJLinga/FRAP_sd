@@ -71,7 +71,15 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
                                         <?php 
 
-                                            $query = "SELECT L.DATE_APPLIED, M.MEMBER_ID, M.FIRSTNAME, M.LASTNAME, RD.DEPT_NAME, L.AMOUNT, L.LOAN_ID FROM MEMBER M JOIN LOANS L ON M.MEMBER_ID = L.MEMBER_ID JOIN REF_DEPARTMENT RD ON M.DEPT_ID = RD.DEPT_ID WHERE L.APP_STATUS='1' AND L.LOAN_STATUS='1' AND L.LOAN_DETAIL_ID ='1';";
+                                            $query = "SELECT L.DATE_APPLIED, M.MEMBER_ID, M.FIRSTNAME, M.LASTNAME, RD.DEPT_NAME, L.AMOUNT, L.LOAN_ID 
+                                                      FROM MEMBER M 
+                                                      JOIN LOANS L 
+                                                      ON M.MEMBER_ID = L.MEMBER_ID 
+                                                      JOIN REF_DEPARTMENT RD 
+                                                      ON M.DEPT_ID = RD.DEPT_ID 
+                                                      WHERE L.APP_STATUS='1' 
+                                                      AND L.LOAN_STATUS='1' 
+                                                      AND L.LOAN_DETAIL_ID ='1';";
                                             $result = mysqli_query($dbc, $query);
                                             
                                             foreach ($result as $resultRow) {
