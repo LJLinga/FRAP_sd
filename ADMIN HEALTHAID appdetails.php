@@ -10,6 +10,7 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
      //Test value
     //$_SESSION['idnum']=1141231234;
 
+
     if(isset($_POST['action'])){
         if($_POST['action'] == "Accept Application"){
             //Change the status into Approved (APP_STATUS =2)
@@ -23,7 +24,7 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
         }
         else if($_POST['action'] == "Reject Application"){
-            //Change the status into Approved (APP_STATUS =2)
+            //Change the status into Rejected (APP_STATUS =3)
             $query = "UPDATE HEALTH_AID SET APP_STATUS = '3', EMP_ID =". $_SESSION['idnum'] ." WHERE MEMBER_ID =" . $_SESSION['showHAID'].";";
             $result = mysqli_query($dbc, $query);
 
@@ -33,6 +34,8 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
             $resultTnx = mysqli_query($dbc, $queryTnx);
         }
     }
+
+
 
     $page_title = 'Loans - Health Aid Application Details';
     include 'GLOBAL_TEMPLATE_Header.php';
@@ -73,7 +76,13 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
                                         <div class="panel-body"><p>
                                             <?php 
-                                                $query = "SELECT M.FIRSTNAME, M.LASTNAME, M.MIDDLENAME, RD.DEPT_NAME FROM MEMBER M JOIN HEALTH_AID HA ON M.MEMBER_ID = HA.MEMBER_ID JOIN REF_DEPARTMENT RD ON M.DEPT_ID = RD.DEPT_ID WHERE M.MEMBER_ID = ". $_SESSION['showHAID'] .";";
+                                                $query = "SELECT M.FIRSTNAME, M.LASTNAME, M.MIDDLENAME, RD.DEPT_NAME 
+                                                          FROM MEMBER M 
+                                                          JOIN HEALTH_AID HA 
+                                                          ON M.MEMBER_ID = HA.MEMBER_ID 
+                                                          JOIN REF_DEPARTMENT RD 
+                                                          ON M.DEPT_ID = RD.DEPT_ID 
+                                                          WHERE M.MEMBER_ID = ". $_SESSION['showHAID'] .";";
                                                 $result = mysqli_query($dbc, $query);
                                                 $row = mysqli_fetch_array($result);
                                             ?>

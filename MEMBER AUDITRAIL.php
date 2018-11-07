@@ -65,7 +65,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
                                           on tr.txn_type = tt.type_id
                                           join employee e
                                           on tr.EMP_ID = e.EMP_ID
-                                          WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
+                                          WHERE tr.MEMBER_ID =" . $_SESSION['idnum'].";";
 
 
                                 $result = mysqli_query($dbc, $query);

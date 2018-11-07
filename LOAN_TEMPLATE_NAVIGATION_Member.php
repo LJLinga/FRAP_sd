@@ -48,8 +48,19 @@
             </li>
 
             <li class="dropdown sideicons">
+                <?php
+                $query = "SELECT LASTNAME, FIRSTNAME FROM employee
+                                    
+                        WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
 
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+                $result = mysqli_query($dbc, $query);
+                $row = mysqli_fetch_array($result);
+
+                $displayName = $row['LASTNAME']." , ".$row['FIRSTNAME'][0].". ";
+
+                ?>
+
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $displayName; ?> <b class="caret"></b></a>
 
                 <ul class="dropdown-menu">
 
@@ -125,12 +136,6 @@
 
             <li>
 
-                <a href="MEMBER BANKLOAN list.php"><i class="fa fa-dollar" aria-hidden="true"></i> Bank Loans</a>
-
-            </li>
-
-            <li>
-
                 <a href="MEMBER DEDUCTION summary.php"><i class="fa fa-book" aria-hidden="true"></i> Salary Deduction Summary</a>
 
             </li>
@@ -143,10 +148,6 @@
 
                     <li>
                         <a href="MEMBER FALP summary.php"><i class="fa fa-institution" aria-hidden="true"></i>&nbsp;&nbsp;FALP Loan</a>
-                    </li>
-
-                    <li>
-                        <a href="MEMBER BANKLOAN summary.php"><i class="fa fa-dollar" aria-hidden="true"></i>&nbsp;&nbsp;Bank Loan</a>
                     </li>
 
                 </ul>
@@ -163,9 +164,6 @@
                         <a href="MEMBER HA summary.php"><i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;&nbsp;Health Aid Summary</a>
                     </li>
 
-                    <li>
-                        <a href="MEMBER LIFETIME summary.php"><i class="fa fa-handshake-o" aria-hidden="true"></i>&nbsp;&nbsp;Lifetime Membership Summary</a>
-                    </li>
 
                 </ul>
 
@@ -174,12 +172,6 @@
             <li>
 
                 <a href="MEMBER AUDITRAIL.php"><i class="fa fa-backward" aria-hidden="true"></i> Audit Trail</a>
-
-            </li>
-
-            <li>
-
-                <a href="MEMBER FILEREPO.php"><i class="fa fa-folder" aria-hidden="true"></i> File Repository</a>
 
             </li>
 
