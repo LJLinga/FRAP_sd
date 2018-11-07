@@ -83,7 +83,9 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 
                                 <tr>
                                     <?php
-                                    foreach ($rows as $key => $row){
+
+
+                                    foreach ((array) $rows as $key => $row){
 
                                     $id = $row['MEMBER_ID'];
                                     $name = $row['FIRSTNAME']." ".$row['LASTNAME'];
