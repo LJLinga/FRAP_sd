@@ -6,9 +6,9 @@
     $title = $_POST['title'];
     $body = $_POST['body'];
 
-    echo $title;
-    echo $body;
+    //echo $title;
+    //echo $body;
 
-    $crud->execute("INSERT INTO posts (title, body, authorId, statusId) values ('$title','$body',1,1)");
-
+    $id = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body', 1,1)");
+    echo $id;
 ?>

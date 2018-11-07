@@ -37,6 +37,16 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         }
     }
 
+    public function executeGetKey($query){
+        $result = $this->connection->query($query);
+        if ($result == false) {
+            echo 'Error: cannot execute the command';
+            return false;
+        }else{
+            return mysqli_insert_id($this->connection);
+        }
+    }
+
     public function delete($id, $table){
 
         $query = "DELETE FROM $table WHERE id = $id";

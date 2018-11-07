@@ -12,37 +12,16 @@ $crud = new GLOBAL_CLASS_CRUD();
 //hardcoded value for userType, will add MYSQL verification query
 $userType = 'editor';
 
-$mode = "add";
-$head = "Add Post";
-$body = "";
+if(isset($_POST['btnSaveDraft']) || isset($_POST['btnPublish'])){
+    $title = $_POST['post_title'];
+    $body = $_POST['post_content'];
+    $status = '1';
 
+    if(isset($_POST['btnPublish'])){ $status = '2';}
 
-
-//I was attempting to make the AddPost also become EditPost
-//If coming from the Posts Dashboard, this is edit, if from Add Post this is add.
-//If new post was submitted, refreesh nalang to Posts Dashboard
-//Modify posts dashboard to show most recent post first based on date (SQL)
-//Add the Author credentials to the post
-
-
-
-
-// if user came from the posts dashboard
-if(isset($_POST['edit'])){
-    $mode = "edit";
-
-    $postId = $_POST['edit'];
-    $rows = $crud->getData("SELECT title, body FROM posts WHERE id='$postId'");
-    foreach ($rows as $key => $row) {
-        $title = $row['title'];
-        $body = $row['body'];
-    }
-    $head = "Edit: ".$title;
+    $id = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body', 1,'$status')");
+    header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/CMS_VIEW_EditPost.php?edit=".$id);
 }
-
-//check if post has been published before
-
-
 
 $page_title = 'Santinig - Add Post';
 include 'GLOBAL_TEMPLATE_Header.php';
@@ -53,7 +32,6 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
 <script src="quill/quill.js"></script>
 
 <script>
-
     $(document).ready( function(){
 
         var quill = new Quill('#editor', {
@@ -63,35 +41,11 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
             theme: 'snow'
         });
 
-        $('#form').submit(function(event){
-
-            var title = $('input[name=post_title]').val();
-
-            $.ajax({
-                method: 'POST',
-                url: 'ajax/CMS_POST_INSERT.php',
-                data: {
-                    'title': title,
-                    'body': JSON.stringify(quill.getContents())
-                },
-                success: function(result){
-                    $('.page-header').html('Edit Post: '+title);
-                    alert('Post submitted!');
-                    console.log('Data inserted!');
-                }
-            });
-            event.preventDefault();
+        $('#form').on('submit', function(){
+            $('#post_content').val(JSON.stringify(quill.getContents()));
+            alert(JSON.stringify(quill.getContents()));
         });
     });
-
-
-    function alertBox(){
-        alert("Replace this alert with modal for document selection.");
-    };
-    function submit(){
-        alert("Replace ");
-    };
-
 </script>
 
     <div id="page-wrapper">
@@ -99,19 +53,7 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header">
-                        <?php
-                            echo $head;
-                            if($userType == 'editor'){
-                                if($mode == 'edit'){
-                                    echo '<p></p><button type="button" class="btn btn-primary">Save and Publish</button>';
-                                    echo ' <button type="button" class="btn btn-default">Preview Article</button>';
-                                }
-                            }else{
-                                if($mode == 'edit'){
-                                    echo '<p></p><button type="button" class="btn btn-default">Preview Article</button>';
-                                }
-                            }
-                        ?>
+                        Add New Post
                     </h3>
                     <?php
                     if(isset($message)){
@@ -125,7 +67,7 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                 </div>
             </div>
             <!--Insert success page-->
-            <form id="form" name="form" method="POST" action="ajax/CMS_POST_INSERT.php">
+            <form id="form" name="form" method="POST" action="<?php  ?>">
                 <div class="row">
                     <div class="column col-lg-6">
                         <!-- Text input-->
@@ -182,9 +124,7 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                                   <button class="ql-clean"></button>
                                 </span>
                             </div>
-                            <div id="editor" class="height: 500px">
-                                <?php echo $body;
-                                ?>
+                            <div id="editor">
                             </div>
                             <input type="hidden" name="post_content" id="post_content">
                         </div>
@@ -197,7 +137,6 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                                 <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
                                 <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
                             </div>
-                            <?php //echo $body; ?>
                         </div>
 
                         <div class="form-group">
@@ -208,18 +147,10 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
-                        <input type="hidden" id="hidMode" name="hidMode" value="add">
-                        <input type="hidden" id="hidPostId" name="hidPostId" value="<?php if(isset($postId)){ echo $postId; }; ?>">
-                        <?php
-                            if($userType == 'editor'){
-                                $btnSubmitLabel = 'Save and Publish';
-                            }else{
-                                $btnSubmitLabel = 'Save';
-                            }
-                        ?>
-                        <button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit">
-                            <?php echo $btnSubmitLabel; ?>
-                        </button>
+                        <button type="submit" class="btn btn-default" name="btnSaveDraft" id="btnSaveDraft">Save Draft</button>
+                        <?php if($userType=='editor'){
+                            echo "<button type=\"submit\" class=\"btn btn-primary\" name=\"btnPublish\" id=\"btnPublish\">Publish</button>";
+                        }?>
                     </div>
                 </div>
             </form>

@@ -9,7 +9,7 @@
 class GLOBAL_CLASS_Database
 {
     private $host = 'localhost';
-    private $database = 'facultyassocnew';
+    private $database = 'mydb';
     private $username = 'root';
     private $password = '1234';
     public $connection;

@@ -68,7 +68,7 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                                 <td align="center"><?php echo $row['name'] ;?></td>
                                 <td align="center"><?php echo $row['status'] ;?></td>
                                 <td align="center" class="nowrap">
-                                    <form method="post" action="CMS_VIEW_AddPost.php">
+                                    <form method="GET" action="CMS_VIEW_EditPost.php">
                                         <button type="submit" name="edit" class="btn btn-default" value=<?php echo $row['id'];?>>Edit</button>&nbsp;&nbsp;
                                         <button type="button" name="archive" class="btn btn-danger" value=<?php echo $row['id'];?>>Archive</button>&nbsp;&nbsp;
                                     </form>
