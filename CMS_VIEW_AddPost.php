@@ -17,6 +17,7 @@ $head = "Add Post";
 $body = "";
 
 
+
 //I was attempting to make the AddPost also become EditPost
 //If coming from the Posts Dashboard, this is edit, if from Add Post this is add.
 //If new post was submitted, refreesh nalang to Posts Dashboard
@@ -24,23 +25,7 @@ $body = "";
 //Add the Author credentials to the post
 
 
-//If the user came from a submit from the same page YOU CAN REMOVE THIS IF NEEDED
-if(isset($_POST['btnSubmit'])){
-    $mode = "edit";
 
-    $title = $_POST['post_title'];
-    $body = $_POST['post_content'];
-
-    $head = " Edit: ".$title;
-
-    if($_POST['hidMode']=="add"){
-        $crud->execute("INSERT INTO posts (title, body, authorId, statusId) values ($title, $body, 1,1)");
-        //header("Location: CMS_VIEW_PostsDashboard.php");
-    }elseif($_POST['hidMode']=="edit"){
-        $postId = $_POST['hidPostId'];
-        $crud->execute("UPDATE posts SET title=$title, body=$body WHERE id=$postId ");
-    }
-}
 
 // if user came from the posts dashboard
 if(isset($_POST['edit'])){
@@ -71,8 +56,6 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
 
     $(document).ready( function(){
 
-        var preloaded = "<?php echo $body; ?>";
-
         var quill = new Quill('#editor', {
             modules: {
                 toolbar: '#editorToolbar'
@@ -80,25 +63,25 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
             theme: 'snow'
         });
 
-        quill.setContents({
-            "ops":[
-                {"insert": preloaded}
-            ]
+        $('#form').submit(function(event){
+
+            var title = $('input[name=post_title]').val();
+
+            $.ajax({
+                method: 'POST',
+                url: 'ajax/CMS_POST_INSERT.php',
+                data: {
+                    'title': title,
+                    'body': JSON.stringify(quill.getContents())
+                },
+                success: function(result){
+                    $('.page-header').html('Edit Post: '+title);
+                    alert('Post submitted!');
+                    console.log('Data inserted!');
+                }
+            });
+            event.preventDefault();
         });
-
-        var form = document.querySelector('form');
-        form.onsubmit = function() {
-            // Populate hidden form on submit
-            var about = document.querySelector('input[name=post_content]');
-            about.value = JSON.stringify(quill.getContents());
-
-            console.log("Submitted", $(form).serialize(), $(form).serializeArray());
-
-            // No back end to actually submit to!
-            alert('Open the console to see the submit data!')
-            return false;
-        };
-
     });
 
 
@@ -142,7 +125,7 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                 </div>
             </div>
             <!--Insert success page-->
-            <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+            <form id="form" name="form" method="POST" action="ajax/CMS_POST_INSERT.php">
                 <div class="row">
                     <div class="column col-lg-6">
                         <!-- Text input-->
@@ -200,7 +183,7 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                                 </span>
                             </div>
                             <div id="editor" class="height: 500px">
-                                <?php //echo $body;
+                                <?php echo $body;
                                 ?>
                             </div>
                             <input type="hidden" name="post_content" id="post_content">
@@ -214,7 +197,7 @@ include 'CMS_TEMPLATE_NAVIGATION_Editor.php';
                                 <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
                                 <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
                             </div>
-                            <?php echo $body; ?>
+                            <?php //echo $body; ?>
                         </div>
 
                         <div class="form-group">
