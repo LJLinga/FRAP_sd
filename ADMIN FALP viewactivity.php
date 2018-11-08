@@ -16,7 +16,7 @@ $query1 = "SELECT TXN_DATE,SUM(AMOUNT) as 'AMOUNT' FROM txn_reference where LOAN
 $result = mysqli_query($dbc,$query1);
 
 $page_title = 'Loans - View Activity';
-include 'GLOBAL_TEMPLATE_Header.php';
+include 'GLOBAL_HEADER.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
         <div id="page-wrapper">

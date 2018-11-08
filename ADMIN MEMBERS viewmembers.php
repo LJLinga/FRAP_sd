@@ -17,7 +17,7 @@ $query = "SELECT * FROM member m join ref_department d
 $result = mysqli_query($dbc,$query);
 
 $page_title = 'Loans - View Members';
-include 'GLOBAL_TEMPLATE_Header.php';
+include 'GLOBAL_HEADER.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
 

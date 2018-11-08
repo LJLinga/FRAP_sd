@@ -36,7 +36,7 @@ else {
            $year =$row['Year'];
     }
     $page_title = 'Loans - Collected Membership Fees';
-    include 'GLOBAL_TEMPLATE_Header.php';
+    include 'GLOBAL_HEADER.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 }
 ?>

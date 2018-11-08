@@ -51,7 +51,7 @@ where l.LOAN_STATUS = 3 and latest.Date = l.Date_Matured";
 $result=mysqli_query($dbc,$query);
 
 $page_title = 'Loans - Completed Deductions';
-include 'GLOBAL_TEMPLATE_Header.php';
+include 'GLOBAL_HEADER.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 
 ?>

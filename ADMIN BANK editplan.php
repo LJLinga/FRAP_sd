@@ -39,7 +39,7 @@ where l.bank_id != 1 AND b.Bank_Status = 1";
 $result = mysqli_query($dbc,$query);
 
 $page_title = 'Loans - Edit Bank Plan';
-include 'GLOBAL_TEMPLATE_Header.php';
+include 'GLOBAL_HEADER.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
         <div id="page-wrapper">

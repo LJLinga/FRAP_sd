@@ -79,7 +79,7 @@ where DATE(latest.Date) = date(TXN_DATE) group by m.member_ID";
 $result=mysqli_query($dbc,$query);
 
     $page_title = 'Loans - Detailed Report';
-    include 'GLOBAL_TEMPLATE_Header.php';
+    include 'GLOBAL_HEADER.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 
 ?>

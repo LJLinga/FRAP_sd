@@ -1,0 +1,5 @@
+{
+    "require": {
+        "deanblackborough/php-quill-renderer": "^3.15"
+    }
+}

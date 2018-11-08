@@ -30,7 +30,7 @@ require_once('mysql_connect_FA.php');
     $ans1 = mysqli_fetch_assoc($result);
 
     $page_title = 'Loans - FALP Summary';
-    include 'GLOBAL_TEMPLATE_Header.php';
+    include 'GLOBAL_HEADER.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 ?>
         <div id="page-wrapper">
@@ -246,4 +246,4 @@ require_once('mysql_connect_FA.php');
 
         </div>
         <!-- /#page-wrapper -->
-    <?php include 'GLOBAL_TEMPLATE_Footer.php' ?>
+    <?php include 'GLOBAL_FOOTER.php' ?>

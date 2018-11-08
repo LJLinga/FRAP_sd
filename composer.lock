@@ -1,0 +1,72 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "a84e62f4f115c99742b9c3bddbe448f8",
+    "packages": [
+        {
+            "name": "deanblackborough/php-quill-renderer",
+            "version": "v3.15.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/deanblackborough/php-quill-renderer.git",
+                "reference": "edf8221aadecc0082e573084b515044d1175cd9f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/deanblackborough/php-quill-renderer/zipball/edf8221aadecc0082e573084b515044d1175cd9f",
+                "reference": "edf8221aadecc0082e573084b515044d1175cd9f",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "php-coveralls/php-coveralls": "^2",
+                "phpunit/phpunit": "^7"
+            },
+            "suggest": {
+                "php": "^7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DBlackborough\\Quill\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dean Blackborough",
+                    "email": "dean@g3d-development.com"
+                }
+            ],
+            "description": "Render quill insert deltas to HTML, Markdown and GitHub flavoured Markdown ",
+            "homepage": "http://www.transmute-coffee.com/php-quill-renderer.php",
+            "keywords": [
+                "delta",
+                "html",
+                "markdown",
+                "parse",
+                "php",
+                "quill",
+                "quilljs",
+                "renderer"
+            ],
+            "time": "2018-10-25T22:29:44+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

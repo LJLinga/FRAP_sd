@@ -27,7 +27,7 @@
 
     }
     $page_title = 'Loans - FALP Requirements';
-    include 'GLOBAL_TEMPLATE_Header.php';
+    include 'GLOBAL_HEADER.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 ?>
 <script>
@@ -348,4 +348,4 @@
 
         </div>
         <!-- /#page-wrapper -->
-<?php include 'GLOBAL_TEMPLATE_Footer.php' ?>
+<?php include 'GLOBAL_FOOTER.php' ?>

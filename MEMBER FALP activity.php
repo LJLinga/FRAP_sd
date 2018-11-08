@@ -28,7 +28,7 @@ require_once('mysql_connect.php');
     $result = mysqli_query($dbc,$query);
 
     $page_title = 'Loans - FALP Activity';
-    include 'GLOBAL_TEMPLATE_Header.php';
+    include 'GLOBAL_HEADER.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 ?>
         <div id="page-wrapper">
@@ -144,4 +144,4 @@ require_once('mysql_connect.php');
 
         </div>
         <!-- /#page-wrapper -->
-    <?php include 'GLOBAL_TEMPLATE_Footer.php' ?>
+    <?php include 'GLOBAL_FOOTER.php' ?>

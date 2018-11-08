@@ -6,9 +6,9 @@
  * Time: 3:48 PM
  */
 
-include 'GLOBAL_TEMPLATE_Header.php';
-include 'EDMS_TEMPLATE_MenuHeader.php';
-include 'EDMS_TEMPLATE_NAVIGATION_ViewDocument.php';
+include 'GLOBAL_HEADER.php';
+include 'GLOBAL_NAV_TopBar.php';
+include 'EDMS_USER_NAV_ViewDocumentSidebar.php';
 ?>
 <script src="js/aesthetics.js"></script>s
 
@@ -72,4 +72,4 @@ include 'EDMS_TEMPLATE_NAVIGATION_ViewDocument.php';
     </div>
 </div>
 
-<?php include 'GLOBAL_TEMPLATE_Footer.php';?>
+<?php include 'GLOBAL_FOOTER.php';?>
