@@ -40,6 +40,16 @@
     include 'GLOBAL_HEADER.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
+
+<script>
+
+    $(document).ready(function(){
+
+        $('#table').DataTable();
+
+    });
+
+</script>
         <div id="page-wrapper">
 
             <div class="container-fluid">
@@ -65,7 +75,7 @@
 
                                 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST"> <!-- SERVER SELF -->
 
-                                <table id="table" class="table table-bordered table-striped">
+                                <table id="table" name="table" class="table table-bordered table-striped">
                                     
                                     <thead>
 
@@ -132,22 +142,6 @@
     </div>
     <!-- /#wrapper -->
 
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-
-    <script type="text/javascript" src="DataTables/datatables.min.js"></script>
-    <script>
-
-        $(document).ready(function(){
-    
-            $('#table').DataTable();
-
-        });
-
-    </script>
 
 </body>
 

@@ -66,6 +66,9 @@
                         <a href="ADMIN MEMBERS viewmembers.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;&nbsp;View All Members</a>
                     </li>
                     <li>
+                        <a href="ADMIN MEMBER roles.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;&nbsp;View All Roles </a>
+                    </li>
+                    <li>
                         <a href="javascript:" data-toggle="collapse" data-target="#loans"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;On-going Loans<i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="loans" class="collapse">
                             <li>
