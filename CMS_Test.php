@@ -5,38 +5,22 @@
  * Date: 11/9/2018
  * Time: 10:59 AM
  */
- //include 'GLOBAL_HEADER.php';
+ include 'GLOBAL_HEADER.php';
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="pell-master/dist/pell.min.css">
-    <script src="pell-master/dist/pell.min.js"></script>
-    <script>
-        window.pell.init({
-            root: 'pell',
-            actions: [
-                'bold',
-                { name: 'italic', icon: '&#9786;', title: 'Zitalic' },
-                'underline'
-            ],
-            classes: {
-                actionbar: 'pell-actionbar',
-                button: 'pell-button',
-                editor: 'pell-editor'
-            },
-        })
-
-    </script>
 
 </head>
+
 <body>
+<!-- Create a tag that we will use as the editable area. -->
+<!-- You can use a div tag as well. -->
+<textarea></textarea>
 
 
-<div id="pell" class="pell"></div>
-
-
+<!-- Initialize the editor. -->
+<script> $(function() { $('textarea').froalaEditor() }); </script>
 </body>
 </html>
-

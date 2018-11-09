@@ -30,6 +30,15 @@
     <link href="js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet">
     <link href="js/jquery-ui-1.12.1.custom/jquery-ui.structure.min.css" rel="stylesheet">
     <link href="js/jquery-ui-1.12.1.custom/jquery-ui.theme.min.css" rel="stylesheet">
+
+    <!-- Include Editor style. -->
+
+    <link href="froala/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+    <link href="froala/css/froala_style.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Include JS file. -->
+
+    <script type="text/javascript" src="froala/js/froala_editor.pkgd.min.js"></script>
 </head>
 
 <body>
