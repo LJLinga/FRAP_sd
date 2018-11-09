@@ -14,7 +14,7 @@ $userType = 'editor';
 if(isset($_POST['btnSaveDraft']) || isset($_POST['btnPublish'])){
 
     $title = $_POST['post_title'];
-    $body = $_POST['post_content'];
+    $body = $crud->escape_string($_POST['post_content']);
     $status = '1';
 
     if(isset($_POST['btnPublish'])){ $status = '2';}
@@ -28,88 +28,84 @@ include 'GLOBAL_HEADER.php';
 include 'GLOBAL_NAV_TopBar.php';
 include 'CMS_ADMIN_NAV_Sidebar.php';
 ?>
-
-<link href="quill/quill.snow.css" rel="stylesheet">
-<script src="quill/quill.js"></script>
-
 <script>
     $(document).ready( function(){
-        $('textarea').froalaEditor();
 
-        $('#form').on('submit', function(){
-            //$('#post_content').val(JSON.stringify(quill.getContents()));
-            //$('#post_content').val();
-            //$('textarea').froalaEditor('html.get', false);
-            //alert(JSON.stringify(quill.getContents()));
+        $('textarea').froalaEditor({
+            //Disables video upload
+            videoUpload: false,
+
+            // Set the image upload URL.
+            //imageUploadParam: 'image_param',
+            imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
+            imageUploadParams: {
+                id: 'my_editor'
+            },
+
+            // Set the file upload URL.
+            fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
+            fileUploadParams: {
+                id: 'my_editor'
+            }
+
         });
     });
 </script>
 
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">
+                    <?php echo $head;?>
+                </h3>
 
-<script> $(function() { $('textarea').froalaEditor() }); </script>
-
-    <div id="page-wrapper">
-        <div class="container-fluid">
+            </div>
+        </div>
+        <!--Insert success page-->
+        <form id="form" name="form" method="POST" action="<?php $_SERVER["PHP_SELF"]?>">
             <div class="row">
-                <div class="col-lg-12">
-                    <h3 class="page-header">
-                        Add New Post
-                    </h3>
-                    <?php
-                    if(isset($message)){
-                        echo"  
-                                <div class='alert alert-warning'>
-                                    ". $message ."
-                                </div>
-                                ";
-                    }
-                    ?>
+                <div class="column col-lg-6">
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label for="post_title">Title</label>
+                        <input id="post_title" name="post_title" type="text" placeholder="Put your post title here..." class="form-control input-md" value="<?php if(isset($title)){ echo $title; }; ?>" required>
+                    </div>
+
+                    <!-- Textarea -->
+                    <div class="form-group">
+                        <label for="post_content">Content</label>
+                        <textarea name="post_content" id="post_content"></textarea>
+                    </div>
+                </div>
+                <div class="column col-lg-4">
+                    <!-- Button -->
+                    <div class="form-group">
+                        <label for="reference">References</label>
+                        <div id="reference">
+                            <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
+                            <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label  for="customFile">Upload attachment</label>
+                        <input type="file" class="" id="customFile">
+                    </div>
                 </div>
             </div>
-            <!--Insert success page-->
-            <form id="form" name="form" method="POST" action="<?php $_SERVER["PHP_SELF"] ?>">
-                <div class="row">
-                    <div class="column col-lg-6">
-                        <!-- Text input-->
-                        <div class="form-group">
-                            <label for="post_title">Title</label>
-                            <input id="post_title" name="post_title" type="text" placeholder="Put your post title here..." class="form-control input-md" value="<?php if(isset($title)){ echo $title; }; ?>" required>
-                        </div>
-
-                        <!-- Textarea -->
-                        <div class="form-group">
-                            <label for="post_content">Content</label>
-                            <textarea name="post_content" id="post_content"></textarea>
-                        </div>
-                    </div>
-                    <div class="column col-lg-4">
-                        <!-- Button -->
-                        <div class="form-group">
-                            <label for="reference">References</label>
-                            <div id="reference">
-                                <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
-                                <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label  for="customFile">Upload attachment</label>
-                            <input type="file" class="" id="customFile">
-                        </div>
-                    </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <button type="submit" class="btn btn-default" name="btnSaveDraft" id="btnSaveDraft">Save Draft</button>
+                    <?php if($userType=='editor'){
+                        echo "<button type=\"submit\" class=\"btn btn-primary\" name=\"btnPublish\" id=\"btnPublish\">Publish</button>";
+                    }?>
                 </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <button type="submit" class="btn btn-default" name="btnSaveDraft" id="btnSaveDraft">Save Draft</button>
-                        <?php if($userType=='editor'){
-                            echo "<button type=\"submit\" class=\"btn btn-primary\" name=\"btnPublish\" id=\"btnPublish\">Publish</button>";
-                        }?>
-                    </div>
-                </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
-    <!-- /#page-wrapper -->
+</div>
+<!-- /#page-wrapper -->
 <?php include 'GLOBAL_FOOTER.php' ?>
 
 

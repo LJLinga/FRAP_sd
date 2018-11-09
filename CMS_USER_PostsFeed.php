@@ -24,7 +24,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
 
                 <?php
 
-                $rows = $crud->getData("SELECT p.id, p.title, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status, p.lastUpdated FROM mydb.posts p JOIN mydb.authors a ON p.authorId = a.id JOIN mydb.post_status s ON s.id = p.statusId WHERE s.id = 2;");
+                $rows = $crud->getData("SELECT p.id, p.title, p.body, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status, p.lastUpdated FROM mydb.posts p JOIN mydb.authors a ON p.authorId = a.id JOIN mydb.post_status s ON s.id = p.statusId WHERE s.id = 2;");
                 foreach ((array) $rows as $key => $row){
                     ?>
 
@@ -32,7 +32,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                             <div class="card-body">
                                 <h3 class="card-title"><?php echo $row['title'];?></h3>
                                 <h5 class="card-subtitle"><i>By: <?php echo $row['name'];?> <br> Posted: <?php echo $row['lastUpdated'] ;?></i></h5>
-                                <p class="card-text">Some example text. Some example text.</p>
+                                <p class="card-text"><?php echo $row['body'] ?></p>
                                 <a href="#" class="card-link">Card link</a>
                                 <a href="#" class="card-link">Another link</a>
                             </div>

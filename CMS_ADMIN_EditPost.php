@@ -12,13 +12,14 @@ include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 
 $userType = 'editor';
-$body = 'hello';
 $head = 'Add New Post';
 $title = '';
 $result = 'no json';
+$body = '';
 
 //hardcoded value for userType, will add MYSQL verification query
-if(!empty($_GET['postId'])){
+
+if(isset($_GET['postId'])){
     $postId = $_GET['postId'];
     $rows = $crud->getData("SELECT title, body FROM posts WHERE id='$postId'");
     foreach ((array) $rows as $key => $row) {
@@ -26,16 +27,21 @@ if(!empty($_GET['postId'])){
         $body = $row['body'];
     }
     $head = "Edit: ".$title;
+}
 
-//    try {
-//        $quill = new \DBlackborough\Quill\Render(json_encode($body));
-//        $result = $quill->render();
-//    } catch (\Exception $e) {
-//        echo $e->getMessage();
-//    }
+if(isset($_POST['btnSaveDraft']) || isset($_POST['btnPublish'])) {
 
-}else{
-    header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/CMS_ADMIN_PostsDashboard.php");
+    $postId = $_POST['post_id'];
+    $title = $_POST['post_title'];
+    $body = $crud->escape_string($_POST['post_content']);
+    $status = '1';
+
+    if(isset($_POST['btnPublish'])){ $status = '2';}
+
+    if($crud->execute("UPDATE posts SET title='$title', body='$body', authorId='1', statusId='$status' WHERE id='$postId';")) {
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditPost.php?postId=" . $postId);
+    }
+
 }
 
 $page_title = 'Santinig - Edit Post';
@@ -44,12 +50,27 @@ include 'GLOBAL_NAV_TopBar.php';
 include 'CMS_ADMIN_NAV_Sidebar.php';
 ?>
 
-<link href="quill/quill.snow.css" rel="stylesheet">
-<script src="quill/quill.js"></script>
-
 <script>
     $(document).ready( function(){
-        $('textarea').froalaEditor();
+
+        $('textarea').froalaEditor({
+            //Disables video upload
+            videoUpload: false,
+
+            // Set the image upload URL.
+            //imageUploadParam: 'image_param',
+            imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
+            imageUploadParams: {
+                id: 'my_editor'
+            },
+
+            // Set the file upload URL.
+            fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
+            fileUploadParams: {
+                id: 'my_editor'
+            }
+
+        });
 
         $('textarea').froalaEditor('html.set', '<?php echo $body?>');
 
@@ -62,13 +83,13 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
         <div class="row">
             <div class="col-lg-12">
                 <h3 class="page-header">
-                    <?php echo $head;?>
+                    <?php echo $head.$postId;?>
                 </h3>
 
             </div>
         </div>
         <!--Insert success page-->
-        <form id="form" name="form" method="GET" action="<?php $_SERVER["PHP_SELF"]?>">
+        <form id="form" name="form" method="POST" action="<?php $_SERVER["PHP_SELF"]?>">
             <div class="row">
                 <div class="column col-lg-6">
                     <!-- Text input-->
@@ -101,7 +122,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
             </div>
             <div class="row">
                 <div class="col-lg-6">
-                    <input type="hidden" id="postId" name="postId" value="<?php if(isset($postId)){ echo $postId;};?>">
+                    <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">
                     <button type="submit" class="btn btn-default" name="btnSaveDraft" id="btnSaveDraft">Save Draft</button>
                     <?php if($userType=='editor'){
                         echo "<button type=\"submit\" class=\"btn btn-primary\" name=\"btnPublish\" id=\"btnPublish\">Publish</button>";
