@@ -9,7 +9,7 @@
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 
-$page_title = 'Santinig - Posts Dashboard';
+$page_title = 'Santinig - Events Dashboard';
 include 'GLOBAL_HEADER.php';
 include 'GLOBAL_NAV_TopBar.php';
 include 'CMS_ADMIN_NAV_Sidebar.php';
@@ -28,20 +28,10 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
         <div class="row">
             <div class="col-lg-12">
                 <h3 class="page-header">
-                    Santinig Posts
+                    Upcoming Events
                     <a class="btn btn-primary" href="CMS_ADMIN_AddPost.php"> Add New Post </a>
                 </h3>
             </div>
-            <div class="col-lg-12">
-
-
-
-            </div>
-        </div>
-
-        <div class="row">
-
-
         </div>
 
         <div class="card mb-3">
@@ -52,10 +42,9 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                         <tr>
 
                             <th align="left" width="200px"><b>Title</b></th>
-                            <th align="left" width="200px"><b>Author</b></th>
-                            <th align="left" width="100px"><b>Status</b></th>
-                            <th align="left" width="200px"><b>Last Updated</b></th>
-                            <th align="right" width="200px"><b>Actions</b></th>
+                            <th align="left" width="200px"><b>Time</b></th>
+                            <th align="left" width="100px"><b>Attendees</b></th>
+                            <th align="left" width="200px"><b>Actions</b></th>
 
                         </tr>
                         </thead>
@@ -63,25 +52,30 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                         <tr>
 
                             <th align="left" width="200px"><b>Title</b></th>
-                            <th align="left" width="200px"><b>Author</b></th>
-                            <th align="left" width="100px"><b>Status</b></th>
-                            <th align="left" width="200px"><b>Last Updated</b></th>
-                            <th align="right" width="200px"><b>Actions</b></th>
+                            <th align="left" width="200px"><b>Time</b></th>
+                            <th align="left" width="50px"><b>Attendees</b></th>
+                            <th align="left" width="100px"><b>Actions</b></th>
 
                         </tr>
                         </tfoot>
                         <tbody>
                         <?php
 
-                            $rows = $crud->getData("SELECT p.id, p.title, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status, p.lastUpdated FROM mydb.posts p JOIN mydb.authors a ON p.authorId = a.id JOIN mydb.post_status s ON s.id = p.statusId WHERE s.id = 1 || s.id = 2;");
-                            foreach ((array) $rows as $key => $row){
-                                ?>
+                        //$row = array('Suntukan sa LRT', '2018 Oct 20 09:00 AM to 2018 Oct 21 09:00 PM', '31');
+
+                        $row['title'] = 'Suntukan sa LRT';
+                        $row['time']= '2018 Oct 20 09:00 AM to 2018 Oct 21 09:00 PM';
+                        $row['going'] = '31';
+                        $row['id'] = 0;
+                        $rows = array($row);
+                        //$rows = $crud->getData("SELECT p.id, p.title, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status FROM mydb.posts p JOIN mydb.authors a ON p.authorId = a.id JOIN mydb.post_status s ON s.id = p.statusId WHERE s.id = 1 || s.id = 2;");
+                        foreach ($rows as $key => $row){
+                            ?>
                             <tr>
 
                                 <td align="left"><?php echo $row['title'];?></td>
-                                <td align="left"><?php echo $row['name'] ;?></td>
-                                <td align="left"><?php echo $row['status'] ;?></td>
-                                <td align="left"><?php echo $row['lastUpdated'] ;?></td>
+                                <td align="left"><?php echo $row['time'] ;?></td>
+                                <td align="left"><?php echo $row['going'] ;?></td>
                                 <td align="right" class="nowrap">
                                     <form method="GET" action="CMS_ADMIN_EditPost.php">
                                         <button type="submit" name="postId" class="btn btn-default" value=<?php echo $row['id'];?>>Edit</button>&nbsp;&nbsp;

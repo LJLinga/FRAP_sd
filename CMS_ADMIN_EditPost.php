@@ -15,6 +15,7 @@ $userType = 'editor';
 $body = 'hello';
 $head = 'Add New Post';
 $title = '';
+$result = 'no json';
 
 //hardcoded value for userType, will add MYSQL verification query
 if(!empty($_GET['postId'])){
@@ -26,13 +27,15 @@ if(!empty($_GET['postId'])){
     }
     $head = "Edit: ".$title;
 
-    try {
-        $quill = new \DBlackborough\Quill\Render($body);
-        $result = $quill->render();
-    } catch (\Exception $e) {
-        echo $e->getMessage();
-    }
+//    try {
+//        $quill = new \DBlackborough\Quill\Render(json_encode($body));
+//        $result = $quill->render();
+//    } catch (\Exception $e) {
+//        echo $e->getMessage();
+//    }
 
+}else{
+    header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/CMS_ADMIN_PostsDashboard.php");
 }
 
 $page_title = 'Santinig - Edit Post';
@@ -55,7 +58,10 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
             theme: 'snow'
         });
 
-        quill.setContents();
+        quill.setContents(<?php echo ($body) ?>);
+
+
+        console.log(JSON.parse('<?php echo json_encode($body) ?>'));
 
     });
 

@@ -43,10 +43,10 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
         });
 
         $('#form').on('submit', function(){
-            $('#post_content').val(JSON.stringify(quill.getContents()));
-            //$('#post_content').val(quill.root.innerHTML);
-            //alert(quill.root.innerHTML);
-            alert(JSON.stringify(quill.getContents()));
+            //$('#post_content').val(JSON.stringify(quill.getContents()));
+            $('#post_content').val(quill.root.innerHTML);
+            alert(quill.root.innerHTML);
+            //alert(JSON.stringify(quill.getContents()));
         });
     });
 </script>
@@ -70,7 +70,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                 </div>
             </div>
             <!--Insert success page-->
-            <form id="form" name="form" method="POST" action="<?php  ?>">
+            <form id="form" name="form" method="POST" action="<?php $_SERVER["PHP_SELF"] ?>">
                 <div class="row">
                     <div class="column col-lg-6">
                         <!-- Text input-->

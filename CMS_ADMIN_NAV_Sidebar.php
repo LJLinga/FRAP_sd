@@ -40,7 +40,7 @@
                 <ul id="events" class="collapse">
 
                     <li>
-                        <a href="#"><i class="fa fa-file-text" aria-hidden="true"></i> View Events</a>
+                        <a href="CMS_ADMIN_EventsDashboard.php"><i class="fa fa-file-text" aria-hidden="true"></i> View Events</a>
                     </li>
 
                     <li>
