@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-session_start();
-require_once('mysql_connect_FA.php');
 
-    if ($_SESSION['usertype'] != 1) {
+    require_once ("mysql_connect_FA.php");
+    session_start();
+    include 'GLOBAL_USER_TYPE_CHECKING.php';
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
-        
+
+    $query = "SELECT MAX(LOAN_ID), LOAN_STATUS from loans where member_id = {$_SESSION['idnum']} ";
+    $result = mysqli_query($dbc,$query);
+    $row = mysqli_fetch_assoc($result);
+
+    if($row['LOAN_STATUS'] == 1){ //checks if you have a pending loan
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
+
+    }else if($row['LOAN_STATUS'] == 2) { //checks if you have a loan that is ongoing.
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
+
     }
 
-    //MENTAL NOTE TO SELF..... DAPAT AYUSIN WHEN THELOAN STARTS! Loans should start when it is APPROVED! just keep this code here for now as placeholder.
+//MENTAL NOTE TO SELF..... DAPAT AYUSIN WHEN THELOAN STARTS! Loans should start when it is APPROVED! just keep this code here for now as placeholder.
 
     $query = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,PICKUP_STATUS)
     values({$_SESSION['idnum']},1,{$_POST['amount']},{$_POST['interest']},{$_POST['payT']},{$_POST['amountP']},{$_POST['monD']}/2,1,1,DATE(now()),1);";
@@ -346,7 +357,7 @@ require_once('mysql_connect_FA.php');
         }
 
 $page_title = 'Loans - FALP Application Sent';
-include 'GLOBAL_HEADER.php';
+include 'GLOBAL_TEMPLATE_Header.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 
 ?>
@@ -406,4 +417,4 @@ include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
         </div>
         <!-- /#page-wrapper -->
 
-<?php include 'GLOBAL_FOOTER.php' ?>
+<?php include 'GLOBAL_TEMPLATE_Footer.php' ?>

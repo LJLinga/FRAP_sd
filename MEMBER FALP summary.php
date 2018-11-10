@@ -1,12 +1,8 @@
 <?php
-session_start();
-require_once('mysql_connect_FA.php');
 
-    if ($_SESSION['usertype'] != 1) {
-
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
-        
-    }
+    require_once ("mysql_connect_FA.php");
+    session_start();
+    include 'GLOBAL_USER_TYPE_CHECKING.php';
 
     $query = "SELECT MAX(LOAN_ID), LOAN_STATUS from loans where member_id = {$_SESSION['idnum']} ";
     $result = mysqli_query($dbc,$query);
@@ -30,7 +26,7 @@ require_once('mysql_connect_FA.php');
     $ans1 = mysqli_fetch_assoc($result);
 
     $page_title = 'Loans - FALP Summary';
-    include 'GLOBAL_HEADER.php';
+    include 'GLOBAL_TEMPLATE_Header.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 ?>
         <div id="page-wrapper">
@@ -246,4 +242,4 @@ require_once('mysql_connect_FA.php');
 
         </div>
         <!-- /#page-wrapper -->
-    <?php include 'GLOBAL_FOOTER.php' ?>
+    <?php include 'GLOBAL_TEMPLATE_Footer.php' ?>

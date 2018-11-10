@@ -1,13 +1,8 @@
 <?php
 
+    require_once ("mysql_connect_FA.php");
     session_start();
-    require_once('mysql_connect_FA.php');
-
-    if ($_SESSION['usertype'] != 1) {
-
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
-        
-    }
+    include 'GLOBAL_USER_TYPE_CHECKING.php';
 
     //check if the person has anongoing  loan first dammit then if he/she has, redirect to a pending. but if its accepted, redirect to activity
     //to check if the user has applied in FALP but this code can be edited to check other applications. e.g. Health aid and shi like th sort
@@ -27,7 +22,7 @@
 
     }
     $page_title = 'Loans - FALP Requirements';
-    include 'GLOBAL_HEADER.php';
+    include 'GLOBAL_TEMPLATE_Header.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 ?>
 <script>
@@ -348,4 +343,4 @@
 
         </div>
         <!-- /#page-wrapper -->
-<?php include 'GLOBAL_FOOTER.php' ?>
+<?php include 'GLOBAL_TEMPLATE_Footer.php' ?>

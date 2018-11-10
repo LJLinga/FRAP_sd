@@ -1,12 +1,9 @@
 <?php
+    srequire_once ("mysql_connect_FA.php");
     session_start();
-    if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
+    include 'GLOBAL_USER_TYPE_CHECKING.php';
+    include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
-    header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
-
-}
-
-    require_once('mysql_connect_FA.php');
      //Test value
     //$_SESSION['idnum']=1141231234;
 
@@ -47,7 +44,7 @@
 
 
     $page_title = 'Loans - Health Aid Application Details';
-    include 'GLOBAL_HEADER.php';
+    include 'GLOBAL_TEMPLATE_Header.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
 

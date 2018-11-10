@@ -1,19 +1,12 @@
 <?php
 
-    session_start();
-
     error_reporting(null);
-
-    require_once('mysql_connect_FA.php');
-
-    if ($_SESSION['usertype'] != 1) {
-
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
-        
-    }
+    require_once ("mysql_connect_FA.php");
+    session_start();
+    include 'GLOBAL_USER_TYPE_CHECKING.php';
 
     $page_title = 'Loans - FALP Application Failed';
-    include 'GLOBAL_HEADER.php';
+    include 'GLOBAL_TEMPLATE_Header.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 ?>
         <div id="page-wrapper">
@@ -98,4 +91,4 @@
         </div>
         <!-- /#page-wrapper -->
 
-<?php include 'GLOBAL_FOOTER.php' ?>
+<?php include 'GLOBAL_TEMPLATE_Footer.php' ?>

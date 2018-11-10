@@ -1,33 +1,27 @@
 <?php
+    require_once ("mysql_connect_FA.php");
     session_start();
-    require_once('mysql_connect_FA.php');
+    include 'GLOBAL_USER_TYPE_CHECKING.php';
 
-    if ($_SESSION['usertype'] != 1) {
-
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
-        
-    }
-
-    $query = "SELECT app_status FROM health_aid
-                                        
-                        WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
-
-    $result = mysqli_query($dbc, $query);
+    $query = "SELECT MAX(RECORD_ID),APP_STATUS from health_aid WHERE MEMBER_ID = {$_SESSION['idnum']} ";
+    $result = mysqli_query($dbc,$query);
     $row = mysqli_fetch_array($result);
 
+
     //checks if you have not applied for one yet.
-    if(empty($row)){
-
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
-
-    }else if($row['APP_STATUS'] = 1){
+     if($row['APP_STATUS'] == 1){ // it you have a pending HA application
 
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA appsent.php");
 
-    }
+     }else if(empty($row)){ // it means that hindi ka pa nagaaply.
+
+         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
+
+     }
+
 
 $page_title = 'Loans - Health Aid Summary';
-include 'GLOBAL_HEADER.php';
+include 'GLOBAL_TEMPLATE_Header.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 
 ?>
@@ -289,8 +283,8 @@ include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
                                 <?php
                                     $query = "SELECT * FROM SIBLINGS WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
                                     $result = mysqli_query($dbc, $query);
-
-                                    if(!empty($result)) {
+                                    $row = mysqli_fetch_array($result);
+                                    if(!empty($row)) {
                                         ?>
 
 
@@ -355,8 +349,9 @@ include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
                                 <?php
                                     $query = "SELECT * FROM CHILDREN WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
                                     $result = mysqli_query($dbc, $query);
+                                    $row = mysqli_fetch_array($result);
 
-                                    if(!empty($result)) {
+                                    if(!empty($row)) {
                                         ?>
 
 
@@ -455,4 +450,4 @@ include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
         </div>
         <!-- /#page-wrapper -->
 
-<?php include 'GLOBAL_FOOTER.php' ?>
+<?php include 'GLOBAL_TEMPLATE_Footer.php' ?>

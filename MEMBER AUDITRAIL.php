@@ -1,17 +1,15 @@
 <?php
 
-    session_start();
     require_once ("mysql_connect_FA.php");
+    session_start();
+    include 'GLOBAL_USER_TYPE_CHECKING.php';
 
-    if ($_SESSION['usertype'] != 1) {
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
-        
-    }
 
-$page_title = 'Loans - Audit Trail';
-include 'GLOBAL_HEADER.php';
-include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
+    $page_title = 'Loans - Audit Trail';
+    include 'GLOBAL_TEMPLATE_Header.php';
+    include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
+
 ?>
 <script>
     $(document).ready(function(){
@@ -150,4 +148,4 @@ include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 
         </div>
         <!-- /#page-wrapper -->
-<?php include 'GLOBAL_FOOTER.php' ?>
+<?php include 'GLOBAL_TEMPLATE_Footer.php' ?>

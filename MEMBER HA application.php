@@ -1,24 +1,22 @@
 <?php
 
+require_once ("mysql_connect_FA.php");
 session_start();
-require_once('mysql_connect_FA.php');
-
-if ($_SESSION['usertype'] != 1) {
-
-    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
-
-}
+include 'GLOBAL_USER_TYPE_CHECKING.php';
 
 $query = "SELECT MAX(RECORD_ID), APP_STATUS from health_aid where member_id = {$_SESSION['idnum']} and APP_STATUS = 1 ";
 $result = mysqli_query($dbc,$query);
-
 $row = mysqli_fetch_assoc($result);
 
-if($row['APP_STATUS'] = 1){ //checks if you have a pending application
+    if($row['APP_STATUS'] == 1){ //checks if you have a pending application
 
-    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA appsent.php");
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA appsent.php");
 
-}
+    }else if($row['APP_STATUS'] == 2){ //checks if you have an approved application
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
+
+    }
 
 $_SESSION['HA_RecordID'] == 0;
 
@@ -621,7 +619,7 @@ else if ($rowForm['APP_STATUS'] == 3) { /* REJECTED */
 }
 
 $page_title = 'Loans - Health Aid Application';
-include 'GLOBAL_HEADER.php';
+include 'GLOBAL_TEMPLATE_Header.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 
 ?>
@@ -1658,4 +1656,4 @@ include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
     </div>
     <!-- /#page-wrapper -->
 
-<?php include 'GLOBAL_FOOTER.php' ?>
+<?php include 'GLOBAL_TEMPLATE_Footer.php' ?>

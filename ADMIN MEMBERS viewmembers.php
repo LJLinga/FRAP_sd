@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php 
-session_start();
-require_once("mysql_connect_FA.php");
-if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
+<?php
 
-header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
-
-}
+    require_once ("mysql_connect_FA.php");
+    session_start();
+    include 'GLOBAL_USER_TYPE_CHECKING.php';
+    include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
 
 
@@ -24,7 +22,7 @@ if(isset($_POST['details'])){
 
 
 $page_title = 'Loans - View Members';
-include 'GLOBAL_HEADER.php';
+include 'GLOBAL_TEMPLATE_Header.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
 

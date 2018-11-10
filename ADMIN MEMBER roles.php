@@ -9,33 +9,18 @@
  * Time: 11:29 PM
  */
 
+require_once ("mysql_connect_FA.php");
 session_start();
-require_once("mysql_connect_FA.php");
-if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
-
-    header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
-
-}
-
-include_once('GLOBAL_CLASS_CRUD.php');
-$crud = new GLOBAL_CLASS_CRUD();
-
-$rows = $crud->getData("SELECT e.MEMBER_ID,  e.FIRSTNAME, e.LASTNAME, f.description AS 'FRAP', c.description AS 'CMS', ed.description AS 'EDMS'
-                               FROM  employee e
-                               JOIN frap_roles f
-                               ON e.FRAP_ROLE = f.id
-                               JOIN cms_roles c
-                               ON e.CMS_ROLE = c.id
-                               JOIN edms_roles ed 
-                               ON e.EDMS_ROLE = ed.id");
-
-
+include 'GLOBAL_USER_TYPE_CHECKING.php';
+include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
 
 
 $page_title = 'Loans - View Member Roles';
-include 'GLOBAL_HEADER.php';
+include 'GLOBAL_TEMPLATE_Header.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
+
+
 ?>
 
 <div id="page-wrapper">
@@ -84,27 +69,25 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                 <tr>
                                     <?php
 
-
-                                    foreach ((array) $rows as $key => $row){
-
-                                    $id = $row['MEMBER_ID'];
-                                    $name = $row['FIRSTNAME']." ".$row['LASTNAME'];
-                                    $frap = $row['FRAP'];
-                                    $cms =  $row['CMS'];
-                                    $edms = $row['EDMS'];
-
-
-
-                                    
+                                    $query = "SELECT e.MEMBER_ID,  e.FIRSTNAME, e.LASTNAME, f.description AS 'FRAP', c.description AS 'CMS', ed.description AS 'EDMS'
+                                           FROM  employee e
+                                           JOIN frap_roles f
+                                           ON e.FRAP_ROLE = f.id
+                                           JOIN cms_roles c
+                                           ON e.CMS_ROLE = c.id
+                                           JOIN edms_roles ed 
+                                           ON e.EDMS_ROLE = ed.id";
+                                    $result = mysqli_query($dbc,$query);
 
 
+                                    foreach ($result as $row) {
 
                                     ?>
-                                    <td align="center"><?php echo $id;?></td>
-                                    <td align="center"><?php echo $name;?> </td>
-                                    <td align="center"><?php echo $frap;?> </td>
-                                    <td align="center"><?php echo $cms;?> </td>
-                                    <td align="center"><?php echo $edms;?> </td>
+                                    <td align="center"><?php echo $row['MEMBER_ID'];?></td>
+                                    <td align="center"><?php echo $row['FIRSTNAME']." ".$row['LASTNAME'];?> </td>
+                                    <td align="center"><?php echo $row['FRAP'];?> </td>
+                                    <td align="center"><?php echo $row['CMS'];?> </td>
+                                    <td align="center"><?php echo $row['EDMS'];?> </td>
 
 
                                 </tr>

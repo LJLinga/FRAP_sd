@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php 
-session_start();
-require_once("mysql_connect_FA.php");
-if ($_SESSION['usertype'] == 1) {
+<?php
+    require_once ("mysql_connect_FA.php");
+    session_start();
+    include 'GLOBAL_USER_TYPE_CHECKING.php';
+    include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
-header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
 
-}
+    if(isset($_POST['action'])){
+        if($_POST['action']=="Reactivate Account"){
+            $query1 = "UPDATE member
+                      set USER_STATUS = 1
+                      where MEMBER_ID = {$_SESSION['currID']}  ";
+        }
+        else if($_POST['action']=="Deactivate Account"){
+            $query1 = "UPDATE member
+                      set USER_STATUS = 4
+                      where MEMBER_ID = {$_SESSION['currID']}  ";
+        }
+        mysqli_query($dbc,$query1);
 
-if(isset($_POST['action'])){
-    if($_POST['action']=="Reactivate Account"){
-        $query1 = "UPDATE member
-                  set USER_STATUS = 1
-                  where MEMBER_ID = {$_SESSION['currID']}  ";
     }
-    else if($_POST['action']=="Deactivate Account"){
-        $query1 = "UPDATE member
-                  set USER_STATUS = 4
-                  where MEMBER_ID = {$_SESSION['currID']}  ";
-    }
-    mysqli_query($dbc,$query1);
+    $query = "SELECT * FROM member m join ref_department d
+              on m.dept_id = d.dept_id 
+              join civ_status c
+              on m.civ_status = c.status_id
+              where m.member_id = {$_SESSION['currID']}";
+    $result = mysqli_query($dbc,$query);
+    $ans = mysqli_fetch_assoc($result);
 
-}
-$query = "SELECT * FROM member m join ref_department d
-          on m.dept_id = d.dept_id 
-          join civ_status c
-          on m.civ_status = c.status_id
-          where m.member_id = {$_SESSION['currID']}";
-$result = mysqli_query($dbc,$query);
-$ans = mysqli_fetch_assoc($result);
+    $page_title = 'Loans - View Member Details';
+    include 'GLOBAL_TEMPLATE_Header.php';
+    include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 
-$page_title = 'Loans - View Member Details';
-include 'GLOBAL_HEADER.php';
-include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
+
 ?>
         <div id="page-wrapper">
 
