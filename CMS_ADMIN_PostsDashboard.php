@@ -9,6 +9,10 @@
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 
+$userType = 'editor';
+// editor can edit all published posts
+// author can only edit unpublished ones
+
 $page_title = 'Santinig - Posts Dashboard';
 include 'GLOBAL_HEADER.php';
 include 'GLOBAL_NAV_TopBar.php';
@@ -17,7 +21,23 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
 
 <script>
     $(document).ready(function() {
-        $('#dataTable').DataTable();
+        let table = $('#dataTable').DataTable();
+        $('#tbody').on('click','.archive', function(){
+            $.ajax({
+                type: 'POST',
+                url: 'ajax/CMS_POST_ARCHIVE.php',
+                data: {
+                    'id': $('.archive').val(),
+                },
+                success: function(msg){
+                    alert($('.archive').val());
+                }
+
+            });
+            table.row($(this).parents('tr')).remove().draw();
+        });
+
+
     });
 </script>
 
@@ -70,7 +90,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
 
                         </tr>
                         </tfoot>
-                        <tbody>
+                        <tbody id="tbody">
                         <?php
 
                             $rows = $crud->getData("SELECT p.id, p.title, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status, p.lastUpdated FROM mydb.posts p JOIN mydb.authors a ON p.authorId = a.id JOIN mydb.post_status s ON s.id = p.statusId WHERE s.id = 1 || s.id = 2;");
@@ -85,7 +105,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                                 <td align="right" class="nowrap">
                                     <form method="GET" action="CMS_ADMIN_EditPost.php">
                                         <button type="submit" name="postId" class="btn btn-default" value=<?php echo $row['id'];?>>Edit</button>&nbsp;&nbsp;
-                                        <button type="button" name="archive" class="btn btn-danger" value=<?php echo $row['id'];?>>Archive</button>&nbsp;&nbsp;
+                                        <button type="button" name="archive" class="archive btn btn-danger" value="<?php echo $row['id']?>">Archive</button>
                                     </form>
                                 </td>
 

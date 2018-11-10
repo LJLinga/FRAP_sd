@@ -12,36 +12,51 @@ include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 
 $userType = 'editor';
+
 $head = 'Add New Post';
+
 $title = '';
-$result = 'no json';
+$status = '1';
+$statusDesc = 'Draft';
 $body = '';
+$author = 'no author';
+$firstPosted = 'Jan 1 2000';
+$lastUpdated = 'Jan 1 2000';
 
 //hardcoded value for userType, will add MYSQL verification query
 
-if(isset($_GET['postId'])){
+if(!empty($_GET['postId'])){
+
     $postId = $_GET['postId'];
-    $rows = $crud->getData("SELECT title, body FROM posts WHERE id='$postId'");
+    $rows = $crud->getData("SELECT p.title, p.authorId, p.body, p.firstCreated, p.lastUpdated, p.statusId, s.description FROM posts p JOIN post_status s ON p.statusId = s.id WHERE p.id='$postId'");
     foreach ((array) $rows as $key => $row) {
         $title = $row['title'];
         $body = $row['body'];
+        $author = $row['authorId'];
+        $status = $row['statusId'];
+        $firstPosted = $row['firstPosted'];
+        $lastUpdated = $row['lastUpdated'];
+        $statusDesc = $row['description'];
     }
+
+    if($userType=='author'){
+        if($status=='3'){
+            echo '';
+        }
+    }
+
     $head = "Edit: ".$title;
 }
 
-if(isset($_POST['btnSaveDraft']) || isset($_POST['btnPublish'])) {
+if(isset($_POST['btnSubmit'])) {
 
-    $postId = $_POST['post_id'];
     $title = $_POST['post_title'];
     $body = $crud->escape_string($_POST['post_content']);
-    $status = '1';
-
-    if(isset($_POST['btnPublish'])){ $status = '2';}
+    $status = $_POST['submitStatus'];
 
     if($crud->execute("UPDATE posts SET title='$title', body='$body', authorId='1', statusId='$status' WHERE id='$postId';")) {
         header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditPost.php?postId=" . $postId);
     }
-
 }
 
 $page_title = 'Santinig - Edit Post';
@@ -75,6 +90,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
         $('textarea').froalaEditor('html.set', '<?php echo $body?>');
 
 
+
     });
 </script>
 
@@ -83,7 +99,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
         <div class="row">
             <div class="col-lg-12">
                 <h3 class="page-header">
-                    <?php echo $head.$postId;?>
+                    <?php echo $head;?>
                 </h3>
 
             </div>
@@ -105,29 +121,50 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                     </div>
                 </div>
                 <div class="column col-lg-4">
-                    <!-- Button -->
-                    <div class="form-group">
-                        <label for="reference">References</label>
-                        <div id="reference">
-                            <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
-                            <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
+
+                    <div class="card" style="margin-bottom: 1rem;">
+                        <div class="card-body">
+                            Author: <b><?php echo $author; ?></b><br>
+                            Editor: <b>Christian Nicole Alderite</b><br>
+                            Current Status: <b><?php echo $statusDesc?></b><br>
+                            <i>Last updated: <b><?php echo $lastUpdated?></b></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="submitStatus">Submit Action</label>
+                                <select class="form-control" id="submitStatus" name="submitStatus">
+                                    <option value="1">Save as Draft</option>
+                                    <option value="2">Submit for Review</option>
+                                    <?php if($userType=='editor'){?>
+                                    <option value="3">Publish</option>
+                                    <?php };?>
+                                    <option value="4">Archive</option>
+                                </select>
+                            </div>
+                            <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">
+                            <button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit">Submit</button>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label  for="customFile">Upload attachment</label>
-                        <input type="file" class="" id="customFile">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="reference">References</label>
+                                <div id="reference">
+                                    <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
+                                    <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Button -->
+
                 </div>
+
             </div>
             <div class="row">
-                <div class="col-lg-6">
-                    <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">
-                    <button type="submit" class="btn btn-default" name="btnSaveDraft" id="btnSaveDraft">Save Draft</button>
-                    <?php if($userType=='editor'){
-                        echo "<button type=\"submit\" class=\"btn btn-primary\" name=\"btnPublish\" id=\"btnPublish\">Publish</button>";
-                    }?>
-                </div>
+
             </div>
         </form>
     </div>

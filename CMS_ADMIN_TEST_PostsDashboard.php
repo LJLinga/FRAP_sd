@@ -63,7 +63,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
         <div class="card mb-3">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-bordered" id="tableAll" width="100%" cellspacing="0">
                         <thead>
                         <tr>
 
@@ -86,28 +86,52 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
 
                         </tr>
                         </tfoot>
-                        <tbody id="tbody">
-                        <?php
+                    </table>
+                    <table class="table table-bordered" id="tablePublished" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
 
-                        $rows = $crud->getData("SELECT p.id, p.title, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status, p.lastUpdated FROM mydb.posts p JOIN mydb.authors a ON p.authorId = a.id JOIN mydb.post_status s ON s.id = p.statusId WHERE s.id = 3");
-                        foreach ((array) $rows as $key => $row){
-                            ?>
-                            <tr>
+                            <th align="left" width="200px"><b>Title</b></th>
+                            <th align="left" width="200px"><b>Author</b></th>
+                            <th align="left" width="200px"><b>Last Updated</b></th>
+                            <th align="right" width="200px"><b>Actions</b></th>
 
-                                <td align="left"><?php echo $row['title'];?></td>
-                                <td align="left"><?php echo $row['name'] ;?></td>
-                                <td align="left"><?php echo $row['status'] ;?></td>
-                                <td align="left"><?php echo $row['lastUpdated'] ;?></td>
-                                <td align="right" class="nowrap">
-                                    <form method="GET" action="CMS_ADMIN_EditPost.php">
-                                        <button type="submit" name="postId" class="btn btn-default" value=<?php echo $row['id'];?>>Edit</button>&nbsp;&nbsp;
-                                        <button type="button" name="archive" class="archive btn btn-success" value="<?php echo $row['id']?>">Archive</button>
-                                    </form>
-                                </td>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
 
-                            </tr>
-                        <?php }?>
-                        </tbody>
+                            <th align="left" width="200px"><b>Title</b></th>
+                            <th align="left" width="200px"><b>Author</b></th>
+                            <th align="left" width="200px"><b>Last Updated</b></th>
+                            <th align="right" width="200px"><b>Actions</b></th>
+
+                        </tr>
+                        </tfoot>
+                    </table>
+                    <table class="table table-bordered" id="tableDraft" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+
+                            <th align="left" width="200px"><b>Title</b></th>
+                            <th align="left" width="200px"><b>Author</b></th>
+                            <th align="left" width="100px"><b>Status</b></th>
+                            <th align="left" width="200px"><b>Last Updated</b></th>
+                            <th align="right" width="200px"><b>Actions</b></th>
+
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+
+                            <th align="left" width="200px"><b>Title</b></th>
+                            <th align="left" width="200px"><b>Author</b></th>
+                            <th align="left" width="100px"><b>Status</b></th>
+                            <th align="left" width="200px"><b>Last Updated</b></th>
+                            <th align="right" width="200px"><b>Actions</b></th>
+
+                        </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
