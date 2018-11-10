@@ -28,32 +28,61 @@ $lastUpdated = 'Jan 1 2000';
 if(!empty($_GET['postId'])){
 
     $postId = $_GET['postId'];
-    $rows = $crud->getData("SELECT p.title, 
-                                  CONCAT(a.firstName,a.lastName) AS author, 
-                                  CONCAT(pub.firstName, pub.lastName) AS publisher, 
-                                  p.body, p.firstCreated, p.lastUpdated, p.statusId, s.description 
-                                  FROM authors a JOIN posts p ON p.authorId=a.id JOIN 
-                                  FROM posts p JOIN post_status s ON p.statusId = s.id WHERE p.id='$postId'");
+    $rows = $crud->getData("SELECT 
+            p.title,
+            CONCAT(u.firstName,' ', u.lastName) AS author,
+            p.body,
+            p.firstCreated,
+            p.lastUpdated,
+            p.statusId,
+            s.description
+        FROM
+            users u
+                JOIN
+            posts p ON p.authorId = u.id
+                JOIN
+            post_status s ON p.statusId = s.id
+        WHERE
+            p.id = '$postId'   ");
+
     foreach ((array) $rows as $key => $row) {
         $title = $row['title'];
         $body = $row['body'];
         $author = $row['author'];
         $status = $row['statusId'];
-        $firstPosted = $row['firstPosted'];
+        $firstPosted = $row['firstCreated'];
         $lastUpdated = $row['lastUpdated'];
         $statusDesc = $row['description'];
     }
 
+    $pubQuery= $crud->getData(" 
+        SELECT 
+            CONCAT(pub.firstName,' ',pub.lastName) AS publisher
+        FROM
+            posts p
+                JOIN
+            users pub ON pub.id = p.publisherId
+        WHERE
+            p.id = $postId;
+    ");
+
+    if(($pubQuery)!=null){
+        foreach((array) $rows as $key => $row){
+            $publisher = $row['publisher'];
+        }
+    }
+
     if($userType=='author'){
         if($status=='3'){
+
+            // cant edit this post display redirect
             echo '';
         }
     }
 
     $head = "Edit: ".$title;
-}
 
-if(isset($_POST['btnSubmit'])) {
+}elseif(isset($_POST['btnSubmit'])) {
 
     $title = $_POST['post_title'];
     $body = $crud->escape_string($_POST['post_content']);
@@ -130,7 +159,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                     <div class="card" style="margin-bottom: 1rem;">
                         <div class="card-body">
                             Author: <b><?php echo $author; ?></b><br>
-                            Publisher: <b>Christian Nicole Alderite</b><br>
+                            Publisher: <b><?php echo $publisher?></b><br>
                             Created on: <?php echo $firstPosted?><br><br>
                             Current Status: <b><?php echo $statusDesc?></b><br>
                             <i>Last updated: <b><?php echo $lastUpdated?></b></i><br>

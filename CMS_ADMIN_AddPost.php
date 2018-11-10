@@ -9,6 +9,7 @@ $crud = new GLOBAL_CLASS_CRUD();
  */
 //hardcoded value for userType, will add MYSQL verification query
 $userType = 'editor';
+$authorId = '1';
 
 if(isset($_POST['btnSaveDraft']) || isset($_POST['btnSubmit'])){
     $title = $_POST['post_title'];
@@ -17,8 +18,14 @@ if(isset($_POST['btnSaveDraft']) || isset($_POST['btnSubmit'])){
 
     if(isset($_POST['btnSubmit'])){ $status = '2';}
 
-    $id = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body', 1,'$status')");
-    header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/CMS_ADMIN_EditPost.php?postId=".$id);
+    $id = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body','$authorId','$status')");
+    if(!empty ($id)) {
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditPost.php?postId=" . $id);
+    }else{
+        echo '<script language="javascript">';
+        echo 'alert("something went wrong")';
+        echo '</script>';
+    }
 }
 $page_title = 'Santinig - Add Post';
 include 'GLOBAL_HEADER.php';
@@ -90,7 +97,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                 <div class="row">
                     <div class="col-lg-6">
                         <button type="submit" class="btn btn-default" name="btnSaveDraft" id="btnSaveDraft">Save Draft</button>
-                        <button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit">Submit for Review</button>
+                        <button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit">Submit for Review</button>
                     </div>
                 </div>
             </form>
