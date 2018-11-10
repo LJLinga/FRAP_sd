@@ -28,11 +28,16 @@ $lastUpdated = 'Jan 1 2000';
 if(!empty($_GET['postId'])){
 
     $postId = $_GET['postId'];
-    $rows = $crud->getData("SELECT p.title, p.authorId, p.body, p.firstCreated, p.lastUpdated, p.statusId, s.description FROM posts p JOIN post_status s ON p.statusId = s.id WHERE p.id='$postId'");
+    $rows = $crud->getData("SELECT p.title, 
+                                  CONCAT(a.firstName,a.lastName) AS author, 
+                                  CONCAT(pub.firstName, pub.lastName) AS publisher, 
+                                  p.body, p.firstCreated, p.lastUpdated, p.statusId, s.description 
+                                  FROM authors a JOIN posts p ON p.authorId=a.id JOIN 
+                                  FROM posts p JOIN post_status s ON p.statusId = s.id WHERE p.id='$postId'");
     foreach ((array) $rows as $key => $row) {
         $title = $row['title'];
         $body = $row['body'];
-        $author = $row['authorId'];
+        $author = $row['author'];
         $status = $row['statusId'];
         $firstPosted = $row['firstPosted'];
         $lastUpdated = $row['lastUpdated'];
@@ -125,9 +130,10 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                     <div class="card" style="margin-bottom: 1rem;">
                         <div class="card-body">
                             Author: <b><?php echo $author; ?></b><br>
-                            Editor: <b>Christian Nicole Alderite</b><br>
+                            Publisher: <b>Christian Nicole Alderite</b><br>
+                            Created on: <?php echo $firstPosted?><br><br>
                             Current Status: <b><?php echo $statusDesc?></b><br>
-                            <i>Last updated: <b><?php echo $lastUpdated?></b></i>
+                            <i>Last updated: <b><?php echo $lastUpdated?></b></i><br>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
@@ -143,6 +149,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                             </div>
                             <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">
                             <button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit">Submit</button>
+
                         </div>
                     </div>
 
