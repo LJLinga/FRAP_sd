@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-error_reporting(0); 
-session_start();
- if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
+    error_reporting(0);
+    require_once ("mysql_connect_FA.php");
+    session_start();
+    include 'GLOBAL_USER_TYPE_CHECKING.php';
+    include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
-            
-    }
-require_once('mysql_connect_FA.php');
+
 if(!isset($_POST['select_date'])){
    $query = "SELECT max(day(txn_date)) as 'Day',max(month(txn_date)) as 'Month',max(Year(txn_date)) as 'Year' from txn_reference where txn_type = 2";
    $result = mysqli_query($dbc,$query);
@@ -36,7 +35,7 @@ else {
            $year =$row['Year'];
     }
     $page_title = 'Loans - Collected Membership Fees';
-    include 'GLOBAL_HEADER.php';
+    include 'GLOBAL_TEMPLATE_Header.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 }
 ?>

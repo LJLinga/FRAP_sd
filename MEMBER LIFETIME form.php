@@ -3,12 +3,7 @@
     session_start();
     error_reporting(null);
     require_once("mysql_connect_FA.php");
-
-    if ($_SESSION['usertype'] != 1) {
-
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
-        
-    }
+    include 'GLOBAL_USER_TYPE_CHECKING.php';
 
     // compute the date first 
 
@@ -51,7 +46,7 @@
 
     // 
 $page_title = 'Loans - Lifetime Membership Form';
-include 'GLOBAL_HEADER.php';
+include 'GLOBAL_TEMPLATE_Header.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 ?>
 
@@ -150,4 +145,4 @@ include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
         </div>
         <!-- /#page-wrapper -->
 
-<?php include 'GLOBAL_FOOTER.php' ?>
+<?php include 'GLOBAL_TEMPLATE_Footer.php' ?>

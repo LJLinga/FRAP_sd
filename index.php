@@ -70,14 +70,57 @@
                 $password = $_SESSION['password'];
 
                 //require_once('mysql_connect_FA.php');
-                $queryMem = "SELECT MEMBER_ID, PASSWORD, FIRST_CHANGE_PW FROM MEMBER_ACCOUNT WHERE MEMBER_ID = '{$idnum}' AND PASSWORD = PASSWORD('{$password}')";
+
+                /*
+                    $queryMem = "SELECT MEMBER_ID, PASSWORD, FIRST_CHANGE_PW FROM MEMBER_ACCOUNT WHERE MEMBER_ID = '{$idnum}' AND PASSWORD = PASSWORD('{$password}')";
+                    $resultMem = mysqli_query($dbc, $queryMem);
+                    $rowMem = mysqli_fetch_array($resultMem);
+
+                    $queryEmp = "SELECT EMP_ID, PASSWORD, ACC_STATUS, FIRST_CHANGE_PW FROM EMPLOYEE WHERE EMP_ID = '{$idnum}' AND PASSWORD = PASSWORD('{$password}')";
+                    $resultEmp = mysqli_query($dbc, $queryEmp);
+                    $rowEmp = mysqli_fetch_array($resultEmp);
+                */
+
+                /*
+                    $idnum = "hellll";
+                    $pass = "fww";
+
+                    include_once('GLOBAL_CLASS_CRUD.php');
+                    $crud = new GLOBAL_CLASS_CRUD();
+                    //checks if there is a person like this in the database.
+
+                    $account = $crud->getData("SELECT * from employee WHERE  MEMBER_ID = '{$idnum}' &&  PASS_WORD = PASSWORD('{$password}') " );
+
+                    foreach ((array) $account as $key => $row) {
+                        $idnum = $row['MEMBER_ID'];
+                        $pass = $row['PASS_WORD'];
+                    }
+
+                    echo $idnum;
+                    echo $pass;
+                */
+
+
+                $queryMem = "SELECT * FROM employee WHERE MEMBER_ID = '{$idnum}' AND PASS_WORD = PASSWORD('{$password}')";
                 $resultMem = mysqli_query($dbc, $queryMem);
                 $rowMem = mysqli_fetch_array($resultMem);
 
-                $queryEmp = "SELECT EMP_ID, PASSWORD, ACC_STATUS, FIRST_CHANGE_PW FROM EMPLOYEE WHERE EMP_ID = '{$idnum}' AND PASSWORD = PASSWORD('{$password}')";
-                $resultEmp = mysqli_query($dbc, $queryEmp);
-                $rowEmp = mysqli_fetch_array($resultEmp);
 
+                if(empty($rowMem)){ //if the account does not exist
+
+                    $message .= "This account is not recognized by the Faculty Association. Please contact the administrator.";
+
+                }else if($rowMem['FIRST_CHANGE_PW'] != 1){ // if the account has not changed its password yet.
+
+                    //insert code here/
+
+                }else{ //sends it to the most appropriate account.
+
+                    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER dashboard.php");
+
+                }
+
+                /*
                 if ($rowMem['MEMBER_ID'] == $_SESSION['idnum']) {
 
                 	$queryPending = "SELECT MEMBERSHIP_STATUS, USER_STATUS FROM MEMBER WHERE MEMBER_ID = '{$_SESSION['idnum']}'";
@@ -98,20 +141,12 @@
 
                 	}
 
-                	else {
 
-                		$message .= "This account is not recognized by the Faculty Association. Please contact the administrator.";
 
-                	}
 
                 }
 
-                else if ($rowEmp['EMP_ID'] == 99999999) { /* sir meltons ID number */
 
-                    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN FALP manual.php");
-                    $_SESSION['usertype'] = "3";
-
-                }
 
                 else if ($rowEmp['EMP_ID'] == $_SESSION['idnum']) {
 
@@ -143,6 +178,7 @@
 
                 }
 
+                */
         }
 
     }

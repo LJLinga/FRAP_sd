@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php 
+<?php
+require_once ("mysql_connect_FA.php");
 session_start();
-require_once("mysql_connect_FA.php");
-if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
+include 'GLOBAL_USER_TYPE_CHECKING.php';
+include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
-header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
 
-}
  $query = "SELECT m.member_ID, m.FIRSTNAME,m.LASTNAME,ha.Record_ID as 'has_HA', f.Amount as 'FFee', b.Amount as 'BFee', l.date_added as 'has_L'
               from member m
               left join (SELECT * from health_aid where app_status = 2) ha
@@ -24,7 +23,7 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 $result = mysqli_query($dbc,$query);
 
 $page_title = 'Loans - View Member Status';
-include 'GLOBAL_HEADER.php';
+include 'GLOBAL_TEMPLATE_Header.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
 

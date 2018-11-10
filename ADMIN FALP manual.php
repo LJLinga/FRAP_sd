@@ -1,3 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SB Admin - Bootstrap Admin Template</title>
+
+    <link href="css/montserrat.css" rel="stylesheet">
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/sb-admin.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
 <?php
 
 session_start();
@@ -11,7 +43,7 @@ if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
 header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
 
 }
-    $success = null;
+$success = null;
 
     $queryDept = "SELECT * FROM REF_DEPARTMENT";
     $resultDept = mysqli_query($dbc, $queryDept);
@@ -22,7 +54,8 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
     if (isset($_POST['submit'])) {
 
             $idNum = $_POST['idNum']; 
-            
+            $failedLife = null;
+            $failedFalp = null;
             //first and last names
             $fName = NULL;
             $lName = NULL;
@@ -38,6 +71,7 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
             $hYear = $_POST['hYear'];
             $hMonth = $_POST['hMonth'];
             $hDay = $_POST['hDay'];
+           
             $dept = NULL;
 
          
@@ -46,7 +80,31 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
             // hadresses
             $haddress = NULL;
             $badress = NULL;
+            // Date Approved
+            $aYear = $_POST['aYear'];
+            $aMonth = $_POST['aMonth'];
+            $aDay = $_POST['aDay'];
+            $fYear = $_POST['fYear'];
+            $fMonth = $_POST['fMonth'];
+            $fDay = $_POST['fDay'];
+            $lYear = $_POST['lYear'];
+            $lMonth = $_POST['lMonth'];
+            $lDay = $_POST['lDay'];
+            //Date applied
+            // Date applied
+            // Date applied
+            $appYear = $_POST['appYear'];
+            $appMonth = $_POST['appMonth'];
+            $appDay = $_POST['appDay'];
+            $faYear = $_POST['faYear'];
+            $faMonth = $_POST['faMonth'];
+            $faDay = $_POST['faDay'];
+            $laYear = $_POST['laYear'];
+            $laMonth = $_POST['laMonth'];
+            $laDay = $_POST['laDay'];
 
+            // Employee ID
+            $emp_ID = $_POST['emp_ID'];
            
 
            
@@ -97,7 +155,33 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
                     echo 'alert("Please fill up the addresses! ")';
                     echo '</script>';
 
-            }else {
+            }
+            else if(isset($_POST['hasFALP'])&&(empty($_POST['amount']) || empty($_POST['terms']) || empty($_POST['fEmp_ID']))){
+                	
+                	
+                	
+               
+                	
+           			echo '<script language="javascript">';
+                    echo 'alert("You forgot to fill up the FALP portion!")';
+                    echo '</script>';
+           				
+           			}
+
+
+           		
+
+           	else if(isset($_POST['hasLifetime'])&&(empty($_POST['primary']) || empty($_POST['lEmp_ID']))){
+                	
+                	
+                		
+           			echo '<script language="javascript">';
+                    echo 'alert("You forgot to fill up the Life portion!")';
+                    echo '</script>';
+           			
+
+           		}
+            else {
 
                $fName = $_POST['fName'];
                $mName = $_POST['mName'];
@@ -117,18 +201,25 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
                $haddress = $_POST['haddress'];
                $honum = $_POST['honum'];
+               //set dates
+
                $birthdate = $bYear . "-" . $bMonth . "-" . $bDay;
                $datehired = $hYear . "-" . $hMonth . "-" . $hDay;
-
-               if(!empty($_POST['bunum']) && !empty($_POST['baddress'])){
+               $dateapp = $aYear . "-" . $aMonth . "-" . $aDay;
+               $dateappl = $appYear . "-" . $appMonth . "-" . $appDay;
+               $fdateapp = $fYear . "-" . $fMonth . "-" . $fDay;
+               $fdateappl = $faYear . "-" . $faMonth . "-" . $faDay;
+               $ldateapp = $lYear . "-" . $lMonth . "-" . $lDay;
+               $ldateappl = $laYear . "-" . $laMonth . "-" . $laDay;
+               if(!empty($_POST['bunum']) && !empty($_POST['baddress'])){ //if the business number is not empty
                      $bunum = $_POST['bunum'];
                      $baddress = $_POST['baddress'];
 
 
-                     $query = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME,CIV_STATUS, MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, BUSINESS_NUM, HOME_ADDRESS, BUSINESS_ADDRESS, 
-                          DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED) VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat},'{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}','{$baddress}',{$dept},1,2,NOW())"; 
+                     $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME,CIV_STATUS, MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, BUSINESS_NUM, HOME_ADDRESS, BUSINESS_ADDRESS, DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE) 
+                                          VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat},'{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}','{$baddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','{$emp_ID}')";
 
-                      $result = mysqli_query($dbc,$query);
+                      $result = mysqli_query($dbc,$query1);
 
                       $pw = "password";
 
@@ -137,14 +228,14 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
                }
 
-               else if(!empty($_POST['bunum']) ){
+               else if(!empty($_POST['bunum']) ){ //if the bnum isnt empty
                     $bunum = $_POST['bunum'];
 
-                    $query = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME,MIDDLENAME,CIV_STATUS,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, BUSINESS_NUM, HOME_ADDRESS, 
-                          DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED) VALUES ('{$idNum}','{$fName}','{$lName}','{$mName}',{$civStat},{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}',{$dept},1,2,NOW())"; 
+                    $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME,MIDDLENAME,CIV_STATUS,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, BUSINESS_NUM, HOME_ADDRESS, 
+                          DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE) VALUES ('{$idNum}','{$fName}','{$lName}','{$mName}',{$civStat},{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','{$emp_ID}')"; 
 
 
-                      $result = mysqli_query($dbc,$query); 
+                      $result = mysqli_query($dbc,$query1); 
 
                       $pw = "password";
 
@@ -153,14 +244,14 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
                }
 
-               else if(!empty($_POST['baddress'])){
+               else if(!empty($_POST['baddress'])){ // if the Business address isnt empty
                     $baddress = $_POST['baddress'];
 
-                    $query = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS, MIDDLENAME, SEX, BIRTHDATE, DATE_HIRED, HOME_NUM, HOME_ADDRESS, BUSINESS_ADDRESS, 
-                          DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED) VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},'{$haddress}','{$baddress}',{$dept},1,2,NOW())"; 
+                    $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS, MIDDLENAME, SEX, BIRTHDATE, DATE_HIRED, HOME_NUM, HOME_ADDRESS, BUSINESS_ADDRESS, 
+                          DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE) VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},'{$haddress}','{$baddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','{$emp_ID}')"; 
 
 
-                     $result = mysqli_query($dbc,$query); 
+                     $result = mysqli_query($dbc,$query1); 
 
                      $pw = "password";
 
@@ -171,12 +262,12 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
                }
 
-               else {
+               else { //when Business address and Business Number is empty
 
-                    $query = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS,  MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, HOME_ADDRESS, DEPT_ID, USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED) 
-                        VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}','{$sex}','{$birthdate}','{$datehired}','{$honum}','{$haddress}',{$dept},1,2,NOW())"; 
+                    $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS,  MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, HOME_ADDRESS, DEPT_ID, USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE) 
+                        VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}','{$sex}','{$birthdate}','{$datehired}','{$honum}','{$haddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','{$emp_ID}')"; 
 
-                    $result = mysqli_query($dbc,$query); 
+                    $result = mysqli_query($dbc,$query1); 
 
                     $pw = "password";
 
@@ -184,21 +275,292 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
                     $result2 = mysqli_query($dbc, $query2);
 
                 }
-                $query = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,PICKUP_STATUS)
-                values({$_POST['idNum']},1,{$_POST['amount']},5,{$_POST['terms']},{$_POST['amount']}+{$_POST['amount']}*5/100,({$_POST['amount']}+{$_POST['amount']}*5/100)/{$_POST['terms']}/2,2,2,DATE(now()),1);";
+                if(isset($_POST['hasFALP'])){
+                	$falpPaid = '0';
+                	
+                	
+                	
+                		if(!empty($_POST['fAmountPaid'])){
+                			$falpPaid = $_POST['fAmountPaid'];
+		            	}
+		                $query = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,DATE_APPROVED,PICKUP_STATUS,AMOUNT_PAID,EMP_ID)
+		                                    values({$_POST['idNum']},1,{$_POST['amount']},5,{$_POST['terms']},{$_POST['amount']}+{$_POST['amount']}*5/100,({$_POST['amount']}+{$_POST['amount']}*5/100)/{$_POST['terms']}/2,2,2,'{$fdateappl}','{$fdateapp}',1,{$falpPaid},{$_POST['fEmp_ID']});";
 
-                mysqli_query($dbc,$query);
-               
-               $success = "yes";
+		               mysqli_query($dbc,$query);
+		               
+           			
+
+           		}
+           		if(isset($_POST['hasLifetime'])){
+                	
+                	
+                		$primary = $_POST['primary'];
+                		$secondary = 'null';
+                		$org = 'null';
+                		if(!empty($_POST['secondary'])){
+                			$secondary = $_POST['secondary'];
+                		}
+                		if(!empty($_POST['org'])){
+                			$org = "'".$_POST['org']."'";
+                		}
+		                $query4 = "INSERT INTO lifetime(MEMBER_ID,`PRIMARY`,SECONDARY,ORG,APP_STATUS,DATE_ADDED,EMP_ID) values({$_POST['idNum']},'{$primary}',{$secondary},{$org},2,'{$ldateapp}',{$_POST['lEmp_ID']});";
+
+		               mysqli_query($dbc,$query4);
+		               
+           			
+
+           		}
+                $query3 = " SELECT * FROM MEMBER WHERE MEMBER_ID = {$_POST['idNum']}";
+
+                $result = mysqli_query($dbc,$query3);
+                $row = mysqli_fetch_assoc($result);
+                if(!empty($row)){
+              	  $success = "yes";
+           	    }
 
             }
 
     }
-$page_title = 'Loans - Manual';
-include 'GLOBAL_HEADER.php';
-include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
  
 ?>
+
+<body>
+	
+    <div id="wrapper">
+
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            
+            <div class="navbar-header"> <!-- Logo -->
+                
+                <img src="images/I-FA Logo Edited.png" id="ifalogo">
+            
+            
+            <ul class="nav navbar-right top-nav"> <!-- Top Menu Items / Notifications area -->
+                
+                <li class="dropdown sideicons">
+
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
+
+                    <ul class="dropdown-menu alert-dropdown">
+
+                        <li>
+                            <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
+                        </li>
+
+                        <li>
+                            <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
+                        </li>
+
+                        <li>
+                            <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
+                        </li>
+
+                        <li>
+                            <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
+                        </li>
+
+                        <li>
+                            <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
+                        </li>
+
+                        <li>
+                            <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
+                        </li>
+
+                        <li class="divider"></li>
+
+                        <li>
+                            <a href="#">View All</a>
+                        </li>
+
+                    </ul>
+
+                </li>
+
+                <li class="dropdown sideicons">
+
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Jo, Melton <b class="caret"></b></a>
+
+                    <ul class="dropdown-menu">
+
+                        <li>
+
+                            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+
+                        </li>
+
+                        <li class="divider"></li>
+
+                        <li>
+
+                            <a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+
+                        </li>
+
+                    </ul>
+
+                </li>
+
+            </ul>
+			
+            </div>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+
+                <ul class="nav navbar-nav side-nav">
+
+    <li id="top">
+
+        <a href="ADMIN FALP manual.php"><i class="fa fa-gears" aria-hidden="true"></i> Add Member</a>
+
+    </li>
+
+    <!--<li>
+
+        <a href="ADMIN addaccount.php"><i class="fa fa-user-plus" aria-hidden="true"></i> Add Admin Account</a>
+
+    </li>
+
+    <li>
+
+    <a href="javascript:;" data-toggle="collapse" data-target="#applications"><i class="fa fa-wpforms" aria-hidden="true"></i>&nbsp;Applications<i class="fa fa-fw fa-caret-down"></i></a>
+
+        <ul id="applications" class="collapse">
+
+            <li>
+                <a href="ADMIN MEMBERSHIP applications.php"><i class="fa fa-id-card-o" aria-hidden="true"></i>&nbsp;&nbsp;Membership Pending Applications</a>
+            </li>
+
+            <li>
+                <a href="ADMIN FALP applications.php"><i class="fa fa-dollar" aria-hidden="true"></i>&nbsp;&nbsp;FALP Pending Applications</a>
+            </li>
+
+            <li>
+                <a href="ADMIN BANK applications.php"><i class="fa fa-institution" aria-hidden="true"></i>&nbsp;&nbsp;Bank Loan Pending Applications</a>
+            </li>
+
+            <li>
+                <a href="ADMIN HEALTHAID applications.php"><i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;&nbsp;Health Aid Pending Applications</a>
+            </li>
+
+        </ul>
+
+    </li>
+
+    <li>
+
+        <a href="ADMIN LIFETIME addmember.php"><i class="fa fa-id-card-o" aria-hidden="true"></i> Add Lifetime Member</a>
+
+    </li>
+
+    <li>
+
+    <a href="javascript:;" data-toggle="collapse" data-target="#bankloans"><i class="fa fa-institution" aria-hidden="true"></i>&nbsp;Bank Loans<i class="fa fa-fw fa-caret-down"></i></a>
+
+        <ul id="bankloans" class="collapse">
+
+            <li>
+                <a href="ADMIN BANK addbank.php"><i class="fa fa-institution" aria-hidden="true"></i>&nbsp;&nbsp;Add Partner Bank</a>
+            </li>
+
+            <li>
+                <a href="ADMIN BANK editbank.php"><i class="fa fa-gears" aria-hidden="true"></i>&nbsp;&nbsp;Enable/Disable Partner Bank</a>
+            </li>
+
+            <li>
+                <a href="ADMIN BANK addplan.php"><i class="fa fa-dollar" aria-hidden="true"></i>&nbsp;&nbsp;Add Bank Loan Plan</a>
+            </li>
+
+            <li>
+                <a href="ADMIN BANK editplan.php"><i class="fa fa-gears" aria-hidden="true"></i>&nbsp;&nbsp;Enable/Disable Bank Loan Plan</a>
+            </li>
+
+        </ul>
+
+    </li>-->
+    
+            <li>
+                <a href="ADMIN MEMBERS viewmembers.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;&nbsp;View All Members</a>
+            </li>
+
+    <li>
+
+    <a href="javascript:;" data-toggle="collapse" data-target="#loans"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;On-going Loans<i class="fa fa-fw fa-caret-down"></i></a>
+
+        <ul id="loans" class="collapse">
+
+            <li>
+                <a href="ADMIN FALP viewactive.php"><i class="fa fa-dollar" aria-hidden="true"></i>&nbsp;&nbsp;FALP Loans</a>
+            </li>
+
+            <!--<li>
+                <a href="ADMIN BANK viewactive.php"><i class="fa fa-institution" aria-hidden="true"></i>&nbsp;&nbsp;Bank Loans</a>
+            </li>-->
+
+        </ul>
+
+    </li>
+
+    <li>
+
+    <a href="javascript:;" data-toggle="collapse" data-target="#dreports"><i class="fa fa-minus" aria-hidden="true"></i>&nbsp;Deduction Reports<i class="fa fa-fw fa-caret-down"></i></a>
+
+        <ul id="dreports" class="collapse">
+
+            <li>
+                <a href="ADMIN DREPORT general.php"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;&nbsp;General Deductions</a>
+            </li>
+
+            <li>
+                <a href="ADMIN DREPORT detailed.php"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;&nbsp;Detailed Deductions</a>
+            </li>
+
+        </ul>
+
+    </li>
+
+    <li>
+
+    <a href="javascript:;" data-toggle="collapse" data-target="#preports"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Periodical Reports<i class="fa fa-fw fa-caret-down"></i></a>
+
+        <ul id="preports" class="collapse">
+
+            <li>
+                <a href="ADMIN PREPORT completed.php"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;&nbsp;Completed Loans</a>
+            </li>
+
+            <li>
+                <a href="ADMIN PREPORT new.php"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;&nbsp;New Deductions</a>
+            </li>
+
+        </ul>
+
+    </li>
+
+                        <li>
+
+        <a href="ADMIN MREPORT report.php"><i class="fa fa-table" aria-hidden="true"></i> Monthly Report</a>
+
+    </li>
+
+    <li>
+
+    <a href="ADMIN FILEREPO.php"><i class="fa fa-folder-open-o" aria-hidden="true"></i>&nbsp;File Repository</i></a>
+
+    </li>
+    <!--
+    <li>
+
+        <a href="ADMIN MANAGE.php"><i class="fa fa-gears" aria-hidden="true"></i> Admin Management</a>
+
+    </li>-->
+
+</ul>
+
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
         <div id="page-wrapper">
 
             <div class="container-fluid">
@@ -208,7 +570,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
-                            Add Member and FALP Account
+                            Add Member
                         </h1>
                     
                     </div>
@@ -219,11 +581,12 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                     <div class="col-lg-12">
 
                         <p><i>Fields with <big class="req">*</big> are required to be filled out and those without are optional.</i></p>
-
+                        <a href="ADMIN FALP manual.php#falpInfo">Jump to FALP</a> <p>
+						<a href="ADMIN FALP manual.php#lifetimeInfo">Jump to Lifetime</a>
                         <!--Insert success page--> 
                         <form method="POST" action="ADMIN FALP manual.php" id="addAccount" onSubmit="return checkform()">
 
-                            <div class="panel panel-green">
+                            <div class="panel panel-green" name = "personalInfo">
 
                                 <div class="panel-heading">
 
@@ -238,17 +601,24 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 
                                         <div class="col-lg-12">
                                                 <span class="labelspan"><b>ID Number</b><big class="req"> *</big></span>
-                                                <input type="text" minlength = "8" maxlength="8" class="form-control memname" placeholder="e.g. 09000000" name="idNum">
+                                                <input type="text" minlength = "8" maxlength="8" class="form-control memname" placeholder="e.g. 09000000" name="idNum" <?php if(isset($_POST['idNum'])){
+                                                	echo "value = '{$_POST['idNum']}'";
+                                                } ?>
+                                                >
                                                 </label>
 
                                                 <label>
                                                 <span class="labelspan">First Name<big class="req"> *</big></span>
-                                                <input type="text" class="form-control memname" placeholder="First Name" name="fName">
+                                                <input type="text" class="form-control memname" placeholder="First Name" name="fName"  <?php if(isset($_POST['fName'])){
+                                                	echo "value = '{$_POST['fName']}'";
+                                                } ?>>
                                                 </label>
 
                                                 <label>
                                                 <span class="labelspan">Last Name<big class="req"> *</big></span>
-                                                <input type="text" class="form-control memname" placeholder="Last Name" name="lName">
+                                                <input type="text" class="form-control memname" placeholder="Last Name" name="lName" <?php if(isset($_POST['lName'])){
+                                                	echo "value = '{$_POST['lName']}'";
+                                                } ?>>
                                                 </label>
 
                                         </div>
@@ -260,8 +630,10 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                         <div class="col-lg-12">
 
                                                 <label class="memfieldlabel">Middle Name</label><big class="req"> *</big>
-                                                <input type="text" class="form-control memfields" placeholder="Middle Name" name="mName">
-
+                                                <input type="text" class="form-control memfields" placeholder="Middle Name" name="mName" <?php if(isset($_POST['mName'])){
+                                                	echo "value = '{$_POST['mName']}'";
+                                                } ?>>
+                                                
                                         </div>
 
                                     </div>
@@ -291,16 +663,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 
                                                 <p id="dbirthlabel"><b>Date of Birth</b><big class="req"> *</big></p>
 
-                                                <label class="memfieldlabel">Year</label>
-                                                <select class="form-control datedropdown"  name =  "bYear">
-
-                                                    <?php for($y = 2017; $y >= 1900; $y--) { ?>
-
-                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
-
-                                                    <?php } ?>
-
-                                                </select>
+                                                
 
                                                 <label class="memfieldlabel">Month</label>
                                                 <select class="form-control datedropdown" name =  "bMonth">
@@ -330,6 +693,16 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                                     <?php } ?>
 
                                                 </select>
+                                                <label class="memfieldlabel">Year</label>
+                                                <select class="form-control datedropdown"  name =  "bYear">
+
+                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
+
+                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+
+                                                    <?php } ?>
+
+                                                </select>
 
 
                                         </div>
@@ -352,12 +725,128 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                         </div>
 
                                     </div>
+                                    <div class="row">
+
+                                        <div class="col-lg-12">
+
+                                                <p id="dbirthlabel"><b>Member since:</b><big class="req"> *</big></p>
+
+                                               
+                                                <label class="memfieldlabel">Month</label>
+                                                <select class="form-control datedropdown" name =  "aMonth">
+
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                    <option>6</option>
+                                                    <option>7</option>
+                                                    <option>8</option>
+                                                    <option>9</option>
+                                                    <option>10</option>
+                                                    <option>11</option>
+                                                    <option>12</option>
+
+                                                </select>
+
+                                                <label class="memfieldlabel">Day</label>
+                                                <select class="form-control datedropdown"  name =  "aDay">
+
+                                                    <?php for($x = 1; $x <= 31; $x++) { ?>
+
+                                                        <option value="<?php echo $x; ?>"><?php echo $x; ?></option>
+
+                                                    <?php } ?>
+
+                                                </select>
+                                                 <label class="memfieldlabel">Year</label>
+                                                <select class="form-control datedropdown"  name =  "aYear">
+
+                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
+
+                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+
+                                                    <?php } ?>
+                                                    
+
+                                                </select>
+
+
+
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-lg-12">
+
+                                                <p id="dbirthlabel"><b>Date Applied:</b><big class="req"> *</big></p>
+
+                                               
+
+                                                <label class="memfieldlabel">Month</label>
+                                                <select class="form-control datedropdown" name =  "appMonth">
+
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                    <option>6</option>
+                                                    <option>7</option>
+                                                    <option>8</option>
+                                                    <option>9</option>
+                                                    <option>10</option>
+                                                    <option>11</option>
+                                                    <option>12</option>
+
+                                                </select>
+
+                                                <label class="memfieldlabel">Day</label>
+                                                <select class="form-control datedropdown"  name =  "appDay">
+
+                                                    <?php for($x = 1; $x <= 31; $x++) { ?>
+
+                                                        <option value="<?php echo $x; ?>"><?php echo $x; ?></option>
+
+                                                    <?php } ?>
+
+                                                </select>
+                                                 <label class="memfieldlabel">Year</label>
+                                                <select class="form-control datedropdown"  name =  "appYear">
+
+                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
+
+                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+
+                                                    <?php } ?>
+                                                    
+                                                </select>
+
+
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-lg-12">
+
+                                                <span class="labelspan"><b>ID of Employee Hired</b><big class="req"> *</big></span>
+                                                <input type="text" minlength = "8" maxlength="8" class="form-control memname" placeholder="e.g. 09000000" name="emp_ID" <?php if(isset($_POST['emp_ID'])){
+                                                	echo "value = '{$_POST['emp_ID']}'";
+                                                } ?>>
+                                                </label>
+
+                                        </div>
+
+                                    </div>
 
                                 </div>
 
                             </div>
 
-                            <div class="panel panel-green">
+                            <div class="panel panel-green" name = "emplymentInfo">
 
                                 <div class="panel-heading">
 
@@ -377,7 +866,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                                 <label class="memfieldlabel">Year</label>
                                                 <select class="form-control datedropdown" name = "hYear">
 
-                                                    <?php for($y = 2017; $y >= 1900; $y--) { ?>
+                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
 
                                                         <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
 
@@ -464,7 +953,9 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                         <div class="col-lg-12">
 
                                             <label class="memfieldlabel">Home Phone Number</label><big class="req"> *</big>
-                                            <input type="number" class="form-control memfields number" placeholder="Home Phone Number" name="honum">
+                                            <input type="number" class="form-control memfields number" placeholder="Home Phone Number" name="honum" <?php if(isset($_POST['honum'])){
+                                                	echo "value = '{$_POST['honum']}'";
+                                                } ?>>
 
                                         </div>
 
@@ -474,8 +965,10 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 
                                         <div class="col-lg-12">
 
-                                            <label class="memfieldlabel">Business Phone Number</label><big class="req"> *</big>
-                                            <input type="number" class="form-control memfields number" placeholder="Home Phone Number" name="bunum">
+                                            <label class="memfieldlabel">Business Phone Number</label>
+                                            <input type="number" class="form-control memfields number" placeholder="Home Phone Number" name="bunum" <?php if(isset($_POST['bunum'])){
+                                                	echo "value = '{$_POST['bunum']}'";
+                                                } ?>>
 
                                         </div>
 
@@ -486,18 +979,22 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                         <div class="col-lg-12">
 
                                             <label class="memfieldlabel">Home Address</label><big class="req"> *</big>
-                                            <textarea class="form-control memfields address" placeholder="Address" name="haddress" rows="2"></textarea> 
+                                            <textarea class="form-control memfields address" placeholder="Address" name="haddress" rows="2"  ><?php if(isset($_POST['haddress'])){
+                                                	echo $_POST['haddress'];
+                                                } ?></textarea> 
 
                                         </div>
 
                                     </div>
 
-                                    <div class="row">
+                                    <div class="row" id = "falpInfo">
 
                                         <div class="col-lg-12">
 
-                                            <label class="memfieldlabel">Business Address</label><big class="req"> </big>
-                                            <textarea  class="form-control memfields address" placeholder="Address" name="baddress" rows="2"></textarea> 
+                                            <label class="memfieldlabel">Business Address</label>
+                                            <textarea  class="form-control memfields address" placeholder="Address" name="baddress" rows="2" ><?php if(isset($_POST['baddress'])){
+                                                	echo $_POST['baddress'];
+                                                } ?></textarea> 
 
                                         </div>
 
@@ -507,7 +1004,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 
                             </div>
 
-                            <div class="panel panel-green">
+                            <div class="panel panel-green" >
 
                                 <div class="panel-heading">
 
@@ -515,13 +1012,27 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                 </div>
 
                                 <div class="panel-body">
+                                	<div class="row">
+
+                                        <div class="col-lg-4">
+
+                                           
+                                             <input type="checkbox" name="hasFALP" value="1" <?php if(isset($_POST['hasFALP'])){
+                                                	echo "checked";
+                                                } ?>>Check box if member has FALP<p>
+
+                                        </div>
+
+                                    </div>
 
                                     <div class="row">
 
                                         <div class="col-lg-4">
 
-                                            <label class="memfieldlabel">Amount</label><big class="req"> *</big>
-                                            <input type="number" class="form-control" placeholder="Enter Amount (Peso)" name="amount" id="amount">
+                                            <label class="memfieldlabel">Amount</label><big class="req">*</big>
+                                            <input type="number" class="form-control" placeholder="Enter Amount (Peso)" name="amount" id="amount" <?php if(isset($_POST['amount'])){
+                                                	echo "value = '{$_POST['amount']}'";
+                                                }?>>
 
                                         </div>
 
@@ -533,8 +1044,10 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 
                                         <div class="col-lg-4">
                                             
-                                            <label class="memfieldlabel">Payment Terms</label><big class="req"> *</big>
-                                            <input type="number" class="form-control" placeholder="Payment Terms" name="terms"  id="terms">
+                                            <label class="memfieldlabel">Payment Terms</label><big class="req">*</big>
+                                            <input type="number" class="form-control" placeholder="Payment Terms" name="terms"  id="terms" <?php if(isset($_POST['terms'])){
+                                                	echo "value = '{$_POST['terms']}'";
+                                                } ?>>
                                             <p>
                                             <div id = "totalI">   </div> <p>
                                             <p>
@@ -548,12 +1061,362 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                         </div>
 
                                     </div>
+                                    <p>
+                                    <div class="row">
+
+                                        <div class="col-lg-4">
+
+                                           
+                                            <label class="memfieldlabel">Status of Pickup</label>
+                                                <select class="form-control dropdown" name =  "pickupStatus">
+
+                                                    <option value = "1" selected>Pending for Evaluation</option>
+                                                    <option value = "2">Processing Check</option>
+                                                    <option value = "3">Ready for pickup</option>
+                                                    <option value = "4">Picked Up</option>
+                                                    
+
+                                                </select>
+
+
+                                        </div>
+
+                                    </div>
+                                    <p>
+                                    <div class="row">
+
+                                        <div class="col-lg-4">
+
+                                            <label class="memfieldlabel">Amount Already Paid</label>
+                                            <input type="number" class="form-control" placeholder="Enter Amount (Peso)" name="fAmountPaid" id="fAmountPaid" <?php if(isset($_POST['fAmountPaid'])){
+                                                	echo "value = '{$_POST['fAmountPaid']}'"
+                                                	;
+                                                } else echo '0';?>>
+
+                                        </div>
+
+                                    </div>
+                                    <p>
+                                    	<div class="row">
+
+                                        <div class="col-lg-12">
+
+                                                <p id="dbirthlabel"><b>Date Applied</b></p>
+
+
+                                                <label class="memfieldlabel">Year</label>
+                                                <select class="form-control datedropdown" name = "faYear">
+
+                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
+
+                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+
+                                                    <?php } ?>
+
+                                                </select>
+
+
+
+
+
+                                                <label class="memfieldlabel">Month</label>
+                                                <select class="form-control datedropdown" name = "faMonth">
+
+                                                
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                    <option>6</option>
+                                                    <option>7</option>
+                                                    <option>8</option>
+                                                    <option>9</option>
+                                                    <option>10</option>
+                                                    <option>11</option>
+                                                    <option>12</option>
+
+                                                </select>
+
+                                                <label class="memfieldlabel">Day</label>
+                                                <select class="form-control datedropdown" name = "faDay">
+
+                                                    <?php for($x = 1; $x <= 31; $x++) { ?>
+
+                                                        <option value="<?php echo $x; ?>"><?php echo $x; ?></option>
+
+                                                    <?php } ?>
+
+                                                </select>
+
+                                                
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-lg-12">
+
+                                                <p id="dbirthlabel"><b>Date Approved</b></p>
+
+
+                                                <label class="memfieldlabel">Year</label>
+                                                <select class="form-control datedropdown" name = "fYear">
+
+                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
+
+                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+
+                                                    <?php } ?>
+                                                   
+                                                </select>
+
+
+
+
+
+                                                <label class="memfieldlabel">Month </label>
+                                                <select class="form-control datedropdown" name = "fMonth">
+
+                                                
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                    <option>6</option>
+                                                    <option>7</option>
+                                                    <option>8</option>
+                                                    <option>9</option>
+                                                    <option>10</option>
+                                                    <option>11</option>
+                                                    <option>12</option>
+
+                                                </select>
+
+                                                <label class="memfieldlabel">Day</label>
+                                                <select class="form-control datedropdown" name = "fDay">
+
+                                                    <?php for($x = 1; $x <= 31; $x++) { ?>
+
+                                                        <option value="<?php echo $x; ?>"><?php echo $x; ?></option>
+
+                                                    <?php } ?>
+
+                                                </select>
+
+                                                
+
+                                        </div>
+                                    </div>
+                                    <div class="row" id = "falpInfo">
+	                                    <div class="col-lg-4">
+												 <span class="labelspan"><b>ID of Employee Hired</b></span><big class="req">*</big>
+	                                                <input type="text" minlength = "8" maxlength="8" class="form-control memname" placeholder="e.g. 09000000" name="fEmp_ID" <?php if(isset($_POST['fEmp_ID'])){
+                                                	echo "value = '{$_POST['fEmp_ID']}'";
+                                                } ?>>
+	                                                </label>
+
+
+	                                    </div>
+                                     </div>
 
                                 </div>
 
                             </div>
+                            <div class="panel panel-green" id = "lifetimeInfo">
 
-                            <input class="btn btn-success" type="submit" name="submit" value="Sumbit">
+                                <div class="panel-heading">
+
+                                    <b>Lifetime Information</b>
+                                </div>
+
+                                <div class="panel-body">
+                                	<div class="row">
+
+                                        <div class="col-lg-4">
+
+                                           
+                                             <input type="checkbox" name="hasLifetime" value="1" <?php if(isset($_POST['hasLifetime'])){
+                                                	echo "checked";
+                                                } ?>>Check box if member has lifetime<p>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-lg-4">
+
+                                            <label class="memfieldlabel">Primary Beneficiary</label><big class="req">*</big>
+                                            <input type="text" class="form-control" name="primary" id="primary" <?php if(isset($_POST['primary'])){
+                                                	echo "value = '{$_POST['primary']}'";
+                                                } ?>>
+
+                                        </div>
+
+                                    </div>
+
+                                    <p>
+                                    
+                                    <div class="row">
+
+                                        <div class="col-lg-4">
+                                            
+                                            <label class="memfieldlabel">Secondary Beneficiary</label>
+                                            <input type="text" class="form-control"  name="secondary"  id="secondary" <?php if(isset($_POST['secondary'])){
+                                                	echo "value = '{$_POST['secondary']}'";
+                                                } ?>>
+                                           
+
+                                            
+                                        </div>
+
+                                    </div>
+                                     <div class="row">
+
+                                        <div class="col-lg-4">
+
+                                            <label class="memfieldlabel">Organization</label>
+                                            <input type="text" class="form-control"  name="org" id="org" <?php if(isset($_POST['org'])){
+                                                	echo "value = '{$_POST['org']}'";
+                                                }?>>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-lg-12">
+
+                                                <p id="dbirthlabel"><b>Date Applied</b></p>
+
+
+                                                <label class="memfieldlabel">Year</label>
+                                                <select class="form-control datedropdown" name = "laYear">
+
+                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
+
+                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+
+                                                    <?php } ?>
+                                                    
+
+                                                </select>
+
+
+
+
+
+                                                <label class="memfieldlabel">Month</label>
+                                                <select class="form-control datedropdown" name = "laMonth">
+
+                                                
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                    <option>6</option>
+                                                    <option>7</option>
+                                                    <option>8</option>
+                                                    <option>9</option>
+                                                    <option>10</option>
+                                                    <option>11</option>
+                                                    <option>12</option>
+
+                                                </select>
+
+                                                <label class="memfieldlabel">Day</label>
+                                                <select class="form-control datedropdown" name = "laDay">
+
+                                                    <?php for($x = 1; $x <= 31; $x++) { ?>
+
+                                                        <option value="<?php echo $x; ?>"><?php echo $x; ?></option>
+
+                                                    <?php } ?>
+
+                                                </select>
+
+                                                
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-lg-12">
+
+                                                <p id="dbirthlabel"><b>Date Approved</b></p>
+
+
+                                                <label class="memfieldlabel">Year</label>
+                                                <select class="form-control datedropdown" name = "lYear">
+
+                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
+
+                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+
+                                                    <?php } ?>
+                                                    
+
+                                                </select>
+
+
+
+
+
+                                                <label class="memfieldlabel">Month</label>
+                                                <select class="form-control datedropdown" name = "lMonth">
+
+                                                
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                    <option>6</option>
+                                                    <option>7</option>
+                                                    <option>8</option>
+                                                    <option>9</option>
+                                                    <option>10</option>
+                                                    <option>11</option>
+                                                    <option>12</option>
+
+                                                </select>
+
+                                                <label class="memfieldlabel">Day</label>
+                                                <select class="form-control datedropdown" name = "lDay">
+
+                                                    <?php for($x = 1; $x <= 31; $x++) { ?>
+
+                                                        <option value="<?php echo $x; ?>"><?php echo $x; ?></option>
+
+                                                    <?php } ?>
+
+                                                </select>
+
+                                                
+
+                                        </div>
+                                        <div class="col-lg-4">
+											 <span class="labelspan"><b>ID of Employee Hired</b></span><big class="req">*</big>
+                                                <input type="text" minlength = "8" maxlength="8" class="form-control memname" placeholder="e.g. 09000000" name="lEmp_ID" <?php if(isset($_POST['lEmp_ID'])){
+                                                	echo "value = '{$_POST['lEmp_ID']}'";
+                                                } ?>>
+                                                </label>
+
+
+                                    </div>
+                                    </div>
+                                    
+
+                                </div>
+
+                            </div>
+                            
+
+                            <input class="btn btn-success" type="submit" name="submit" value="Sumbit"></p>
 
                        </form>
 
@@ -579,6 +1442,18 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
         echo "<script type='text/javascript'>alert('Success!');</script>";
         
     }
+    else if(empty($success) && isset($_POST['submit'])){
+        $string = 'Failed to Add!';
+        if(!empty($failedFalp)){
+        	$string = $string.'Missing fields in FALP';
+        }
+        if(!empty($failedLife)){
+        	$string = $string.'Missing fields in Lifetime';
+        }
+        echo "<script type='text/javascript'>alert('{$string}');</script>";
+        
+    }
+
 
     ?>
     <!-- Bootstrap Core JavaScript -->
@@ -604,10 +1479,6 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
             var amount = parseFloat(document.getElementById("amount").value);
             var terms = parseFloat(document.getElementById("terms").value);
            
-            if(isNaN(amount)||isNaN(terms)){
-                alert("Invalid Input in FALP Account Information");
-                return false;
-            }
             return true;
             
         }

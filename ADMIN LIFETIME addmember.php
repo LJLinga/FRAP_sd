@@ -1,11 +1,9 @@
 <?php
-session_start();
-require_once("mysql_connect_FA.php");
-if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
+    require_once ("mysql_connect_FA.php");
+    session_start();
+    include 'GLOBAL_USER_TYPE_CHECKING.php';
+    include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
-header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
-
-}
 
     $queryMem = "SELECT M.MEMBER_ID, M.LASTNAME, M.FIRSTNAME, M.DATE_HIRED, RD.DEPT_NAME FROM MEMBER AS M
                  JOIN REF_DEPARTMENT AS RD ON RD.DEPT_ID = M.DEPT_ID
@@ -21,7 +19,7 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
 
     }
     $page_title = 'Loans - Add Lifetime Member';
-    include 'GLOBAL_HEADER.php';
+    include 'GLOBAL_TEMPLATE_Header.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
 

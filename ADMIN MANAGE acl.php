@@ -1,14 +1,11 @@
 <?php
+require_once ("mysql_connect_FA.php");
 session_start();
-require_once("mysql_connect_FA.php");
-if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
-
-header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
-
-}
+include 'GLOBAL_USER_TYPE_CHECKING.php';
+include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
     $page_title = 'Loans - Manage ACL';
-    include 'GLOBAL_HEADER.php';
+    include 'GLOBAL_TEMPLATE_Header.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
 

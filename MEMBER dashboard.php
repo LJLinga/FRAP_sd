@@ -1,16 +1,16 @@
 <?php
+
     require_once ("mysql_connect_FA.php");
     session_start();
+    include 'GLOBAL_USER_TYPE_CHECKING.php';
+
     error_reporting(NULL);
 
-    if ($_SESSION['usertype'] != 1) {
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
-        
-    }
     $page_title = 'Loans - Dashboard';
-    include 'GLOBAL_HEADER.php';
+    include 'GLOBAL_TEMPLATE_Header.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
+
 ?>
         <div id="page-wrapper">
 
@@ -79,8 +79,8 @@
                             <div>
 
                                 <?php
-
-                                    echo date('F j, Y', $row["DATE_HIRED"]);
+                                    $date = date_create($row['DATE_HIRED']);
+                                    echo date_format($date, 'F  j,  Y');
 
                                 ?>
 
@@ -274,4 +274,4 @@
 
         </div>
         <!-- /#page-wrapper -->
-<?php include 'GLOBAL_FOOTER.php' ?>
+<?php include 'GLOBAL_TEMPLATE_Footer.php' ?>

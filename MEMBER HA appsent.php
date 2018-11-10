@@ -1,20 +1,29 @@
 <?php
+    require_once ("mysql_connect_FA.php");
     session_start();
-    require_once('mysql_connect_FA.php');
-
-    //get the friggin application sent and keep checking if it has been approved.
+    include 'GLOBAL_USER_TYPE_CHECKING.php';
 
 
-    if ($_SESSION['usertype'] != 1) {
+    //checks the status of the application that you have sent
+    $query = "SELECT MAX(RECORD_ID), APP_STATUS from health_aid WHERE MEMBER_ID = {$_SESSION['idnum']} ";
+    $result = mysqli_query($dbc,$query);
+    $row = mysqli_fetch_array($result);
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
-        
+    if($row['APP_STATUS'] == 2){ // it means you have an approved HA - youll be sent to the HA summary
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
+
+    }else if(empty($row)){ // it means you have have not applied yet for HA, youll be sent to HA application
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
+
     }
 
 
 
+
 $page_title = 'Loans - Health Aid Application Sent';
-include 'GLOBAL_HEADER.php';
+include 'GLOBAL_TEMPLATE_Header.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 ?>
         <div id="page-wrapper">
@@ -370,4 +379,4 @@ include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 
         </div>
         <!-- /#page-wrapper -->
-<?php include 'GLOBAL_FOOTER.php' ?>
+<?php include 'GLOBAL_TEMPLATE_Footer.php' ?>

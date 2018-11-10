@@ -1,4 +1,5 @@
-<?php
+
+<?php 
     session_start();
     require_once('mysql_connect_FA.php');
     if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
@@ -39,16 +40,18 @@ header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF']).
             $message = "Rejected";
         }
     }
+
 $page_title = 'Loans - Membership Application Details';
-include 'GLOBAL_HEADER.php';
+include 'GLOBAL_TEMPLATE_Header.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
+<body>
         <div id="page-wrapper">
 
             <div class="container-fluid">
 
                 <div class="row">
-
+                
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
@@ -64,7 +67,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                             }
                         ?>
                     </div>
-
+                    
                 </div>
                 <!-- alert -->
                 <div class="row">
@@ -85,7 +88,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                         </div>
 
                                         <div class="panel-body"><p>
-                                            <?php
+                                            <?php 
                                                 $query = "SELECT FIRSTNAME, LASTNAME, MIDDLENAME FROM MEMBER M WHERE MEMBER_ID = ". $_SESSION['showFMID'] .";";
                                                 $result = mysqli_query($dbc, $query);
                                                 $row = mysqli_fetch_array($result);
@@ -95,7 +98,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                             <b>First Name:</b><?php echo $row['FIRSTNAME']; ?> <p>
                                             <b>Last Name:</b><?php echo $row['LASTNAME']; ?> <p>
                                             <b>Middle Name:</b><?php echo $row['MIDDLENAME']; ?> <p>
-
+                                            
                                         </div>
 
                                     </div>
@@ -109,7 +112,7 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                         </div>
 
                                         <div class="panel-body"><p>
-                                            <?php
+                                            <?php 
                                                 $query = "SELECT AMOUNT, PAYABLE, PAYMENT_TERMS, PER_PAYMENT FROM LOANS WHERE MEMBER_ID = ". $_SESSION['showFMID'] .";";
                                                 $result = mysqli_query($dbc, $query);
                                                 $row = mysqli_fetch_array($result);
@@ -155,22 +158,13 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
             </div>
 
         </div>
-        <!-- /#page-wrapper -->
 
-    </div>
-    <!-- /#wrapper -->
 
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-
-    <script type="text/javascript" src="DataTables/datatables.min.js"></script>
     <script>
 
         $(document).ready(function(){
-
+    
             $('#table').DataTable();
 
         });

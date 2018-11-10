@@ -362,7 +362,7 @@
 	}
 
 $page_title = 'Loans - File Repository';
-include 'GLOBAL_HEADER.php';
+include 'GLOBAL_TEMPLATE_Header.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
 

@@ -1,12 +1,12 @@
 
 <?php
+require_once ("mysql_connect_FA.php");
 session_start();
-if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
-
-header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
-
-}
+include 'GLOBAL_USER_TYPE_CHECKING.php';
+include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 require_once('mysql_connect_FA.php');
+
+
 $flag=0;
 if(isset($_POST['print'])){
     $_SESSION['date']=$_POST['date'];
@@ -55,7 +55,7 @@ else {
 $result=mysqli_query($dbc,$query);
 
 $page_title = 'Loans - General Report';
-include 'GLOBAL_HEADER.php';
+include 'GLOBAL_TEMPLATE_Header.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
         <div id="page-wrapper">

@@ -1,25 +1,20 @@
 <?php
 
+    require_once ("mysql_connect_FA.php");
     session_start();
-    require_once('mysql_connect_FA.php');
-    if ($_SESSION['usertype'] != 1) {
-
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
-        
-    }
+    include 'GLOBAL_USER_TYPE_CHECKING.php';
 
     //to check if the user has applied in FALP but this code can be edited to check other applications. e.g. Health aid and shi like th sort
 
     $query = "SELECT MAX(LOAN_ID), LOAN_STATUS from loans where member_id = {$_SESSION['idnum']} ";
     $result = mysqli_query($dbc,$query);
-
     $row = mysqli_fetch_assoc($result);
 
-    if($row['LOAN_STATUS'] = 1){ //checks if you have a pending loan
+    if($row['LOAN_STATUS'] == 1){ //checks if you have a pending loan
 
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
 
-    }else if($row['LOAN_STATUS'] = 2) { //checks if you have a loan that is ongoing.
+    }else if($row['LOAN_STATUS'] == 2) { //checks if you have a loan that is ongoing.
 
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
 
@@ -41,45 +36,56 @@
     }
     */
     $page_title = 'Loans - FALP Application';
-    include 'GLOBAL_HEADER.php';
+    include 'GLOBAL_TEMPLATE_Header.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 ?>
 <script>
-    document.getElementById("falpcompute").onclick = function() {calculate()};
 
-    function calculate(){
+    $(document).ready(function(){
 
-        var amount = parseFloat(document.getElementById("amount").value);
-        var terms = parseFloat(document.getElementById("terms").value);
-        var interest = 5;
+        document.getElementById("falpcompute").onclick = function() {
+            checkform();
+        };
+        function calculate(){
 
-        document.getElementById("totalI").innerHTML ="<b>Total Interest Payable: </b>₱"+ parseFloat((amount*interest/100)).toFixed(2);
-        document.getElementById("totalP").innerHTML ="<b>Total Amount Payable: </b> ₱"+ parseFloat((amount+amount*interest/100)).toFixed(2);
-        document.getElementById("PerP").innerHTML ="<b>Per Payment Period Payable: </b> ₱ "+ parseFloat(((amount+amount*interest/100)/terms/2)).toFixed(2);
-        document.getElementById("Monthly").innerHTML ="<b>Monthly Payable: </b> ₱"+ parseFloat(((amount+amount*interest/100)/terms)).toFixed(2);
+            var amount = parseFloat(document.getElementById("amount").value);
+            var terms = parseFloat(document.getElementById("terms").value);
+            var interest = 5;
 
-    }
-
-    function checkform(){
-
-        var amount = parseFloat(document.getElementById("amount").value);
-
-        if(amount<5000){
-            alert("Amount entered is below minimum. Please enter amount within the range.");
-            return false;
+            document.getElementById("totalI").innerHTML ="<b>Total Interest Payable: </b>₱"+ parseFloat((amount*interest/100)).toFixed(2);
+            document.getElementById("totalP").innerHTML ="<b>Total Amount Payable: </b> ₱"+ parseFloat((amount+amount*interest/100)).toFixed(2);
+            document.getElementById("PerP").innerHTML ="<b>Per Payment Period Payable: </b> ₱ "+ parseFloat(((amount+amount*interest/100)/terms/2)).toFixed(2);
+            document.getElementById("Monthly").innerHTML ="<b>Monthly Payable: </b> ₱"+ parseFloat(((amount+amount*interest/100)/terms)).toFixed(2);
 
         }
-        else if(amount >20000){
-            alert("Amount entered is above maximum.Please enter amount within the range.");
-            return false;
-        }
-        else if(isNaN(amount)){
-            alert("Invalid Input");
-            return false;
-        }
-        return true;
 
-    }
+        function checkform(){
+
+            var amount = parseFloat(document.getElementById("amount").value);
+
+            if(amount<5000){
+                alert("Amount entered is below minimum. Please enter amount within the range.");
+                return false;
+            }
+            else if(amount >20000){
+                alert("Amount entered is above maximum.Please enter amount within the range.");
+                return false;
+            }
+            else if(isNaN(amount)){
+                alert("Invalid Input");
+                return false;
+            }else{
+                calculate();
+                return true;
+            }
+
+
+
+        }
+    });
+
+
+
 </script>
         <div id="page-wrapper">
 
@@ -311,5 +317,5 @@
 
         </div>
         <!-- /#page-wrapper -->
-<?php include 'GLOBAL_FOOTER.php' ?>
+<?php include 'GLOBAL_TEMPLATE_Footer.php' ?>
 

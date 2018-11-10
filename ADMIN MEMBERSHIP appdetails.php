@@ -1,14 +1,10 @@
 <?php
 
-    session_start();
+require_once ("mysql_connect_FA.php");
+session_start();
+include 'GLOBAL_USER_TYPE_CHECKING.php';
+include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
-    if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
-
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
-            
-    }
-
-    require_once('mysql_connect_FA.php');
 
     $queryMem = "SELECT M.MEMBER_ID, M.LASTNAME, M.FIRSTNAME, M.MIDDLENAME, C.STATUS, M.DATE_HIRED, D.DEPT_NAME, M.HOME_ADDRESS, 
                  M.BUSINESS_ADDRESS, M.HOME_NUM, M.BUSINESS_NUM, M.BIRTHDATE, M.SEX
@@ -73,7 +69,7 @@
     }
 
 $page_title = 'Loans - Membership Application Details';
-include 'GLOBAL_HEADER.php';
+include 'GLOBAL_TEMPLATE_Header.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 
 ?>
