@@ -36,7 +36,7 @@
 
 
     $page_title = 'Loans - Health Applications';
-    include 'GLOBAL_TEMPLATE_Header.php';
+    include 'GLOBAL_HEADER.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
 

@@ -15,7 +15,7 @@ $success = "yes";
 }
 
 $page_title = 'Loans - Add User Account';
-include 'GLOBAL_TEMPLATE_Header.php';
+include 'GLOBAL_HEADER.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
         <div id="page-wrapper">

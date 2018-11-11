@@ -6,7 +6,7 @@
     include 'GLOBAL_USER_TYPE_CHECKING.php';
 
     $page_title = 'Loans - FALP Application Failed';
-    include 'GLOBAL_TEMPLATE_Header.php';
+    include 'GLOBAL_HEADER.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 ?>
         <div id="page-wrapper">
@@ -91,4 +91,4 @@
         </div>
         <!-- /#page-wrapper -->
 
-<?php include 'GLOBAL_TEMPLATE_Footer.php' ?>
+<?php include 'GLOBAL_FOOTER.php' ?>

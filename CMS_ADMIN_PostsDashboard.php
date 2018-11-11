@@ -93,7 +93,15 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                         <tbody id="tbody">
                         <?php
 
-                            $rows = $crud->getData("SELECT p.id, p.title, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status, p.lastUpdated FROM posts p JOIN users a ON p.authorId = a.id JOIN post_status s ON s.id = p.statusId WHERE s.id = 1 || s.id = 2 || s.id=3 || s.id=4;");
+                            $rows = $crud->getData("SELECT p.id, 
+                                                                  p.title, 
+                                                                  CONCAT(a.firstName,' ', a.lastName) AS name, 
+                                                                  s.description AS status, 
+                                                                  p.lastUpdated 
+                                                                  FROM posts p JOIN users a ON p.authorId = a.id 
+                                                                  JOIN post_status s ON s.id = p.statusId 
+                                                                  WHERE s.id = 1 || s.id = 2 || s.id=3 || s.id=4
+                                                                  ");
                             foreach ((array) $rows as $key => $row){
                                 ?>
                             <tr>

@@ -40,6 +40,19 @@
 
     <script type="text/javascript" src="froala/js/froala_editor.pkgd.min.js"></script>
 </head>
+<style>
+    head{
+        background-color: #f0f0f0;
+    }
+
+    body{
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        background-color: #f0f0f0;
+    }
+
+
+</style>
 
 <body>
 <div id="wrapper">

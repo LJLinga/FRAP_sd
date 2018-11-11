@@ -9,15 +9,14 @@ $crud = new GLOBAL_CLASS_CRUD();
  * Time: 3:48 PM
  */
 //hardcoded value for userType, will add MYSQL verification query
-$userType = 'editor';
+$cmsRole = '3';
 $authorId = '1';
 
-if(isset($_POST['btnSaveDraft']) || isset($_POST['btnSubmit'])){
+if(isset($_POST['btnSubmit'])){
     $title = $_POST['post_title'];
     $body = $crud->escape_string($_POST['post_content']);
-    $status = '1';
+    $status = $_POST['submitStatus'];
 
-    if(isset($_POST['btnSubmit'])){ $status = '2';}
 
     $id = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body','$authorId','$status')");
     if(!empty ($id)) {
@@ -28,6 +27,7 @@ if(isset($_POST['btnSaveDraft']) || isset($_POST['btnSubmit'])){
         echo '</script>';
     }
 }
+
 $page_title = 'Santinig - Add Post';
 include 'GLOBAL_HEADER.php';
 include 'GLOBAL_NAV_TopBar.php';
@@ -45,11 +45,14 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
             }).on('froalaEditor.image.error', function (e, editor, error, response) {
                 console.log(error);
                 console.log(response);
+            }).on('froalaEditor.file.error', function (e, editor, error, response) {
+                console.log(error);
+                console.log(response);
             });
         });
     </script>
 
-    <div id="page-wrapper">
+    <div id="content-wrapper">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">
@@ -77,7 +80,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                     </div>
                     <div class="column col-lg-4">
 
-                        <div class="card">
+                        <div class="card" style="margin-bottom: 1rem;">
                             <div class="card-body" style="margin-bottom: 1rem;">
                                 <div class="form-group">
                                     <label for="reference">References</label>

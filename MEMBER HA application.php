@@ -619,7 +619,7 @@ else if ($rowForm['APP_STATUS'] == 3) { /* REJECTED */
 }
 
 $page_title = 'Loans - Health Aid Application';
-include 'GLOBAL_TEMPLATE_Header.php';
+include 'GLOBAL_HEADER.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 
 ?>
@@ -1656,4 +1656,4 @@ include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
     </div>
     <!-- /#page-wrapper -->
 
-<?php include 'GLOBAL_TEMPLATE_Footer.php' ?>
+<?php include 'GLOBAL_FOOTER.php' ?>

@@ -5,7 +5,7 @@ include 'GLOBAL_USER_TYPE_CHECKING.php';
 include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
     $page_title = 'Loans - Manage ACL';
-    include 'GLOBAL_TEMPLATE_Header.php';
+    include 'GLOBAL_HEADER.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
 

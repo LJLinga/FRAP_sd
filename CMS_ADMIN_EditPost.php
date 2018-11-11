@@ -11,21 +11,10 @@ require_once __DIR__.'/vendor/autoload.php';
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 
-//User Load
-$cmsRole = '3';
-$currentUserId = '1';
-//
 
-//
-$head = 'Add New Post';
-$title = '';
-$status = '1';
-$statusDesc = 'Draft';
-$body = '';
-$author = 'no author';
-$firstPosted = 'Jan 1 2000';
-$lastUpdated = 'Jan 1 2000';
-//
+//User Load
+$cmsRole = '2';
+$currentUserId = '1';
 
 //hardcoded value for userType, will add MYSQL verification query
 
@@ -113,13 +102,10 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
         });
 
         $('textarea').froalaEditor('html.set', '<?php echo $body?>');
-
-
-
     });
 </script>
 
-<div id="page-wrapper">
+<div id="content-wrapper">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
@@ -172,11 +158,17 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                             <div class="form-group">
                                 <label for="submitStatus">Submit Action</label>
                                 <select class="form-control" id="submitStatus" name="submitStatus">
-                                    <option value="1">Save as Draft</option>
-                                    <option value="2">Submit for Review</option>
-                                    <option value="3">Publish</option>
-                                    <?php if($cmsRole=='3'){ echo "<option value=\"3\">Publish</option>";}?>
-                                    <option value="4">Archive</option>
+                                    <option <?php if ($status == '1' ) echo 'selected' ; ?> value="1">Save as Draft</option>
+                                    <option <?php if ($status == '2' ) echo 'selected' ; ?> value="2">Submit for Review</option>
+                                    <?php if($cmsRole == '3'){
+                                        $text = '';
+                                        if($status == '3'){
+                                            $text='selected';
+                                        }
+                                        echo "<option ".$text." value=\"3\">Publish</option>" ?>
+
+                                    <?php };?>
+                                    <option <?php if ($status == '4' ) echo 'selected' ; ?> value="4">Archive</option>
                                 </select>
                             </div>
                             <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">

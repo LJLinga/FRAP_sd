@@ -9,13 +9,9 @@
 //check which user type
 
 
-$cmsRole = 2;
 // 1 for Reader
 // 2 for Author
 // 3 for Editor
-
-$edmsRole = 1;
-$frapRole = 1;
 
 ?>
 <script>
