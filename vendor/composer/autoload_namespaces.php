@@ -6,4 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'FroalaEditor' => array($vendorDir . '/froala/wysiwyg-editor-php-sdk/lib'),
 );

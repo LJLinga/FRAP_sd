@@ -106,20 +106,10 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
         $('textarea').froalaEditor({
             //Disables video upload
             videoUpload: false,
-
-            // Set the image upload URL.
-            //imageUploadParam: 'image_param',
+            // Set the image upload URL
             imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
-            imageUploadParams: {
-                id: 'my_editor'
-            },
-
             // Set the file upload URL.
             fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
-            fileUploadParams: {
-                id: 'my_editor'
-            }
-
         });
 
         $('textarea').froalaEditor('html.set', '<?php echo $body?>');
@@ -157,8 +147,8 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                 </div>
                 <div class="column col-lg-4">
 
-                    <div class="card">
-                        <div class="card-body" style="margin-bottom: 1rem;">
+                    <div class="card" style="margin-bottom: 1rem;">
+                        <div class="card-body" >
                             <div class="form-group">
                                 <label for="reference">References</label>
                                 <div id="reference">
@@ -184,6 +174,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                                 <select class="form-control" id="submitStatus" name="submitStatus">
                                     <option value="1">Save as Draft</option>
                                     <option value="2">Submit for Review</option>
+                                    <option value="3">Publish</option>
                                     <?php if($cmsRole=='3'){ echo "<option value=\"3\">Publish</option>";}?>
                                     <option value="4">Archive</option>
                                 </select>

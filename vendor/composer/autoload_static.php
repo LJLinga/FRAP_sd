@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInit0a8943aaa519dd01a8cb99967eb45485
 {
     public static $prefixLengthsPsr4 = array (
+        'F' => 
+        array (
+            'FroalaEditor\\' => 13,
+        ),
         'D' => 
         array (
             'DBlackborough\\Quill\\' => 20,
@@ -14,9 +18,23 @@ class ComposerStaticInit0a8943aaa519dd01a8cb99967eb45485
     );
 
     public static $prefixDirsPsr4 = array (
+        'FroalaEditor\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/froala/wysiwyg-editor-php-sdk/lib/FroalaEditor',
+        ),
         'DBlackborough\\Quill\\' => 
         array (
             0 => __DIR__ . '/..' . '/deanblackborough/php-quill-renderer/src',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'F' => 
+        array (
+            'FroalaEditor' => 
+            array (
+                0 => __DIR__ . '/..' . '/froala/wysiwyg-editor-php-sdk/lib',
+            ),
         ),
     );
 
@@ -25,6 +43,7 @@ class ComposerStaticInit0a8943aaa519dd01a8cb99967eb45485
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit0a8943aaa519dd01a8cb99967eb45485::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit0a8943aaa519dd01a8cb99967eb45485::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit0a8943aaa519dd01a8cb99967eb45485::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

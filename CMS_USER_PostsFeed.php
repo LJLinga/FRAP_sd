@@ -20,21 +20,21 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
     <div class="container-fluid" style="padding-top: 2rem;">
 
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-6 col-lg-offset-1">
 
                 <?php
 
-                $rows = $crud->getData("SELECT p.id, p.title, p.body, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status, p.lastUpdated FROM mydb.posts p JOIN mydb.authors a ON p.authorId = a.id JOIN mydb.post_status s ON s.id = p.statusId WHERE s.id = 2;");
+                $rows = $crud->getData("SELECT p.id, p.title, p.body, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status, p.lastUpdated FROM posts p JOIN users a ON p.authorId = a.id JOIN post_status s ON s.id = p.statusId WHERE s.id=3;");
                 foreach ((array) $rows as $key => $row){
                     ?>
 
                         <div class="card">
                             <div class="card-body">
-                                <h3 class="card-title"><?php echo $row['title'];?></h3>
-                                <h5 class="card-subtitle"><i>By: <?php echo $row['name'];?> <br> Posted: <?php echo $row['lastUpdated'] ;?></i></h5>
-                                <p class="card-text"><?php echo $row['body'] ?></p>
-                                <a href="#" class="card-link">Card link</a>
-                                <a href="#" class="card-link">Another link</a>
+                                <h3 class="card-title"><b><?php echo $row['title'];?></b></h3>
+                                <h5 class="card-subtitle"><i>By: <?php echo $row['name'];?> <br> Posted: <?php echo $row['lastUpdated'] ;?></i>
+                                    <p class="card-text"><?php echo $row['body'] ?></p>
+                                <a href="#" class="card-link">Comment</a>
+
                             </div>
                         </div>
 

@@ -4,6 +4,6 @@
     $crud = new GLOBAL_CLASS_CRUD();
 
     $id = $_POST['id'];
-    $crud->execute("UPDATE posts SET statusId= '3' WHERE posts.id = '$id'; ");
+    $crud->execute("UPDATE posts SET statusId= '4' WHERE posts.id = '$id'; ");
 
 ?>

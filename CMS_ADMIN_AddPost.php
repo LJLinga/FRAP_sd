@@ -1,6 +1,7 @@
 <?php
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
+
 /**
  * Created by PhpStorm.
  * User: nicol
@@ -38,16 +39,12 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                 //Disables video upload
                 videoUpload: false,
                 // Set the image upload URL.
-                //imageUploadParam: 'image_param',
                 imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
-                imageUploadParams: {
-                    id: 'my_editor'
-                },
                 // Set the file upload URL.
-                fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
-                fileUploadParams: {
-                    id: 'my_editor'
-                }
+                fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php'
+            }).on('froalaEditor.image.error', function (e, editor, error, response) {
+                console.log(error);
+                console.log(response);
             });
         });
     </script>

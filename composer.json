@@ -1,5 +1,6 @@
 {
     "require": {
-        "deanblackborough/php-quill-renderer": "^3.15"
+        "deanblackborough/php-quill-renderer": "^3.15",
+        "froala/wysiwyg-editor-php-sdk": "1.0.1"
     }
 }
