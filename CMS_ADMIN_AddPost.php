@@ -79,25 +79,38 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                         </div>
                     </div>
                     <div class="column col-lg-4">
-                        <!-- Button -->
-                        <div class="form-group">
-                            <label for="reference">References</label>
-                            <div id="reference">
-                                <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
-                                <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
+
+                        <div class="card">
+                            <div class="card-body" style="margin-bottom: 1rem;">
+                                <div class="form-group">
+                                    <label for="reference">References</label>
+                                    <div id="reference">
+                                        <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
+                                        <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label  for="customFile">Upload attachment</label>
-                            <input type="file" class="" id="customFile">
+                        <div class="card" style="margin-bottom: 1rem;">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="submitStatus">Submit Action</label>
+                                    <select class="form-control" id="submitStatus" name="submitStatus">
+                                        <option value="1">Save as Draft</option>
+                                        <option value="2">Submit for Review</option>
+                                        <?php if($cmsRole=='3'){ echo "<option value=\"3\">Publish</option>";}?>
+                                        <option value="4">Archive</option>
+                                    </select>
+                                </div>
+                                <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">
+                                <button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit">Submit</button>
+
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <button type="submit" class="btn btn-default" name="btnSaveDraft" id="btnSaveDraft">Save Draft</button>
-                        <button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit">Submit for Review</button>
+
+                        <!-- Button -->
+
                     </div>
                 </div>
             </form>

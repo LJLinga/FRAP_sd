@@ -11,10 +11,13 @@ require_once __DIR__.'/vendor/autoload.php';
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 
-$userType = 'editor';
+//User Load
+$cmsRole = '3';
+$currentUserId = '1';
+//
 
+//
 $head = 'Add New Post';
-
 $title = '';
 $status = '1';
 $statusDesc = 'Draft';
@@ -22,6 +25,7 @@ $body = '';
 $author = 'no author';
 $firstPosted = 'Jan 1 2000';
 $lastUpdated = 'Jan 1 2000';
+//
 
 //hardcoded value for userType, will add MYSQL verification query
 
@@ -55,40 +59,37 @@ if(!empty($_GET['postId'])){
         $statusDesc = $row['description'];
     }
 
-    $pubQuery= $crud->getData(" 
-        SELECT 
-            CONCAT(pub.firstName,' ',pub.lastName) AS publisher
-        FROM
-            posts p
-                JOIN
-            users pub ON pub.id = p.publisherId
-        WHERE
-            p.id = $postId;
-    ");
-
-    if(($pubQuery)!=null){
-        foreach((array) $rows as $key => $row){
+    if($status == '3'){
+        $pubQuery= $crud->getData(" 
+            SELECT 
+                CONCAT(pub.firstName,' ',pub.lastName) AS publisher
+            FROM
+                posts p
+                    JOIN
+                users pub ON pub.id = p.publisherId
+            WHERE
+                p.id = '$postId' ;
+        ");
+        foreach((array) $pubQuery as $key => $row){
             $publisher = $row['publisher'];
-        }
-    }
-
-    if($userType=='author'){
-        if($status=='3'){
-
-            // cant edit this post display redirect
-            echo '';
         }
     }
 
     $head = "Edit: ".$title;
 
-}elseif(isset($_POST['btnSubmit'])) {
+}
+
+if(isset($_POST['btnSubmit'])) {
 
     $title = $_POST['post_title'];
     $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['submitStatus'];
 
-    if($crud->execute("UPDATE posts SET title='$title', body='$body', authorId='1', statusId='$status' WHERE id='$postId';")) {
+    if($crud->execute("UPDATE posts SET title='$title', body='$body', statusId='$status' WHERE id='$postId';")) {
+
+        if($status=='3' && $cmsRole=='3'){
+            $crud->execute("UPDATE posts SET publisherId='$currentUserId' WHERE id='$postId';");
+        }
         header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditPost.php?postId=" . $postId);
     }
 }
@@ -156,12 +157,25 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                 </div>
                 <div class="column col-lg-4">
 
-                    <div class="card" style="margin-bottom: 1rem;">
+                    <div class="card">
+                        <div class="card-body" style="margin-bottom: 1rem;">
+                            <div class="form-group">
+                                <label for="reference">References</label>
+                                <div id="reference">
+                                    <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
+                                    <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" >
                         <div class="card-body">
                             Author: <b><?php echo $author; ?></b><br>
-                            Publisher: <b><?php echo $publisher?></b><br>
-                            Created on: <?php echo $firstPosted?><br><br>
+                            <i>Created on: <b><?php echo $firstPosted?></b></i><br><br>
+
                             Current Status: <b><?php echo $statusDesc?></b><br>
+                            <?php if(!empty($publisher)){ echo "Publisher: <b>".$publisher."</b><br>"; }?>
                             <i>Last updated: <b><?php echo $lastUpdated?></b></i><br>
                         </div>
                         <div class="card-body">
@@ -170,27 +184,13 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                                 <select class="form-control" id="submitStatus" name="submitStatus">
                                     <option value="1">Save as Draft</option>
                                     <option value="2">Submit for Review</option>
-                                    <?php if($userType=='editor'){?>
-                                    <option value="3">Publish</option>
-                                    <?php };?>
+                                    <?php if($cmsRole=='3'){ echo "<option value=\"3\">Publish</option>";}?>
                                     <option value="4">Archive</option>
                                 </select>
                             </div>
                             <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">
                             <button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit">Submit</button>
 
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="reference">References</label>
-                                <div id="reference">
-                                    <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
-                                    <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
-                                </div>
-                            </div>
                         </div>
                     </div>
 
