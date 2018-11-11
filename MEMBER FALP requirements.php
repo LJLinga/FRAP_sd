@@ -12,15 +12,16 @@
 
     $row = mysqli_fetch_assoc($result);
 
-    if($row['LOAN_STATUS'] = 1){ //checks if you have a pending loan
+    if($row['LOAN_STATUS'] == 1){ //checks if you have a pending loan
 
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
 
-    }else if($row['LOAN_STATUS'] = 2) { //checks if you have a loan that is ongoing.
+    }else if($row['LOAN_STATUS'] == 2) { //checks if you have a loan that is ongoing.
 
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
 
     }
+
     $page_title = 'Loans - FALP Requirements';
     include 'GLOBAL_HEADER.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
@@ -317,6 +318,10 @@
 								<input type = "text" name = "payT" value = <?php echo $_POST['terms'];?> hidden>
 								<input type = "text" name = "monD" value = <?php echo ($_POST['amount']+$_POST['amount']*$_POST['interest']/100)/$_POST['terms'];?> hidden>
 								<input type = "text" name = "numP" value = <?php echo $_POST['terms']*2;?> hidden>
+                                <?php
+                                //this is a hidden variable that you came from this page before the nest
+                                $fromReqPage = true;
+                                ?>
                             </div>
 
                         </div>

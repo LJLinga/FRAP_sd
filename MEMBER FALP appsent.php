@@ -7,17 +7,21 @@
     include 'GLOBAL_USER_TYPE_CHECKING.php';
 
 
-    $query = "SELECT MAX(LOAN_ID), LOAN_STATUS from loans where member_id = {$_SESSION['idnum']} ";
-    $result = mysqli_query($dbc,$query);
-    $row = mysqli_fetch_assoc($result);
+    $queryCHECK = "SELECT MAX(LOAN_ID), APP_STATUS from loans where member_id = {$_SESSION['idnum']} ";
+    $resultCHECK = mysqli_query($dbc,$queryCHECK);
+    $rowCHECK = mysqli_fetch_assoc($resultCHECK);
 
-    if($row['LOAN_STATUS'] == 1){ //checks if you have a pending loan
-
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
-
-    }else if($row['LOAN_STATUS'] == 2) { //checks if you have a loan that is ongoing.
+    if($rowCHECK['LOAN_STATUS'] == 1){ //checks if you have a pending loan
 
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
+
+    }else if($rowCHECK['LOAN_STATUS'] == 2) { //checks if you have a loan that is ongoing.
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
+
+    }else if(!$_POST['fromReqPage'] && empty($rowCHECK) ){ //if they have not applied yet
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP application.php");
 
     }
 
@@ -86,13 +90,13 @@
 
     $loan_id;
 
-    $query = "SELECT MAX(LOAN_ID) as 'loan_id' from loans where member_id = '{$_SESSION['idnum']}'";
+    $query = "SELECT LOAN_ID  from loans where member_id = '{$_SESSION['idnum']}' ORDER BY LOAN_ID DESC LIMIT 1;";
 
     $result = mysqli_query($dbc,$query);
 
     $loan = mysqli_fetch_assoc($result);
 
-    $loan_id = $loan['loan_id'];
+    $loan_id = $loan['LOAN_ID'];
 
     $user_id = $_SESSION['idnum'];
 
@@ -331,8 +335,6 @@
 
             echo 'Sucessfully inserted loans without any problems!';
 
-            header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/MEMBER FALP appsent.php");
-
 
         }
 
@@ -350,8 +352,6 @@
         } else {
 
             echo 'Sucessfully inserted into Transaction referrences without any problems!';
-
-            header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/MEMBER FALP appsent.php");
 
 
         }

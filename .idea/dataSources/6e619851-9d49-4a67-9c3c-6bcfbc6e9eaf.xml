@@ -406,55 +406,55 @@ documentId</RefColNames>
       <DataType>int(8)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="134" parent="42" name="PASSWORD">
-      <Position>2</Position>
-      <DataType>varchar(45)|0</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="135" parent="42" name="FIRSTNAME">
+    <column id="134" parent="42" name="FIRSTNAME">
       <Position>3</Position>
       <DataType>varchar(45)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="136" parent="42" name="LASTNAME">
+    <column id="135" parent="42" name="LASTNAME">
       <Position>4</Position>
       <DataType>varchar(45)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="137" parent="42" name="DATE_CREATED">
+    <column id="136" parent="42" name="DATE_CREATED">
       <Position>5</Position>
       <DataType>datetime|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="138" parent="42" name="DATE_REMOVED">
+    <column id="137" parent="42" name="DATE_REMOVED">
       <Position>6</Position>
       <DataType>datetime|0</DataType>
     </column>
-    <column id="139" parent="42" name="ACC_STATUS">
+    <column id="138" parent="42" name="ACC_STATUS">
       <Position>7</Position>
       <DataType>int(1)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="140" parent="42" name="FIRST_CHANGE_PW">
+    <column id="139" parent="42" name="FIRST_CHANGE_PW">
       <Position>8</Position>
       <DataType>tinyint(4)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="141" parent="42" name="EDMS_ROLE">
+    <column id="140" parent="42" name="EDMS_ROLE">
       <Position>9</Position>
       <DataType>int(11)|0</DataType>
     </column>
-    <column id="142" parent="42" name="CMS_ROLE">
+    <column id="141" parent="42" name="CMS_ROLE">
       <Position>10</Position>
       <DataType>int(11)|0</DataType>
     </column>
-    <column id="143" parent="42" name="FRAP_ROLE">
+    <column id="142" parent="42" name="FRAP_ROLE">
       <Position>11</Position>
       <DataType>int(11)|0</DataType>
     </column>
-    <column id="144" parent="42" name="MEMBER_ID">
+    <column id="143" parent="42" name="MEMBER_ID">
       <Position>12</Position>
       <DataType>int(11)|0</DataType>
+    </column>
+    <column id="144" parent="42" name="PASS_WORD">
+      <Position>2</Position>
+      <DataType>varchar(45)|0</DataType>
+      <NotNull>1</NotNull>
     </column>
     <index id="145" parent="42" name="fk_employee_user_status1_idx">
       <ColNames>ACC_STATUS</ColNames>
