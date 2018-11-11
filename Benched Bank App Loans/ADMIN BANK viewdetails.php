@@ -23,7 +23,7 @@
     $loan_info = mysqli_fetch_array($result1 ,MYSQLI_ASSOC); // use this when referring to the personal information of the person
 
 $page_title = 'Loans - View Bank Details';
-include 'GLOBAL_HEADER.php';
+include 'GLOBAL_TEMPLATE_Header.php';
 include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
 

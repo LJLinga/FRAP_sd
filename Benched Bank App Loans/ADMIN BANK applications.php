@@ -22,7 +22,7 @@ $_SESSION['bank_loan_id'] = '';
     }
 
     $page_title = 'Loans - Bank Applications';
-    include 'GLOBAL_HEADER.php';
+    include 'GLOBAL_TEMPLATE_Header.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
 
