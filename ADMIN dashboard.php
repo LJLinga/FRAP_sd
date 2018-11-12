@@ -5,7 +5,6 @@
     include 'GLOBAL_USER_TYPE_CHECKING.php';
     include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
-    require_once('mysql_connect_FA.php');
     $page_title = 'Admin - Dashboard';
     include 'GLOBAL_HEADER.php';
     include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
@@ -25,6 +24,4 @@
 
     </div>
     <!-- /#wrapper -->]
-</body>
-
-</html>
+<?php include 'GLOBAL_FOOTER.php' ?>

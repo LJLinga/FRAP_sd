@@ -24,9 +24,9 @@ $row = mysqli_fetch_assoc($result);
 
 
 
-$_SESSION['HA_RecordID'] == 0;
+$_SESSION['HA_RecordID'] = 0;
 
-$_SESSION['SI_Sibling'] == 0;
+$_SESSION['SI_Sibling'] = 0;
 
 //This retrieves the Sibling's maximum
 $querySISIB = "SELECT MAX(SIBLING_ID) as SIBLING_ID FROM SIBLINGS;";
@@ -41,7 +41,7 @@ else{
     $_SESSION['SI_Sibling'] = $rowSISIB['SI_SIBLING'] + 1;
 }
 
-$_SESSION['CI_Child'] == 0;
+$_SESSION['CI_Child'] = 0;
 
 //This retrieves the Child's maximum
 $queryCIC = "SELECT MAX(CHILD_ID) as CHILD_ID FROM CHILDREN;";

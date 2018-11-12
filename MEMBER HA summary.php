@@ -3,7 +3,7 @@
     session_start();
     include 'GLOBAL_USER_TYPE_CHECKING.php';
 
-    $query = "SELECT MAX(RECORD_ID),APP_STATUS from health_aid WHERE MEMBER_ID = {$_SESSION['idnum']} ";
+    $query = "SELECT RECORD_ID,APP_STATUS from health_aid WHERE MEMBER_ID = {$_SESSION['idnum']} ";
     $result = mysqli_query($dbc,$query);
     $row = mysqli_fetch_array($result);
 

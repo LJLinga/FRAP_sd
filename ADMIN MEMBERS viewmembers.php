@@ -57,11 +57,12 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 
                                         <tr>
 
-                                        <td align="center"><b>ID Number</b></td>
-                                        <td align="center" width="300px"><b>Name</b></td>
-                                        <td align="center"><b>Department</b></td>
-                                        <td align="center"><b>Member Since</b></td>
-                                        <td align="center"><b>Actions</b></td>
+                                            <td align="center"><b>ID Number</b></td>
+                                            <td align="center" width="300px"><b>Name</b></td>
+                                            <td align="center"><b>Department</b></td>
+                                            <td align="center"><b>Member Since</b></td>
+                                            <td align="center"><b>Full/Part Time?</b></td>
+                                            <td align="center"><b>Actions</b></td>
 
                                         </tr>
 
@@ -70,10 +71,14 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                     <tbody>
                                         <?php
 
-                                        $query = "SELECT m.MEMBER_ID, m.FIRSTNAME, m.LASTNAME, m.DATE_APPROVED,  d.DEPT_NAME
+                                        $query = "SELECT m.MEMBER_ID, m.FIRSTNAME, m.LASTNAME, m.DATE_APPROVED,  d.DEPT_NAME, us.STATUS
                                         FROM member m 
                                         join ref_department d
-                                        on m.dept_id = d.dept_id where m.membership_status = 2";
+                                        on m.dept_id = d.dept_id 
+                                        join user_status us 
+                                        on m.USER_STATUS = us.STATUS_ID
+                                        where m.membership_status = 2";
+
                                         $result = mysqli_query($dbc,$query);
 
 
@@ -82,11 +87,12 @@ include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
                                             ?>
                                         <tr>
 
-                                        <td align="center"><?php echo $rows['MEMBER_ID'];?></td>
-                                        <td align="center"><?php echo $rows['FIRSTNAME']." ".$rows['LASTNAME'];?> </td>
-                                        <td align="center"><?php echo $rows['DEPT_NAME'];?></td>
-                                        <td align="center"><?php echo $rows['DATE_APPROVED'];?></td>
-                                        <td align="center">&nbsp;&nbsp;&nbsp;<button type="submit" name="details" class="btn btn-success" value=<?php echo $rows['MEMBER_ID'];?>>Details</button>&nbsp;&nbsp;&nbsp;</td>
+                                            <td align="center"><?php echo $rows['MEMBER_ID'];?></td>
+                                            <td align="center"><?php echo $rows['FIRSTNAME']." ".$rows['LASTNAME'];?> </td>
+                                            <td align="center"><?php echo $rows['DEPT_NAME'];?></td>
+                                            <td align="center"><?php echo $rows['DATE_APPROVED'];?></td>
+                                            <td align="center"><?php echo $rows['STATUS'];?></td>
+                                            <td align="center">&nbsp;&nbsp;&nbsp;<button type="submit" name="details" class="btn btn-success" value=<?php echo $rows['MEMBER_ID'];?>>Details</button>&nbsp;&nbsp;&nbsp;</td>
 
                                         </tr>
                                         <?php }?>

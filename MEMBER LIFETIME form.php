@@ -7,7 +7,7 @@
 
     // compute the date first 
 
-        $query = "SELECT YEAR(DATE_HIRED) as 'year' from member where member_id = ".$_SESSION['idnum']." ";
+        $query = "SELECT YEAR(DATE_APPROVED) as 'year' from member where member_id = ".$_SESSION['idnum']." ";
 
         $hireDate = mysqli_fetch_assoc(mysqli_query($dbc,$query));
 

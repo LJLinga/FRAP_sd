@@ -44,7 +44,7 @@
                             <div>
 
                                 <?php
-                                    $query = "SELECT M.DATE_HIRED, M.CAMPUS, D.DEPT_NAME 
+                                    $query = "SELECT M.DATE_APPROVED, M.CAMPUS, D.DEPT_NAME 
                                     FROM MEMBER M
                                     JOIN ref_department D
                                     ON M.DEPT_ID = D.DEPT_ID
@@ -79,7 +79,7 @@
                             <div>
 
                                 <?php
-                                    $date = date_create($row['DATE_HIRED']);
+                                    $date = date_create($row['DATE_APPROVED']);
                                     echo date_format($date, 'F  j,  Y');
 
                                 ?>

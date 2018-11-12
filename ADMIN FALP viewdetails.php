@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
 <?php
 session_start();
-if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
+require_once('mysql_connect_FA.php');
+include 'GLOBAL_USER_TYPE_CHECKING.php';
+include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
-header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
-
-}
-require_once("mysql_connect_FA.php");
 
 $query = "SELECT * FROM LOANS where LOAN_ID = {$_SESSION['details']} 
                                                   AND loan_detail_id = 1 AND    loan_status != 3";
@@ -110,37 +106,10 @@ $status = mysqli_fetch_assoc($result3);
 
 
 
-
-
+$page_title = 'FALP - View FALP Details';
+include 'GLOBAL_HEADER.php';
+include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>FRAP | Falp Summary</title>
-
-    <link href="css/montserrat.css" rel="stylesheet">
-    <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="css/sb-admin.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-</head>
 <style>
     .slidecontainer {
         width: 100%;
@@ -177,191 +146,6 @@ $status = mysqli_fetch_assoc($result3);
         cursor: pointer;
     }
 </style>
-
-<body>
-
-    <div id="wrapper">
-
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-
-            <div class="navbar-header"> <!-- Logo -->
-
-                <img src="images/I-FA Logo Edited.png" id="ifalogo">
-
-
-                <ul class="nav navbar-right top-nav"> <!-- Top Menu Items / Notifications area -->
-
-                    <li class="dropdown sideicons">
-
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
-
-                        <ul class="dropdown-menu alert-dropdown">
-
-                            <li>
-                                <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
-                            </li>
-
-                            <li>
-                                <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
-                            </li>
-
-                            <li>
-                                <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
-                            </li>
-
-                            <li>
-                                <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
-                            </li>
-
-                            <li>
-                                <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
-                            </li>
-
-                            <li>
-                                <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
-                            </li>
-
-                            <li class="divider"></li>
-
-                            <li>
-                                <a href="#">View All</a>
-                            </li>
-
-                        </ul>
-
-                    </li>
-
-                    <li class="dropdown sideicons">
-
-                        <?php
-                        $query = "SELECT FIRSTNAME, LASTNAME
-                                    from employee
-                                    where EMP_ID =" . $_SESSION['idnum'].";";
-
-                            $result = mysqli_query($dbc, $query);
-                            $row = mysqli_fetch_array($result);
-
-                            $displayName = $row['LASTNAME']." , ".$row['FIRSTNAME'][0].". ";
-
-                        ?>
-
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $displayName ?><b class="caret"></b></a>
-
-                        <ul class="dropdown-menu">
-
-                            <li>
-
-                                <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
-
-                            </li>
-
-                            <li class="divider"></li>
-
-                            <li>
-
-                                <a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
-
-                            </li>
-
-                        </ul>
-
-                    </li>
-
-                </ul>
-
-            </div>
-            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-
-                <ul class="nav navbar-nav side-nav">
-
-                    <li id="top">
-
-                        <a href="ADMIN FALP manual.php"><i class="fa fa-gears" aria-hidden="true"></i> Add Member & FALP Account</a>
-
-                    </li>
-
-                    <li>
-                        <a href="ADMIN MEMBERS viewmembers.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;&nbsp;View All Members</a>
-                    </li>
-
-                    <li>
-
-                        <a href="javascript:;" data-toggle="collapse" data-target="#loans"><i class="fa fa-money" aria-hidden="true"></i> FALP Loans<i class="fa fa-fw fa-caret-down"></i></a>
-
-                        <ul id="loans" class="collapse">
-
-                            <li>
-                                <a href="ADMIN FALP viewactive.php"><i class="fa fa-dollar" aria-hidden="true"></i>&nbsp;View FALP Loans</a>
-                            </li>
-
-                            <li>
-                                <a href="ADMIN FALP only.php"><i class="fa fa-dollar" aria-hidden="true"></i>&nbsp; Add FALP to Member </a>
-                            </li>
-
-                        </ul>
-
-                    </li>
-
-                    <li>
-
-                        <a href="javascript:;" data-toggle="collapse" data-target="#dreports"><i class="fa fa-minus" aria-hidden="true"></i>&nbsp;Deduction Reports<i class="fa fa-fw fa-caret-down"></i></a>
-
-                        <ul id="dreports" class="collapse">
-
-                            <li>
-                                <a href="ADMIN DREPORT general.php"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;&nbsp;General Deductions</a>
-                            </li>
-
-                            <li>
-                                <a href="ADMIN DREPORT detailed.php"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;&nbsp;Detailed Deductions</a>
-                            </li>
-
-                        </ul>
-
-                    </li>
-
-                    <li>
-
-                        <a href="javascript:;" data-toggle="collapse" data-target="#preports"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Periodical Reports<i class="fa fa-fw fa-caret-down"></i></a>
-
-                        <ul id="preports" class="collapse">
-
-                            <li>
-                                <a href="ADMIN PREPORT completed.php"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;&nbsp;Completed Loans</a>
-                            </li>
-
-                            <li>
-                                <a href="ADMIN PREPORT new.php"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;&nbsp;New Deductions</a>
-                            </li>
-
-                        </ul>
-
-                    </li>
-
-                    <li>
-
-                        <a href="ADMIN MREPORT report.php"><i class="fa fa-table" aria-hidden="true"></i> Monthly Report</a>
-
-                    </li>
-
-                    <li>
-
-                        <a href="ADMIN FILEREPO.php"><i class="fa fa-folder-open-o" aria-hidden="true"></i>&nbsp;File Repository</i></a>
-
-                    </li>
-                    <!--
-                    <li>
-
-                        <a href="ADMIN MANAGE.php"><i class="fa fa-gears" aria-hidden="true"></i> Admin Management</a>
-
-                    </li>-->
-
-                </ul>
-
-            </div>
-            <!-- /.navbar-collapse -->
-        </nav>
 
         <div id="page-wrapper">
 
@@ -645,6 +429,4 @@ $status = mysqli_fetch_assoc($result3);
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
 
-</body>
-
-</html>
+<?php include "GLOBAL_FOOTER.php"; ?>
