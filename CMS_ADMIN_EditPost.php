@@ -88,7 +88,19 @@ include 'GLOBAL_HEADER.php';
 include 'GLOBAL_NAV_TopBar.php';
 include 'CMS_ADMIN_NAV_Sidebar.php';
 ?>
-
+<style>
+    @media screen and (min-width: 1200px) {
+        #publishColumn{
+            position: fixed;
+            right:1rem;
+        }
+    }
+    @media screen and (max-width: 1199px) {
+        #publishColumn{
+            position: relative;
+        }
+    }
+</style>
 <script>
     $(document).ready( function(){
 
@@ -98,11 +110,22 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
             // Set the image upload URL
             imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
             // Set the file upload URL.
-            fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
+            fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php'
+            //Allow comments
         });
 
         $('textarea').froalaEditor('html.set', '<?php echo $body?>');
+
+        $('#btnComment').onclick( function(){
+            $('#comment').html($('textarea').froalaEditor('html.getSelected'));
+            alert('hello');
+        });
+
     });
+
+    function addComment(){
+        $('#comment').html($('textarea').froalaEditor('html.getSelected'));
+    }
 </script>
 
 <div id="content-wrapper">
@@ -131,7 +154,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                         <textarea name="post_content" id="post_content"></textarea>
                     </div>
                 </div>
-                <div class="column col-lg-4" style="margin-bottom: 1rem; position:fixed; right:2rem;">
+                <div id="publishColumn" class="column col-lg-4" style="margin-bottom: 1rem; right:1rem;">
 
                     <div class="card" style="margin-bottom: 1rem;">
                         <div class="card-body" >
@@ -177,7 +200,13 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                         </div>
                     </div>
 
-                    <!-- Button -->
+
+                    <div class="card" style="margin-bottom: 1rem;">
+                        <div class="card-body" >
+                            <button type="button" class="btn btn-default" name="btnComment" id="btnComment" onclick="addComment()">Comment</button>
+                           <p id="comment" name="comment"></p>
+                        </div>
+                    </div>
 
                 </div>
 

@@ -36,6 +36,19 @@ include 'GLOBAL_HEADER.php';
 include 'GLOBAL_NAV_TopBar.php';
 include 'CMS_ADMIN_NAV_Sidebar.php';
 ?>
+    <style>
+        @media screen and (min-width: 1200px) {
+            #publishColumn{
+                position: fixed;
+                right:1rem;
+            }
+        }
+        @media screen and (max-width: 1199px) {
+            #publishColumn{
+                position: relative;
+            }
+        }
+    </style>
     <script>
         $(document).ready( function(){
             $('textarea').froalaEditor({
@@ -68,7 +81,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
             <!--Insert success page-->
             <form id="form" name="form" method="POST" action="<?php $_SERVER["PHP_SELF"]?>">
                 <div class="row">
-                    <div class="column col-lg-6">
+                    <div class="column col-lg-7">
                         <!-- Text input-->
                         <div class="form-group">
                             <label for="post_title">Title</label>
@@ -81,10 +94,10 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                             <textarea name="post_content" id="post_content"></textarea>
                         </div>
                     </div>
-                    <div class="column col-lg-4">
+                    <div id="publishColumn" class="column col-lg-4" style="margin-bottom: 1rem;">
 
                         <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-body" style="margin-bottom: 1rem; position:fixed;">
+                            <div class="card-body">
                                 <div class="form-group">
                                     <label for="reference">References</label>
                                     <div id="reference">
@@ -95,7 +108,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                             </div>
                         </div>
 
-                        <div class="card" style="margin-bottom: 1rem; position:fixed;">
+                        <div class="card" style="margin-bottom: 1rem;">
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="submitStatus">Submit Action</label>

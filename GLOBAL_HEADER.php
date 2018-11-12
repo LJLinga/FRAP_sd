@@ -20,7 +20,6 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/tinymce.min.js"></script>
 
     <link href="datatables/dataTables.bootstrap4.css" rel="stylesheet">
     <script src="datatables/jquery.dataTables.js"></script>
@@ -48,8 +47,12 @@
     body{
         padding-top: 1rem;
         padding-bottom: 1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
         background-color: #f0f0f0;
     }
+
+
 
 
 </style>
