@@ -8,9 +8,12 @@ $crud = new GLOBAL_CLASS_CRUD();
  * Date: 10/10/2018
  * Time: 3:48 PM
  */
+
 //hardcoded value for userType, will add MYSQL verification query
 $cmsRole = '3';
-$authorId = '1';
+
+$authorId = '2';
+//John Andrew Santiago
 
 if(isset($_POST['btnSubmit'])){
     $title = $_POST['post_title'];
@@ -36,9 +39,9 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
     <script>
         $(document).ready( function(){
             $('textarea').froalaEditor({
-                //Disables video upload
+                // Disables video upload
                 videoUpload: false,
-                // Set the image upload URL.
+                //
                 imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
                 // Set the file upload URL.
                 fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php'
@@ -81,7 +84,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                     <div class="column col-lg-4">
 
                         <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-body" style="margin-bottom: 1rem;">
+                            <div class="card-body" style="margin-bottom: 1rem; position:fixed;">
                                 <div class="form-group">
                                     <label for="reference">References</label>
                                     <div id="reference">
@@ -92,7 +95,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                             </div>
                         </div>
 
-                        <div class="card" style="margin-bottom: 1rem;">
+                        <div class="card" style="margin-bottom: 1rem; position:fixed;">
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="submitStatus">Submit Action</label>

@@ -17,9 +17,9 @@
 <script>
     $(document).ready(function(){
 
-        var cmsRole = "<?php echo $cmsRole ?>";
-        var edmsRole = "<?php echo $edmsRole ?>";
-        var frapRole = "<?php echo $frapRole ?>";
+        var cmsRole = "";
+        var edmsRole = "";
+        var frapRole = "";
 
         if(cmsRole>1 || edmsRole>1 || frapRole>1){
 

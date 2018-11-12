@@ -30,8 +30,9 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                             <div class="card-body">
                                 <h3 class="card-title"><b><?php echo $row['title'];?></b></h3>
                                 <h5 class="card-subtitle"><i>By: <?php echo $row['name'];?> <br> Posted: <?php echo $row['lastUpdated'] ;?></i>
-                                <div class="collapse" id="collapse<?php echo $row['id']?>">
                                     <p class="card-text" ><?php echo $row['body'] ?></p>
+                                <div class="collapse" id="collapse<?php echo $row['id']?>">
+
                                 </div>
                                 <p>
                                     <a class="card-link" data-toggle="collapse" href="#collapse<?php echo $row['id']?>" role="button" aria-expanded="false" aria-controls="collapse<?php echo $row['id']?>">Read More</a>

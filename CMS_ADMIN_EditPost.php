@@ -13,7 +13,7 @@ $crud = new GLOBAL_CLASS_CRUD();
 
 
 //User Load
-$cmsRole = '2';
+$cmsRole = '3';
 $currentUserId = '1';
 
 //hardcoded value for userType, will add MYSQL verification query
@@ -118,7 +118,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
         <!--Insert success page-->
         <form id="form" name="form" method="POST" action="<?php $_SERVER["PHP_SELF"]?>">
             <div class="row">
-                <div class="column col-lg-6">
+                <div class="column col-lg-7">
                     <!-- Text input-->
                     <div class="form-group">
                         <label for="post_title">Title</label>
@@ -131,7 +131,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                         <textarea name="post_content" id="post_content"></textarea>
                     </div>
                 </div>
-                <div class="column col-lg-4">
+                <div class="column col-lg-4" style="margin-bottom: 1rem; position:fixed; right:2rem;">
 
                     <div class="card" style="margin-bottom: 1rem;">
                         <div class="card-body" >
@@ -145,8 +145,8 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                         </div>
                     </div>
 
-                    <div class="card" >
-                        <div class="card-body">
+                    <div class="card" style="margin-bottom: 1rem;">
+                        <div class="card-body" >
                             Author: <b><?php echo $author; ?></b><br>
                             <i>Created on: <b><?php echo $firstPosted?></b></i><br><br>
 
