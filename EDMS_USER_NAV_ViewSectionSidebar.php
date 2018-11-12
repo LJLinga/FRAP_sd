@@ -12,7 +12,7 @@
         <ul class="nav navbar-nav side-nav">
             <br>
             <li>
-                <a href="javascript:;" data-toggle="collapse" data-target="#Membership"><i class="fa fa-fw fa-folder"></i> 1.0 Membership</a>
+                <a href="javascript:" data-toggle="collapse" data-target="#Membership"><i class="fa fa-fw fa-folder"></i> 1.0 Membership</a>
                 <ul id="Membership" class="collapse">
                     <li style="">
                         <a href="#"><i class="fa fa-fw fa-folder"></i> 1.0.1 Requirements</a>

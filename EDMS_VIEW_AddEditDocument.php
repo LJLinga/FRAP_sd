@@ -8,7 +8,7 @@
 
 include 'GLOBAL_HEADER.php';
 include 'GLOBAL_NAV_TopBar.php';
-include 'EDMS_USER_NAV_ViewDocumentSidebar.php';
+include 'EDMS_USER_NAV_ViewSectionSidebar.php';
 ?>
 
 <div id="page-wrapper">
