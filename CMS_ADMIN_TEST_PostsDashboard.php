@@ -1,27 +1,35 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nicol
- * Date: 10/10/2018
- * Time: 3:48 PM
- */
+///**
+// * Created by PhpStorm.
+// * User: nicol
+// * Date: 10/10/2018
+// * Time: 3:48 PM
+// */
+//
+//include_once('GLOBAL_CLASS_CRUD.php');
+//$crud = new GLOBAL_CLASS_CRUD();
+//
+//$page_title = 'Santinig - Posts Dashboard';
+//include 'GLOBAL_HEADER.php';
+//include 'GLOBAL_NAV_TopBar.php';
+//include 'CMS_ADMIN_NAV_Sidebar.php';
+//?>
 
-include_once('GLOBAL_CLASS_CRUD.php');
-$crud = new GLOBAL_CLASS_CRUD();
-
-$page_title = 'Santinig - Posts Dashboard';
-include 'GLOBAL_HEADER.php';
-include 'GLOBAL_NAV_TopBar.php';
-include 'CMS_ADMIN_NAV_Sidebar.php';
-?>
+<!DOCTYPE html>
+<head>
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css" rel="stylesheet">
+</head>
 
 <script>
     $(document).ready(function() {
-
-        $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
-            $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
-        });
-
+        $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
+            $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+        } );
 
         $('table.table').DataTable( {
             ajax:           'ajax/CMS_POST_ARRAY_ALL.php',
@@ -30,14 +38,12 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
             paging:         false
         } );
 
-        $('#tablePublished').DataTable().search('Published').draw();
-        $('#tablePending').DataTable().search('Pending').draw();
-        $('#tableDraft').DataTable().search('Draft').draw();
-        $('#tableArchived').DataTable().search('Archived').draw();
-
-
-    });
+        // Apply a search to the second table for the demo
+        $('#myTable2').DataTable().search( 'New York' ).draw();
+    } );
 </script>
+
+<body>
 
 <div id="content-wrapper">
 
@@ -59,128 +65,33 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
 
         <div class="row">
 
+            <table id="myTable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Office</th>
+                    <th>Extn.</th>
+                    <th>Start date</th>
+                    <th>Salary</th>
+                </tr>
+                </thead>
+            </table><table id="myTable2" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Office</th>
+                    <th>Extn.</th>
+                    <th>Start date</th>
+                    <th>Salary</th>
+                </tr>
+                </thead>
+            </table>
+
 
         </div>
 
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered" id="tableAll" width="100%" cellspacing="0">
-                        <thead>
-                        <tr>
-
-                            <th align="left" width="200px"><b>Title</b></th>
-                            <th align="left" width="200px"><b>Author</b></th>
-                            <th align="left" width="100px"><b>Status</b></th>
-                            <th align="left" width="200px"><b>Last Updated</b></th>
-                            <th align="right" width="200px"><b>Actions</b></th>
-
-                        </tr>
-                        </thead>
-                        <tfoot>
-                        <tr>
-
-                            <th align="left" width="200px"><b>Title</b></th>
-                            <th align="left" width="200px"><b>Author</b></th>
-                            <th align="left" width="100px"><b>Status</b></th>
-                            <th align="left" width="200px"><b>Last Updated</b></th>
-                            <th align="right" width="200px"><b>Actions</b></th>
-
-                        </tr>
-                        </tfoot>
-                    </table>
-                    <table class="table table-bordered" id="tablePublished" width="100%" cellspacing="0">
-                        <thead>
-                        <tr>
-
-                            <th align="left" width="200px"><b>Title</b></th>
-                            <th align="left" width="200px"><b>Author</b></th>
-                            <th align="left" width="200px"><b>Last Updated</b></th>
-                            <th align="right" width="200px"><b>Actions</b></th>
-
-                        </tr>
-                        </thead>
-                        <tfoot>
-                        <tr>
-
-                            <th align="left" width="200px"><b>Title</b></th>
-                            <th align="left" width="200px"><b>Author</b></th>
-                            <th align="left" width="200px"><b>Last Updated</b></th>
-                            <th align="right" width="200px"><b>Actions</b></th>
-
-                        </tr>
-                        </tfoot>
-                    </table>
-                    <table class="table table-bordered" id="tablePending" width="100%" cellspacing="0">
-                        <thead>
-                        <tr>
-
-                            <th align="left" width="200px"><b>Title</b></th>
-                            <th align="left" width="200px"><b>Author</b></th>
-                            <th align="left" width="200px"><b>Last Updated</b></th>
-                            <th align="right" width="200px"><b>Actions</b></th>
-
-                        </tr>
-                        </thead>
-                        <tfoot>
-                        <tr>
-
-                            <th align="left" width="200px"><b>Title</b></th>
-                            <th align="left" width="200px"><b>Author</b></th>
-                            <th align="left" width="200px"><b>Last Updated</b></th>
-                            <th align="right" width="200px"><b>Actions</b></th>
-
-                        </tr>
-                        </tfoot>
-                    </table>
-                    <table class="table table-bordered" id="tableDraft" width="100%" cellspacing="0">
-                        <thead>
-                        <tr>
-
-                            <th align="left" width="200px"><b>Title</b></th>
-                            <th align="left" width="200px"><b>Author</b></th>
-                            <th align="left" width="200px"><b>Last Updated</b></th>
-                            <th align="right" width="200px"><b>Actions</b></th>
-
-                        </tr>
-                        </thead>
-                        <tfoot>
-                        <tr>
-
-                            <th align="left" width="200px"><b>Title</b></th>
-                            <th align="left" width="200px"><b>Author</b></th>
-                            <th align="left" width="200px"><b>Last Updated</b></th>
-                            <th align="right" width="200px"><b>Actions</b></th>
-
-                        </tr>
-                        </tfoot>
-                    </table>
-                    <table class="table table-bordered" id="tableArchived" width="100%" cellspacing="0">
-                        <thead>
-                        <tr>
-
-                            <th align="left" width="200px"><b>Title</b></th>
-                            <th align="left" width="200px"><b>Author</b></th>
-                            <th align="left" width="200px"><b>Last Updated</b></th>
-                            <th align="right" width="200px"><b>Actions</b></th>
-
-                        </tr>
-                        </thead>
-                        <tfoot>
-                        <tr>
-
-                            <th align="left" width="200px"><b>Title</b></th>
-                            <th align="left" width="200px"><b>Author</b></th>
-                            <th align="left" width="200px"><b>Last Updated</b></th>
-                            <th align="right" width="200px"><b>Actions</b></th>
-
-                        </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-        </div>
 
     </div>
     <!-- /.container-fluid -->
@@ -192,3 +103,5 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
 </div>
 <!-- /#wrapper -->
 
+
+</body>

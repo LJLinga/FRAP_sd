@@ -8,9 +8,12 @@ $crud = new GLOBAL_CLASS_CRUD();
  * Date: 10/10/2018
  * Time: 3:48 PM
  */
+
 //hardcoded value for userType, will add MYSQL verification query
 $cmsRole = '3';
-$authorId = '1';
+
+$authorId = '2';
+//John Andrew Santiago
 
 if(isset($_POST['btnSubmit'])){
     $title = $_POST['post_title'];
@@ -33,12 +36,25 @@ include 'GLOBAL_HEADER.php';
 include 'GLOBAL_NAV_TopBar.php';
 include 'CMS_ADMIN_NAV_Sidebar.php';
 ?>
+    <style>
+        @media screen and (min-width: 1200px) {
+            #publishColumn{
+                position: fixed;
+                right:1rem;
+            }
+        }
+        @media screen and (max-width: 1199px) {
+            #publishColumn{
+                position: relative;
+            }
+        }
+    </style>
     <script>
         $(document).ready( function(){
             $('textarea').froalaEditor({
-                //Disables video upload
+                // Disables video upload
                 videoUpload: false,
-                // Set the image upload URL.
+                //
                 imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
                 // Set the file upload URL.
                 fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php'
@@ -65,7 +81,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
             <!--Insert success page-->
             <form id="form" name="form" method="POST" action="<?php $_SERVER["PHP_SELF"]?>">
                 <div class="row">
-                    <div class="column col-lg-6">
+                    <div class="column col-lg-7">
                         <!-- Text input-->
                         <div class="form-group">
                             <label for="post_title">Title</label>
@@ -78,10 +94,10 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                             <textarea name="post_content" id="post_content"></textarea>
                         </div>
                     </div>
-                    <div class="column col-lg-4">
+                    <div id="publishColumn" class="column col-lg-4" style="margin-bottom: 1rem;">
 
                         <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-body" style="margin-bottom: 1rem;">
+                            <div class="card-body">
                                 <div class="form-group">
                                     <label for="reference">References</label>
                                     <div id="reference">

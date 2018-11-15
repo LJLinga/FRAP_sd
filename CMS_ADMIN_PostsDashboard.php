@@ -20,8 +20,13 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
 ?>
 
 <script>
+
+
     $(document).ready(function() {
-        let table = $('#dataTable').DataTable();
+
+        table = $('#dataTable').DataTable();
+        displayTable(table,'');
+
         $('#tbody').on('click','.archive', function(){
             $.ajax({
                 type: 'POST',
@@ -37,8 +42,28 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
             table.row($(this).parents('tr')).remove().draw();
         });
 
+        $('#btnAll').on('click', function(){
+            displayTable(table, '');
+        });
+        $('#btnPublished').on('click', function(){
+            displayTable(table, 'Published');
+        });
+        $('#btnPending').on('click', function(){
+            displayTable(table, 'Pending')
+        });
+        $('#btnDraft').on('click', function(){
+            displayTable(table, 'Draft');
+        });
+        $('#btnArchived').on('click', function(){
+            displayTable(table, 'Archived');
+        });
+
 
     });
+
+    function displayTable(table, searchText){
+        table.column(2).search(searchText).column(3).order('desc').draw();
+    }
 </script>
 
 <div id="content-wrapper">
@@ -59,12 +84,14 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
             </div>
         </div>
 
-        <div class="row">
-
-
-        </div>
-
         <div class="card mb-3">
+            <div class="card-header">
+                <a type="button" class="btn btn-default" id="btnAll">All</a>
+                <a type="button" class="btn btn-success" id="btnPublished">Published</a>
+                <a type="button" class="btn btn-warning" id="btnPending">Pending Review</a>
+                <a type="button" class="btn btn-primary" id="btnDraft">Drafts</a>
+                <a type="button" class="btn btn-danger" id="btnArchived">Archived</a>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -101,7 +128,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                                                                   FROM posts p JOIN users a ON p.authorId = a.id 
                                                                   JOIN post_status s ON s.id = p.statusId 
                                                                   WHERE s.id = 1 || s.id = 2 || s.id=3 || s.id=4
-                                                                  ");
+                                                                  ORDER BY p.lastUpdated DESC;");
                             foreach ((array) $rows as $key => $row){
                                 ?>
                             <tr>
