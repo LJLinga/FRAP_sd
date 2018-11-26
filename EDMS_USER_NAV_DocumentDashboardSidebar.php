@@ -31,7 +31,7 @@
                 <a href="#"><i class="fa fa-fw fa-folder"></i> Contracts</a>
             </li>
             <li>
-                <a href="#"><i class="fa fa-fw fa-folder"></i> Faculty Manual</a>
+                <a href="EDMS_VIEW_ViewSection.php"><i class="fa fa-fw fa-folder"></i> Faculty Manual</a>
             </li>
             <li>
                 <a href="javascript:;" data-toggle="collapse" data-target="#minutes"><i class="fa fa-fw fa-folder"></i> Minutes <i class="fa fa-fw fa-caret-down"></i></a>

@@ -20,5 +20,9 @@ $(document).ready( function(){
     $("#docRef3B").click(function () {
         $("#docRef3").toggle(100);
     });
+
+    $("#docRef4B").click(function () {
+        $("#docRef4").toggle(100);
+    });
     //-- End
 });

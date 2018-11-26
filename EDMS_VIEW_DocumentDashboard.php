@@ -23,8 +23,26 @@ include 'EDMS_USER_NAV_DocumentDashboardSidebar.php';
             <div class="col-lg-12">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">Documents</h1>
-
+                        <h1 class="page-header">General Files</h1>
+                        <ol class="breadcrumb">
+                            <li class="active">
+                                General Files
+                            </li>
+                            <!-- *this succeeding lines of codes are for the breakdown of the files.
+                            Modify this to be updated when user clicks on a directory and the page refreshes.
+                            The next <li> should be appended here.
+                            Ex. Gen files > User clicks on contract > Gen Files/Contracts is displayed.
+                            Append the class active on the current directory being displayed. See ex. below
+                            <li>
+                                Contracts
+                            </li>
+                            <li class="active">
+                                2018
+                            </li> -->
+                        </ol>
+                        <!-- This table should be updated based on the contents of the current directory being displayed.
+                        Ex. Default, display all the directory as such on the screen. When user navigates to Contracts
+                        > 2018. It should display all contracts for 2018 -->
                         <table class="table table-bordered" align="center" id="dataTable">
                             <thead>
                                 <tr>

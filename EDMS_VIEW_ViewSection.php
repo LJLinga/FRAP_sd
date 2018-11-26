@@ -15,7 +15,7 @@ include 'EDMS_USER_NAV_ViewSectionSidebar.php';
 <div id="page-wrapper">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-9">
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">Faculty Manual</h1>
@@ -47,7 +47,7 @@ include 'EDMS_USER_NAV_ViewSectionSidebar.php';
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
-                                    <div class="panel-heading"><i class="fa fa-fw fa-file-text"></i> Document Section Referenced</div>
+                                    <div id="docRef2B" class="panel-heading"><i class="fa fa-fw fa-file-text"></i> Document Section Referenced</div>
                                     <div id="docRef2">
                                         <div class="panel-body">
                                             No Minutes Section Referenced <br>
@@ -57,9 +57,26 @@ include 'EDMS_USER_NAV_ViewSectionSidebar.php';
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
-                                    <div class="panel-heading"><i class="fa fa-fw fa-file-o"></i> Other Document Referenced</div>
+                                    <div id="docRef3B" class="panel-heading"><i class="fa fa-fw fa-file-o"></i> Other Document Referenced</div>
                                     <div id="docRef3">
                                         <div class="panel-body">No Document Refferenced</div>
+                                        <div class="panel-footer"><button>Add</button></div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div id="docRef4B" class="panel-heading"><i class="fa fa-fw fa-comment"></i> Comments</div>
+                                    <div id="docRef4">
+                                        <div class="panel-body">
+                                            <div class="panel panel-default">
+                                                <div id="" class="panel-heading"><i class="fa fa-fw fa-commenting"></i> Director</div>
+                                                <div id="">
+                                                    <div class="panel-body">
+                                                        <p>I think revise this section of the page</p>
+                                                    </div>
+                                                    <div class="panel-footer"></div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="panel-footer"><button>Add</button></div>
                                     </div>
                                 </div>
@@ -67,6 +84,10 @@ include 'EDMS_USER_NAV_ViewSectionSidebar.php';
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="col-lg-3">
+                <!-- -->
+                <?php include 'EDMS_USER_NAV_ViewSectionBreakdownSidebar.php'; ?>
             </div>
         </div>
     </div>
