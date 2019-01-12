@@ -8,7 +8,7 @@
 
 include 'GLOBAL_HEADER.php';
 include 'GLOBAL_NAV_TopBar.php';
-include 'EDMS_USER_NAV_ViewSectionSidebar.php';
+include 'EDMS_USER_SIDEBAR_ViewSection.php';
 ?>
 <script src="js/aesthetics.js"></script>s
 
@@ -87,7 +87,7 @@ include 'EDMS_USER_NAV_ViewSectionSidebar.php';
             </div>
             <div class="col-lg-3">
                 <!-- -->
-                <?php include 'EDMS_USER_NAV_ViewSectionBreakdownSidebar.php'; ?>
+                <?php include 'EDMS_USER_SIDEBAR_ViewSectionBreakdown.php'; ?>
             </div>
         </div>
     </div>

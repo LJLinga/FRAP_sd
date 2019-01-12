@@ -77,7 +77,7 @@ $result=mysqli_query($dbc,$query);
 
     $page_title = 'Loans - Detailed Report';
     include 'GLOBAL_HEADER.php';
-    include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
+    include 'FRAP_ADMIN_SIDEBAR.php';
 
 ?>
         <div id="page-wrapper">

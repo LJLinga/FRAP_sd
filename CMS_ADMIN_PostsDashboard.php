@@ -8,6 +8,7 @@
 
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
+//require_once ("mysql_connect_FA.php");
 
 $userType = 'editor';
 // editor can edit all published posts
@@ -15,8 +16,7 @@ $userType = 'editor';
 
 $page_title = 'Santinig - Posts Dashboard';
 include 'GLOBAL_HEADER.php';
-include 'GLOBAL_NAV_TopBar.php';
-include 'CMS_ADMIN_NAV_Sidebar.php';
+include 'CMS_ADMIN_SIDEBAR.php';
 ?>
 
 <script>
@@ -25,7 +25,8 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
     $(document).ready(function() {
 
         table = $('#dataTable').DataTable();
-        displayTable(table,'');
+        displayTable(table,'')
+        $('.card-footer').html('Updated on '+table.cell(0,3).data());
 
         $('#tbody').on('click','.archive', function(){
             $.ajax({
@@ -85,7 +86,7 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
         </div>
 
         <div class="card mb-3">
-            <div class="card-header">
+            <div class="card-header btn-group" data-toggle="buttons">
                 <a type="button" class="btn btn-default" id="btnAll">All</a>
                 <a type="button" class="btn btn-success" id="btnPublished">Published</a>
                 <a type="button" class="btn btn-warning" id="btnPending">Pending Review</a>
@@ -150,9 +151,8 @@ include 'CMS_ADMIN_NAV_Sidebar.php';
                     </table>
                 </div>
             </div>
-            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+            <div class="card-footer small text-muted"><b>Updated yesterday at 11:59 PM</b>5</div>
         </div>
-
     </div>
     <!-- /.container-fluid -->
 

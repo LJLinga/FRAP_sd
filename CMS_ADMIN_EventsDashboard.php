@@ -11,8 +11,7 @@ $crud = new GLOBAL_CLASS_CRUD();
 
 $page_title = 'Santinig - Events Dashboard';
 include 'GLOBAL_HEADER.php';
-include 'GLOBAL_NAV_TopBar.php';
-include 'CMS_ADMIN_NAV_Sidebar.php';
+include 'CMS_ADMIN_SIDEBAR.php';
 ?>
 
 <script>

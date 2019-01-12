@@ -10,10 +10,7 @@ include 'GLOBAL_CLASS_CRUD.php';
 $crud = new GLOBAL_CLASS_CRUD();
 
 include 'GLOBAL_HEADER.php';
-include 'GLOBAL_NAV_TopBar.php';
-
-//change into USER sidebar
-include 'CMS_ADMIN_NAV_Sidebar.php';
+include 'CMS_ADMIN_SIDEBAR.php';
 
 ?>
     <div class="container-fluid">

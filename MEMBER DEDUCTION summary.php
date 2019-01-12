@@ -29,7 +29,7 @@
 
     $page_title = 'Loans - Audit Trail';
     include 'GLOBAL_HEADER.php';
-    include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
+    include 'FRAP_USER_SIDEBAR.php';
 ?>
         <div id="page-wrapper">
 

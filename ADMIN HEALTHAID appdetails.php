@@ -1,5 +1,5 @@
 <?php
-    srequire_once ("mysql_connect_FA.php");
+    require_once ("mysql_connect_FA.php");
     session_start();
     include 'GLOBAL_USER_TYPE_CHECKING.php';
     include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
@@ -45,7 +45,7 @@
 
     $page_title = 'Loans - Health Aid Application Details';
     include 'GLOBAL_HEADER.php';
-    include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
+    include 'FRAP_ADMIN_SIDEBAR.php';
 ?>
 
 <!---

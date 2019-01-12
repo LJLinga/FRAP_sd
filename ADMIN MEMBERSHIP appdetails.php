@@ -70,7 +70,7 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
 $page_title = 'Loans - Membership Application Details';
 include 'GLOBAL_HEADER.php';
-include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
+include 'FRAP_ADMIN_SIDEBAR.php';
 
 ?>
         <div id="page-wrapper">

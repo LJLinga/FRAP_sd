@@ -13,6 +13,8 @@ $crud = new GLOBAL_CLASS_CRUD();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
+
+
 //hardcoded value for userType, will add MYSQL verification query
 
 if(!empty($_GET['postId'])){
@@ -119,9 +121,15 @@ include 'CMS_ADMIN_SIDEBAR.php';
 
     });
 
-    function addComment(){
-        $('#comment').html($('textarea').froalaEditor('html.getSelected'));
-    }
+    $('#datetimepicker1').datetimepicker( {
+        minDate: moment(),
+        locale: moment().local('ph')
+    });
+
+    $('#datetimepicker2').datetimepicker( {
+        minDate: moment(),
+        locale: moment().local('ph')
+    });
 </script>
 
 <div id="content-wrapper">
@@ -200,7 +208,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
                     <div class="card" style="margin-bottom: 1rem;">
                         <div class="card-body" >
                             <button type="button" class="btn btn-default" name="btnComment" id="btnComment" onclick="addComment()">Comment</button>
-                           <p id="comment" name="comment"></p>
+                            <p id="comment" name="comment"></p>
                         </div>
                     </div>
 

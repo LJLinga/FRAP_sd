@@ -358,7 +358,7 @@
 
 $page_title = 'Loans - FALP Application Sent';
 include 'GLOBAL_HEADER.php';
-include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
+include 'FRAP_USER_SIDEBAR.php';
 
 ?>
 

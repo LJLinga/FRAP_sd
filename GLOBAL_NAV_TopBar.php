@@ -5,28 +5,7 @@
  * Date: 10/4/2018
  * Time: 2:09 PM
  */
-
-//check which user type
-
-
-// 1 for Reader
-// 2 for Author
-// 3 for Editor
-
 ?>
-<script>
-    $(document).ready(function(){
-
-        var cmsRole = "";
-        var edmsRole = "";
-        var frapRole = "";
-
-        if(cmsRole>1 || edmsRole>1 || frapRole>1){
-
-        }
-
-    });
-</script>
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="navbar-header"> <!-- Logo -->
 
@@ -105,18 +84,21 @@
             </li>
 
             <li class="dropdown sideicons">
+                <?php
+                $query = "SELECT LASTNAME, FIRSTNAME FROM employee
+                                    
+                        WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
 
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Jo, Melton <b class="caret"></b></a>
+                $result = mysqli_query($dbc, $query);
+                $row = mysqli_fetch_array($result);
+
+                $displayName = $row['LASTNAME']." , ".$row['FIRSTNAME'][0].". ";
+
+                ?>
+
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $displayName; ?> <b class="caret"></b></a>
 
                 <ul class="dropdown-menu">
-
-                    <li>
-
-                        <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
-
-                    </li>
-
-                    <li class="divider"></li>
 
                     <li>
 

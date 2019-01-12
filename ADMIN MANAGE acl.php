@@ -6,7 +6,7 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
     $page_title = 'Loans - Manage ACL';
     include 'GLOBAL_HEADER.php';
-    include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
+    include 'FRAP_ADMIN_SIDEBAR.php';
 ?>
 
 <style>

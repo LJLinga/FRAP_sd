@@ -8,7 +8,7 @@
 
 include 'GLOBAL_HEADER.php';
 include 'GLOBAL_NAV_TopBar.php';
-include 'EDMS_USER_NAV_DocumentDashboardSidebar.php';
+include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
 ?>
 
 <script>

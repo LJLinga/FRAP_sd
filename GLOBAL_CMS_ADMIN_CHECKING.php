@@ -11,10 +11,13 @@
 
 $query = "SELECT CMS_ROLE FROM employee WHERE MEMBER_ID = '{$_SESSION['idnum']}' ";
 $row = mysqli_query($dbc, $query);
-$frapRole = mysqli_fetch_array($row);
+$cmsRole = mysqli_fetch_array($row);
 
-if($frapRole['CMS_ROLE'] == 1){ // 1 = Member in frap/cms/edms terms basically the most basic privilege.
+if($cmsRole['CMS_ROLE'] == 1){ // 1 = Member in frap/cms/edms terms basically the most basic privilege.
 
     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER dashboard.php");
 
+}else{
+    $cmsRole = $cmsRole['CMS_ROLE'];
+    $userId = $_SESSION['idnum'];
 }

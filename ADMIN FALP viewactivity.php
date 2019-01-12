@@ -17,7 +17,7 @@ $result = mysqli_query($dbc,$query1);
 
 $page_title = 'FALP - View Active';
 include 'GLOBAL_HEADER.php';
-include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
+include 'FRAP_ADMIN_SIDEBAR.php';
 
 ?>
 

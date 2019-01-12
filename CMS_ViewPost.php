@@ -17,7 +17,7 @@ $content = "Content from SQL query: The quick brown fox jumps over the lazy dog"
 
 $head = $title;
 include 'GLOBAL_HEADER.php';
-include 'CMS_ADMIN_NAV_Sidebar.php';
+include 'CMS_ADMIN_SIDEBAR.php';
 ?>
 <script>
 

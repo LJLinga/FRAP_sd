@@ -16,7 +16,7 @@
 
 $page_title = 'Loans - Bank Activity';
 include 'GLOBAL_HEADER.php';
-include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
+include 'FRAP_USER_SIDEBAR.php';
 ?>
         <div id="page-wrapper">
             <div class="container-fluid">

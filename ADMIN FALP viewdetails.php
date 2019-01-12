@@ -108,7 +108,7 @@ $status = mysqli_fetch_assoc($result3);
 
 $page_title = 'FALP - View FALP Details';
 include 'GLOBAL_HEADER.php';
-include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
+include 'FRAP_ADMIN_SIDEBAR.php';
 ?>
 <style>
     .slidecontainer {

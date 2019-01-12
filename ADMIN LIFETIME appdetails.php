@@ -90,7 +90,7 @@
 
     $page_title = 'Loans - Lifetime Application Details';
     include 'GLOBAL_HEADER.php';
-    include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
+    include 'FRAP_ADMIN_SIDEBAR.php';
 
 ?>
 
