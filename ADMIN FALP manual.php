@@ -627,7 +627,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                                  <label>
                                                 <span class="labelspan">Campus Registered<big class="req"> *</big></span>
-                                                <input type="text" class="form-control memname" placeholder="First Name" name="campus"  <?php if(isset($_POST['campus'])){
+                                                <input type="text" class="form-control memname" placeholder="Campus" name="campus"  <?php if(isset($_POST['campus'])){
                                                 	echo "value = '{$_POST['campus']}'";
                                                 } ?>>
                                                 </label>
@@ -1005,7 +1005,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     </div>
                                     <div class="row" id = "falpInfo">
 	                                    <div class="col-lg-4">
-												 <span class="labelspan"><b>ID of Employee Hired</b></span><big class="req">*</big>
+												 <span class="labelspan"><b>ID of Employee Approved</b></span><big class="req">*</big>
 	                                                <input type="text" minlength = "8" maxlength="8" class="form-control memname" placeholder="e.g. 09000000" name="fEmp_ID" <?php if(isset($_POST['fEmp_ID'])){
                                                 	echo "value = '{$_POST['fEmp_ID']}'";
                                                 } ?>>
@@ -1194,7 +1194,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                         </div>
                                         <div class="col-lg-4">
-											 <span class="labelspan"><b>ID of Employee Hired</b></span><big class="req">*</big>
+											 <span class="labelspan"><b>ID of Employee Approved</b></span><big class="req">*</big>
                                                 <input type="text" minlength = "8" maxlength="8" class="form-control memname" placeholder="e.g. 09000000" name="lEmp_ID" <?php if(isset($_POST['lEmp_ID'])){
                                                 	echo "value = '{$_POST['lEmp_ID']}'";
                                                 } ?>>
