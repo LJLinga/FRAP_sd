@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
 <?php
     error_reporting(0);
     require_once ("mysql_connect_FA.php");
@@ -8,36 +6,37 @@
     include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
 
-if(!isset($_POST['select_date'])){
-   $query = "SELECT max(day(txn_date)) as 'Day',max(month(txn_date)) as 'Month',max(Year(txn_date)) as 'Year' from txn_reference where txn_type = 2";
-   $result = mysqli_query($dbc,$query);
-   $row = mysqli_fetch_assoc($result);
-   $date = $row['Month']."-".$row['Year'];
-   
-   $month =$row['Month'];
-   $year =$row['Year'];
-}
-else {
-    if($_POST['date'] != "0"){
-        $date = $_POST['date'];
+    if(!isset($_POST['select_date'])){
+       $query = "SELECT max(day(txn_date)) as 'Day',max(month(txn_date)) as 'Month',max(Year(txn_date)) as 'Year' from txn_reference where txn_type = 2";
+       $result = mysqli_query($dbc,$query);
+       $row = mysqli_fetch_assoc($result);
+       $date = $row['Month']."-".$row['Year'];
 
-        $month = substr($date,0,strpos($date,"-"));
-        $year = substr($date,strpos($date,"-")+1);
-        }
-    
-    else{
-        $query = "SELECT max(day(txn_date)) as 'Day',max(month(txn_date)) as 'Month',max(Year(txn_date)) as 'Year' from txn_reference where txn_type = 2";
-        $result = mysqli_query($dbc,$query);
-        $row = mysqli_fetch_assoc($result);
-        $date = $row['Month']."-".$row['Year'];
-        
-           $month =$row['Month'];
-           $year =$row['Year'];
+       $month =$row['Month'];
+       $year =$row['Year'];
     }
-    $page_title = 'Loans - Collected Membership Fees';
-    include 'GLOBAL_HEADER.php';
-    include 'FRAP_ADMIN_SIDEBAR.php';
+    else {
+        if($_POST['date'] != "0"){
+            $date = $_POST['date'];
+
+            $month = substr($date,0,strpos($date,"-"));
+            $year = substr($date,strpos($date,"-")+1);
+            }
+
+        else{
+            $query = "SELECT max(day(txn_date)) as 'Day',max(month(txn_date)) as 'Month',max(Year(txn_date)) as 'Year' from txn_reference where txn_type = 2";
+            $result = mysqli_query($dbc,$query);
+            $row = mysqli_fetch_assoc($result);
+            $date = $row['Month']."-".$row['Year'];
+
+               $month =$row['Month'];
+               $year =$row['Year'];
+        }
+
 }
+$page_title = 'Loans - Collected Membership Fees';
+include 'GLOBAL_HEADER.php';
+include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
 
         <div id="page-wrapper">
@@ -303,13 +302,6 @@ else {
 
     </div>
     <!-- /#wrapper -->
-
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-
     <script type="text/javascript" src="DataTables/datatables.min.js"></script>
     <script type="text/javascript">
 
@@ -323,6 +315,4 @@ else {
 
     </script>
 
-</body>
-
-</html>
+<?php include "GLOBAL_FOOTER.php" ?>

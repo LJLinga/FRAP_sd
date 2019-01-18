@@ -28,16 +28,21 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
                 echo 'alert("This person has a current Loan and has not paid 50% of it!")';
                 echo '</script>';
 
-            }else{
+            }else {
+                // 500 per month.
+                // 250 per payment.
+                $halfterms = $_POST['terms'];
+                $perPayment = $_POST['amount'] / $halfterms + 250;
 
                 $query = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,PICKUP_STATUS)
-                      values({$idNum},1,{$_POST['amount']},5,{$_POST['terms']},{$_POST['amount']}+{$_POST['amount']}*5/100,({$_POST['amount']}+{$_POST['amount']}*5/100)/{$_POST['terms']},2,2,DATE(now()),1);";
+                                      values({$idNum},1,{$_POST['amount']},500,{$terms},{$_POST['amount']}+(500*{$terms}),{$perPayment},2,2,DATE(now()),1);";
 
-                mysqli_query($dbc,$query);
+                mysqli_query($dbc, $query);
 
                 $success = "yes";
-
             }
+
+
 
         }else{
             echo '<script language="javascript">';
@@ -53,7 +58,7 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
 $page_title = 'FALP - Only ';
 include 'GLOBAL_HEADER.php';
-include 'FRAP_ADMIN_SIDEBAR.php';
+include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
 
         <div id="page-wrapper">
@@ -102,6 +107,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                     <td align="center"><b>ID Number</b></td>
                                                     <td align="center" width="300px"><b>Name</b></td>
                                                     <td align="center"><b>Department</b></td>
+                                                    <td align="center"><b>Full-Time/Part-Time?</b></td>
                                                     <td align="center"><b>Member Since</b></td>
 
 
@@ -111,8 +117,13 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                                 <tbody>
                                                 <?php
-                                                $query2 = "SELECT * FROM member m join ref_department d
-                                                          on m.dept_id = d.dept_id where m.membership_status = 2";
+                                                $query2 = "SELECT m.MEMBER_ID, m.FIRSTNAME, m.LASTNAME,  u.STATUS, d.DEPT_NAME, m.DATE_APPROVED
+                                                           FROM member m 
+                                                           join ref_department d
+                                                           on m.dept_id = d.dept_id
+                                                           join user_status u 
+                                                           on m.USER_STATUS = u.STATUS_ID
+                                                           where m.membership_status = 2";
                                                         $result2 = mysqli_query($dbc,$query2);
 
 
@@ -126,6 +137,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                         <td align="center"><?php echo $row2['MEMBER_ID'];?></td>
                                                         <td align="center"><?php echo $row2['FIRSTNAME']." ".$row2['LASTNAME'];?> </td>
                                                         <td align="center"><?php echo $row2['DEPT_NAME'];?></td>
+                                                        <td align="center"><?php echo $row2['STATUS'];?></td>
                                                         <td align="center"><?php echo $row2['DATE_APPROVED'];?></td>
 
                                                     </tr>
@@ -220,33 +232,58 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
     <script src="js/bootstrap.min.js"></script>
 <script>
-        document.getElementById("falpcompute").onclick = function() {calculate()};
+        document.getElementById("falpcompute").onclick = function() {
+            checkform();
+        };
         
         function calculate(){
             
             var amount = parseFloat(document.getElementById("amount").value);
             var terms = parseFloat(document.getElementById("terms").value);
-            var interest = 5;
+            var interest = 500;
+            var halfterms = terms/2;
             
-            document.getElementById("totalI").innerHTML ="<b>Total Interest Payable: </b>₱"+ parseFloat((amount*interest/100)).toFixed(2);
-            document.getElementById("totalP").innerHTML ="<b>Total Amount Payable: </b> ₱"+ parseFloat((amount+amount*interest/100)).toFixed(2);
-            document.getElementById("PerP").innerHTML ="<b>Per Payment Period Payable: </b> ₱ "+ parseFloat(((amount+amount*interest/100)/terms)).toFixed(2);
-            document.getElementById("Monthly").innerHTML ="<b>Monthly Payable: </b> ₱"+ parseFloat(((amount+amount*interest/100)/(terms/2))).toFixed(2);
-            
+            document.getElementById("totalI").innerHTML ="<b>Total Interest Payable: </b>₱"+ parseFloat((interest*halfterms)).toFixed(2);
+            document.getElementById("totalP").innerHTML ="<b>Total Amount Payable: </b> ₱"+ parseFloat((amount+(interest*halfterms))).toFixed(2);
+            document.getElementById("PerP").innerHTML ="<b>Per Payment Period Payable: </b> ₱ "+ parseFloat((amount/terms + (interest/2))).toFixed(2);
+            document.getElementById("Monthly").innerHTML ="<b>Monthly Payable: </b> ₱"+ parseFloat(((amount/halfterms) + interest)).toFixed(2);
+
         }
-        
+
+
         function checkform(){
 
             var amount = parseFloat(document.getElementById("amount").value);
             var terms = parseFloat(document.getElementById("terms").value);
 
-            if(isNaN(amount)||isNaN(terms)){
-                alert("Invalid Input in FALP Account Information");
+            if(amount<5000){
+                alert("Amount entered is below minimum. Please enter amount within the range.");
                 return false;
             }
-            return true;
+            else if(amount >25000){
+                alert("Amount entered is above maximum. Please enter amount within the range.");
+                return false;
+            }
+            else if(isNaN(amount)){
+                alert("Invalid Input");
+                return false;
+            }else if (isNaN(terms)){
+                alert("No Terms");
+                return false;
+            } else{
+                calculate();
+                return true;
+            }
 
         }
+
+
+        $(document).ready(function(){
+
+            $('#table').DataTable();
+
+        });
+
     </script>
 
 <?php include 'GLOBAL_FOOTER.php'; ?>

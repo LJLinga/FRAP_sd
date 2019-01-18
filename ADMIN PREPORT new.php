@@ -2,11 +2,12 @@
 <html lang="en">
 <?php
 session_start();
- if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
+error_reporting(0);
+require_once ("mysql_connect_FA.php");
+session_start();
+include 'GLOBAL_USER_TYPE_CHECKING.php';
+include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
-            
-    }
 require_once('mysql_connect_FA.php');
 $flag=0;
 if(isset($_POST['print'])){
@@ -56,7 +57,7 @@ $result=mysqli_query($dbc,$query);
 
 $page_title = 'Loans - New Deductions';
 include 'GLOBAL_HEADER.php';
-include 'FRAP_ADMIN_SIDEBAR.php';
+include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 ?>
 
         <div id="page-wrapper">

@@ -12,7 +12,7 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
 
 $success = null;
 
-    $queryDept = "SELECT * FROM REF_DEPARTMENT";
+    $queryDept = "SELECT * FROM REF_DEPAR";
     $resultDept = mysqli_query($dbc, $queryDept);
 
     $queryCiv = "SELECT * FROM CIV_STATUS";
@@ -197,7 +197,7 @@ $success = null;
 
 $page_title = 'FALP - Details';
 include 'GLOBAL_HEADER.php';
-include 'FRAP_ADMIN_SIDEBAR.php';
+include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 
 ?>
         <div id="page-wrapper">

@@ -43,7 +43,7 @@
 
     $page_title = 'Loans - FALP Application';
     include 'GLOBAL_HEADER.php';
-    include 'FRAP_USER_SIDEBAR.php';
+    include 'LOAN_TEMPLATE_NAVIGATION_Member.php';
 ?>
 <script>
 
@@ -52,40 +52,48 @@
         document.getElementById("falpcompute").onclick = function() {
             checkform();
         };
+        document.getElementById("falpcompute").onclick = function() {
+            checkform();
+        };
+
         function calculate(){
 
             var amount = parseFloat(document.getElementById("amount").value);
             var terms = parseFloat(document.getElementById("terms").value);
-            var interest = 5;
+            var interest = 500;
+            var halfterms = terms/2;
 
-            document.getElementById("totalI").innerHTML ="<b>Total Interest Payable: </b>₱"+ parseFloat((amount*interest/100)).toFixed(2);
-            document.getElementById("totalP").innerHTML ="<b>Total Amount Payable: </b> ₱"+ parseFloat((amount+amount*interest/100)).toFixed(2);
-            document.getElementById("PerP").innerHTML ="<b>Per Payment Period Payable: </b> ₱ "+ parseFloat(((amount+amount*interest/100)/terms/2)).toFixed(2);
-            document.getElementById("Monthly").innerHTML ="<b>Monthly Payable: </b> ₱"+ parseFloat(((amount+amount*interest/100)/terms)).toFixed(2);
+            document.getElementById("totalI").innerHTML ="<b>Total Interest Payable: </b>₱"+ parseFloat((interest*halfterms)).toFixed(2);
+            document.getElementById("totalP").innerHTML ="<b>Total Amount Payable: </b> ₱"+ parseFloat((amount+(interest*halfterms))).toFixed(2);
+            document.getElementById("PerP").innerHTML ="<b>Per Payment Period Payable: </b> ₱ "+ parseFloat((amount/terms + (interest/2))).toFixed(2);
+            document.getElementById("Monthly").innerHTML ="<b>Monthly Payable: </b> ₱"+ parseFloat(((amount/halfterms) + interest)).toFixed(2);
 
         }
+
 
         function checkform(){
 
             var amount = parseFloat(document.getElementById("amount").value);
+            var terms = parseFloat(document.getElementById("terms").value);
 
             if(amount<5000){
                 alert("Amount entered is below minimum. Please enter amount within the range.");
                 return false;
             }
-            else if(amount >20000){
-                alert("Amount entered is above maximum.Please enter amount within the range.");
+            else if(amount >25000){
+                alert("Amount entered is above maximum. Please enter amount within the range.");
                 return false;
             }
             else if(isNaN(amount)){
                 alert("Invalid Input");
                 return false;
-            }else{
+            }else if (isNaN(terms)){
+                alert("No Terms");
+                return false;
+            } else{
                 calculate();
                 return true;
             }
-
-
 
         }
     });

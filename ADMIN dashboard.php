@@ -5,9 +5,10 @@
     include 'GLOBAL_USER_TYPE_CHECKING.php';
     include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
+
     $page_title = 'Admin - Dashboard';
     include 'GLOBAL_HEADER.php';
-    include 'FRAP_ADMIN_SIDEBAR.php';
+    include 'LOAN_TEMPLATE_NAVIGATION_Admin.php';
 
 
 ?>
