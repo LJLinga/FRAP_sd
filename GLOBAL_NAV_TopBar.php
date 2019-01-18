@@ -85,15 +85,14 @@
 
             <li class="dropdown sideicons">
                 <?php
-                $query = "SELECT LASTNAME, FIRSTNAME FROM employee
-                                    
-                        WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
+                    $query = "SELECT LASTNAME, FIRSTNAME FROM employee
+                                        
+                            WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
 
-                $result = mysqli_query($dbc, $query);
-                $row = mysqli_fetch_array($result);
+                    $result = mysqli_query($dbc, $query);
+                    $row = mysqli_fetch_array($result);
 
-                $displayName = $row['LASTNAME']." , ".$row['FIRSTNAME'][0].". ";
-
+                    $displayName = $row['LASTNAME']." , ".$row['FIRSTNAME'][0].". ";
                 ?>
 
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $displayName; ?> <b class="caret"></b></a>
