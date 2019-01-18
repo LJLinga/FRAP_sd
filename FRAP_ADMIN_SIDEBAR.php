@@ -5,6 +5,9 @@
                         <a href="ADMIN FALP manual.php"><i class="fa fa-gears" aria-hidden="true"></i> Add Member & FALP Account</a>
                     </li>
                     <li>
+                        <a href="ADMIN%20FALP%20only.php"><i class="fa fa-dollar" aria-hidden="true"></i>&nbsp;&nbsp;View All Members</a>
+                    </li>
+                    <li>
                         <a href="ADMIN MEMBERS viewmembers.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;&nbsp;View All Members</a>
                     </li>
                     <li>
