@@ -295,8 +295,9 @@ $success = null;
                 		if(!empty($_POST['fAmountPaid'])){
                 			$falpPaid = $_POST['fAmountPaid'];
 		            	}
+
 		                $query = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,DATE_APPROVED,PICKUP_STATUS,AMOUNT_PAID,EMP_ID)
-		                          values({$_POST['idNum']},1,{$_POST['amount']},5,{$_POST['terms']},{$_POST['amount']}+{$_POST['amount']}*5/100,({$_POST['amount']}+{$_POST['amount']}*5/100)/{$_POST['terms']}/2,2,2,'{$fdateappl}','{$fdateapp}',1,{$falpPaid},{$_POST['fEmp_ID']});";
+		                          values({$_POST['idNum']},1,{$_POST['amount']},5,{$_POST['terms']},{$_POST['amount']}+{$_POST['amount']}*5/100,({$_POST['amount']}+{$_POST['amount']}*5/100)/{$_POST['terms']}/2,2,2,'{$fdateappl}','{$fdateapp}',{$_POST['pickupStatus']},{$falpPaid},{$_POST['fEmp_ID']});";
 
 		               mysqli_query($dbc,$query);
 		               
