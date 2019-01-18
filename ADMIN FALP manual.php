@@ -1,18 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SB Admin - Bootstrap Admin Template</title>
+
+    <link href="css/montserrat.css" rel="stylesheet">
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/sb-admin.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="buttonsstyle.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"> 
+    </script>
+
+     
+
+    <script> $(function(){
+     	$('#scrollToTopScript').load('scrollToTop.html');
+     });
+    </script>
+</head>
 
 <?php
-require_once ("mysql_connect_FA.php");
+
 session_start();
+require_once("mysql_connect_FA.php");
 include 'GLOBAL_USER_TYPE_CHECKING.php';
 include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
-
-/*-------FILE REPO STUFF------
+/*-------FILE REPO STUFF------*/
 $_SESSION['parentFolderID']="";
 $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
 /*-------FILE REPO STUFF END------*/
+if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
 
+header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
 
-
+}
 $success = null;
 
     $queryDept = "SELECT * FROM REF_DEPARTMENT";
@@ -171,6 +212,7 @@ $success = null;
 
                $haddress = $_POST['haddress'];
                $honum = $_POST['honum'];
+               $campus = $_POST['campus'];
                //set dates
 
                $birthdate = $bYear . "-" . $bMonth . "-" . $bDay;
@@ -181,22 +223,19 @@ $success = null;
                $fdateappl = $faYear . "-" . $faMonth . "-" . $faDay;
                $ldateapp = $lYear . "-" . $lMonth . "-" . $lDay;
                $ldateappl = $laYear . "-" . $laMonth . "-" . $laDay;
-
-
                if(!empty($_POST['bunum']) && !empty($_POST['baddress'])){ //if the business number is not empty
                      $bunum = $_POST['bunum'];
                      $baddress = $_POST['baddress'];
 
 
-                     $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME,CIV_STATUS, MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, BUSINESS_NUM, HOME_ADDRESS, BUSINESS_ADDRESS, DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE) 
-                                          VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat},'{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}','{$baddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','{$emp_ID}')";
+                     $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME,CIV_STATUS, MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, BUSINESS_NUM, HOME_ADDRESS, BUSINESS_ADDRESS, DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,CAMPUS) 
+                                          VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat},'{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}','{$baddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','{$emp_ID}','{$campus}')";
 
                       $result = mysqli_query($dbc,$query1);
 
                       $pw = "password";
 
-                      $query2 = "INSERT INTO employee (EMP_ID, PASS_WORD, FIRSTNAME, LASTNAME ,FIRST_CHANGE_PW,DATE_CREATED,ACC_STATUS,EDMS_ROLE, CMS_ROLE, FRAP_ROLE, MEMBER_ID) 
-                                                VALUES ('{$idNum}', PASSWORD('{$pw}'), $fName, $lName, '0', NOW(), 1, 1,1,1, '{$idNum}');";
+                      $query2 = "INSERT INTO MEMBER_ACCOUNT (MEMBER_ID, PASSWORD, FIRST_CHANGE_PW) VALUES ('{$idNum}', PASSWORD('{$pw}'), '0');";
                 $result2 = mysqli_query($dbc, $query2); 
 
                }
@@ -205,17 +244,14 @@ $success = null;
                     $bunum = $_POST['bunum'];
 
                     $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME,MIDDLENAME,CIV_STATUS,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, BUSINESS_NUM, HOME_ADDRESS, 
-                          DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE) VALUES ('{$idNum}','{$fName}','{$lName}','{$mName}',{$civStat},{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','{$emp_ID}')"; 
+                          DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,CAMPUS) VALUES ('{$idNum}','{$fName}','{$lName}','{$mName}',{$civStat},{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','{$emp_ID}','{$campus}')"; 
 
 
                       $result = mysqli_query($dbc,$query1); 
 
                       $pw = "password";
 
-                   $query2 = "INSERT INTO employee (EMP_ID, PASS_WORD, FIRSTNAME, LASTNAME ,FIRST_CHANGE_PW,DATE_CREATED,ACC_STATUS,EDMS_ROLE, CMS_ROLE, FRAP_ROLE, MEMBER_ID) 
-                                                VALUES ('{$idNum}', PASSWORD('{$pw}'), $fName, $lName, '0', NOW(), 1, 1,1,1, '{$idNum}');";
-
-
+                      $query2 = "INSERT INTO MEMBER_ACCOUNT (MEMBER_ID, PASSWORD, FIRST_CHANGE_PW) VALUES ('{$idNum}', PASSWORD('{$pw}'), '0');";
                 $result2 = mysqli_query($dbc, $query2);
 
                }
@@ -224,16 +260,15 @@ $success = null;
                     $baddress = $_POST['baddress'];
 
                     $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS, MIDDLENAME, SEX, BIRTHDATE, DATE_HIRED, HOME_NUM, HOME_ADDRESS, BUSINESS_ADDRESS, 
-                          DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE) VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},'{$haddress}','{$baddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','{$emp_ID}')"; 
+                          DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,CAMPUS) VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},'{$haddress}','{$baddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','{$emp_ID}','{$campus}')"; 
 
 
-                    $result = mysqli_query($dbc,$query1);
+                     $result = mysqli_query($dbc,$query1); 
 
-                    $pw = "password";
+                     $pw = "password";
 
-                    $query2 = "INSERT INTO employee (EMP_ID, PASS_WORD, FIRSTNAME, LASTNAME ,FIRST_CHANGE_PW,DATE_CREATED,ACC_STATUS,EDMS_ROLE, CMS_ROLE, FRAP_ROLE, MEMBER_ID) 
-                                                VALUES ('{$idNum}', PASSWORD('{$pw}'), $fName, $lName, '0', NOW(), 1, 1,1,1, '{$idNum}');";
-                    $result2 = mysqli_query($dbc, $query2);
+                     $query2 = "INSERT INTO MEMBER_ACCOUNT (MEMBER_ID, PASSWORD, FIRST_CHANGE_PW) VALUES ('{$idNum}', PASSWORD('{$pw}'), '0');";
+                $result2 = mysqli_query($dbc, $query2);
 
 
 
@@ -241,16 +276,14 @@ $success = null;
 
                else { //when Business address and Business Number is empty
 
-                    $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS,  MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, HOME_ADDRESS, DEPT_ID, USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE) 
-                        VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}','{$sex}','{$birthdate}','{$datehired}','{$honum}','{$haddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','{$emp_ID}')"; 
+                    $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS,  MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, HOME_ADDRESS, DEPT_ID, USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,CAMPUS) 
+                        VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}','{$sex}','{$birthdate}','{$datehired}','{$honum}','{$haddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','{$emp_ID}','{$campus}')"; 
 
                     $result = mysqli_query($dbc,$query1); 
 
                     $pw = "password";
 
-                   $query2 = "INSERT INTO employee (EMP_ID, PASS_WORD, FIRSTNAME, LASTNAME ,FIRST_CHANGE_PW,DATE_CREATED,ACC_STATUS,EDMS_ROLE, CMS_ROLE, FRAP_ROLE, MEMBER_ID) 
-                                                VALUES ('{$idNum}', PASSWORD('{$pw}'), $fName, $lName, '0', NOW(), 1, 1,1,1, '{$idNum}');";
-
+                    $query2 = "INSERT INTO MEMBER_ACCOUNT (MEMBER_ID, PASSWORD, FIRST_CHANGE_PW) VALUES ('{$idNum}', PASSWORD('{$pw}'), '0');";
                     $result2 = mysqli_query($dbc, $query2);
 
                 }
@@ -262,8 +295,9 @@ $success = null;
                 		if(!empty($_POST['fAmountPaid'])){
                 			$falpPaid = $_POST['fAmountPaid'];
 		            	}
+
 		                $query = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,DATE_APPROVED,PICKUP_STATUS,AMOUNT_PAID,EMP_ID)
-		                                    values({$_POST['idNum']},1,{$_POST['amount']},5,{$_POST['terms']},{$_POST['amount']}+{$_POST['amount']}*5/100,({$_POST['amount']}+{$_POST['amount']}*5/100)/{$_POST['terms']}/2,2,2,'{$fdateappl}','{$fdateapp}',1,{$falpPaid},{$_POST['fEmp_ID']});";
+		                          values({$_POST['idNum']},1,{$_POST['amount']},5,{$_POST['terms']},{$_POST['amount']}+{$_POST['amount']}*5/100,({$_POST['amount']}+{$_POST['amount']}*5/100)/{$_POST['terms']}/2,2,2,'{$fdateappl}','{$fdateapp}',{$_POST['pickupStatus']},{$falpPaid},{$_POST['fEmp_ID']});";
 
 		               mysqli_query($dbc,$query);
 		               
@@ -300,12 +334,17 @@ $success = null;
             }
 
     }
-
-
-$page_title = 'FALP - Manual';
+ $page_title = 'FALP - Only ';
 include 'GLOBAL_HEADER.php';
 include 'FRAP_ADMIN_SIDEBAR.php';
 ?>
+
+<body>
+	<button onclick="topFunction()" id="scrollToTop" title="Go to top">Scroll to Top</button>
+    
+    	
+        
+
         <div id="page-wrapper">
 
             <div class="container-fluid">
@@ -316,6 +355,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                         <h1 class="page-header">
                             Add Member
+
                         </h1>
                     
                     </div>
@@ -329,6 +369,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                         <a href="ADMIN FALP manual.php#falpInfo">Jump to FALP</a> <p>
 						<a href="ADMIN FALP manual.php#lifetimeInfo">Jump to Lifetime</a>
                         <!--Insert success page--> 
+                        
                         <form method="POST" action="ADMIN FALP manual.php" id="addAccount" onSubmit="return checkform()">
 
                             <div class="panel panel-green" name = "personalInfo">
@@ -450,6 +491,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 </select>
 
 
+
                                         </div>
 
                                     </div>
@@ -519,6 +561,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
 
 
+
                                         </div>
 
                                     </div>
@@ -583,9 +626,16 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 } ?>>
                                                 </label>
 
+                                                 <label>
+                                                <span class="labelspan">Campus Registered<big class="req"> *</big></span>
+                                                <input type="text" class="form-control memname" placeholder="Campus" name="campus"  <?php if(isset($_POST['campus'])){
+                                                	echo "value = '{$_POST['campus']}'";
+                                                } ?>>
+                                                </label>
                                         </div>
 
                                     </div>
+
 
                                 </div>
 
@@ -956,7 +1006,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     </div>
                                     <div class="row" id = "falpInfo">
 	                                    <div class="col-lg-4">
-												 <span class="labelspan"><b>ID of Employee Hired</b></span><big class="req">*</big>
+												 <span class="labelspan"><b>ID of Employee Approved</b></span><big class="req">*</big>
 	                                                <input type="text" minlength = "8" maxlength="8" class="form-control memname" placeholder="e.g. 09000000" name="fEmp_ID" <?php if(isset($_POST['fEmp_ID'])){
                                                 	echo "value = '{$_POST['fEmp_ID']}'";
                                                 } ?>>
@@ -1145,7 +1195,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                         </div>
                                         <div class="col-lg-4">
-											 <span class="labelspan"><b>ID of Employee Hired</b></span><big class="req">*</big>
+											 <span class="labelspan"><b>ID of Employee Approved</b></span><big class="req">*</big>
                                                 <input type="text" minlength = "8" maxlength="8" class="form-control memname" placeholder="e.g. 09000000" name="lEmp_ID" <?php if(isset($_POST['lEmp_ID'])){
                                                 	echo "value = '{$_POST['lEmp_ID']}'";
                                                 } ?>>
@@ -1161,7 +1211,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                             </div>
                             
 
-                            <input class="btn btn-success" type="submit" name="submit" value="Sumbit"></p>
+                            <input id = "submit"  type="submit" name="submit" value="Sumbit"></p>
 
                        </form>
 
@@ -1228,5 +1278,10 @@ include 'FRAP_ADMIN_SIDEBAR.php';
             
         }
     </script>
+    <!-- Scroll to top script-->
+    <div id ="scrollToTopScript">
+    		</div>
 
-<?php include 'GLOBAL_FOOTER.php' ?>
+</body>
+
+</html>
