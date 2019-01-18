@@ -82,7 +82,7 @@
 
 
                         <li>
-                            <a href="#"> <i class="fa fa-money" aria-hidden="true"></i> Loans </a>
+                            <a href="ADMIN%20dashboard.php"> <i class="fa fa-money" aria-hidden="true"></i> Loans </a>
                         </li>
 
                         <li>
