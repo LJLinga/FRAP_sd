@@ -55,18 +55,23 @@
         document.getElementById("falpcompute").onclick = function() {
             checkform();
         };
-
+        //HERES A FUCKING NOTE SO I DONT FUCKING FORGET
+        // JESUS CHRIST TERM = MONTH OKAY
+        // DONT GO CONFUSING TERMS OK
+        // 1 TERM = 1 MONTH
+        // 5 TERMS = 5 MONTHS
+        // 1 TERM = 2 PAYMENTS
+        // 5 TERMS = 10 PAYMETNS
         function calculate(){
 
             var amount = parseFloat(document.getElementById("amount").value);
             var terms = parseFloat(document.getElementById("terms").value);
             var interest = 500;
-            var halfterms = terms/2;
 
-            document.getElementById("totalI").innerHTML ="<b>Total Interest Payable: </b>₱"+ parseFloat((interest*halfterms)).toFixed(2);
-            document.getElementById("totalP").innerHTML ="<b>Total Amount Payable: </b> ₱"+ parseFloat((amount+(interest*halfterms))).toFixed(2);
-            document.getElementById("PerP").innerHTML ="<b>Per Payment Period Payable: </b> ₱ "+ parseFloat((amount/terms + (interest/2))).toFixed(2);
-            document.getElementById("Monthly").innerHTML ="<b>Monthly Payable: </b> ₱"+ parseFloat(((amount/halfterms) + interest)).toFixed(2);
+            document.getElementById("totalI").innerHTML ="<b>Total Interest Payable: </b>₱"+ parseFloat((interest*terms)).toFixed(2);
+            document.getElementById("totalP").innerHTML ="<b>Total Amount Payable: </b> ₱"+ parseFloat((amount+(interest*terms))).toFixed(2);
+            document.getElementById("PerP").innerHTML ="<b>Per Payment Period Payable: </b> ₱ "+ parseFloat(((amount/terms*2)+interest/2)).toFixed(2);
+            document.getElementById("Monthly").innerHTML ="<b>Monthly Payable: </b> ₱"+ parseFloat(((amount/terms)+interest)).toFixed(2);
 
         }
 
@@ -130,7 +135,7 @@
 
                             <div class="panel-body">
 
-                                ₱ 5,000.00 to ₱ 20,000.00
+                                ₱ 5,000.00 to ₱ 25,000.00
 
                             </div>
 
@@ -150,7 +155,7 @@
 
                             <div class="panel-body">
 
-                                5%
+                                ₱ 500.00
 
                             </div>
 

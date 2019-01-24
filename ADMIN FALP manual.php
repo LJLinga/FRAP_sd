@@ -49,11 +49,7 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 $_SESSION['parentFolderID']="";
 $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
 /*-------FILE REPO STUFF END------*/
-if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
 
-header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/index.php");
-
-}
 $success = null;
 
     $queryDept = "SELECT * FROM REF_DEPARTMENT";

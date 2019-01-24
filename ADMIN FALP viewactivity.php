@@ -11,8 +11,9 @@ $query = "SELECT * FROM LOANS
 $result = mysqli_query($dbc,$query);
 $ans = mysqli_fetch_assoc($result);
 
-$query1 = "SELECT TXN_DATE,SUM(AMOUNT) as 'AMOUNT' FROM txn_reference where LOAN_REF ={$ans['LOAN_ID']} AND txn_type = 2 AND SERVICE_TYPE = 3 group by TXN_DATE";
-$result = mysqli_query($dbc,$query1);
+$query1 = "SELECT TXN_DATE,SUM(AMOUNT) as 'AMOUNT' FROM txn_reference where LOAN_REF ={$ans['LOAN_ID']} AND txn_type = 2 
+AND SERVICE_TYPE = 4 AND MEMBER_ID = {$ans['MEMBER_ID']} group by TXN_DATE";
+$result1 = mysqli_query($dbc,$query1);
 
 
 $page_title = 'FALP - View Active';
@@ -30,7 +31,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                 
                     <div class="col-lg-12">
 
-                        <h1 class="page-header">FALP Loan Activity<?php echo $query; ?></h1>
+                        <h1 class="page-header">FALP Loan Activity</h1>
                     
                     </div>
 

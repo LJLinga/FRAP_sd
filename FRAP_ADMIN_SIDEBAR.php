@@ -2,17 +2,19 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li id="top">
-                        <a href="ADMIN FALP manual.php"><i class="fa fa-gears" aria-hidden="true"></i> Add Member & FALP Account</a>
+                        <a href="ADMIN FALP manual.php"><i class="fa fa-gears" aria-hidden="true"></i> Manually Add Member </a>
                     </li>
                     <li>
-                        <a href="ADMIN%20FALP%20only.php"><i class="fa fa-dollar" aria-hidden="true"></i>&nbsp;&nbsp;View All Members</a>
+                        <a href="ADMIN%20FALP%20only.php"><i class="fa fa-dollar" aria-hidden="true"></i>&nbsp;&nbsp;Add FALP to Member </a>
                     </li>
                     <li>
                         <a href="ADMIN MEMBERS viewmembers.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;&nbsp;View All Members</a>
                     </li>
+                    <!---
                     <li>
                         <a href="ADMIN MEMBER roles.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;&nbsp;View All Roles </a>
                     </li>
+                    --->
                     <li>
                         <a href="javascript:" data-toggle="collapse" data-target="#loans"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;On-going Loans<i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="loans" class="collapse">
@@ -35,7 +37,7 @@
 
                         </ul>
                     </li>
-
+                    <!----
                     <li>
                         <a href="javascript:" data-toggle="collapse" data-target="#dreports"><i class="fa fa-minus" aria-hidden="true"></i>&nbsp;Deduction Reports<i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="dreports" class="collapse">

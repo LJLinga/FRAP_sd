@@ -1,11 +1,10 @@
 <?php
 session_start();
-require('fpdf/fpdf.php');
- if ($_SESSION['usertype'] == 1||!isset($_SESSION['usertype'])) {
+include 'GLOBAL_USER_TYPE_CHECKING.php';
+include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
-            
-    }
+require('fpdf/fpdf.php');
+
 class PDF extends FPDF
 {
 	var $row = 0;

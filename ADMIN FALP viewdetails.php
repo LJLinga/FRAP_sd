@@ -24,7 +24,9 @@ if(isset($_POST['addToPay'])){
 
         //get the terms to be paid - calculate the payment to be made based on this
 
-        $paymentToBeAdded =$ans['AMOUNT_PAID']+ ($_POST['terms']*$ans['PER_PAYMENT']);
+        $paymentToBeAdded = $ans['AMOUNT_PAID']+ ($_POST['terms']*$ans['PER_PAYMENT']);
+
+        $payment = $_POST['terms']*$ans['PER_PAYMENT'];
 
         $termsLeft = $ans['PAYMENTS_MADE'] + $_POST['terms'];
 
@@ -37,7 +39,24 @@ if(isset($_POST['addToPay'])){
             mysqli_query($dbc,$update);
         }
 
+        //First get the Loan member ID + loan
+
+
+
+
         //update transaction table
+
+        $description = 'Deduction from Loan';
+
+        $query = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE , LOAN_REF, EMP_ID, SERVICE_ID)
+                                      values({$ans['MEMBER_ID']}, 2, '{$description}' ,{$payment}, NOW(), {$ans['LOAN_ID']}, {$_SESSION['idnum']}, 4);";
+
+        echo $query;
+
+        if (!mysqli_query($dbc,$query))
+        {
+            echo("Error description: " . mysqli_error($dbc));
+        }
 
     }else{
         echo '<script language="javascript">';
@@ -61,7 +80,10 @@ if(isset($_POST['addToPay'])){
 
         $termsLeftForFifty =($ans['PAYMENT_TERMS'] - $ans['PAYMENTS_MADE'])-($ans['PAYMENT_TERMS']/2); // this variable calculates the remaining 50% to be updated in the loan.
 
+
         $payment = $ans['AMOUNT_PAID']+($termsLeftForFifty*$ans['PER_PAYMENT']);
+
+        $perPayment = $termsLeftForFifty*$ans['PER_PAYMENT'];
 
         $newPayments = $ans['PAYMENTS_MADE']+$termsLeftForFifty;
 
@@ -71,7 +93,18 @@ if(isset($_POST['addToPay'])){
         $update = "UPDATE loans SET AMOUNT_PAID = {$payment},PAYMENTS_MADE = {$newPayments}, DATE_MATURED = NOW() where LOAN_ID  = {$_SESSION['details']}";
         mysqli_query($dbc,$update);
 
-        //update transaction table
+        //update transaction table -  FOR SOME FUCKING SHITTY FUCKING SHIT ASS REASON THIS AND THE PART ABOVE WONT FUCKING INSERT AND IM GOING CRAZY LOOKING FOR A
+        // PROBABLY STUPID FUCKING BUG
+
+        $description = "Deduction from Loan";
+
+        $query = "  INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE , LOAN_REF, EMP_ID, SERVICE_ID)
+                                      values({$ans['MEMBER_ID']}, 2, '{$description}' , {$perPayment}, now(), {$ans['LOAN_ID']}, {$_SESSION['idnum']}, 4);";
+
+        if (!mysqli_query($dbc,$query))
+        {
+            echo("Error description: " . mysqli_error($dbc));
+        }
 
 
 
@@ -214,7 +247,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     <tr>
 
                                     <td>Payment Terms</td>
-                                    <td><?php echo $updated['PAYMENT_TERMS']/2;?> months</td>
+                                    <td><?php echo $updated['PAYMENT_TERMS'];?> months</td>
 
                                     </tr>
 
@@ -228,7 +261,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     <tr>
 
                                     <td>Number of Payments</td>
-                                    <td><?php echo $updated['PAYMENT_TERMS'];?> payments</td>
+                                    <td><?php echo $updated['PAYMENT_TERMS']*2;?> payments</td>
 
                                     </tr>
 
@@ -293,7 +326,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     <tr>
 
                                     <td>Payments Left</td>
-                                    <td><?php echo ($updated['PAYMENT_TERMS']) - $updated['PAYMENTS_MADE'];?> Payments</td>
+                                    <td><?php echo ($updated['PAYMENT_TERMS']*2) - $updated['PAYMENTS_MADE'];?> Payments</td>
 
                                     </tr>
 
@@ -350,7 +383,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <!---<input type="number" value="0" min="0" max="" class="form-control" placeholder="Amount to Add" name="terms"  id="terms">
                                         --->
                                         <div class="slidecontainer">
-                                            <input type="range" min="0" max="<?php echo ($updated['PAYMENT_TERMS'])-$updated['PAYMENTS_MADE']; ?>" value="0" class="slider" name="terms" id="myRange">
+                                            <input type="range" min="0" max="<?php echo ($updated['PAYMENT_TERMS']*2)-$updated['PAYMENTS_MADE']; ?>" value="0" class="slider" name="terms" id="myRange">
                                             <p>Number of Payments to be Paid For: <span id="demo"> </span></p>
                                         </div>
 

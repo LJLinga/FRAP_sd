@@ -114,7 +114,7 @@
 
                     //insert code here/
 
-                }else{ //sends it to the most appropriate account.
+                }else{ //sends it to the most appropriate account. and adds the
 
                     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER dashboard.php");
 

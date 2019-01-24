@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-
+    error_reporting(0);
     require_once ("mysql_connect_FA.php");
     session_start();
     include 'GLOBAL_USER_TYPE_CHECKING.php';
@@ -333,7 +333,7 @@
 
         } else {
 
-            echo 'Sucessfully inserted loans without any problems!';
+
 
 
         }
@@ -351,7 +351,7 @@
 
         } else {
 
-            echo 'Sucessfully inserted into Transaction referrences without any problems!';
+
 
 
         }

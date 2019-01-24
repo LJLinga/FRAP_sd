@@ -16,6 +16,8 @@ if($userStatus['USER_STATUS'] > 2){ //meaning the account they are using has bee
 
     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
 
+}else if(empty($userStatus)){
+    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
 }
 
 // user status 1 = full time

@@ -263,7 +263,7 @@
                                 <tr>
 
                                 <td><b>Amount Payable</td>
-                                <td>₱ <?php echo $_POST['amount']+($_POST['amount']*5/100);?></td>
+                                <td>₱ <?php echo $_POST['amount']+(500*$_POST['terms']);?></td>
 
                                 </tr>
 
@@ -277,7 +277,7 @@
                                 <tr>
 
                                 <td><b>Monthly Deduction</td>
-                                <td>₱ <?php echo ($_POST['amount']+($_POST['amount']*5/100))/$_POST['terms'];?></td>
+                                <td>₱ <?php echo 500.00 ;?></td>
 
                                 </tr>
 
@@ -291,7 +291,7 @@
                                 <tr>
 
                                 <td><b>Per Payment Deduction</td>
-                                <td>₱ <?php echo (($_POST['amount']+($_POST['amount']*5/100))/$_POST['terms'])/2;?></td>
+                                <td>₱ <?php echo 250.00 ;?></td>
 
                                 </tr>
 
