@@ -33,7 +33,7 @@
 <?php 
 
     session_start();
-    require_once('mysql_connect_FA.php');
+    require('mysql_connect_FA.php');
 
 /*****
  * So what these code do is that they are
@@ -103,7 +103,12 @@
 
                 $queryMem = "SELECT * FROM employee WHERE MEMBER_ID = '{$idnum}' AND PASS_WORD = PASSWORD('{$password}')";
                 $resultMem = mysqli_query($dbc, $queryMem);
+                if (!$resultMem) {
+                    printf("Error: %s\n", mysqli_error($dbc));
+                    exit();
+                }
                 $rowMem = mysqli_fetch_array($resultMem);
+
 
 
                 if(empty($rowMem)){ //if the account does not exist
