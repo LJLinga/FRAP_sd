@@ -26,7 +26,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
 ?>
 
-        <div id="page-wrapper">
+        <div id="content-wrapper">
 
             <div class="container-fluid">
 
@@ -63,7 +63,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                     <div class="col-lg-8">
 
-                        <div class="well" align="center">
+                        <div class="well" align="center" style="background-color: white">
                             <?php
                                 $query = "SELECT DATE_APPROVED FROM HEALTH_AID WHERE MEMBER_ID = ". $_SESSION['idnum'] .";";
                                 $result = mysqli_query($dbc, $query);

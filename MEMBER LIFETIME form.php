@@ -50,7 +50,7 @@ include 'GLOBAL_HEADER.php';
 include 'FRAP_USER_SIDEBAR.php';
 ?>
 
-        <div id="page-wrapper">
+        <div id="content-wrapper">
 
             <div class="container-fluid">
 
@@ -74,7 +74,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                     <div class = "col-lg-8">
 
-                         <div class="well">
+                         <div class="well" style="background-color: white">
 
                             <p class="text-center">
 

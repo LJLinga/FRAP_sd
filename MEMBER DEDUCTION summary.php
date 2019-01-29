@@ -31,7 +31,7 @@
     include 'GLOBAL_HEADER.php';
     include 'FRAP_USER_SIDEBAR.php';
 ?>
-        <div id="page-wrapper">
+        <div id="content-wrapper">
 
             <div class="container-fluid">
 
@@ -178,7 +178,7 @@
 
                         </div>
 
-                        <table class="table table-bordered">
+                        <table class="table table-bordered" style="background-color: white;">
                             
                         <thread>
 

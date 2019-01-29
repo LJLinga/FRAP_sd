@@ -9,7 +9,7 @@
     include 'GLOBAL_HEADER.php';
     include 'FRAP_USER_SIDEBAR.php';
 ?>
-        <div id="page-wrapper">
+        <div id="content-wrapper">
 
             <div class="container-fluid">
 
@@ -22,7 +22,7 @@
 
                         <br>
 
-                        <div class="well" align="center">
+                        <div class="well" align="center" style="background-color: white">
                             <?php
                                 $query = "SELECT MAX(LOAN_ID), AMOUNT_PAID, LOAN_STATUS FROM MEMBER WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
 

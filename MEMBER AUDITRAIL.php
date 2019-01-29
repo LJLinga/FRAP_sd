@@ -16,7 +16,7 @@
         $('#table').DataTable();
     });
 </script>
-        <div id="page-wrapper">
+        <div id="content-wrapper">
 
             <div class="container-fluid">
 

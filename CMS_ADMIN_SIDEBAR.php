@@ -19,7 +19,7 @@
                 <a href="CMS_ADMIN_AddEvent.php"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Add Event</a>
             </li>
 
-           
+
 
         </ul>
 
