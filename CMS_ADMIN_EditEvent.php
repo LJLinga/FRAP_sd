@@ -15,10 +15,6 @@ session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
-
-
-//hardcoded value for userType, will add MYSQL verification query
-
 if(!empty($_GET['postId'])){
 
     $postId = $_GET['postId'];

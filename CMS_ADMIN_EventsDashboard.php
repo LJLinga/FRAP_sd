@@ -39,6 +39,13 @@ include 'CMS_ADMIN_SIDEBAR.php';
         </div>
 
         <div class="card mb-3">
+            <div class="card-header btn-group" data-toggle="buttons">
+                <a type="button" class="btn btn-default" id="btnAll">All</a>
+                <a type="button" class="btn btn-success" id="btnPublished">Ongoing</a>
+                <a type="button" class="btn btn-warning" id="btnPending">Upcoming</a>
+                <a tye="button" class="btn btn-primary" id="btnDraft">Finished</a>
+                <a type="button" class="btn btn-danger" id="btnArchived">Cancelled</a>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
