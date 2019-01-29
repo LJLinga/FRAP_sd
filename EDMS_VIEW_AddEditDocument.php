@@ -6,12 +6,18 @@
  * Time: 3:48 PM
  */
 
+include_once('GLOBAL_CLASS_CRUD.php');
+$crud = new GLOBAL_CLASS_CRUD();
+require_once('mysql_connect_FA.php');
+session_start();
+include('GLOBAL_USER_TYPE_CHECKING.php');
+include('GLOBAL_EDMS_ADMIN_CHECKING.php');
+
 include 'GLOBAL_HEADER.php';
-include 'GLOBAL_NAV_TopBar.php';
 include 'EDMS_USER_SIDEBAR_ViewSection.php';
 ?>
 
-<div id="page-wrapper">
+<div id="content-wrapper">
     <div class="container-fluid">
         <div class="row">
             <form>

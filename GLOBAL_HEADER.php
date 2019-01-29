@@ -71,32 +71,55 @@
             <ul class="nav navbar-right top-nav"> <!-- Top Menu Items / Notifications area -->
 
                 <li>
-                    <a href="#"> Home </a>
+                    <a href="MEMBER%20dashboard.php"> Home </a>
                 </li>
 
-                <li class="dropdown sideicons">
+                <?php
 
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Admin Tools <b class="caret"></b></a>
+                    if($_SESSION['FRAP_ROLE'] > 1 || $_SESSION['EDMS_ROLE'] > 1 || $_SESSION['CMS_ROLE'] > 1) {
 
-                    <ul class="dropdown-menu alert-dropdown">
+                        echo '
+    
+                            <li class="dropdown sideicons">
+    
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Admin Tools <b class="caret"></b></a>
+    
+                                <ul class="dropdown-menu alert-dropdown">';
 
+                        if($_SESSION['FRAP_ROLE'] > 1) {
 
-                        <li>
-                            <a href="ADMIN%20dashboard.php"> <i class="fa fa-money" aria-hidden="true"></i> Loans </a>
-                        </li>
+                            echo '
+                                <li>
+                                    <a href="ADMIN%20dashboard.php"> <i class="fa fa-money" aria-hidden="true"></i> Loans </a>
+                                </li>
+                                ';
+                        }
 
-                        <li>
-                            <a href="#"> <i class="fa fa-newspaper-o" aria-hidden="true"></i> Santinig Content </a>
-                        </li>
+                        if($_SESSION['CMS_ROLE'] > 1) {
 
-                        <li>
-                            <a href="#"> <i class="fa fa-file-text" aria-hidden="true"></i> Documents</a>
-                        </li>
+                            echo '
+                                <li>
+                                    <a href="CMS_ADMIN_PostsDashboard.php"> <i class="fa fa-newspaper-o" aria-hidden="true"></i> Santinig Content </a>
+                                </li>
+                                ';
+                        }
 
-                    </ul>
+                        if($_SESSION['EDMS_ROLE'] > 1){
 
-                </li>
+                            echo ' 
+                                 <li>
+                                    <a href="EDMS_VIEW_DocumentDashboard.php"> <i class="fa fa-file-text" aria-hidden="true"></i> Documents</a>
+                                 </li>';
 
+                        }
+
+                        echo '
+                                </ul>
+                    
+                            </li> ';
+
+                    }
+                ?>
 
 
                 <li class="dropdown sideicons">
@@ -141,6 +164,7 @@
 
                 <li class="dropdown sideicons">
                     <?php
+
                     $query = "SELECT LASTNAME, FIRSTNAME FROM employee
                                     
                         WHERE MEMBER_ID =" . $_SESSION['idnum'].";";

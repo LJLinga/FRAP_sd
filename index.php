@@ -117,9 +117,25 @@
 
                 }else if($rowMem['FIRST_CHANGE_PW'] != 1){ // if the account has not changed its password yet.
 
+                    $query = "SELECT FRAP_ROLE, EDMS_ROLE, CMS_ROLE FROM employee WHERE MEMBER_ID = '{$_SESSION['idnum']}' ";
+                    $row = mysqli_query($dbc, $query);
+                    $result = mysqli_fetch_array($row);
+
+                    $_SESSION['FRAP_ROLE'] =  $result['FRAP_ROLE'];
+                    $_SESSION['CMS_ROLE'] =  $result['CMS_ROLE'];
+                    $_SESSION['EDMS_ROLE'] =  $result['EDMS_ROLE'];
+
                     //insert code here/
 
                 }else{ //sends it to the most appropriate account. and adds the
+
+                    $query = "SELECT FRAP_ROLE, EDMS_ROLE, CMS_ROLE FROM employee WHERE MEMBER_ID = '{$_SESSION['idnum']}' ";
+                    $row = mysqli_query($dbc, $query);
+                    $result = mysqli_fetch_array($row);
+
+                    $_SESSION['FRAP_ROLE'] =  $result['FRAP_ROLE'];
+                    $_SESSION['CMS_ROLE'] =  $result['CMS_ROLE'];
+                    $_SESSION['EDMS_ROLE'] =  $result['EDMS_ROLE'];
 
                     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER dashboard.php");
 
@@ -261,12 +277,12 @@
 
                             <div>
                                 <label id="emaillabel">ID Number</label>
-                                <input type="text" id="emaillogin" class="form-control" minlength="8" maxlength="8" placeholder="e.g. 11700000" name="idnum">
+                                <input type="text" id="emaillogin" class="form-control" minlength="8" maxlength="8" placeholder="e.g. 11700000" name="idnum" required>
                             </div>
 
                             <div>
                                 <label id="passlabel">Password</label>
-                                <input type="password" id="passlogin" class="form-control" placeholder="Password" name="password">
+                                <input type="password" id="passlogin" class="form-control" placeholder="Password" name="password" required>
                             </div>
 
                             <div id="loginsubmitbutton">

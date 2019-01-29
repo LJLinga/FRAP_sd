@@ -12,7 +12,7 @@
     include 'FRAP_USER_SIDEBAR.php';
 
 ?>
-        <div id="page-wrapper">
+        <div id="content-wrapper">
 
             <div class="container-fluid">
 
@@ -31,7 +31,7 @@
 
                     <div class="col-lg-4 col-1">
 
-                        <div class="well" align="center">
+                        <div class="well" align="center" style="background-color: white">
 
                             <b>Current Employee Department</b>
 
@@ -66,7 +66,7 @@
 
                     <div class="col-lg-4 col-2">
 
-                        <div class="well" align="center">
+                        <div class="well" align="center" style="background-color: white">
 
                             <b>Faculty Association Member Since</b>
                             
@@ -92,7 +92,7 @@
 
                     <div class="col-lg-4 col-3">
 
-                        <div class="well" align="center">
+                        <div class="well" align="center" style="background-color: white">
 
                             <b>Campus</b>
                             

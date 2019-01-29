@@ -8,7 +8,8 @@
 
 include 'GLOBAL_CLASS_CRUD.php';
 $crud = new GLOBAL_CLASS_CRUD();
-
+require_once('mysql_connect_FA.php');
+session_start();
 include 'GLOBAL_HEADER.php';
 include 'CMS_ADMIN_SIDEBAR.php';
 

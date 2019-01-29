@@ -10,6 +10,8 @@ require_once __DIR__.'/vendor/autoload.php';
 
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
+require_once('mysql_connect_FA.php');
+session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_CMS_ADMIN_CHECKING.php');
 

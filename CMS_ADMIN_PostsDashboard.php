@@ -8,11 +8,10 @@
 
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
-//require_once ("mysql_connect_FA.php");
-
-$userType = 'editor';
-// editor can edit all published posts
-// author can only edit unpublished ones
+require_once('mysql_connect_FA.php');
+session_start();
+include('GLOBAL_USER_TYPE_CHECKING.php');
+include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 $page_title = 'Santinig - Posts Dashboard';
 include 'GLOBAL_HEADER.php';
