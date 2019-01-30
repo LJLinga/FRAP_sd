@@ -108,6 +108,8 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
     <!-- jQuery -->
     
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
 
     <script type="text/javascript" src="DataTables/datatables.min.js"></script>
     <script>
