@@ -241,7 +241,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
     <!-- /#wrapper -->
     
     <!-- jQuery -->
-    <script src="js/jquery.js"></script>
+    
        
         
    
