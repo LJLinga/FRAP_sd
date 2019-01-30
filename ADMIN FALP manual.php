@@ -134,7 +134,7 @@ $success = null;
                     echo 'alert("Your chosen ID is already in use by an Active/Pending User!" . $memid)';
                     echo '</script>';
 
-            }else if (empty($_POST['fName']) || empty($_POST['lName']) || empty($_POST['mName'])){ // check if any of the names is empty 
+            }else if (empty($_POST['fName']) || empty($_POST['lName'])){ // check if any of the names is empty 
 
                     echo '<script language="javascript">';
                     echo 'alert("You forgot to fill up a name portion!")';
@@ -390,6 +390,13 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 </label>
 
                                                 <label>
+                                                <span class="labelspan">Last Name<big class="req"> *</big>
+                                                <input type="text" class="form-control memname" placeholder="Last Name" name="lName" <?php if(isset($_POST['lName'])){
+                                                  echo "value = '{$_POST['lName']}'";
+                                                } ?>>
+                                                </label>
+
+                                                <label>
                                                 <span class="labelspan">First Name<big class="req"> *</big></span>
                                                 <input type="text" class="form-control memname" placeholder="First Name" name="fName"  <?php if(isset($_POST['fName'])){
                                                 	echo "value = '{$_POST['fName']}'";
@@ -397,28 +404,19 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 </label>
 
                                                 <label>
-                                                <span class="labelspan">Last Name<big class="req"> *</big></span>
-                                                <input type="text" class="form-control memname" placeholder="Last Name" name="lName" <?php if(isset($_POST['lName'])){
-                                                	echo "value = '{$_POST['lName']}'";
+                                                <span class="labelspan">Middle Name</span>
+                                                <input type="text" class="form-control memname" placeholder="Last Name" name="lName" <?php if(isset($_POST['mName'])){
+                                                  echo "value = '{$_POST['mName']}'";
                                                 } ?>>
                                                 </label>
 
+                                               
+
                                         </div>
 
                                     </div>
 
-                                    <div class="row">
-
-                                        <div class="col-lg-12">
-
-                                                <label class="memfieldlabel">Middle Name</label><big class="req"> *</big>
-                                                <input type="text" class="form-control memfields" placeholder="Middle Name" name="mName" <?php if(isset($_POST['mName'])){
-                                                	echo "value = '{$_POST['mName']}'";
-                                                } ?>>
-                                                
-                                        </div>
-
-                                    </div>
+                                 
 
                                     <div class="row">
 
@@ -445,23 +443,33 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                                 <p id="dbirthlabel"><b>Date of Birth</b><big class="req"> *</big></p>
 
-                                                
+                                                <label class="memfieldlabel">Year</label>
+                                                <select class="form-control datedropdown"  name =  "bYear">
+
+                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
+
+                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+
+                                                    <?php } ?>
+
+                                                </select>
+
 
                                                 <label class="memfieldlabel">Month</label>
                                                 <select class="form-control datedropdown" name =  "bMonth">
 
-                                                    <option>1</option>
-                                                    <option>2</option>
-                                                    <option>3</option>
-                                                    <option>4</option>
-                                                    <option>5</option>
-                                                    <option>6</option>
-                                                    <option>7</option>
-                                                    <option>8</option>
-                                                    <option>9</option>
-                                                    <option>10</option>
-                                                    <option>11</option>
-                                                    <option>12</option>
+                                                   <option value = 1>January</option>
+                                                    <option value = 2>February</option>
+                                                    <option value = 3>March</option>
+                                                    <option value = 4>April</option>
+                                                    <option value = 5>May</option>
+                                                    <option value = 6>June</option>
+                                                    <option value = 7>July</option>
+                                                    <option value = 8>August</option>
+                                                    <option value = 9>September</option>
+                                                    <option value = 10>October</option>
+                                                    <option value = 11>November</option>
+                                                    <option value = 12>December</option>
 
                                                 </select>
 
@@ -475,17 +483,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                     <?php } ?>
 
                                                 </select>
-                                                <label class="memfieldlabel">Year</label>
-                                                <select class="form-control datedropdown"  name =  "bYear">
-
-                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
-
-                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
-
-                                                    <?php } ?>
-
-                                                </select>
-
+                                               
 
 
                                         </div>
@@ -514,22 +512,32 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                                 <p id="dbirthlabel"><b>Member since:</b><big class="req"> *</big></p>
 
-                                               
+                                                 <label class="memfieldlabel">Year</label>
+                                                <select class="form-control datedropdown"  name =  "aYear">
+
+                                                    <?php for($y = date("Y"); $y >= 1900; $y--) { ?>
+
+                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+
+                                                    <?php } ?>
+                                                    
+
+                                                </select>
                                                 <label class="memfieldlabel">Month</label>
                                                 <select class="form-control datedropdown" name =  "aMonth">
 
-                                                    <option>1</option>
-                                                    <option>2</option>
-                                                    <option>3</option>
-                                                    <option>4</option>
-                                                    <option>5</option>
-                                                    <option>6</option>
-                                                    <option>7</option>
-                                                    <option>8</option>
-                                                    <option>9</option>
-                                                    <option>10</option>
-                                                    <option>11</option>
-                                                    <option>12</option>
+                                                    <option value = 1>January</option>
+                                                    <option value = 2>February</option>
+                                                    <option value = 3>March</option>
+                                                    <option value = 4>April</option>
+                                                    <option value = 5>May</option>
+                                                    <option value = 6>June</option>
+                                                    <option value = 7>July</option>
+                                                    <option value = 8>August</option>
+                                                    <option value = 9>September</option>
+                                                    <option value = 10>October</option>
+                                                    <option value = 11>November</option>
+                                                    <option value = 12>December</option>
 
                                                 </select>
 
@@ -543,17 +551,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                     <?php } ?>
 
                                                 </select>
-                                                 <label class="memfieldlabel">Year</label>
-                                                <select class="form-control datedropdown"  name =  "aYear">
-
-                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
-
-                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
-
-                                                    <?php } ?>
-                                                    
-
-                                                </select>
+                                               
 
 
 
@@ -567,24 +565,32 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                                 <p id="dbirthlabel"><b>Date Applied:</b><big class="req"> *</big></p>
 
-                                               
+                                               <label class="memfieldlabel">Year</label>
+                                                <select class="form-control datedropdown"  name =  "appYear">
+
+                                                    <?php for($y = date("Y"); $y >= 1900; $y--) { ?>
+
+                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+
+                                                    <?php } ?>
+                                                    
+                                                </select>
 
                                                 <label class="memfieldlabel">Month</label>
                                                 <select class="form-control datedropdown" name =  "appMonth">
 
-                                                    <option>1</option>
-                                                    <option>2</option>
-                                                    <option>3</option>
-                                                    <option>4</option>
-                                                    <option>5</option>
-                                                    <option>6</option>
-                                                    <option>7</option>
-                                                    <option>8</option>
-                                                    <option>9</option>
-                                                    <option>10</option>
-                                                    <option>11</option>
-                                                    <option>12</option>
-
+                                                    <option value = 1>January</option>
+                                                    <option value = 2>February</option>
+                                                    <option value = 3>March</option>
+                                                    <option value = 4>April</option>
+                                                    <option value = 5>May</option>
+                                                    <option value = 6>June</option>
+                                                    <option value = 7>July</option>
+                                                    <option value = 8>August</option>
+                                                    <option value = 9>September</option>
+                                                    <option value = 10>October</option>
+                                                    <option value = 11>November</option>
+                                                    <option value = 12>December</option>
                                                 </select>
 
                                                 <label class="memfieldlabel">Day</label>
@@ -597,16 +603,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                     <?php } ?>
 
                                                 </select>
-                                                 <label class="memfieldlabel">Year</label>
-                                                <select class="form-control datedropdown"  name =  "appYear">
-
-                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
-
-                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
-
-                                                    <?php } ?>
-                                                    
-                                                </select>
+                                                 
 
 
                                         </div>
@@ -616,18 +613,13 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                         <div class="col-lg-12">
 
-                                                <span class="labelspan"><b>ID of Employee Hired</b><big class="req"> *</big></span>
+                                                <!--<span class="labelspan"><b>ID of Employee Hired</b><big class="req"> *</big></span>
                                                 <input type="text" minlength = "8" maxlength="8" class="form-control memname" placeholder="e.g. 09000000" name="emp_ID" <?php if(isset($_POST['emp_ID'])){
                                                 	echo "value = '{$_POST['emp_ID']}'";
                                                 } ?>>
-                                                </label>
+                                                </label>-->
 
-                                                 <label>
-                                                <span class="labelspan">Campus Registered<big class="req"> *</big></span>
-                                                <input type="text" class="form-control memname" placeholder="Campus" name="campus"  <?php if(isset($_POST['campus'])){
-                                                	echo "value = '{$_POST['campus']}'";
-                                                } ?>>
-                                                </label>
+                                                 
                                         </div>
 
                                     </div>
@@ -646,18 +638,38 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                 </div>
 
                                 <div class="panel-body">
+                                    <div class="row">
 
+                                        <div class="col-lg-2">
+
+                                                <label class="memfieldlabel">Employment Status</label>
+                                                <select class="form-control" name ="empStat">
+
+                                                    
+                                                        <option>Probationary</option>
+                                                        <option>Permanent</option>
+                                                        <option>Part-time</option>
+                                                        <option>Faculty</option>
+                                                        <option>ASF</option>
+
+                                                  
+
+                                                </select>
+
+                                        </div>
+
+                                    </div><p>
                                     <div class="row">
 
                                         <div class="col-lg-12">
 
-                                                <p id="dbirthlabel"><b>Date of Hiring</b></p>
+                                                <p id="dbirthlabel"><b>Term Hired</b></p>
 
 
                                                 <label class="memfieldlabel">Year</label>
                                                 <select class="form-control datedropdown" name = "hYear">
 
-                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
+                                                    <?php for($y = date("Y"); $y >= 1900; $y--) { ?>
 
                                                         <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
 
@@ -673,18 +685,18 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 <select class="form-control datedropdown" name = "hMonth">
 
                                                 
-                                                    <option>1</option>
-                                                    <option>2</option>
-                                                    <option>3</option>
-                                                    <option>4</option>
-                                                    <option>5</option>
-                                                    <option>6</option>
-                                                    <option>7</option>
-                                                    <option>8</option>
-                                                    <option>9</option>
-                                                    <option>10</option>
-                                                    <option>11</option>
-                                                    <option>12</option>
+                                                    <option value = 1>January</option>
+                                                    <option value = 2>February</option>
+                                                    <option value = 3>March</option>
+                                                    <option value = 4>April</option>
+                                                    <option value = 5>May</option>
+                                                    <option value = 6>June</option>
+                                                    <option value = 7>July</option>
+                                                    <option value = 8>August</option>
+                                                    <option value = 9>September</option>
+                                                    <option value = 10>October</option>
+                                                    <option value = 11>November</option>
+                                                    <option value = 12>December</option>
 
                                                 </select>
 
@@ -898,7 +910,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 <label class="memfieldlabel">Year</label>
                                                 <select class="form-control datedropdown" name = "faYear">
 
-                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
+                                                    <?php for($y = date("Y"); $y >= 1900; $y--) { ?>
 
                                                         <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
 
@@ -914,18 +926,18 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 <select class="form-control datedropdown" name = "faMonth">
 
                                                 
-                                                    <option>1</option>
-                                                    <option>2</option>
-                                                    <option>3</option>
-                                                    <option>4</option>
-                                                    <option>5</option>
-                                                    <option>6</option>
-                                                    <option>7</option>
-                                                    <option>8</option>
-                                                    <option>9</option>
-                                                    <option>10</option>
-                                                    <option>11</option>
-                                                    <option>12</option>
+                                                   <option value = 1>January</option>
+                                                    <option value = 2>February</option>
+                                                    <option value = 3>March</option>
+                                                    <option value = 4>April</option>
+                                                    <option value = 5>May</option>
+                                                    <option value = 6>June</option>
+                                                    <option value = 7>July</option>
+                                                    <option value = 8>August</option>
+                                                    <option value = 9>September</option>
+                                                    <option value = 10>October</option>
+                                                    <option value = 11>November</option>
+                                                    <option value = 12>December</option>
 
                                                 </select>
 
@@ -954,7 +966,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 <label class="memfieldlabel">Year</label>
                                                 <select class="form-control datedropdown" name = "fYear">
 
-                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
+                                                    <?php for($y = date("Y"); $y >= 1900; $y--) { ?>
 
                                                         <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
 
@@ -970,18 +982,18 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 <select class="form-control datedropdown" name = "fMonth">
 
                                                 
-                                                    <option>1</option>
-                                                    <option>2</option>
-                                                    <option>3</option>
-                                                    <option>4</option>
-                                                    <option>5</option>
-                                                    <option>6</option>
-                                                    <option>7</option>
-                                                    <option>8</option>
-                                                    <option>9</option>
-                                                    <option>10</option>
-                                                    <option>11</option>
-                                                    <option>12</option>
+                                                   <option value = 1>January</option>
+                                                    <option value = 2>February</option>
+                                                    <option value = 3>March</option>
+                                                    <option value = 4>April</option>
+                                                    <option value = 5>May</option>
+                                                    <option value = 6>June</option>
+                                                    <option value = 7>July</option>
+                                                    <option value = 8>August</option>
+                                                    <option value = 9>September</option>
+                                                    <option value = 10>October</option>
+                                                    <option value = 11>November</option>
+                                                    <option value = 12>December</option>
 
                                                 </select>
 
@@ -1002,11 +1014,11 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     </div>
                                     <div class="row" id = "falpInfo">
 	                                    <div class="col-lg-4">
-												 <span class="labelspan"><b>ID of Employee Approved</b></span><big class="req">*</big>
+												 <!--<span class="labelspan"><b>ID of Employee Approved</b></span><big class="req">*</big>
 	                                                <input type="text" minlength = "8" maxlength="8" class="form-control memname" placeholder="e.g. 09000000" name="fEmp_ID" <?php if(isset($_POST['fEmp_ID'])){
                                                 	echo "value = '{$_POST['fEmp_ID']}'";
                                                 } ?>>
-	                                                </label>
+	                                                </label>-->
 
 
 	                                    </div>
@@ -1087,7 +1099,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 <label class="memfieldlabel">Year</label>
                                                 <select class="form-control datedropdown" name = "laYear">
 
-                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
+                                                    <?php for($y = date("Y"); $y >= 1900; $y--) { ?>
 
                                                         <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
 
@@ -1104,18 +1116,18 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 <select class="form-control datedropdown" name = "laMonth">
 
                                                 
-                                                    <option>1</option>
-                                                    <option>2</option>
-                                                    <option>3</option>
-                                                    <option>4</option>
-                                                    <option>5</option>
-                                                    <option>6</option>
-                                                    <option>7</option>
-                                                    <option>8</option>
-                                                    <option>9</option>
-                                                    <option>10</option>
-                                                    <option>11</option>
-                                                    <option>12</option>
+                                                  <option value = 1>January</option>
+                                                    <option value = 2>February</option>
+                                                    <option value = 3>March</option>
+                                                    <option value = 4>April</option>
+                                                    <option value = 5>May</option>
+                                                    <option value = 6>June</option>
+                                                    <option value = 7>July</option>
+                                                    <option value = 8>August</option>
+                                                    <option value = 9>September</option>
+                                                    <option value = 10>October</option>
+                                                    <option value = 11>November</option>
+                                                    <option value = 12>December</option>
 
                                                 </select>
 
@@ -1144,7 +1156,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 <label class="memfieldlabel">Year</label>
                                                 <select class="form-control datedropdown" name = "lYear">
 
-                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
+                                                    <?php for($y = date("Y"); $y >= 1900; $y--) { ?>
 
                                                         <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
 
@@ -1161,18 +1173,18 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 <select class="form-control datedropdown" name = "lMonth">
 
                                                 
-                                                    <option>1</option>
-                                                    <option>2</option>
-                                                    <option>3</option>
-                                                    <option>4</option>
-                                                    <option>5</option>
-                                                    <option>6</option>
-                                                    <option>7</option>
-                                                    <option>8</option>
-                                                    <option>9</option>
-                                                    <option>10</option>
-                                                    <option>11</option>
-                                                    <option>12</option>
+                                                   <option value = 1>January</option>
+                                                    <option value = 2>February</option>
+                                                    <option value = 3>March</option>
+                                                    <option value = 4>April</option>
+                                                    <option value = 5>May</option>
+                                                    <option value = 6>June</option>
+                                                    <option value = 7>July</option>
+                                                    <option value = 8>August</option>
+                                                    <option value = 9>September</option>
+                                                    <option value = 10>October</option>
+                                                    <option value = 11>November</option>
+                                                    <option value = 12>December</option>
 
                                                 </select>
 
@@ -1191,12 +1203,12 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                         </div>
                                         <div class="col-lg-4">
-											 <span class="labelspan"><b>ID of Employee Approved</b></span><big class="req">*</big>
+											 <!--<span class="labelspan"><b>ID of Employee Approved</b></span><big class="req">*</big>
                                                 <input type="text" minlength = "8" maxlength="8" class="form-control memname" placeholder="e.g. 09000000" name="lEmp_ID" <?php if(isset($_POST['lEmp_ID'])){
                                                 	echo "value = '{$_POST['lEmp_ID']}'";
                                                 } ?>>
-                                                </label>
-
+                                                </label>-->
+      
 
                                     </div>
                                     </div>
