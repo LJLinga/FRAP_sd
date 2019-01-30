@@ -324,7 +324,7 @@
                                                 <label class="memfieldlabel">Year</label>
                                                 <select class="form-control datedropdown"  name =  "bYear">
 
-                                                    <?php for($y = 2017; $y >= 1900; $y--) { ?>
+                                                    <?php for($y = date("Y"); $y >= 1900; $y--) { ?>
 
                                                         <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
 
@@ -335,18 +335,18 @@
                                                 <label class="memfieldlabel">Month</label>
                                                 <select class="form-control datedropdown" name =  "bMonth">
 
-                                                    <option>1</option>
-                                                    <option>2</option>
-                                                    <option>3</option>
-                                                    <option>4</option>
-                                                    <option>5</option>
-                                                    <option>6</option>
-                                                    <option>7</option>
-                                                    <option>8</option>
-                                                    <option>9</option>
-                                                    <option>10</option>
-                                                    <option>11</option>
-                                                    <option>12</option>
+                                                     <option value = 1>January</option>
+                                                    <option value = 2>February</option>
+                                                    <option value = 3>March</option>
+                                                    <option value = 4>April</option>
+                                                    <option value = 5>May</option>
+                                                    <option value = 6>June</option>
+                                                    <option value = 7>July</option>
+                                                    <option value = 8>August</option>
+                                                    <option value = 9>September</option>
+                                                    <option value = 10>October</option>
+                                                    <option value = 11>November</option>
+                                                    <option value = 12>December</option>
 
                                                 </select>
 
@@ -407,7 +407,7 @@
                                                 <label class="memfieldlabel">Year</label>
                                                 <select class="form-control datedropdown" name = "hYear">
 
-                                                    <?php for($y = 2017; $y >= 1900; $y--) { ?>
+                                                    <?php for($y = date("Y"); $y >= 1900; $y--) { ?>
 
                                                         <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
 
@@ -423,18 +423,18 @@
                                                 <select class="form-control datedropdown" name = "hMonth">
 
                                                 
-                                                    <option>1</option>
-                                                    <option>2</option>
-                                                    <option>3</option>
-                                                    <option>4</option>
-                                                    <option>5</option>
-                                                    <option>6</option>
-                                                    <option>7</option>
-                                                    <option>8</option>
-                                                    <option>9</option>
-                                                    <option>10</option>
-                                                    <option>11</option>
-                                                    <option>12</option>
+                                                    <option value = 1>January</option>
+                                                    <option value = 2>February</option>
+                                                    <option value = 3>March</option>
+                                                    <option value = 4>April</option>
+                                                    <option value = 5>May</option>
+                                                    <option value = 6>June</option>
+                                                    <option value = 7>July</option>
+                                                    <option value = 8>August</option>
+                                                    <option value = 9>September</option>
+                                                    <option value = 10>October</option>
+                                                    <option value = 11>November</option>
+                                                    <option value = 12>December</option>
 
                                                 </select>
 
