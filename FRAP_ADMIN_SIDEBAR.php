@@ -37,7 +37,7 @@
 
                         </ul>
                     </li>
-                    <!----
+
                     <li>
                         <a href="javascript:" data-toggle="collapse" data-target="#dreports"><i class="fa fa-minus" aria-hidden="true"></i>&nbsp;Deduction Reports<i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="dreports" class="collapse">
