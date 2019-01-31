@@ -21,11 +21,11 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
             $result = mysqli_query($dbc, $query);
 
            //Insert into transaction table
-            $queryTnx = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, LOAN_REF, EMP_ID, SERVICE_TYPE) 
+            $queryTnx = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, LOAN_REF, EMP_ID, SERVICE_ID) 
             VALUES({$_SESSION['showFMID']}, '1', 'FALP Approved', 0, NOW(), {$_SESSION['showFID']}, {$_SESSION['idnum']}, '2'); ";
             $resultTnx = mysqli_query($dbc, $queryTnx);
 
-            $message = "Accepted" . $queryTnx;
+            $message = "Accepted" ;
         }
         else if($_POST['action'] == "Reject Application"){
             //Change the status into Approved (APP_STATUS =2)
@@ -33,7 +33,7 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
             $result = mysqli_query($dbc, $query);
 
            //Insert into transaction table
-            $queryTnx = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, LOAN_REF, EMP_ID, SERVICE_TYPE) 
+            $queryTnx = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, LOAN_REF, EMP_ID, SERVICE_ID) 
             VALUES({$_SESSION['showFMID']}, '1', 'FALP Rejected', 0, NOW(), {$_SESSION['showFID']}, {$_SESSION['idnum']}, '2'); ";
             $resultTnx = mysqli_query($dbc, $queryTnx);
 

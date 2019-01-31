@@ -13,7 +13,6 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
         if(!empty($_POST['idNum'])){
 
-
             //Part timer part check
 
             //first check if the part timer is eligible for a loan
@@ -24,40 +23,56 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
             $result = mysqli_query($dbc, $query);
             $row = mysqli_fetch_assoc($result);
 
+            if($row['USER_STATUS'] == 2){
 
-            if($row['PART_TIME_LOANED'] == 'N' && $row['USER_STATUS'] = 2){
+                //Y  Means they have not loaned yet
+                //N means they have.
+                if($row['PART_TIME_LOANED'] = 'Y'){
 
-                echo '<script language="javascript">';
-                echo 'alert("This person is no longer eligible for a loan for this term!")';
-                echo '</script>';
+                    echo '<script language="javascript">';
+                    echo 'alert("This person is no longer eligible for a loan for this term!")';
+                    echo '</script>';
 
 
-            }else{ // which means the selected user is not a part timer
+                }
+
+            } else{ // which means the selected user is not a part timer
 
                 //add an if statement here to see if the guy you are going to add has paid 50% of his loan, then say if he cannot have another loan unless he has paid 50%
-                $query = "SELECT * FROM LOANS where {$idNum} = MEMBER_ID && APP_STATUS = 2  ";
-                $result = mysqli_query($dbc, $query);
-                $row = mysqli_fetch_assoc($result);
+                $query2 = "SELECT * FROM LOANS where {$idNum} = MEMBER_ID && APP_STATUS = 2  ";
+                $result2 = mysqli_query($dbc, $query2);
+                $row2 = mysqli_fetch_assoc($result2);
 
-                $halfAmount = $row['PAYABLE']/2; //the halved amount of the payment the person needs to pay with salary deduction
+                $halfAmount = $row2['PAYABLE']/2; //the halved amount of the payment the person needs to pay with salary deduction
 
-                if($halfAmount > $row['AMOUNT_PAID']){
+                if($halfAmount > $row2['AMOUNT_PAID']){
 
                     echo '<script language="javascript">';
                     echo 'alert("This person has a current Loan and has not paid 50% of it!")';
                     echo '</script>';
 
                 }else {
-                    // 500 per month.
-                    // 250 per payment.
-                    $halfterms = $_POST['terms']; //this fucking means monthly.
-                    $perPayment = ($_POST['amount'] / $halfterms) + 250;
+
+                    $payments = $_POST['terms']*2;
+                    $payable = $_POST['amount'] +500;
+                    $perPayment = (($_POST['amount']+500) / $payments);
 
 
-                    $query = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,PICKUP_STATUS)
-                                      values({$idNum},1,{$_POST['amount']},500,{$halfterms},{$_POST['amount']}+(500*{$halfterms}),{$perPayment},2,2,DATE(now()),1);";
+                    $query3 = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,PICKUP_STATUS)
+                                      values({$idNum},1,{$_POST['amount']},500,{$_POST['terms']},{$payable},{$perPayment},2,2,DATE(now()),1);";
 
-                    mysqli_query($dbc, $query);
+                    if (!mysqli_query($dbc,$query3))
+                    {
+                        echo("Error description: " . mysqli_error($dbc));
+                    }
+
+                    if($row['USER_STATUS'] == 2){
+                        $query = "UPDATE member SET  PART_TIME_LOANED = 'Y' WHERE {$idNum} = MEMBER_ID";
+
+                        mysqli_query($dbc, $query);
+                    }
+
+
 
                     $success = "yes";
                 }
@@ -241,9 +256,6 @@ include 'FRAP_ADMIN_SIDEBAR.php';
     <!-- /#wrapper -->
     
     <!-- jQuery -->
-    
-       
-        
    
     <?php if (!empty($success)) {
         
@@ -266,12 +278,18 @@ include 'FRAP_ADMIN_SIDEBAR.php';
             
             var amount = parseFloat(document.getElementById("amount").value);
             var terms = parseFloat(document.getElementById("terms").value);
-            var interest = 500;
+            var interest = 0;
+
+            if(document.getElementById("partTime").checked){
+                interest = 300;
+            }else{
+                interest = 500;
+            }
             
-            document.getElementById("totalI").innerHTML ="<b>Total Interest Payable: </b>₱"+ parseFloat((interest*terms)).toFixed(2);
-            document.getElementById("totalP").innerHTML ="<b>Total Amount Payable: </b> ₱"+ parseFloat((amount+(interest*terms))).toFixed(2);
-            document.getElementById("PerP").innerHTML ="<b>Per Payment Period Payable: </b> ₱ "+ parseFloat((amount/(terms*2) + (interest/2))).toFixed(2);
-            document.getElementById("Monthly").innerHTML ="<b>Monthly Payable: </b> ₱"+ parseFloat(((amount/(terms*2) + interest/2)*2)).toFixed(2);
+            document.getElementById("totalI").innerHTML ="<b>Total Interest Payable: </b>₱"+ parseFloat((interest)).toFixed(2);
+            document.getElementById("totalP").innerHTML ="<b>Total Amount Payable: </b> ₱"+ parseFloat((amount+interest)).toFixed(2);
+            document.getElementById("PerP").innerHTML ="<b>Per Payment Period Payable: </b> ₱ "+ parseFloat(((amount+interest)/(terms*2))).toFixed(2);
+            document.getElementById("Monthly").innerHTML ="<b>Monthly Payable: </b> ₱"+ parseFloat(((amount+interest)/(terms))).toFixed(2);
 
         }
 
@@ -287,10 +305,10 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
             if(document.getElementById("partTime").checked){
                 amountLimit = 15000;
-                termMax = 5;
+                termMax = 3;
             }else{
                 amountLimit = 25000;
-                termMax = 10;
+                termMax = 5;
             }
 
 
@@ -303,7 +321,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                 alert("Amount entered is above maximum. Please enter amount within the range.");
                 return false;
             }
-            else if(terms  < 5 ){ // if terms are below 3, deins dapat to
+            else if(terms  < 0){ // if terms are below 3, deins dapat to
                 alert("Terms entered is below minimum . Please enter amount within the range.");
                 return false;
             }else if(terms > termMax) {

@@ -111,7 +111,6 @@
 
                                         <div class="panel-body"><p>
 
-                                            <b>Contact Number:</b> <p>
                                             <b>Home Phone Number: <?php echo $ans['HOME_NUM']?></b> <p>
                                             <b>Business Phone Number: <?php echo $ans['BUSINESS_NUM']?></b> <p>
                                             <b>Home Address: <?php echo $ans['HOME_ADDRESS']?></b> <p>

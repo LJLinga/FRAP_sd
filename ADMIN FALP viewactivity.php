@@ -6,13 +6,12 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
 
 $query = "SELECT * FROM LOANS 
-          where LOAN_ID = {$_POST['details']} 
-          AND loan_detail_id = 1 AND    loan_status != 3";
+          where LOAN_ID = {$_SESSION['details']} ";
 $result = mysqli_query($dbc,$query);
 $ans = mysqli_fetch_assoc($result);
 
-$query1 = "SELECT TXN_DATE,SUM(AMOUNT) as 'AMOUNT' FROM txn_reference where LOAN_REF ={$ans['LOAN_ID']} AND txn_type = 2 
-AND SERVICE_TYPE = 4 AND MEMBER_ID = {$ans['MEMBER_ID']} group by TXN_DATE";
+$query1 = "SELECT * FROM txn_reference where LOAN_REF ={$_SESSION['details']} AND txn_type = 2 
+AND SERVICE_ID = 4 AND MEMBER_ID = {$ans['MEMBER_ID']} group by TXN_DATE";
 $result1 = mysqli_query($dbc,$query1);
 
 
@@ -51,7 +50,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                 <div class="panel-body">
 
-                                    <table class="table table-bordered">
+                                    <table id = "table" class="table table-bordered">
                                         
                                         <thread>
 
@@ -70,11 +69,11 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                             <?php
                                             
                                             
-                                            while($ans= mysqli_fetch_assoc($result)){
+                                            while($ans = mysqli_fetch_assoc($result1)){
                                             $dt = new DateTime($ans['TXN_DATE']);
                                             $date = $dt->format('d/m/Y');
                                             $amount = $ans['AMOUNT'];
-                                            $status = "Complete";
+
                                             
                                             ?>
                                             <tr>
@@ -142,5 +141,16 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="DataTables/datatables.min.js"></script>
+    <script>
+
+        $(document).ready(function(){
+
+            $('#table').DataTable();
+
+        });
+
+    </script>
 
 <?php include "GLOBAL_FOOTER.php"; ?>

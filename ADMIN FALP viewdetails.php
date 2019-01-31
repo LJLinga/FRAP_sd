@@ -5,6 +5,7 @@ include 'GLOBAL_USER_TYPE_CHECKING.php';
 include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
 
+
 $query = "SELECT * FROM LOANS where LOAN_ID = {$_SESSION['details']} 
                                                   AND loan_detail_id = 1 AND    loan_status != 3";
 $result = mysqli_query($dbc,$query);
@@ -30,28 +31,31 @@ if(isset($_POST['addToPay'])){
 
         $termsLeft = $ans['PAYMENTS_MADE'] + $_POST['terms'];
 
-        //update query
-        if($paymentTermsLeft = 0){ //checks if the loan will mature
-            $update = "UPDATE loans SET AMOUNT_PAID = {$paymentToBeAdded},PAYMENTS_MADE = {$termsLeft}, DATE_MATURED = NOW(), STATUS = 3 where LOAN_ID  = {$_SESSION['details']}";
-            mysqli_query($dbc,$update);
-        }else{
-            $update = "UPDATE loans SET AMOUNT_PAID = {$paymentToBeAdded},PAYMENTS_MADE = {$termsLeft} where LOAN_ID  = {$_SESSION['details']}";
+        $update = "UPDATE loans SET AMOUNT_PAID = {$paymentToBeAdded},PAYMENTS_MADE = {$termsLeft} where LOAN_ID  = {$_SESSION['details']}";
+        mysqli_query($dbc,$update);
+
+        //this is for checking if the loan is matured. Also updates the data.
+        $queryForMatured = "SELECT * FROM LOANS where LOAN_ID = {$_SESSION['details']} ";
+        $maturedcheck = mysqli_query($dbc,$queryForMatured);
+        $matured = mysqli_fetch_assoc($maturedcheck);
+
+
+        $totalPayments = $matured['PAYMENT_TERMS']*2;
+
+        //update query for matured stuff
+        if($matured['PAYMENTS_MADE'] = $totalPayments){ //checks if the loan will mature
+            $update = "UPDATE loans SET DATE_MATURED = NOW(), LOAN_STATUS = 3 where LOAN_ID  = {$_SESSION['details']}";
             mysqli_query($dbc,$update);
         }
 
-        //First get the Loan member ID + loan
 
-
-
-
-        //update transaction table
+        //updates transaction table
 
         $description = 'Deduction from Loan';
 
         $query = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE , LOAN_REF, EMP_ID, SERVICE_ID)
                                       values({$ans['MEMBER_ID']}, 2, '{$description}' ,{$payment}, NOW(), {$ans['LOAN_ID']}, {$_SESSION['idnum']}, 4);";
 
-        echo $query;
 
         if (!mysqli_query($dbc,$query))
         {
@@ -74,12 +78,11 @@ if(isset($_POST['addToPay'])){
 
 
     //check if the 50% has beeen surpassed first - baka lang na click ni sir melton to
-    if(($ans['PAYMENT_TERMS'] - $ans['PAYMENTS_MADE']) > ($ans['PAYMENT_TERMS']/2)){
+    if(($ans['PAYMENT_TERMS']*2 - $ans['PAYMENTS_MADE']) > ($ans['PAYMENT_TERMS'])){
 
         //get the current Amount paid, and get the 50% of the Payable Amount,
 
-        $termsLeftForFifty =($ans['PAYMENT_TERMS'] - $ans['PAYMENTS_MADE'])-($ans['PAYMENT_TERMS']/2); // this variable calculates the remaining 50% to be updated in the loan.
-
+        $termsLeftForFifty =($ans['PAYMENT_TERMS']*2 - $ans['PAYMENTS_MADE'])-($ans['PAYMENT_TERMS']); // this variable calculates the remaining 50% to be updated in the loan.
 
         $payment = $ans['AMOUNT_PAID']+($termsLeftForFifty*$ans['PER_PAYMENT']);
 
@@ -127,13 +130,11 @@ if(isset($_POST['addToPay'])){
 
 }
 
-$show = "SELECT * FROM LOANS where LOAN_ID = {$_SESSION['details']} 
-                                                  AND loan_detail_id = 1 AND    loan_status != 3";
+$show = "SELECT * FROM LOANS where LOAN_ID = {$_SESSION['details']} ";
 $showme = mysqli_query($dbc,$show);
 $updated = mysqli_fetch_assoc($showme);
 
-$query3 = "SELECT l2.STATUS as 'Status' FROM LOANS l1 JOIN LOAN_STATUS l2 ON l1.LOAN_STATUS = l2.STATUS_ID where l1.LOAN_ID = {$_SESSION['details']} 
-                                                  AND l1.loan_detail_id = 1 AND     l1.loan_status != 3";
+$query3 = "SELECT l2.STATUS as 'Status' FROM LOANS l1 JOIN LOAN_STATUS l2 ON l1.LOAN_STATUS = l2.STATUS_ID where l1.LOAN_ID = {$_SESSION['details']} ";
 $result3 = mysqli_query($dbc,$query3);
 $status = mysqli_fetch_assoc($result3);
 
@@ -190,7 +191,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                     <div class="col-lg-12">
                         <?php
                             $query2 = "SELECT m.firstname as 'First',m.lastname as 'Last' FROM LOANS l join member m on l.member_id = m.member_id where LOAN_ID = {$_SESSION['details']} 
-                                                  AND loan_detail_id = 1 AND    loan_status != 3";
+                                                 ";
                                         $result2 = mysqli_query($dbc,$query2);
                                         $ans2 = mysqli_fetch_assoc($result2);
 
