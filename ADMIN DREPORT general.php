@@ -8,8 +8,6 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
 $flag=0;
 if(isset($_POST['print'])){
-
-
     $_SESSION['date']=$_POST['date'];
     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/generateGOD.php");
 }
@@ -253,7 +251,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
     
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+    
 
     <script type="text/javascript" src="DataTables/datatables.min.js"></script>
     <script>
