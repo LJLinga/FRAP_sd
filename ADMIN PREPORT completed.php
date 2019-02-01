@@ -12,6 +12,7 @@ if(isset($_POST['print'])){
     $_SESSION['date']=$_POST['date'];
     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/generateCD.php");
 }
+
 if(!isset($_POST['select_date'])){
    
         $query="SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_DETAIL_ID as 'Ref',l.LOAN_ID
@@ -47,7 +48,7 @@ join (SELECT max(date_matured) as 'Date' from loans) latest
 where l.LOAN_STATUS = 3 and latest.Date = l.Date_Matured";
     }
 }
-$result = mysqli_query($dbc,$query);
+$result2 = mysqli_query($dbc,$query);
 
 $page_title = 'Loans - Completed Deductions';
 include 'GLOBAL_HEADER.php';
@@ -209,7 +210,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     <tbody>
 
                                      <?php 
-                                        while($ans = mysqli_fetch_assoc($result)){
+                                        while($ans = mysqli_fetch_assoc($result2)){
 
 
                                         ?>

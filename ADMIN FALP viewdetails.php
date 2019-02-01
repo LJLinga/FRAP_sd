@@ -43,7 +43,7 @@ if(isset($_POST['addToPay'])){
         $totalPayments = $matured['PAYMENT_TERMS']*2;
 
         //update query for matured stuff
-        if($matured['PAYMENTS_MADE'] = $totalPayments){ //checks if the loan will mature
+        if($matured['PAYMENTS_MADE'] >= $totalPayments){ //checks if the loan will mature
             $update = "UPDATE loans SET DATE_MATURED = NOW(), LOAN_STATUS = 3 where LOAN_ID  = {$_SESSION['details']}";
             mysqli_query($dbc,$update);
         }

@@ -15,7 +15,7 @@ if(isset($_POST['print'])){
      $_SESSION['dayend'] = $_POST['dayend'];
     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/generateND.php");
 }
-if(!isset($_POST['select_date'])){
+if(!isset($_POST['date'])){
    
         $query="SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',l.per_payment as 'Amount'
         from member m
@@ -52,7 +52,7 @@ else {
         group by m.member_ID";
     }
 }
-$result=mysqli_query($dbc,$query);
+$result2=mysqli_query($dbc,$query);
 
 $page_title = 'Loans - New Deductions';
 include 'GLOBAL_HEADER.php';
@@ -231,7 +231,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                     <tbody>
                                         <?php 
-                                        while($ans = mysqli_fetch_assoc($result)){
+                                        while($ans = mysqli_fetch_assoc($result2)){
 
 
                                         ?>

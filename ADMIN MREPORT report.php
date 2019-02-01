@@ -16,7 +16,7 @@
        $year =$row['Year'];
     }
     else {
-        if($_POST['date'] != "0"){
+        if($_POST['select_date'] != "0"){
             $date = $_POST['date'];
 
             $month = substr($date,0,strpos($date,"-"));
@@ -88,7 +88,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                             <option value = "0">This Current Date</option>  
                                         <?php
                                         $query="SELECT DISTINCT MONTH(txn_date) as 'Month',YEAR(txn_date) as 'Year' from txn_reference
-                                            where txn_type = 2 AND service_type != 4";
+                                            where txn_type = 2 ";
                                         $result1 = mysqli_query($dbc,$query);
 
                                         while($ans = mysqli_fetch_assoc($result1)){?>
@@ -181,10 +181,10 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     $query1 = "SELECT s.SERVICE as 'Type',sum(amount)  as 'Amount',count(amount) as 'Count'
                                                 from service_type s
                                                 left join txn_reference t
-                                                on t.SERVICE_TYPE = s.SERVICE_ID
+                                                on t.SERVICE_ID = s.SERVICE_ID
                                                 join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
                                                 where $month = Month(txn_date) AND $year = Year(txn_date)  AND t.TXN_TYPE = 2 AND s.SERVICE_ID = 1 
-                                                group by t.SERVICE_TYPE ";
+                                                group by t.SERVICE_ID ";
                                     $result1 = mysqli_query($dbc,$query1);
                                     $row1 = mysqli_fetch_assoc($result1);
 
@@ -225,10 +225,10 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     $query1 = "SELECT s.SERVICE as 'Type',sum(amount)  as 'Amount',count(amount) as 'Count'
                                                 from service_type s
                                                 left join txn_reference t
-                                                on t.SERVICE_TYPE = s.SERVICE_ID
+                                                on t.SERVICE_ID = s.SERVICE_ID
                                                 join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
                                                 where $month = Month(txn_date) AND $year = Year(txn_date)  AND t.TXN_TYPE = 2 AND s.SERVICE_ID = 2 
-                                                group by t.SERVICE_TYPE ";
+                                                group by t.SERVICE_ID ";
                                     $result1 = mysqli_query($dbc,$query1);
                                     $row1 = mysqli_fetch_assoc($result1);
 
@@ -270,10 +270,10 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     $query1 = "SELECT s.SERVICE as 'Type',sum(amount)  as 'Amount',count(amount) as 'Count'
                                                 from service_type s
                                                 left join txn_reference t
-                                                on t.SERVICE_TYPE = s.SERVICE_ID
+                                                on t.SERVICE_ID = s.SERVICE_ID
                                                 join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
-                                                where $month = Month(txn_date) AND $year = Year(txn_date)  AND t.TXN_TYPE = 2 AND s.SERVICE_ID = 3 
-                                                group by t.SERVICE_TYPE ";
+                                                where $month = Month(txn_date) AND $year = Year(txn_date)  AND t.TXN_TYPE = 2 AND s.SERVICE_ID = 4 
+                                                group by t.SERVICE_ID ";
                                     $result1 = mysqli_query($dbc,$query1);
                                     $row1 = mysqli_fetch_assoc($result1);
 
