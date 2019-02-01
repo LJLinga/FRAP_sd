@@ -11,9 +11,9 @@ if(isset($_POST['print'])){
     $_SESSION['date']=$_POST['date'];
     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/generateGOD.php");
 }
-if(!isset($_POST['select_date'])){
+if(!isset($_POST['date'])){
    
-        $query="SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',DEPT_NAME,sum(t.amount) as 'Total'
+        $query2="SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',DEPT_NAME,sum(t.amount) as 'Total'
         from member m
         join ref_department d
         on m.dept_id = d.dept_id
@@ -30,7 +30,7 @@ else {
         $day = substr($date,0,strpos($date," "));
         $month = substr($date,(strpos($date," ")+1),strpos($date,"-")-strpos($date," ")-1);
         $year = substr($date,strpos($date,"-")+1);
-        $query="SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',DEPT_NAME,sum(t.amount) as 'Total'
+        $query2="SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',DEPT_NAME,sum(t.amount) as 'Total'
         from member m
         join ref_department d
         on m.dept_id = d.dept_id
@@ -40,7 +40,7 @@ else {
         group by m.member_ID";
     }
     else{
-        $query="SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',DEPT_NAME,sum(t.amount) as 'Total'
+        $query2="SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',DEPT_NAME,sum(t.amount) as 'Total'
         from member m
         join ref_department d
         on m.dept_id = d.dept_id
@@ -51,7 +51,7 @@ else {
         group by m.member_ID";
     }
 }
-$result=mysqli_query($dbc,$query);
+$result2=mysqli_query($dbc,$query2);
 
 $page_title = 'Loans - General Report';
 include 'GLOBAL_HEADER.php';
@@ -99,9 +99,9 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <select class="form-control" name = "date">
                                             <option value = "0">This Current Date</option>  
                                         <?php
-                                        $query="SELECT DISTINCT MONTH(txn_date) as 'Month',YEAR(txn_date) as 'Year', DAY(txn_date) as 'Day' from txn_reference
+                                        $query1="SELECT DISTINCT MONTH(txn_date) as 'Month',YEAR(txn_date) as 'Year', DAY(txn_date) as 'Day' from txn_reference
                                             where txn_type = 2";
-                                        $result1 = mysqli_query($dbc,$query);
+                                        $result1 = mysqli_query($dbc,$query1);
 
                                         while($ans = mysqli_fetch_assoc($result1)){?>
                                             <option value = "<?php echo $ans['Day']." ".$ans['Month']."-".$ans['Year'];
@@ -211,7 +211,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                     <tbody>
                                         <?php 
-                                        while($ans = mysqli_fetch_assoc($result)){
+                                        while($ans = mysqli_fetch_assoc($result2)){
 
 
                                         ?>

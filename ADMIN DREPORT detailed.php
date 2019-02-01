@@ -13,18 +13,16 @@ if(isset($_POST['print'])){
 }
 if(!isset($_POST['select_date'])){
    
-        $query="SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee',b.amount as 'BFee'
+        $query2="SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee'
 from member m
 join ref_department d
 on m.dept_id = d.dept_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_TYPE = 1 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) mf
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 1 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) mf
 on m.MEMBER_ID = mf.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_TYPE = 2 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) ha
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 2 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) ha
 on m.MEMBER_ID = ha.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_TYPE = 3 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) f
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 3 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) f
 on m.MEMBER_ID = f.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_TYPE = 4 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) b
-on m.MEMBER_ID = b.member_id
 join txn_reference t
 on t.member_id = m.member_id
 join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
@@ -37,43 +35,41 @@ else {
         $day = substr($date,0,strpos($date," "));
         $month = substr($date,(strpos($date," ")+1),strpos($date,"-")-strpos($date," ")-1);
         $year = substr($date,strpos($date,"-")+1);
-        $query="SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee',b.amount as 'BFee'
+        $query2="SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee'
 from member m
 join ref_department d
 on m.dept_id = d.dept_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_TYPE = 1 AND $month = Month(txn_date) AND $year = Year(txn_date) AND $day = DAY(txn_date) group by member_id) mf
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 1 AND $month = Month(txn_date) AND $year = Year(txn_date) AND $day = DAY(txn_date) group by member_id) mf
 on m.MEMBER_ID = mf.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_TYPE = 2 AND $month = Month(txn_date) AND $year = Year(txn_date) AND $day = DAY(txn_date) group by member_id) ha
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 2 AND $month = Month(txn_date) AND $year = Year(txn_date) AND $day = DAY(txn_date) group by member_id) ha
 on m.MEMBER_ID = ha.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_TYPE = 3 AND $month = Month(txn_date) AND $year = Year(txn_date) AND $day = DAY(txn_date) group by member_id) f
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 3 AND $month = Month(txn_date) AND $year = Year(txn_date) AND $day = DAY(txn_date) group by member_id) f
 on m.MEMBER_ID = f.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_TYPE = 4 AND $month = Month(txn_date) AND $year = Year(txn_date) AND $day = DAY(txn_date) group by member_id) b
-on m.MEMBER_ID = b.member_id
+
 join txn_reference t
         on t.MEMBER_ID = m.MEMBER_ID
         where TXN_TYPE =2 and $month = Month(txn_date) AND $year = Year(txn_date) AND $day = DAY(txn_date)
 group by m.member_ID";
     }
     else{
-        $query="SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee',b.amount as 'BFee'
+        $query2="SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee'
 from member m
 join ref_department d
 on m.dept_id = d.dept_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_TYPE = 1 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) mf
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 1 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) mf
 on m.MEMBER_ID = mf.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_TYPE = 2 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) ha
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 2 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) ha
 on m.MEMBER_ID = ha.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_TYPE = 3 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) f
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 3 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) f
 on m.MEMBER_ID = f.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_TYPE = 4 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) b
-on m.MEMBER_ID = b.member_id
+
 join txn_reference t
 on t.member_id = m.member_id
 join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
 where DATE(latest.Date) = date(TXN_DATE) group by m.member_ID";
     }
 }
-$result=mysqli_query($dbc,$query);
+$result2=mysqli_query($dbc,$query2);
 
     $page_title = 'Loans - Detailed Report';
     include 'GLOBAL_HEADER.php';
@@ -225,7 +221,7 @@ $result=mysqli_query($dbc,$query);
                                         <td align="center">Membership Fee</td>
                                         <td align="center">Health Aid Fee</td>
                                         <td align="center">FALP Loan</td>
-                                        <td align="center">Bank Loan</td>
+                                       
                                         <td align="center" width="110px">Total</td>
                                         
                                         </tr>
@@ -236,8 +232,8 @@ $result=mysqli_query($dbc,$query);
                                      
 
                                         <?php 
-                                        while($ans = mysqli_fetch_assoc($result)){
-                                            $total  =(float)$ans['MFee']+(float)$ans['HAFee']+(float)$ans['FFee']+(float)$ans['BFee'];
+                                        while($ans = mysqli_fetch_assoc($result2)){
+                                            $total  =(float)$ans['MFee']+(float)$ans['HAFee']+(float)$ans['FFee'];
 
                                         ?>
                                         <tr>
@@ -247,7 +243,6 @@ $result=mysqli_query($dbc,$query);
                                         <td align="center"><b><?php echo sprintf("%.2f",(float)$ans['MFee']);?></b></td>
                                         <td align="center"><b><?php echo sprintf("%.2f",(float)$ans['HAFee']);?></b></td>
                                         <td align="center"><b><?php echo sprintf("%.2f",(float)$ans['FFee']);?></b></td>
-                                        <td align="center"><b><?php echo sprintf("%.2f",(float)$ans['BFee']);?></b></td>
                                         <td align="center"><b><?php echo sprintf("%.2f",(float)$total);?></b></td>
 
                                         </tr>
