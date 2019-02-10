@@ -125,7 +125,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
                                                                   CONCAT(a.firstName,' ', a.lastName) AS name, 
                                                                   s.description AS status, 
                                                                   p.lastUpdated 
-                                                                  FROM posts p JOIN users a ON p.authorId = a.id 
+                                                                  FROM posts p JOIN employee a ON p.authorId = a.EMP_ID 
                                                                   JOIN post_status s ON s.id = p.statusId 
                                                                   WHERE s.id = 1 || s.id = 2 || s.id=3 || s.id=4
                                                                   ORDER BY p.lastUpdated DESC;");

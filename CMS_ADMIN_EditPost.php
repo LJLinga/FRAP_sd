@@ -15,11 +15,25 @@ session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
-//hardcoded value for userType, will add MYSQL verification query
+//hardcoded value for userType, will add MYSQL verification
+
+
 
 if(!empty($_GET['postId'])){
 
     $postId = $_GET['postId'];
+
+    $rows1 = $crud->getData("SELECT p.authorId FROM posts p WHERE p.id = '$postId'");
+    foreach((array) $rows1 as $key => $row){
+        $authorId = $row['authorId'];
+    }
+
+    $userId = $_SESSION['idnum'];
+
+    if($cmsRole != 3 && $authorId != $_SESSION['idnum']){
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_PostsDashboard.php");
+    }
+
     $rows = $crud->getData("SELECT 
             p.title,
             CONCAT(u.firstName,' ', u.lastName) AS author,
@@ -29,9 +43,9 @@ if(!empty($_GET['postId'])){
             p.statusId,
             s.description
         FROM
-            users u
+            employee u
                 JOIN
-            posts p ON p.authorId = u.id
+            posts p ON p.authorId = u.EMP_ID
                 JOIN
             post_status s ON p.statusId = s.id
         WHERE
@@ -54,7 +68,7 @@ if(!empty($_GET['postId'])){
             FROM
                 posts p
                     JOIN
-                users pub ON pub.id = p.publisherId
+                employee pub ON pub.EMP_ID = p.publisherId
             WHERE
                 p.id = '$postId' ;
         ");

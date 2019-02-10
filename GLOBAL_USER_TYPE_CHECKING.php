@@ -5,7 +5,6 @@
 // first we have to check if the user is  active, non active resigned etc.
 
 
-
 $queryUser = "SELECT USER_STATUS
               from member
               where MEMBER_ID = {$_SESSION['idnum']}";

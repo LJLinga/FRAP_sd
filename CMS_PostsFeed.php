@@ -20,7 +20,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
 
                 <?php
 
-                $rows = $crud->getData("SELECT p.id, p.title, p.body, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status, p.lastUpdated FROM posts p JOIN users a ON p.authorId = a.id JOIN post_status s ON s.id = p.statusId WHERE s.id=3 ORDER BY p.firstCreated DESC;");
+                $rows = $crud->getData("SELECT p.id, p.title, p.body, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status, p.lastUpdated FROM posts p JOIN employee a ON p.authorId = a.EMP_ID JOIN post_status s ON s.id = p.statusId WHERE s.id=3 ORDER BY p.firstCreated DESC;");
                 foreach ((array) $rows as $key => $row){
                     ?>
 
