@@ -16,6 +16,10 @@ include('GLOBAL_CMS_ADMIN_CHECKING.php');
 $page_title = 'Santinig - Posts Dashboard';
 include 'GLOBAL_HEADER.php';
 include 'CMS_ADMIN_SIDEBAR.php';
+
+$userId = $_SESSION['idnum'];
+
+echo $userId." ".$cmsRole;
 ?>
 
 <script>
@@ -99,7 +103,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
                         <tr>
 
                             <th align="left" width="200px"><b>Title</b></th>
-                            <th align="left" width="200px"><b>Author</b></th>
+                            <?php if($cmsRole == '3') ?> <th align="left" width="200px"><b>Author</b></th> <?php ?>
                             <th align="left" width="100px"><b>Status</b></th>
                             <th align="left" width="200px"><b>Last Updated</b></th>
                             <th align="right" width="200px"><b>Actions</b></th>
@@ -110,7 +114,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
                         <tr>
 
                             <th align="left" width="200px"><b>Title</b></th>
-                            <th align="left" width="200px"><b>Author</b></th>
+                            <?php if($cmsRole == '3') ?> <th align="left" width="200px"><b>Author</b></th> <?php ?>
                             <th align="left" width="100px"><b>Status</b></th>
                             <th align="left" width="200px"><b>Last Updated</b></th>
                             <th align="right" width="200px"><b>Actions</b></th>
@@ -120,21 +124,38 @@ include 'CMS_ADMIN_SIDEBAR.php';
                         <tbody id="tbody">
                         <?php
 
-                            $rows = $crud->getData("SELECT p.id, 
+                            if($cmsRole == 3){
+                                // Editor can see all his posts and drafts, and all "pending","published",and "archived" posts that are not his but not other's drafts
+                                $query = "SELECT p.id, 
                                                                   p.title, 
                                                                   CONCAT(a.firstName,' ', a.lastName) AS name, 
                                                                   s.description AS status, 
                                                                   p.lastUpdated 
                                                                   FROM posts p JOIN employee a ON p.authorId = a.EMP_ID 
                                                                   JOIN post_status s ON s.id = p.statusId 
-                                                                  WHERE s.id = 1 || s.id = 2 || s.id=3 || s.id=4
-                                                                  ORDER BY p.lastUpdated DESC;");
+                                                                  WHERE s.id = 2 || s.id=3 || s.id=4 
+                                                                  OR s.id = 1 AND p.authorId = '$userId' 
+                                                                  ORDER BY p.lastUpdated DESC;";
+                            }else{
+                                // Non-editors can only view their posts, can also see their "published" and "archived" but would not be able to modify them.
+                                $query = "SELECT p.id, 
+                                            p.title, 
+                                            CONCAT(a.firstName,' ', a.lastName) AS name, 
+                                            s.description AS status, 
+                                                                  p.lastUpdated 
+                                                                  FROM posts p JOIN employee a ON p.authorId = a.EMP_ID 
+                                                                  JOIN post_status s ON s.id = p.statusId 
+                                                                  WHERE p.authorId = '$userId'
+                                                                  ORDER BY p.lastUpdated DESC;";
+                            }
+
+                            $rows = $crud->getData($query);
                             foreach ((array) $rows as $key => $row){
                                 ?>
                             <tr>
 
                                 <td align="left"><?php echo $row['title'];?></td>
-                                <td align="left"><?php echo $row['name'] ;?></td>
+                                <td align="left"><?php if($cmsRole == '3') echo $row['name'] ;?></td>
                                 <td align="left"><?php echo $row['status'] ;?></td>
                                 <td align="left"><?php echo $row['lastUpdated'] ;?></td>
                                 <td align="right" class="nowrap">
@@ -150,7 +171,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
                     </table>
                 </div>
             </div>
-            <div class="card-footer small text-muted"><b>Updated yesterday at 11:59 PM</b>5</div>
+            <div class="card-footer small text-muted"></div>
         </div>
     </div>
     <!-- /.container-fluid -->

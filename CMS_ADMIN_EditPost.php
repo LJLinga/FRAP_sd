@@ -116,18 +116,23 @@ include 'CMS_ADMIN_SIDEBAR.php';
 <script>
     $(document).ready( function(){
 
+        let status = <?php echo $status; ?>
+
         $('textarea').froalaEditor({
             //Disables video upload
             videoUpload: false,
             // Set the image upload URL
             imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
             // Set the file upload URL.
-            fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php'
+            fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
             //Allow comments
         });
 
         $('textarea').froalaEditor('html.set', '<?php echo $body?>');
 
+        if(status == 3){
+            $('textarea').froalaEditor("edit.off");
+        }
         $('#btnComment').onclick( function(){
             $('#comment').html($('textarea').froalaEditor('html.getSelected'));
             alert('hello');
@@ -157,7 +162,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
                     <!-- Text input-->
                     <div class="form-group">
                         <label for="post_title">Title</label>
-                        <input id="post_title" name="post_title" type="text" placeholder="Put your post title here..." class="form-control input-md" value="<?php if(isset($title)){ echo $title; }; ?>" required>
+                        <input <?php if($cmsRole != '3' && $status == '3') echo 'disabled' ?> id="post_title" name="post_title" type="text" placeholder="Put your post title here..." class="form-control input-md" value="<?php if(isset($title)){ echo $title; }; ?>" required>
                     </div>
 
                     <!-- Textarea -->
@@ -187,28 +192,31 @@ include 'CMS_ADMIN_SIDEBAR.php';
 
                             Current Status: <b><?php echo $statusDesc?></b><br>
                             <?php if(!empty($publisher)){ echo "Publisher: <b>".$publisher."</b><br>"; }?>
-                            <i>Last updated: <b><?php echo $lastUpdated?></b></i><br>
+                            <i>Last updated: <b><?php echo $lastUpdated?></b></i><br><br>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="submitStatus">Submit Action</label>
-                                <select class="form-control" id="submitStatus" name="submitStatus">
-                                    <option <?php if ($status == '1' ) echo 'selected' ; ?> value="1">Save as Draft</option>
-                                    <option <?php if ($status == '2' ) echo 'selected' ; ?> value="2">Submit for Review</option>
-                                    <?php if($cmsRole == '3'){
-                                        $text = '';
-                                        if($status == '3'){
-                                            $text='selected';
-                                        }
-                                        echo "<option ".$text." value=\"3\">Publish</option>" ?>
-
-                                    <?php };?>
-                                    <option <?php if ($status == '4' ) echo 'selected' ; ?> value="4">Archive</option>
-                                </select>
+                                <?php if($cmsRole=='3'){ ?>
+                                    <label for="submitStatus">Submit Action</label>
+                                    <select class="form-control" id="submitStatus" name="submitStatus">
+                                        <option <?php if ($status == '2' ) echo 'selected' ; ?> value="2">Unpublish</option>
+                                        <option <?php if ($status == '3' ) echo 'selected' ; ?> value="3">Publish</option>
+                                        <option <?php if ($status == '4' ) echo 'selected' ; ?> value="4">Archive</option>
+                                    </select>
+                                <?php }else if($cmsRole!='3' && $status != '3'){ ?>
+                                    <label for="submitStatus">Submit Action</label>
+                                    <select class="form-control" id="submitStatus" name="submitStatus">
+                                        <option <?php if ($status == '1' ) echo 'selected' ; ?> value="1">Save as Draft</option>
+                                        <option <?php if ($status == '2' ) echo 'selected' ; ?> value="2">Submit for Review</option>
+                                    </select>
+                                <?php }else{ ?>
+                                    'Ask your publisher to unpublish if you wish to edit this post.'
+                                <?php } ?>
                             </div>
-                            <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">
-                            <button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit">Submit</button>
-
+                            <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;}; ?>">
+                            <?php if($status != '3' || $cmsRole == '3'){ ?>
+                                <button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit">Submit</button>
+                            <?php } ?>
                         </div>
                     </div>
 
@@ -231,5 +239,3 @@ include 'CMS_ADMIN_SIDEBAR.php';
 </div>
 <!-- /#page-wrapper -->
 <?php include 'GLOBAL_FOOTER.php' ?>
-
-

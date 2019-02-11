@@ -12,13 +12,12 @@ session_start();
  * Date: 10/10/2018
  * Time: 3:48 PM
  */
-
+$userId = $_SESSION['idnum'];
 
 if(isset($_POST['btnSubmit'])){
     $title = $_POST['post_title'];
     $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['submitStatus'];
-
 
     $id = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body','$userId','$status')");
     if(!empty ($id)) {
