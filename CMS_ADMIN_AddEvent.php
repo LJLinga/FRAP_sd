@@ -1,11 +1,15 @@
 <?php
 
+require_once __DIR__ . '/Calendar Integration/vendor/autoload.php';
+
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_CMS_ADMIN_CHECKING.php');
+
+$userId = $_SESSION['idnum'];
 
 /**
  * Created by PhpStorm.
@@ -19,13 +23,49 @@ if(isset($_POST['btnSubmit'])){
     $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['submitStatus'];
 
+    include 'Calendar Integration/addToCalendar.php';
 
-    $id = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body','$userId','$status')");
+    $client = getClient();
+    $service = new Google_Service_Calendar($client);
+
+    $event = new Google_Service_Calendar_Event(array(
+        'summary' => $title,
+        'location' => '800 Howard St., San Francisco, CA 94103',
+        'description' => $body,
+        'start' => array(
+            'dateTime' => '2015-05-28T09:00:00-07:00',
+            'timeZone' => 'America/Los_Angeles',
+        ),
+        'end' => array(
+            'dateTime' => '2015-05-28T17:00:00-07:00',
+            'timeZone' => 'America/Los_Angeles',
+        ),
+        'recurrence' => array(
+            'RRULE:FREQ=DAILY;COUNT=2'
+        ),
+        'attendees' => array(
+            array('email' => 'lpage@example.com'),
+            array('email' => 'sbrin@example.com'),
+        ),
+        'reminders' => array(
+            'useDefault' => FALSE,
+            'overrides' => array(
+                array('method' => 'email', 'minutes' => 24 * 60),
+                array('method' => 'popup', 'minutes' => 10),
+            ),
+        ),
+    ));
+
+    $calendarId = 'primary';
+    $event = $service->events->insert($calendarId, $event);
+    $eventLink = $event->htmlLink;
+
+    $id = $crud->executeGetKey("INSERT INTO events (title, description, posterId, eventLink) values ('$title', '$body','$userId','$eventLink')");
     if(!empty ($id)) {
         header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditEvent.php?postId=" . $id);
     }else{
         echo '<script language="javascript">';
-        echo 'alert("something went wrong")';
+        echo 'alert('.$eventLink.')';
         echo '</script>';
     }
 }
@@ -66,12 +106,14 @@ include 'CMS_ADMIN_SIDEBAR.php';
 
             $('#datetimepicker1').datetimepicker( {
                 minDate: moment(),
-                locale: moment().local('ph')
+                locale: moment().local('ph'),
+                defaultDate: moment().add(5,'minutes')
             });
 
             $('#datetimepicker2').datetimepicker( {
-                minDate: moment(),
-                locale: moment().local('ph')
+                minDate: moment().add(15, 'minutes'),
+                locale: moment().local('ph'),
+                defaultDate: moment().add(20, 'minutes')
             });
 
 
@@ -151,9 +193,10 @@ include 'CMS_ADMIN_SIDEBAR.php';
                                 <div class="form-group">
                                     <label for="submitStatus">Submit Action</label>
                                     <select class="form-control" id="submitStatus" name="submitStatus">
-                                        <option value="1">Submit for Review</option>
+                                        <option value="1">Submit for Approval</option>
                                         <?php if($cmsRole=='3'){ echo "<option value=\"2\">Publish</option>";}?>
                                         <option value="3">Cancel Event</option>
+                                        <option value="4">Finish Event</option>
                                     </select>
                                 </div>
                                 <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">

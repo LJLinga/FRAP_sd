@@ -12,7 +12,7 @@ if (php_sapi_name() != 'cli') {
 function getClient()
 {
     $client = new Google_Client();
-    $client->setApplicationName('Google Calendar API PHP Quickstart');
+    $client->setApplicationName('LapDoc System Scheduler');
     $client->setScopes(Google_Service_Calendar::CALENDAR);
     $client->setAuthConfig('credentials.json');
     $client->setAccessType('offline');

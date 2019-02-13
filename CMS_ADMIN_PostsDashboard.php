@@ -101,7 +101,7 @@ echo $userId." ".$cmsRole;
                         <tr>
 
                             <th align="left" width="200px"><b>Title</b></th>
-                            <?php if($cmsRole == '3') ?> <th align="left" width="200px"><b>Author</b></th> <?php ?>
+                            <?php if($cmsRole == 3) echo '<th align="left" width="200px"><b>Author</b></th>'?>
                             <th align="left" width="100px"><b>Status</b></th>
                             <th align="left" width="200px"><b>Last Updated</b></th>
                             <th align="right" width="200px"><b>Actions</b></th>
@@ -112,7 +112,7 @@ echo $userId." ".$cmsRole;
                         <tr>
 
                             <th align="left" width="200px"><b>Title</b></th>
-                            <?php if($cmsRole == '3') ?> <th align="left" width="200px"><b>Author</b></th> <?php ?>
+                            <?php if($cmsRole == 3) echo '<th align="left" width="200px"><b>Author</b></th>'?>
                             <th align="left" width="100px"><b>Status</b></th>
                             <th align="left" width="200px"><b>Last Updated</b></th>
                             <th align="right" width="200px"><b>Actions</b></th>
@@ -153,7 +153,7 @@ echo $userId." ".$cmsRole;
                             <tr>
 
                                 <td align="left"><?php echo $row['title'];?></td>
-                                <td align="left"><?php if($cmsRole == '3') echo $row['name'] ;?></td>
+                                <?php if($cmsRole == 3) echo '<td align="left">'.$row['name'].'</td>' ?>
                                 <td align="left"><?php echo $row['status'] ;?></td>
                                 <td align="left"><?php echo $row['lastUpdated'] ;?></td>
                                 <td align="right" class="nowrap">

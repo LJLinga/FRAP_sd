@@ -6,8 +6,6 @@
  * Time: 3:48 PM
  */
 
-require_once __DIR__ . '/vendor/autoload.php';
-
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
@@ -16,8 +14,6 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 //hardcoded value for userType, will add MYSQL verification
-
-
 
 if(!empty($_GET['postId'])){
 
@@ -79,6 +75,8 @@ if(!empty($_GET['postId'])){
 
     $head = "Edit: ".$title;
 
+}else{
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_PostsDashboard.php");
 }
 
 if(isset($_POST['btnSubmit'])) {
