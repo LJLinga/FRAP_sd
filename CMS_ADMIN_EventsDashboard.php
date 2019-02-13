@@ -1,4 +1,4 @@
-<?php
+1<?php
 /**
  * Created by PhpStorm.
  * User: nicol
@@ -112,4 +112,3 @@ include 'CMS_ADMIN_SIDEBAR.php';
 
 </div>
 <!-- /#wrapper -->
-

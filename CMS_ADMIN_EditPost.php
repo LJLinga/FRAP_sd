@@ -6,7 +6,7 @@
  * Time: 3:48 PM
  */
 
-require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
@@ -116,7 +116,8 @@ include 'CMS_ADMIN_SIDEBAR.php';
 <script>
     $(document).ready( function(){
 
-        let status = <?php echo $status; ?>
+        let status = <?php echo $status; ?>;
+        $('textarea').froalaEditor();
 
         $('textarea').froalaEditor({
             //Disables video upload
@@ -132,7 +133,8 @@ include 'CMS_ADMIN_SIDEBAR.php';
 
         if(status == 3){
             $('textarea').froalaEditor("edit.off");
-        }
+        };
+
         $('#btnComment').onclick( function(){
             $('#comment').html($('textarea').froalaEditor('html.getSelected'));
             alert('hello');

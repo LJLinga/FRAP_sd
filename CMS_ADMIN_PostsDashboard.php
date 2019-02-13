@@ -23,8 +23,6 @@ echo $userId." ".$cmsRole;
 ?>
 
 <script>
-
-
     $(document).ready(function() {
 
         table = $('#dataTable').DataTable();
@@ -126,25 +124,25 @@ echo $userId." ".$cmsRole;
 
                             if($cmsRole == 3){
                                 // Editor can see all his posts and drafts, and all "pending","published",and "archived" posts that are not his but not other's drafts
-                                $query = "SELECT p.id, 
-                                                                  p.title, 
-                                                                  CONCAT(a.firstName,' ', a.lastName) AS name, 
-                                                                  s.description AS status, 
-                                                                  p.lastUpdated 
-                                                                  FROM posts p JOIN employee a ON p.authorId = a.EMP_ID 
-                                                                  JOIN post_status s ON s.id = p.statusId 
-                                                                  WHERE s.id = 2 || s.id=3 || s.id=4 
-                                                                  OR s.id = 1 AND p.authorId = '$userId' 
+                                $query = "SELECT p.id,
+                                                                  p.title,
+                                                                  CONCAT(a.firstName,' ', a.lastName) AS name,
+                                                                  s.description AS status,
+                                                                  p.lastUpdated
+                                                                  FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
+                                                                  JOIN post_status s ON s.id = p.statusId
+                                                                  WHERE s.id = 2 || s.id=3 || s.id=4
+                                                                  OR s.id = 1 AND p.authorId = '$userId'
                                                                   ORDER BY p.lastUpdated DESC;";
                             }else{
                                 // Non-editors can only view their posts, can also see their "published" and "archived" but would not be able to modify them.
-                                $query = "SELECT p.id, 
-                                            p.title, 
-                                            CONCAT(a.firstName,' ', a.lastName) AS name, 
-                                            s.description AS status, 
-                                                                  p.lastUpdated 
-                                                                  FROM posts p JOIN employee a ON p.authorId = a.EMP_ID 
-                                                                  JOIN post_status s ON s.id = p.statusId 
+                                $query = "SELECT p.id,
+                                            p.title,
+                                            CONCAT(a.firstName,' ', a.lastName) AS name,
+                                            s.description AS status,
+                                                                  p.lastUpdated
+                                                                  FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
+                                                                  JOIN post_status s ON s.id = p.statusId
                                                                   WHERE p.authorId = '$userId'
                                                                   ORDER BY p.lastUpdated DESC;";
                             }
@@ -182,4 +180,3 @@ echo $userId." ".$cmsRole;
 
 </div>
 <!-- /#wrapper -->
-
