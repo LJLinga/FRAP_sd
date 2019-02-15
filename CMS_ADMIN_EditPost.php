@@ -194,6 +194,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
                             <?php if(!empty($publisher)){ echo "Publisher: <b>".$publisher."</b><br>"; }?>
                             <i>Last updated: <b><?php echo $lastUpdated?></b></i><br><br>
                         </div>
+                        
                         <div class="card-body">
                             <div class="form-group">
                                 <?php if($cmsRole=='3'){ ?>
