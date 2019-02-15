@@ -111,7 +111,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
                                     <label for="submitStatus">Submit Action</label>
                                     <select class="form-control" id="submitStatus" name="submitStatus">
                                         <option value="1">Save as Draft</option>
-                                        <option value="2">Submit for Review</option>
+                                        <?php if($cmsRole!='3'){ echo "<option value=\"2\">Submit for Review</option>";}?>
                                         <?php if($cmsRole=='3'){ echo "<option value=\"3\">Publish</option>";}?>
                                         <option value="4">Archive</option>
                                     </select>

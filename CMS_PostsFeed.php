@@ -14,9 +14,10 @@ include 'GLOBAL_HEADER.php';
 include 'CMS_ADMIN_SIDEBAR.php';
 
 ?>
+
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-6" style="top: 1rem;">
 
                 <?php
 
@@ -42,9 +43,10 @@ include 'CMS_ADMIN_SIDEBAR.php';
                 <?php }?>
             </div>
 
-            <div class="=">
-
-            </div>
+            <div class="col-lg-4" style="position: fixed; right: 100px; top: 75px;">
+                <div class="googleCalendar">
+                    <iframe src="https://calendar.google.com/calendar/b/3/embed?title=AFED%20Events&amp;height=400&amp;wkst=2&amp;bgcolor=%2399ff99&amp;src=noreply.lapdoc%40gmail.com&amp;color=%231B887A&amp;src=en.philippines%23holiday%40group.v.calendar.google.com&amp;color=%23125A12&amp;ctz=Asia%2FManila" style="border-width:0" width="600" height="400" frameborder="0" scrolling="no"></iframe>
+                </div>
         </div>
 
 

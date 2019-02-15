@@ -19,15 +19,21 @@ include 'CMS_ADMIN_SIDEBAR.php';
 
 $userId = $_SESSION['idnum'];
 
-echo $userId." ".$cmsRole;
 ?>
 
 <script>
     $(document).ready(function() {
 
         table = $('#dataTable').DataTable();
-        displayTable(table,'')
-        $('.card-footer').html('Updated on '+table.cell(0,3).data());
+        displayTable(table,'');
+
+        let cmsRole = "<?php echo $cmsRole; ?>";
+
+        if(cmsRole===3){
+            $('.card-footer').html('Updated on '+table.cell(0,3).data());
+        }else{
+            $('.card-footer').html('Updated on '+table.cell(0,4).data());
+        }
 
         $('#tbody').on('click','.archive', function(){
             $.ajax({

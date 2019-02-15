@@ -30,7 +30,7 @@ if(isset($_POST['btnSubmit'])){
     $startTime = preg_replace('/\s+/', 'T', $startTime);
     $endTime = preg_replace('/\s+/', 'T', $endTime);
 
-    if($status == 2) {
+    if($status == 3) {
 
         include 'Calendar Integration/addToCalendar.php';
 
@@ -55,7 +55,6 @@ if(isset($_POST['btnSubmit'])){
             //    'RRULE:FREQ=DAILY;COUNT=2'
             //),
             'attendees' => array(
-
                 array('email' => 'nicolealderite@gmail.com'),
                 array('email' => 'sbrin@example.com'),
             ),
@@ -75,7 +74,7 @@ if(isset($_POST['btnSubmit'])){
 
     }
 
-    $id = $crud->executeGetKey("INSERT INTO events (title, description, posterId, startTime, endTime, GOOGLE_EVENTID, GOOGLE_EVENTLINK) values ('$title', '$body','$userId','$startTime','$endTime','$eventId','$eventLink')");
+    $id = $crud->executeGetKey("INSERT INTO events (title, description, posterId, statusId, startTime, endTime, GOOGLE_EVENTID, GOOGLE_EVENTLINK) values ('$title', '$body','$userId','$statusId','$startTime','$endTime','$eventId','$eventLink')");
     if(!empty ($id)) {
         header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditEvent.php?postId=" . $id);
     }else{
@@ -217,10 +216,11 @@ include 'CMS_ADMIN_SIDEBAR.php';
                                 <div class="form-group">
                                     <label for="submitStatus">Submit Action</label>
                                     <select class="form-control" id="submitStatus" name="submitStatus">
-                                        <option value="1">Submit for Approval</option>
-                                        <?php if($cmsRole=='3'){ echo "<option value=\"2\">Publish</option>";}?>
-                                        <option value="3">Cancel Event</option>
-                                        <option value="4">Finish Event</option>
+                                        <option value="1">Save as Draft</option>
+                                        <?php if($cmsRole!=3 && $status!=3){ echo "<option value=\"2\">Submit for Approval</option>";}?>
+                                        <?php if($cmsRole==3){ echo "<option value=\"3\">Approve</option>";}?>
+                                        <?php if($cmsRole==3 && $status==4){ echo "<option value=\"5\">Finish Event</option>";}?>
+                                        <?php if($cmsRole==3 && $status==3){ echo "<option value=\"6\">Cancel Event</option>";}?>
                                     </select>
                                 </div>
                                 <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">
