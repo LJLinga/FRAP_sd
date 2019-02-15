@@ -144,6 +144,7 @@ $page_title = 'FALP - View FALP Details';
 include 'GLOBAL_HEADER.php';
 include 'FRAP_ADMIN_SIDEBAR.php';
 ?>
+
 <style>
     .slidecontainer {
         width: 100%;
@@ -389,8 +390,8 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         </div>
 
                                         <br>
-                                        <button type="submit" name="addToPay" class="btn btn-primary">Pay with number of terms</button>
-                                        <button type="submit" name="addFifty" class="btn btn-primary">Pay 50% Immediately</button>
+                                        <button type="submit" name="addToPay" id="addToPay" class="btn btn-primary">Pay with number of terms</button>
+                                        <button type="submit" name="addFifty" id="addFifty" class="btn btn-primary">Pay 50% Immediately</button>
                                     </div>
 
                                 </div>
@@ -450,10 +451,18 @@ include 'FRAP_ADMIN_SIDEBAR.php';
     <script>
         var slider = document.getElementById("myRange");
         var output = document.getElementById("demo");
+        var addToPay = document.getElementById("addToPay");
+
+        addToPay.disabled = true;
         output.innerHTML = slider.value;
 
         slider.oninput = function() {
             output.innerHTML = this.value;
+            if(this.value==0){
+                addToPay.disabled=true;
+            }else if(this.value>0){
+                addToPay.disabled=false;
+            }
         }
     </script>
 

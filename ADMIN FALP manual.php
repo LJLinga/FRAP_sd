@@ -178,11 +178,8 @@ $success = null;
 
            		
 
-           	else if(isset($_POST['hasLifetime'])&&(empty($_POST['primary']) ){
-                	
-                	
-                		
-           			echo '<script language="javascript">';
+           	else if(isset($_POST['hasLifetime'])&&(empty($_POST['primary']) )){
+                	echo '<script language="javascript">';
                     echo 'alert("You forgot to fill up the Life portion!")';
                     echo '</script>';
            			

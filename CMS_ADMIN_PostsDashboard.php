@@ -28,11 +28,15 @@ $userId = $_SESSION['idnum'];
         displayTable(table,'');
 
         let cmsRole = "<?php echo $cmsRole; ?>";
+        let s = 2;
+        let d = 3;
 
-        if(cmsRole===3){
-            $('.card-footer').html('Updated on '+table.cell(0,3).data());
+        if(cmsRole==='3'){
+            $('.card-footer').html('Updated on '+table.cell(0,d).data());
         }else{
-            $('.card-footer').html('Updated on '+table.cell(0,4).data());
+            s = 1;
+            d = 2;
+            $('.card-footer').html('Updated on '+table.cell(0,d).data());
         }
 
         $('#tbody').on('click','.archive', function(){
@@ -51,26 +55,26 @@ $userId = $_SESSION['idnum'];
         });
 
         $('#btnAll').on('click', function(){
-            displayTable(table, '');
+            displayTable(table, '',s, d);
         });
         $('#btnPublished').on('click', function(){
-            displayTable(table, 'Published');
+            displayTable(table, 'Published',s, d);
         });
         $('#btnPending').on('click', function(){
-            displayTable(table, 'Pending')
+            displayTable(table, 'Pending', s, d)
         });
         $('#btnDraft').on('click', function(){
-            displayTable(table, 'Draft');
+            displayTable(table, 'Draft', s, d);
         });
         $('#btnArchived').on('click', function(){
-            displayTable(table, 'Archived');
+            displayTable(table, 'Archived', s, d);
         });
 
 
     });
 
-    function displayTable(table, searchText){
-        table.column(2).search(searchText).column(3).order('desc').draw();
+    function displayTable(table, searchText, statusColumn, dateColumn){
+        table.column(statusColumn).search(searchText).column(dateColumn).order('desc').draw();
     }
 </script>
 
