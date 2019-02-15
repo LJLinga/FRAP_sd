@@ -393,6 +393,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <button type="submit" name="addFifty" id="addFifty" hidden>Pay 50% Immediately</button>
 
                                         <button type="button" name="modalTriggerPay" id="modalTriggerPay" class="btn btn-primary" data-toggle="modal" data-target="#confirm-submit">Pay with number of terms</button>
+                                        <br><br>
                                         <button type="button" name="modalTriggerFifty" id="modalTriggerFifty" class="btn btn-primary" data-toggle="modal" data-target="#confirm-submit">Pay 50% Immediately</button>
 
                                     </div>

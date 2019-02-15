@@ -129,13 +129,12 @@
                                         </div>
 
                                         <div class="panel-body"><p>
-                                            <?php if($ans['USER_STATUS']=="4"){ 
-                                                echo '<input type="submit" class="btn btn-success" name="action" value="Reactivate Account">';
-                                                
-                                            
-
-                                            } else{
-                                            echo '<input type="submit" class="btn btn-danger" name="action" value="Deactivate Account">';
+                                            <?php if($ans['USER_STATUS']=="4"){
+                                                echo '<input id="action" type="submit" name="action" value="Reactivate Account" hidden>';
+                                                echo '<button id="modalTrigger" type="button" class="btn btn-success" data-toggle="modal" data-target="#confirm-submit">Reactivate Account</button>';
+                                             } else{
+                                                echo '<input id="action" type="submit" name="action" value="Deactivate Account" hidden>';
+                                                echo '<button id="modalTrigger" type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirm-submit">Deactivate Account</button>';
                                              }?>
                                         </div>
 
@@ -159,6 +158,25 @@
     </div>
     <!-- /#wrapper -->
 
+<!-- Modal by xtian pls dont delete hehe -->
+<div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Confirm Action
+            </div>
+            <div class="modal-body">
+                Are you sure you want to <b id="changeText"></b> ?
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a href="#" id="submit" class="btn btn-success success">Yes, I'm sure</a>
+            </div>
+        </div>
+    </div>
+</div>
+
     <script type="text/javascript" src="DataTables/datatables.min.js"></script>
     <script>
 
@@ -166,8 +184,15 @@
     
             $('#table').DataTable();
 
-        });
+            var action = $("#action").val();
 
+            $('#modalTrigger').click(function() {
+                $('#changeText').text(action);
+                $('#submit').click(function() {
+                    $("#action").click();
+                });
+            });
+        });
     </script>
 
 </body>

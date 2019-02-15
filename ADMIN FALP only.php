@@ -207,7 +207,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                             <input type="checkbox" name="ifPartTime" value="partTime" id="partTime"> Is the member a part time? <br>
                                             <label class="memfieldlabel">Amount</label><big class="req"> *</big>
-                                            <input type="number" class="form-control" placeholder="Enter Amount (Peso)" name="amount" id="amount"  maxlength="5">
+                                            <input type="number" class="form-control" placeholder="Enter Amount (Peso)" name="amount" id="amount" min="1" max="99999" maxlength="5">
 
                                         </div>
 
@@ -220,7 +220,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <div class="col-lg-4">
                                             
                                             <label class="memfieldlabel">Payment Terms</label><big class="req"> *</big>
-                                            <input type="number" class="form-control" placeholder="Payment Terms" name="terms"  id="terms">
+                                            <input type="number" class="form-control" placeholder="Payment Terms" name="terms"  id="terms" min="1">
                                             <p>
                                             <div id = "totalI">   </div> <p>
                                             <p>
@@ -296,9 +296,11 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
         function checkform(){
 
-            var amount = parseFloat(document.getElementById("amount").value);
-            var terms = parseFloat(document.getElementById("terms").value);
+            var elemAmount = document.getElementById("amount");
+            var elemTerms = document.getElementById("terms");
 
+            var amount = parseFloat(elemAmount.value);
+            var terms = parseFloat(elemTerms.value);
 
             var amountLimit;
             var termMax;
@@ -311,6 +313,8 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                 termMax = 5;
             }
 
+            elemAmount.setAttribute("max",amountLimit+"");
+            elemTerms.setAttribute("max",termMax+"");
 
 
             if(amount<5000){
