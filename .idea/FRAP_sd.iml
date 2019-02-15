@@ -2,9 +2,22 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/deanblackborough/php-quill-renderer" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/froala/wysiwyg-editor-php-sdk" />
+      <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/deanblackborough/php-quill-renderer" />
+      <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/firebase/php-jwt" />
+      <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/froala/wysiwyg-editor-php-sdk" />
+      <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/google/apiclient" />
+      <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/google/apiclient-services" />
+      <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/google/auth" />
+      <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/guzzlehttp/guzzle" />
+      <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/guzzlehttp/promises" />
+      <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/guzzlehttp/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/monolog/monolog" />
+      <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/phpseclib/phpseclib" />
+      <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/psr/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/psr/log" />
+      <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/ralouphie/getallheaders" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

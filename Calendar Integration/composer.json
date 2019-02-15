@@ -1,0 +1,7 @@
+{
+    "require": {
+        "deanblackborough/php-quill-renderer": "^3.15",
+        "froala/wysiwyg-editor-php-sdk": "1.0.1",
+        "google/apiclient": "^2.0"
+    }
+}

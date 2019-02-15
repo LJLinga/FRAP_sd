@@ -19,17 +19,21 @@ include 'CMS_ADMIN_SIDEBAR.php';
 
 $userId = $_SESSION['idnum'];
 
-echo $userId." ".$cmsRole;
 ?>
 
 <script>
-
-
     $(document).ready(function() {
 
         table = $('#dataTable').DataTable();
-        displayTable(table,'')
-        $('.card-footer').html('Updated on '+table.cell(0,3).data());
+        displayTable(table,'');
+
+        let cmsRole = "<?php echo $cmsRole; ?>";
+
+        if(cmsRole===3){
+            $('.card-footer').html('Updated on '+table.cell(0,3).data());
+        }else{
+            $('.card-footer').html('Updated on '+table.cell(0,4).data());
+        }
 
         $('#tbody').on('click','.archive', function(){
             $.ajax({
@@ -103,7 +107,7 @@ echo $userId." ".$cmsRole;
                         <tr>
 
                             <th align="left" width="200px"><b>Title</b></th>
-                            <?php if($cmsRole == '3') ?> <th align="left" width="200px"><b>Author</b></th> <?php ?>
+                            <?php if($cmsRole == 3) echo '<th align="left" width="200px"><b>Author</b></th>'?>
                             <th align="left" width="100px"><b>Status</b></th>
                             <th align="left" width="200px"><b>Last Updated</b></th>
                             <th align="right" width="200px"><b>Actions</b></th>
@@ -114,7 +118,7 @@ echo $userId." ".$cmsRole;
                         <tr>
 
                             <th align="left" width="200px"><b>Title</b></th>
-                            <?php if($cmsRole == '3') ?> <th align="left" width="200px"><b>Author</b></th> <?php ?>
+                            <?php if($cmsRole == 3) echo '<th align="left" width="200px"><b>Author</b></th>'?>
                             <th align="left" width="100px"><b>Status</b></th>
                             <th align="left" width="200px"><b>Last Updated</b></th>
                             <th align="right" width="200px"><b>Actions</b></th>
@@ -126,25 +130,25 @@ echo $userId." ".$cmsRole;
 
                             if($cmsRole == 3){
                                 // Editor can see all his posts and drafts, and all "pending","published",and "archived" posts that are not his but not other's drafts
-                                $query = "SELECT p.id, 
-                                                                  p.title, 
-                                                                  CONCAT(a.firstName,' ', a.lastName) AS name, 
-                                                                  s.description AS status, 
-                                                                  p.lastUpdated 
-                                                                  FROM posts p JOIN employee a ON p.authorId = a.EMP_ID 
-                                                                  JOIN post_status s ON s.id = p.statusId 
-                                                                  WHERE s.id = 2 || s.id=3 || s.id=4 
-                                                                  OR s.id = 1 AND p.authorId = '$userId' 
+                                $query = "SELECT p.id,
+                                                                  p.title,
+                                                                  CONCAT(a.firstName,' ', a.lastName) AS name,
+                                                                  s.description AS status,
+                                                                  p.lastUpdated
+                                                                  FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
+                                                                  JOIN post_status s ON s.id = p.statusId
+                                                                  WHERE s.id = 2 || s.id=3 || s.id=4
+                                                                  OR s.id = 1 AND p.authorId = '$userId'
                                                                   ORDER BY p.lastUpdated DESC;";
                             }else{
                                 // Non-editors can only view their posts, can also see their "published" and "archived" but would not be able to modify them.
-                                $query = "SELECT p.id, 
-                                            p.title, 
-                                            CONCAT(a.firstName,' ', a.lastName) AS name, 
-                                            s.description AS status, 
-                                                                  p.lastUpdated 
-                                                                  FROM posts p JOIN employee a ON p.authorId = a.EMP_ID 
-                                                                  JOIN post_status s ON s.id = p.statusId 
+                                $query = "SELECT p.id,
+                                            p.title,
+                                            CONCAT(a.firstName,' ', a.lastName) AS name,
+                                            s.description AS status,
+                                                                  p.lastUpdated
+                                                                  FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
+                                                                  JOIN post_status s ON s.id = p.statusId
                                                                   WHERE p.authorId = '$userId'
                                                                   ORDER BY p.lastUpdated DESC;";
                             }
@@ -155,7 +159,7 @@ echo $userId." ".$cmsRole;
                             <tr>
 
                                 <td align="left"><?php echo $row['title'];?></td>
-                                <td align="left"><?php if($cmsRole == '3') echo $row['name'] ;?></td>
+                                <?php if($cmsRole == 3) echo '<td align="left">'.$row['name'].'</td>' ?>
                                 <td align="left"><?php echo $row['status'] ;?></td>
                                 <td align="left"><?php echo $row['lastUpdated'] ;?></td>
                                 <td align="right" class="nowrap">
@@ -182,4 +186,3 @@ echo $userId." ".$cmsRole;
 
 </div>
 <!-- /#wrapper -->
-

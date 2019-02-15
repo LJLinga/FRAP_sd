@@ -1,11 +1,14 @@
 <?php
 
+require_once __DIR__ . '/Calendar Integration/vendor/autoload.php';
+
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_CMS_ADMIN_CHECKING.php');
+$userId = $_SESSION['idnum'];
 
 /**
  * Created by PhpStorm.
@@ -18,14 +21,65 @@ if(isset($_POST['btnSubmit'])){
     $title = $_POST['post_title'];
     $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['submitStatus'];
+    $startTime =  $_POST['event_start'];
+    $endTime =  $_POST['event_end'];
 
+    $delimitedInput = preg_replace('/\s+/', '', $_POST['post_emails']);
+    $email_array = explode (",", $delimitedInput);
 
-    $id = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body','$userId','$status')");
+    $startTime = preg_replace('/\s+/', 'T', $startTime);
+    $endTime = preg_replace('/\s+/', 'T', $endTime);
+
+    if($status == 3) {
+
+        include 'Calendar Integration/addToCalendar.php';
+
+        $client = getClient();
+        $service = new Google_Service_Calendar($client);
+
+        $event = new Google_Service_Calendar_Event(array(
+            'summary' => $title,
+            'location' => 'Manila',
+            'description' => $body,
+            'start' => array(
+                'dateTime' => $startTime,
+                //'dateTime' => '2019-02-14T17:00:00',
+                'timeZone' => 'Asia/Manila',
+            ),
+            'end' => array(
+                //'dateTime' => '2019-02-14T17:00:00',
+                'dateTime' => $endTime,
+                'timeZone' => 'Asia/Manila',
+            ),
+            //'recurrence' => array(
+            //    'RRULE:FREQ=DAILY;COUNT=2'
+            //),
+            'attendees' => array(
+                array('email' => 'nicolealderite@gmail.com'),
+                array('email' => 'sbrin@example.com'),
+            ),
+            'reminders' => array(
+                'useDefault' => FALSE,
+                'overrides' => array(
+                    array('method' => 'email', 'minutes' => 24 * 60),
+                    array('method' => 'popup', 'minutes' => 10),
+                ),
+            )
+        ));
+
+        $calendarId = 'primary';
+        $event = $service->events->insert($calendarId, $event);
+        $eventId = $event->getId();
+        $eventLink = $event->htmlLink;
+
+    }
+
+    $id = $crud->executeGetKey("INSERT INTO events (title, description, posterId, statusId, startTime, endTime, GOOGLE_EVENTID, GOOGLE_EVENTLINK) values ('$title', '$body','$userId','$statusId','$startTime','$endTime','$eventId','$eventLink')");
     if(!empty ($id)) {
         header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditEvent.php?postId=" . $id);
     }else{
         echo '<script language="javascript">';
-        echo 'alert("something went wrong")';
+        echo 'alert('.$eventLink.')';
         echo '</script>';
     }
 }
@@ -66,12 +120,16 @@ include 'CMS_ADMIN_SIDEBAR.php';
 
             $('#datetimepicker1').datetimepicker( {
                 minDate: moment(),
-                locale: moment().local('ph')
+                locale: moment().local('ph'),
+                defaultDate: moment().add(5,'minutes'),
+                format: 'YYYY-MM-DD hh:mm:ss'
             });
 
             $('#datetimepicker2').datetimepicker( {
-                minDate: moment(),
-                locale: moment().local('ph')
+                minDate: moment().add(15, 'minutes'),
+                locale: moment().local('ph'),
+                defaultDate: moment().add(20, 'minutes'),
+                format: 'YYYY-MM-DD hh:mm:ss'
             });
 
 
@@ -94,9 +152,10 @@ include 'CMS_ADMIN_SIDEBAR.php';
                 <div class="row">
                     <div class="column col-lg-7">
                         <!-- Text input-->
+
                         <div class="form-group">
                             <label for="post_title">Title</label>
-                            <input id="post_title" name="post_title" type="text" placeholder="Put your event title here..." class="form-control input-md" value="<?php if(isset($title)){ echo $title; }; ?>" required>
+                            <input id="post_title" name="post_title" type="text" placeholder="Provide title..." class="form-control input-md"  required>
                         </div>
 
                         <div class="row">
@@ -131,6 +190,12 @@ include 'CMS_ADMIN_SIDEBAR.php';
                             <label for="post_content">Description</label>
                             <textarea name="post_content" id="post_content"></textarea>
                         </div>
+
+                        <div class="form-group">
+                            <label for="post_emails">Invite through email (separate by comma) </label>
+                            <input id="post_emails" name="post_emails" type="text" placeholder="Provide emails" class="form-control input-md"  required>
+                        </div>
+
                     </div>
                     <div id="publishColumn" class="column col-lg-4" style="margin-bottom: 1rem;">
 
@@ -151,9 +216,11 @@ include 'CMS_ADMIN_SIDEBAR.php';
                                 <div class="form-group">
                                     <label for="submitStatus">Submit Action</label>
                                     <select class="form-control" id="submitStatus" name="submitStatus">
-                                        <option value="1">Submit for Review</option>
-                                        <?php if($cmsRole=='3'){ echo "<option value=\"2\">Publish</option>";}?>
-                                        <option value="3">Cancel Event</option>
+                                        <option value="1">Save as Draft</option>
+                                        <?php if($cmsRole!=3 && $status!=3){ echo "<option value=\"2\">Submit for Approval</option>";}?>
+                                        <?php if($cmsRole==3){ echo "<option value=\"3\">Approve</option>";}?>
+                                        <?php if($cmsRole==3 && $status==4){ echo "<option value=\"5\">Finish Event</option>";}?>
+                                        <?php if($cmsRole==3 && $status==3){ echo "<option value=\"6\">Cancel Event</option>";}?>
                                     </select>
                                 </div>
                                 <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">

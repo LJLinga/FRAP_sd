@@ -6,7 +6,7 @@
  * Time: 3:48 PM
  */
 
-require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__ . '/Calendar Integration/vendor/autoload.php';
 
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
@@ -80,7 +80,7 @@ if(isset($_POST['btnSubmit'])) {
     }
 }
 
-$page_title = 'Santinig - Edit Post';
+$page_title = 'Santinig - Edit Event';
 include 'GLOBAL_HEADER.php';
 include 'CMS_ADMIN_SIDEBAR.php';
 ?>

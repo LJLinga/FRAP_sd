@@ -3,8 +3,8 @@ include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
-//include('GLOBAL_USER_TYPE_CHECKING.php');
-//include('GLOBAL_CMS_ADMIN_CHECKING.php');
+include('GLOBAL_USER_TYPE_CHECKING.php');
+include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 /**
  * Created by PhpStorm.
@@ -29,7 +29,7 @@ if(isset($_POST['btnSubmit'])){
     }
 }
 
-$page_title = 'Santinig - Add Event';
+$page_title = 'Santinig - Add Post';
 include 'GLOBAL_HEADER.php';
 include 'CMS_ADMIN_SIDEBAR.php';
 ?>
@@ -111,7 +111,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
                                     <label for="submitStatus">Submit Action</label>
                                     <select class="form-control" id="submitStatus" name="submitStatus">
                                         <option value="1">Save as Draft</option>
-                                        <option value="2">Submit for Review</option>
+                                        <?php if($cmsRole!='3'){ echo "<option value=\"2\">Submit for Review</option>";}?>
                                         <?php if($cmsRole=='3'){ echo "<option value=\"3\">Publish</option>";}?>
                                         <option value="4">Archive</option>
                                     </select>
