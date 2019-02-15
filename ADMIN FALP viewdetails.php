@@ -389,9 +389,12 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                             <p>Number of Payments to be Paid For: <span id="demo"> </span></p>
                                         </div>
 
-                                        <br>
-                                        <button type="submit" name="addToPay" id="addToPay" class="btn btn-primary">Pay with number of terms</button>
-                                        <button type="submit" name="addFifty" id="addFifty" class="btn btn-primary">Pay 50% Immediately</button>
+                                        <button type="submit" name="addToPay" id="addToPay" hidden>Pay with number of terms</button>
+                                        <button type="submit" name="addFifty" id="addFifty" hidden>Pay 50% Immediately</button>
+
+                                        <button type="button" name="modalTriggerPay" id="modalTriggerPay" class="btn btn-primary" data-toggle="modal" data-target="#confirm-submit">Pay with number of terms</button>
+                                        <button type="button" name="modalTriggerFifty" id="modalTriggerFifty" class="btn btn-primary" data-toggle="modal" data-target="#confirm-submit">Pay 50% Immediately</button>
+
                                     </div>
 
                                 </div>
@@ -448,10 +451,29 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
     </div>
     <!-- /#wrapper -->
+
+<!-- Modal by xtian pls dont delete hehe -->
+<div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Confirm Payment
+            </div>
+            <div class="modal-body">
+                Are you sure you want to pay <b id="changeText"></b> ?
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a href="#" id="submit" class="btn btn-success success">Yes, I'm sure</a>
+            </div>
+        </div>
+    </div>
+</div>
     <script>
         var slider = document.getElementById("myRange");
         var output = document.getElementById("demo");
-        var addToPay = document.getElementById("addToPay");
+        var addToPay = document.getElementById("modalTriggerPay");
 
         addToPay.disabled = true;
         output.innerHTML = slider.value;
@@ -464,6 +486,20 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                 addToPay.disabled=false;
             }
         }
+
+        $('#modalTriggerPay').click(function() {
+            $('#changeText').text('for '+output.innerHTML+' month(s)');
+            $('#submit').click(function() {
+                document.getElementById("addToPay").click();
+            });
+        });
+        $('#modalTriggerFifty').click(function() {
+            $('#changeText').text('50 % immediately');
+            $('#submit').click(function() {
+                document.getElementById("addFifty").click();
+            });
+        });
+
     </script>
 
     <!-- jQuery -->
