@@ -29,7 +29,7 @@ include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
             <div class="col-lg-12">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">General Files</h1>
+                        <h1 class="page-header">Faculty Manual</h1>
                         <ol class="breadcrumb">
                             <li class="active">
                                 General Files
@@ -59,37 +59,37 @@ include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><a href="#"><i class="fa fa-fw fa-folder"></i> Applications</a></td>
+                                    <td><a href="EDMS_VIEW_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Final</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="#"><i class="fa fa-fw fa-folder"></i> By-Laws</a></td>
+                                    <td><a href="EDMS_VIEW_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Post-Negotiation Ver1.1</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="#"><i class="fa fa-fw fa-folder"></i> Contracts</a></td>
+                                    <td><a href="EDMS_VIEW_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Post-Negotiation Ver1.0</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="#"><i class="fa fa-fw fa-folder"></i> Faculty Manual</a></td>
+                                    <td><a href="EDMS_VIEW_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Negotiation Ver1.2</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="#"><i class="fa fa-fw fa-folder"></i> Executive Board Minutes</a></td>
+                                    <td><a href="EDMS_VIEW_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Negotiation Ver1.1</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="#"><i class="fa fa-fw fa-folder"></i> General Assembly Minutes</a></td>
+                                    <td><a href="EDMS_VIEW_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Negotiation Ver1.0</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="#"><i class="fa fa-fw fa-folder"></i> Technical Panel Minutes</td>
+                                    <td><a href="EDMS_VIEW_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Pre-Negotiation Ver1.0</td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>

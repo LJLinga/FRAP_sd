@@ -22,16 +22,16 @@
                 <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-folder-open"></i> Documents <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="demo" class="collapse"> -->
             <li>
-                <a href="#"><i class="fa fa-fw fa-folder"></i> Applications</a>
+                <a href="EDMS_VIEW_DIRApplications.php"><i class="fa fa-fw fa-folder"></i> Applications</a>
             </li>
             <li>
-                <a href="#"><i class="fa fa-fw fa-folder"></i> By-Laws</a>
+                <a href="EDMS_VIEW_DIRByLaws.php"><i class="fa fa-fw fa-folder"></i> By-Laws</a>
             </li>
             <li>
-                <a href="#"><i class="fa fa-fw fa-folder"></i> Contracts</a>
+                <a href="EDMS_VIEW_DIRContracts.php"><i class="fa fa-fw fa-folder"></i> Contracts</a>
             </li>
             <li>
-                <a href="EDMS_VIEW_ViewSection.php"><i class="fa fa-fw fa-folder"></i> Faculty Manual</a>
+                <a href="EDMS_VIEW_DIRFacultyManual.php"><i class="fa fa-fw fa-folder"></i> Faculty Manual</a>
             </li>
             <li>
                 <a href="javascript:;" data-toggle="collapse" data-target="#minutes"><i class="fa fa-fw fa-folder"></i> Minutes <i class="fa fa-fw fa-caret-down"></i></a>

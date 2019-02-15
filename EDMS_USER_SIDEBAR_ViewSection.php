@@ -24,24 +24,24 @@
                 </ul>
             </li>
             <li>
-                <a href="#"><i class="fa fa-fw fa-folder"></i> 2.0 Loans</a>
-                <ul id="Membership" class="collapse">
+                <a href="#" data-toggle="collapse" data-target="#Loans"><i class="fa fa-fw fa-folder"></i> 2.0 Loans</a>
+                <ul id="Loans" class="collapse">
                     <li style="">
-                        <a href="#"><i class="fa fa-fw fa-folder"></i> 1.0.1 Requirements</a>
+                        <a href="#"><i class="fa fa-fw fa-folder"></i> 2.0.1 Requirements</a>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-fw fa-folder"></i> 1.0.2 Process</a>
+                        <a href="#"><i class="fa fa-fw fa-folder"></i> 2.0.2 Process</a>
                     </li>
                 </ul>
             </li>
             <li>
-                <a href="#"><i class="fa fa-fw fa-folder"></i> 3.0 Benefits</a>
-                <ul id="Membership" class="collapse">
+                <a href="#" data-toggle="collapse" data-target="#Benefits"><i class="fa fa-fw fa-folder"></i> 3.0 Benefits</a>
+                <ul id="Benefits" class="collapse">
                     <li style="">
-                        <a href="#"><i class="fa fa-fw fa-folder"></i> 1.0.1 Requirements</a>
+                        <a href="#"><i class="fa fa-fw fa-folder"></i> 3.0.1 Requirements</a>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-fw fa-folder"></i> 1.0.2 Process</a>
+                        <a href="#"><i class="fa fa-fw fa-folder"></i> 3.0.2 Process</a>
                     </li>
                 </ul>
             </li>
