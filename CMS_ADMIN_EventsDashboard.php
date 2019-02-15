@@ -32,7 +32,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
             <div class="col-lg-12">
                 <h3 class="page-header">
                     Upcoming Events
-                    <a class="btn btn-primary" href="CMS_ADMIN_EditPost.php"> Add New Post </a>
+                    <a class="btn btn-primary" href="CMS_ADMIN_EditPost.php"> Add New Event </a>
                 </h3>
             </div>
         </div>

@@ -3,8 +3,8 @@ include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
-//include('GLOBAL_USER_TYPE_CHECKING.php');
-//include('GLOBAL_CMS_ADMIN_CHECKING.php');
+include('GLOBAL_USER_TYPE_CHECKING.php');
+include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 /**
  * Created by PhpStorm.
@@ -29,7 +29,7 @@ if(isset($_POST['btnSubmit'])){
     }
 }
 
-$page_title = 'Santinig - Add Event';
+$page_title = 'Santinig - Add Post';
 include 'GLOBAL_HEADER.php';
 include 'CMS_ADMIN_SIDEBAR.php';
 ?>

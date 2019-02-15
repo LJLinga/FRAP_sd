@@ -80,7 +80,7 @@ if(isset($_POST['btnSubmit'])) {
     }
 }
 
-$page_title = 'Santinig - Edit Post';
+$page_title = 'Santinig - Edit Event';
 include 'GLOBAL_HEADER.php';
 include 'CMS_ADMIN_SIDEBAR.php';
 ?>

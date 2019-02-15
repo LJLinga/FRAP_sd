@@ -8,7 +8,6 @@ require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_CMS_ADMIN_CHECKING.php');
-
 $userId = $_SESSION['idnum'];
 
 /**
@@ -22,45 +21,61 @@ if(isset($_POST['btnSubmit'])){
     $title = $_POST['post_title'];
     $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['submitStatus'];
+    $startTime =  $_POST['event_start'];
+    $endTime =  $_POST['event_end'];
 
-    include 'Calendar Integration/addToCalendar.php';
+    $delimitedInput = preg_replace('/\s+/', '', $_POST['post_emails']);
+    $email_array = explode (",", $delimitedInput);
 
-    $client = getClient();
-    $service = new Google_Service_Calendar($client);
+    $startTime = preg_replace('/\s+/', 'T', $startTime);
+    $endTime = preg_replace('/\s+/', 'T', $endTime);
 
-    $event = new Google_Service_Calendar_Event(array(
-        'summary' => $title,
-        'location' => '800 Howard St., San Francisco, CA 94103',
-        'description' => $body,
-        'start' => array(
-            'dateTime' => '2015-05-28T09:00:00-07:00',
-            'timeZone' => 'America/Los_Angeles',
-        ),
-        'end' => array(
-            'dateTime' => '2015-05-28T17:00:00-07:00',
-            'timeZone' => 'America/Los_Angeles',
-        ),
-        'recurrence' => array(
-            'RRULE:FREQ=DAILY;COUNT=2'
-        ),
-        'attendees' => array(
-            array('email' => 'lpage@example.com'),
-            array('email' => 'sbrin@example.com'),
-        ),
-        'reminders' => array(
-            'useDefault' => FALSE,
-            'overrides' => array(
-                array('method' => 'email', 'minutes' => 24 * 60),
-                array('method' => 'popup', 'minutes' => 10),
+    if($status == 2) {
+
+        include 'Calendar Integration/addToCalendar.php';
+
+        $client = getClient();
+        $service = new Google_Service_Calendar($client);
+
+        $event = new Google_Service_Calendar_Event(array(
+            'summary' => $title,
+            'location' => 'Manila',
+            'description' => $body,
+            'start' => array(
+                'dateTime' => $startTime,
+                //'dateTime' => '2019-02-14T17:00:00',
+                'timeZone' => 'Asia/Manila',
             ),
-        ),
-    ));
+            'end' => array(
+                //'dateTime' => '2019-02-14T17:00:00',
+                'dateTime' => $endTime,
+                'timeZone' => 'Asia/Manila',
+            ),
+            //'recurrence' => array(
+            //    'RRULE:FREQ=DAILY;COUNT=2'
+            //),
+            'attendees' => array(
 
-    $calendarId = 'primary';
-    $event = $service->events->insert($calendarId, $event);
-    $eventLink = $event->htmlLink;
+                array('email' => 'nicolealderite@gmail.com'),
+                array('email' => 'sbrin@example.com'),
+            ),
+            'reminders' => array(
+                'useDefault' => FALSE,
+                'overrides' => array(
+                    array('method' => 'email', 'minutes' => 24 * 60),
+                    array('method' => 'popup', 'minutes' => 10),
+                ),
+            )
+        ));
 
-    $id = $crud->executeGetKey("INSERT INTO events (title, description, posterId, eventLink) values ('$title', '$body','$userId','$eventLink')");
+        $calendarId = 'primary';
+        $event = $service->events->insert($calendarId, $event);
+        $eventId = $event->getId();
+        $eventLink = $event->htmlLink;
+
+    }
+
+    $id = $crud->executeGetKey("INSERT INTO events (title, description, posterId, startTime, endTime, GOOGLE_EVENTID, GOOGLE_EVENTLINK) values ('$title', '$body','$userId','$startTime','$endTime','$eventId','$eventLink')");
     if(!empty ($id)) {
         header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditEvent.php?postId=" . $id);
     }else{
@@ -107,13 +122,15 @@ include 'CMS_ADMIN_SIDEBAR.php';
             $('#datetimepicker1').datetimepicker( {
                 minDate: moment(),
                 locale: moment().local('ph'),
-                defaultDate: moment().add(5,'minutes')
+                defaultDate: moment().add(5,'minutes'),
+                format: 'YYYY-MM-DD hh:mm:ss'
             });
 
             $('#datetimepicker2').datetimepicker( {
                 minDate: moment().add(15, 'minutes'),
                 locale: moment().local('ph'),
-                defaultDate: moment().add(20, 'minutes')
+                defaultDate: moment().add(20, 'minutes'),
+                format: 'YYYY-MM-DD hh:mm:ss'
             });
 
 
@@ -136,9 +153,10 @@ include 'CMS_ADMIN_SIDEBAR.php';
                 <div class="row">
                     <div class="column col-lg-7">
                         <!-- Text input-->
+
                         <div class="form-group">
                             <label for="post_title">Title</label>
-                            <input id="post_title" name="post_title" type="text" placeholder="Put your event title here..." class="form-control input-md" value="<?php if(isset($title)){ echo $title; }; ?>" required>
+                            <input id="post_title" name="post_title" type="text" placeholder="Provide title..." class="form-control input-md"  required>
                         </div>
 
                         <div class="row">
@@ -173,6 +191,12 @@ include 'CMS_ADMIN_SIDEBAR.php';
                             <label for="post_content">Description</label>
                             <textarea name="post_content" id="post_content"></textarea>
                         </div>
+
+                        <div class="form-group">
+                            <label for="post_emails">Invite through email (separate by comma) </label>
+                            <input id="post_emails" name="post_emails" type="text" placeholder="Provide emails" class="form-control input-md"  required>
+                        </div>
+
                     </div>
                     <div id="publishColumn" class="column col-lg-4" style="margin-bottom: 1rem;">
 
