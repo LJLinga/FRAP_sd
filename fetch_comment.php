@@ -84,7 +84,7 @@ foreach($result as $row)
  <div class="panel panel-default">
   <div class="panel-heading">By <b>'.$row["commenterName"].'</b> on <i>'.$row["timePosted"].'</i></div>
   <div class="panel-body">'.$row["content"].'</div>
-  <div class="panel-footer" align="right"><button type="button" class="btn btn-default reply" id="'.$row["id"].'">Reply</button></div>
+  <div class="panel-footer" align="right"><button type="button" class="btn btn-default reply" data-toggle="modal" data-target="#myModal" id="'.$row["id"].'">Reply</button></div>
  </div>
  ';
     $output .= get_reply_comment($connect, $row["id"]);
@@ -121,7 +121,7 @@ ORDER BY id DESC
    <div class="panel panel-default" style="margin-left:'.$marginleft.'px">
     <div class="panel-heading">By <b>'.$row["commenterName"].'</b> on <i>'.$row["timePosted"].'</i></div>
     <div class="panel-body">'.$row["content"].'</div>
-    <div class="panel-footer" align="right"><button type="button" class="btn btn-default reply" id="'.$row["id"].'">Reply</button></div>
+    <div class="panel-footer" align="right"><button type="button" class="btn btn-default reply" data-toggle="modal" data-target="#myModal" id="'.$row["id"].'">Reply</button></div>
    </div>
    ';
             $output .= get_reply_comment($connect, $row["id"], $marginleft);
