@@ -15,6 +15,7 @@ include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 //hardcoded value for userType, will add MYSQL verification
 
+
 if(!empty($_GET['postId'])){
 
     $postId = $_GET['postId'];
@@ -84,7 +85,8 @@ if(!empty($_GET['postId'])){
 if(isset($_POST['btnSubmit'])) {
 
     $title = $_POST['post_title'];
-    $body = $crud->escape_string($_POST['post_conten3t']);
+    //$body = $_POST['post_content'];
+    $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['btnSubmit'];
 
     if($crud->execute("UPDATE posts SET title='$title', body='$body', statusId='$status' WHERE id='$postId';")) {
@@ -117,7 +119,9 @@ include 'CMS_ADMIN_SIDEBAR.php';
     $(document).ready( function(){
 
         let status = <?php echo $status; ?>;
-        $('textarea').froalaEditor();
+        let cmsRole = <?php echo $cmsRole; ?>;
+
+        $('#btnUpdate').hide();
 
         $('textarea').froalaEditor({
             //Disables video upload
@@ -129,11 +133,15 @@ include 'CMS_ADMIN_SIDEBAR.php';
             //Allow comments
         });
 
-        $('textarea').froalaEditor('html.set', '<?php echo $body?>');
-
-        if(status == 3){
+        if(status == 3 && cmsRole!= 3){
             $('textarea').froalaEditor("edit.off");
         };
+
+        $('textarea').on('froalaEditor.contentChanged', function (e, editor) {
+            $('#btnUpdate').show();
+        });
+
+        $('textarea').froalaEditor('html.set', '<?php echo $body?>');
 
         $('#btnComment').onclick( function(){
             $('#comment').html($('textarea').froalaEditor('html.getSelected'));
@@ -206,6 +214,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
                                         echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="3">Publish</button> ';
                                         echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="4">Trash</button> ';
                                     } else if ($status == '3') {
+                                        echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnUpdate" value="3" hidden>Publish Changes</button> ';
                                         echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Switch to Draft</button> ';
                                         echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="4">Trash</button> ';
                                     } else if ($status == '4') {
@@ -216,7 +225,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
                                         echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
                                         echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="4">Trash</button> ';
                                     } else if ($status == '2') {
-                                        echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="2">Resubmit for Review</button> ';
+                                        echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnUpdate" value="2">Resubmit for Review</button> ';
                                         echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Switch to Draft</button> ';
                                         echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="4">Trash</button> ';
                                     } else if ($status == '4') {
