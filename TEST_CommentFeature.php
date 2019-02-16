@@ -22,7 +22,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
 <div class="container">
     <form method="POST" id="comment_form">
         <div class="form-group">
-            <input type="text" name="comment_name" id="comment_name" class="form-control" placeholder="Enter Name" value="<?php echo $userId; ?>"/>
+            <input type="hidden" name="comment_name" id="comment_name" class="form-control" placeholder="Enter Name" value="<?php echo $userId; ?>"/>
         </div>
         <div class="form-group">
             <textarea name="comment_content" id="comment_content" class="form-control" placeholder="Enter Comment" rows="5"></textarea>
