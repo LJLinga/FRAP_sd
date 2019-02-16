@@ -57,6 +57,9 @@ $userId = $_SESSION['idnum'];
         $('#btnAll').on('click', function(){
             displayTable(table, '',s, d);
         });
+        $('#btnMine').on('click', function(){
+            displayTable(table, '(Mine)',s-1, d);
+        });
         $('#btnPublished').on('click', function(){
             displayTable(table, 'Published',s, d);
         });
@@ -99,6 +102,7 @@ $userId = $_SESSION['idnum'];
         <div class="card mb-3">
             <div class="card-header btn-group" data-toggle="buttons">
                 <a type="button" class="btn btn-default" id="btnAll">All</a>
+                <?php if($cmsRole == 3) echo '<a type="button" class="btn btn-default" id="btnMine">Mine</a>'?>
                 <a type="button" class="btn btn-success" id="btnPublished">Published</a>
                 <a type="button" class="btn btn-warning" id="btnPending">Pending Review</a>
                 <a type="button" class="btn btn-primary" id="btnDraft">Drafts</a>
@@ -141,8 +145,9 @@ $userId = $_SESSION['idnum'];
                                                                   p.lastUpdated
                                                                   FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
                                                                   JOIN post_status s ON s.id = p.statusId
-                                                                  WHERE s.id = 2 || s.id=3 || s.id=4
+                                                                  WHERE s.id = 2 || s.id=3
                                                                   OR s.id = 1 AND p.authorId = '$userId'
+                                                                  OR s.id = 4 AND p.archivedById = '$userId'
                                                                   ORDER BY p.lastUpdated DESC;";
                             }else{
                                 // Non-editors can only view their posts, can also see their "published" and "archived" but would not be able to modify them.
@@ -163,7 +168,7 @@ $userId = $_SESSION['idnum'];
                             <tr>
 
                                 <td align="left"><?php echo $row['title'];?></td>
-                                <?php if($cmsRole == 3) echo '<td align="left">'.$row['name'].'</td>' ?>
+                                <?php if($cmsRole == 3) echo '<td align="left">'.$row['name'].' <b>(Mine)</b></td>' ?>
                                 <td align="left"><?php echo $row['status'] ;?></td>
                                 <td align="left"><?php echo $row['lastUpdated'] ;?></td>
                                 <td align="right" class="nowrap">

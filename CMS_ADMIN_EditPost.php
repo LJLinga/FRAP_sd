@@ -37,6 +37,7 @@ if(!empty($_GET['postId'])){
             p.firstCreated,
             p.lastUpdated,
             p.statusId,
+            p.previousStatusId,
             s.description
         FROM
             employee u
@@ -52,6 +53,7 @@ if(!empty($_GET['postId'])){
         $body = $row['body'];
         $author = $row['author'];
         $status = $row['statusId'];
+        $prevStatus = $row['previousStatusId'];
         $firstPosted = $row['firstCreated'];
         $lastUpdated = $row['lastUpdated'];
         $statusDesc = $row['description'];
@@ -82,8 +84,8 @@ if(!empty($_GET['postId'])){
 if(isset($_POST['btnSubmit'])) {
 
     $title = $_POST['post_title'];
-    $body = $crud->escape_string($_POST['post_content']);
-    $status = $_POST['submitStatus'];
+    $body = $crud->escape_string($_POST['post_conten3t']);
+    $status = $_POST['btnSubmit'];
 
     if($crud->execute("UPDATE posts SET title='$title', body='$body', statusId='$status' WHERE id='$postId';")) {
 
@@ -196,28 +198,33 @@ include 'CMS_ADMIN_SIDEBAR.php';
                         </div>
 
                         <div class="card-body">
-                            <div class="form-group">
-                                <?php if($cmsRole=='3'){ ?>
-                                    <label for="submitStatus">Submit Action</label>
-                                    <select class="form-control" id="submitStatus" name="submitStatus">
-                                        <option <?php if ($status == '2' ) echo 'selected' ; ?> value="2">Unpublish</option>
-                                        <option <?php if ($status == '3' ) echo 'selected' ; ?> value="3">Publish</option>
-                                        <option <?php if ($status == '4' ) echo 'selected' ; ?> value="4">Archive</option>
-                                    </select>
-                                <?php }else if($cmsRole!='3' && $status != '3'){ ?>
-                                    <label for="submitStatus">Submit Action</label>
-                                    <select class="form-control" id="submitStatus" name="submitStatus">
-                                        <option <?php if ($status == '1' ) echo 'selected' ; ?> value="1">Save as Draft</option>
-                                        <option <?php if ($status == '2' ) echo 'selected' ; ?> value="2">Submit for Review</option>
-                                    </select>
-                                <?php }else{ ?>
-                                    'Ask your publisher to unpublish if you wish to edit this post.'
-                                <?php } ?>
-                            </div>
                             <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;}; ?>">
-                            <?php if($status != '3' || $cmsRole == '3'){ ?>
-                                <button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit">Submit</button>
-                            <?php } ?>
+                            <div class="form-group">
+                                <?php
+                                if($cmsRole == '3') {
+                                    if ($status == '2' || $status == '1') {
+                                        echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="3">Publish</button> ';
+                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="4">Trash</button> ';
+                                    } else if ($status == '3') {
+                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Switch to Draft</button> ';
+                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="4">Trash</button> ';
+                                    } else if ($status == '4') {
+                                        echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="' . $prevStatus . '">Restore</button> ';
+                                    }
+                                }else if($cmsRole == '2'){
+                                    if ($status == '1') {
+                                        echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
+                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="4">Trash</button> ';
+                                    } else if ($status == '2') {
+                                        echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="2">Resubmit for Review</button> ';
+                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Switch to Draft</button> ';
+                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="4">Trash</button> ';
+                                    } else if ($status == '4') {
+                                        echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="' . $prevStatus . '">Restore</button> ';
+                                    }
+                                }
+                                ?>
+                            </div>
                         </div>
                     </div>
 
@@ -228,7 +235,6 @@ include 'CMS_ADMIN_SIDEBAR.php';
                            <p id="comment" name="comment"></p>
                         </div>
                     </div>
-
                 </div>
 
             </div>

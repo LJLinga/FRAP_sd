@@ -113,7 +113,6 @@ include 'CMS_ADMIN_SIDEBAR.php';
                                         <option value="1">Save as Draft</option>
                                         <?php if($cmsRole!='3'){ echo "<option value=\"2\">Submit for Review</option>";}?>
                                         <?php if($cmsRole=='3'){ echo "<option value=\"3\">Publish</option>";}?>
-                                        <option value="4">Archive</option>
                                     </select>
                                 </div>
                                 <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">
