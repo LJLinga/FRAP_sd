@@ -10,9 +10,18 @@ include 'GLOBAL_CLASS_CRUD.php';
 $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
+
+
+if(empty($_GET['lastTimeStamp'])){
+    $lastTimeStamp = $crud->getData("SELECT CURRENT_TIMESTAMP() AS time");
+    $lastTimeStamp = $lastTimeStamp[0]['time'];
+}else{
+    $lastTimeStamp = $_GET['lastTimeStamp'];
+}
+
+$page_title = "Santinig Feed";
 include 'GLOBAL_HEADER.php';
 include 'CMS_ADMIN_SIDEBAR.php';
-
 ?>
 <style>
     .googleCalendar{
@@ -37,27 +46,47 @@ include 'CMS_ADMIN_SIDEBAR.php';
 
                 <?php
 
-                $rows = $crud->getData("SELECT p.id, p.title, p.body, CONCAT(a.firstName,' ', a.lastName) AS name, s.description AS status, p.lastUpdated FROM posts p JOIN employee a ON p.authorId = a.EMP_ID JOIN post_status s ON s.id = p.statusId WHERE s.id=3 ORDER BY p.firstCreated DESC;");
+                $rows = $crud->getData("SELECT p.permalink, p.title, p.body, 
+                                          CONCAT(a.firstName,' ', a.lastName) AS name, 
+                                          s.description AS status, p.timePublished, p.lastUpdated 
+                                          FROM posts p JOIN employee a ON p.authorId = a.EMP_ID 
+                                          JOIN post_status s ON s.id = p.statusId 
+                                          WHERE s.id=3 AND p.timePublished < '$lastTimeStamp'
+                                          ORDER BY p.timePublished DESC LIMIT 10;");
+
                 foreach ((array) $rows as $key => $row){
                     ?>
 
                         <div class="card">
                             <div class="card-body">
                                 <h3 class="card-title"><b><?php echo $row['title'];?></b></h3>
-                                <h5 class="card-subtitle"><i>By: <?php echo $row['name'];?> <br> Posted: <?php echo $row['lastUpdated'] ;?></i>
-                                    <p class="card-text" ><?php echo $row['body'] ?></p>
-                                <div class="collapse" id="collapse<?php echo $row['id']?>">
-
-                                </div>
-                                <p>
-                                    <a class="card-link" data-toggle="collapse" href="#collapse<?php echo $row['id']?>" role="button" aria-expanded="false" aria-controls="collapse<?php echo $row['id']?>">Read More</a>
-                                </p>
+                                <h5 class="card-subtitle">by <?php echo $row['name'];?> | <?php echo date("F j, Y g:i A ", strtotime($row['lastUpdated'])) ;?></h5>
+                            </div>
+                            <div class="card-body" style="overflow: hidden; max-height: 500px">
+                                <p class="card-text"><?php echo $row['body'] ?></>
+                            </div>
+                            <div class="card-body" style="overflow: hidden; max-height: 500px">
+                                <a class="card-link" href="<?php echo "http://localhost/FRAP_sd/post_read.php?permalink=".$row['permalink']?>" >Read More</a>
                             </div>
                         </div>
 
                         <p></p>
-                <?php }?>
+                <?php
+                    $lastTimeStamp = $row['timePublished'];
+                }?>
+
+                <div class="card">
+                    <div class="card-body">
+                        <?php if(!empty($rows[0]['permalink'])) { ?>
+                            <a href="<?php echo "http://localhost/FRAP_sd/CMS_PostsFeed.php?lastTimeStamp=".$lastTimeStamp ?>" >Load More</a>
+                        <?php } else { ?>
+                            <a href="<?php echo "http://localhost/FRAP_sd/CMS_PostsFeed.php"?>" >No More Posts. Go Back</a>
+                        <?php }  ?>
+                    </div>
+                </div>
             </div>
+
+
 
             <div class="col-lg-4">
                 <div class="googleCalendar">
