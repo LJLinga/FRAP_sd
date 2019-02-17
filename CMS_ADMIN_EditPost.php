@@ -32,7 +32,7 @@ if(!empty($_GET['postId'])){
     $rows = $crud->getData("SELECT 
             p.title,
             CONCAT(u.firstName,' ', u.lastName) AS author,
-            p.body,
+            p.body, p.permalink,
             p.firstCreated,
             p.lastUpdated,
             p.statusId,
@@ -50,6 +50,7 @@ if(!empty($_GET['postId'])){
     foreach ((array) $rows as $key => $row) {
         $title = $row['title'];
         $body = $row['body'];
+        $permalink = $row['permalink'];
         $author = $row['author'];
         $status = $row['statusId'];
         $prevStatus = $row['previousStatusId'];
@@ -88,19 +89,20 @@ if(isset($_POST['btnSubmit'])) {
     $status = $_POST['btnSubmit'];
 
     if($crud->execute("UPDATE posts SET title='$title', body='$body', statusId='$status' WHERE id='$postId';")) {
-
         if($status=='3' && $cmsRole=='3'){
             $crud->execute("UPDATE posts SET publisherId='$userId' WHERE id='$postId';");
+            $result = $crud->execute("SELECT permalink FROM posts WHERE id='$postId' AND permalink IS NULL");
+            if(empty($result[0]['permalink'])) {
+                include('CMS_FUNCTION_PERMALINK.php');
+                $permalink = generate_permalink($title);
+                $crud->execute("UPDATE posts SET permalink='$permalink' WHERE id='$postId' AND permalink IS NULL");
+            }
         }
         if($status=='4'){
             $crud->execute("UPDATE posts SET archivedById='$userId' WHERE id='$postId';");
         }
         header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditPost.php?postId=" . $postId);
     }
-
-    echo '<script language="javascript">';
-    echo 'alert("Button isset")';
-    echo '</script>';
 
 }
 
@@ -206,7 +208,11 @@ include 'CMS_ADMIN_SIDEBAR.php';
                             Author: <b><?php echo $author; ?></b><br>
                             <i>Created on: <b><?php echo date("F j, Y g:i:s A ", strtotime($firstPosted)); ?></b></i><br><br>
 
-                            Current Status: <b><?php echo $statusDesc?></b><br>
+                            Current Status: <b><?php echo $statusDesc?>
+                                <?php if(!empty($permalink)){ ?>
+                                    (<a href="<?php echo "http://localhost/FRAP_sd/post_read.php?permalink=".$permalink?>" >Preview</a>)
+                                <?php } ?>
+                            <br>
                             <?php if(!empty($publisher)){ echo "Publisher: <b>".$publisher."</b><br>"; }?>
                             <i>Last updated: <b><?php  echo date("F j, Y g:i:s A ", strtotime($lastUpdated));?></b></i><br><br>
                         </div>

@@ -55,21 +55,27 @@ $userId = $_SESSION['idnum'];
         });
 
         $('#btnAll').on('click', function(){
+            displayTable(table, '',s-1, d);
             displayTable(table, '',s, d);
         });
         $('#btnMine').on('click', function(){
-            displayTable(table, '(Mine)',s-1, d);
+            displayTable(table, '',s, d);
+            displayTable(table, '(Me)',s-1, d);
         });
         $('#btnPublished').on('click', function(){
+            displayTable(table, '',s-1, d);
             displayTable(table, 'Published',s, d);
         });
         $('#btnPending').on('click', function(){
+            displayTable(table, '',s-1, d);
             displayTable(table, 'Pending', s, d)
         });
         $('#btnDraft').on('click', function(){
+            displayTable(table, '',s-1, d);
             displayTable(table, 'Draft', s, d);
         });
         $('#btnArchived').on('click', function(){
+            displayTable(table, '',s-1, d);
             displayTable(table, 'Trashed', s, d);
         });
 
@@ -170,7 +176,7 @@ $userId = $_SESSION['idnum'];
                                 <td align="left"><?php echo $row['title'];?></td>
                                 <?php
                                     if($cmsRole == 3 && $userId == $row['authorId']){
-                                        echo '<td align="left">' . $row['name'] . ' <b>(Mine)</b></td>';
+                                        echo '<td align="left">' . $row['name'] . ' <b>(Me)</b></td>';
                                     }else if($cmsRole == 3 && $userId != $row['authorId']) {
                                         echo '<td align="left">' . $row['name'] . '</td>';
                                     }

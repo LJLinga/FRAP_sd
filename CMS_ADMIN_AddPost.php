@@ -19,9 +19,21 @@ if(isset($_POST['btnSubmit'])){
     $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['btnSubmit'];
 
-    $id = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body','$userId','$status')");
-    if(!empty ($id)) {
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditPost.php?postId=" . $id);
+    $postId = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body','$userId','$status')");
+    if(!empty ($postId)) {
+        if($status=='3' && $cmsRole=='3'){
+            $crud->execute("UPDATE posts SET publisherId='$userId' WHERE id='$postId';");
+            $result = $crud->execute("SELECT timePublished FROM posts WHERE id='$postId' AND permalink IS NULL");
+            if(empty($result[0]['permalink'])) {
+                include('CMS_FUNCTION_PERMALINK.php');
+                $permalink = generate_permalink($title);
+                $crud->execute("UPDATE posts SET permalink='$permalink' WHERE id='$postId' AND permalink IS NULL");
+            }
+        }
+        if($status=='4'){
+            $crud->execute("UPDATE posts SET archivedById='$userId' WHERE id='$postId';");
+        }
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditPost.php?postId=" . $postId);
     }else{
         echo '<script language="javascript">';
         echo 'alert("something went wrong")';
