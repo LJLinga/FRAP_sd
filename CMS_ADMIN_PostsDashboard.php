@@ -70,7 +70,7 @@ $userId = $_SESSION['idnum'];
             displayTable(table, 'Draft', s, d);
         });
         $('#btnArchived').on('click', function(){
-            displayTable(table, 'Archived', s, d);
+            displayTable(table, 'Trashed', s, d);
         });
 
 
@@ -139,7 +139,7 @@ $userId = $_SESSION['idnum'];
                             if($cmsRole == 3){
                                 // Editor can see all his posts and drafts, and all "pending","published",and "archived" posts that are not his but not other's drafts
                                 $query = "SELECT p.id,
-                                                                  p.title,
+                                                                  p.title, p.authorId,
                                                                   CONCAT(a.firstName,' ', a.lastName) AS name,
                                                                   s.description AS status,
                                                                   p.lastUpdated
@@ -152,7 +152,7 @@ $userId = $_SESSION['idnum'];
                             }else{
                                 // Non-editors can only view their posts, can also see their "published" and "archived" but would not be able to modify them.
                                 $query = "SELECT p.id,
-                                            p.title,
+                                            p.title, p.authorId,
                                             CONCAT(a.firstName,' ', a.lastName) AS name,
                                             s.description AS status,
                                                                   p.lastUpdated
@@ -168,7 +168,13 @@ $userId = $_SESSION['idnum'];
                             <tr>
 
                                 <td align="left"><?php echo $row['title'];?></td>
-                                <?php if($cmsRole == 3) echo '<td align="left">'.$row['name'].' <b>(Mine)</b></td>' ?>
+                                <?php
+                                    if($cmsRole == 3 && $userId == $row['authorId']){
+                                        echo '<td align="left">' . $row['name'] . ' <b>(Mine)</b></td>';
+                                    }else if($cmsRole == 3 && $userId != $row['authorId']) {
+                                        echo '<td align="left">' . $row['name'] . '</td>';
+                                    }
+                                ?>
                                 <td align="left"><?php echo $row['status'] ;?></td>
                                 <td align="left"><?php echo $row['lastUpdated'] ;?></td>
                                 <td align="right" class="nowrap">

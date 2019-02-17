@@ -14,7 +14,7 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 //hardcoded value for userType, will add MYSQL verification
-
+$userId = $_SESSION['idnum'];
 
 if(!empty($_GET['postId'])){
 
@@ -24,8 +24,6 @@ if(!empty($_GET['postId'])){
     foreach((array) $rows1 as $key => $row){
         $authorId = $row['authorId'];
     }
-
-    $userId = $_SESSION['idnum'];
 
     if($cmsRole != 3 && $authorId != $_SESSION['idnum']){
         header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_PostsDashboard.php");
@@ -94,8 +92,16 @@ if(isset($_POST['btnSubmit'])) {
         if($status=='3' && $cmsRole=='3'){
             $crud->execute("UPDATE posts SET publisherId='$userId' WHERE id='$postId';");
         }
+        if($status=='4'){
+            $crud->execute("UPDATE posts SET archivedById='$userId' WHERE id='$postId';");
+        }
         header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditPost.php?postId=" . $postId);
     }
+
+    echo '<script language="javascript">';
+    echo 'alert("Button isset")';
+    echo '</script>';
+
 }
 
 $page_title = 'Santinig - Edit Post';
@@ -198,11 +204,11 @@ include 'CMS_ADMIN_SIDEBAR.php';
                     <div class="card" style="margin-bottom: 1rem;">
                         <div class="card-body" >
                             Author: <b><?php echo $author; ?></b><br>
-                            <i>Created on: <b><?php echo $firstPosted?></b></i><br><br>
+                            <i>Created on: <b><?php echo date("F j, Y g:i:s A ", strtotime($firstPosted)); ?></b></i><br><br>
 
                             Current Status: <b><?php echo $statusDesc?></b><br>
                             <?php if(!empty($publisher)){ echo "Publisher: <b>".$publisher."</b><br>"; }?>
-                            <i>Last updated: <b><?php echo $lastUpdated?></b></i><br><br>
+                            <i>Last updated: <b><?php  echo date("F j, Y g:i:s A ", strtotime($lastUpdated));?></b></i><br><br>
                         </div>
 
                         <div class="card-body">

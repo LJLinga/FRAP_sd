@@ -17,7 +17,7 @@ $userId = $_SESSION['idnum'];
 if(isset($_POST['btnSubmit'])){
     $title = $_POST['post_title'];
     $body = $crud->escape_string($_POST['post_content']);
-    $status = $_POST['submitStatus'];
+    $status = $_POST['btnSubmit'];
 
     $id = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body','$userId','$status')");
     if(!empty ($id)) {
@@ -108,16 +108,17 @@ include 'CMS_ADMIN_SIDEBAR.php';
                         <div class="card" style="margin-bottom: 1rem;">
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="submitStatus">Submit Action</label>
-                                    <select class="form-control" id="submitStatus" name="submitStatus">
-                                        <option value="1">Save as Draft</option>
-                                        <?php if($cmsRole!='3'){ echo "<option value=\"2\">Submit for Review</option>";}?>
-                                        <?php if($cmsRole=='3'){ echo "<option value=\"3\">Publish</option>";}?>
-                                    </select>
+                                    <?php
+                                    if($cmsRole == '3') {
+                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
+                                        echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="3">Publish</button> ';
+                                    }else if($cmsRole == '2'){
+                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
+                                        echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
+                                    }
+                                    ?>
                                 </div>
                                 <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">
-                                <button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit">Submit</button>
-
                             </div>
                         </div>
 
