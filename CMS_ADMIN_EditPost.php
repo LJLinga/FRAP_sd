@@ -156,6 +156,19 @@ include 'CMS_ADMIN_SIDEBAR.php';
             alert('hello');
         });
 
+//        $('#modalTriggerSubmit').click(function() {
+//            $('#changeText').text($('.btn').val());
+//            $('#submit').click(function() {
+//                document.getElementById("addToPay").click();
+//            });
+//        });
+//        $('#modalTriggerUpdate').click(function() {
+//            $('#changeText').text('50 % immediately');
+//            $('#submit').click(function() {
+//                document.getElementById("addFifty").click();
+//            });
+//        });
+
     });
 
     function addComment(){
@@ -265,5 +278,22 @@ include 'CMS_ADMIN_SIDEBAR.php';
         </form>
     </div>
 </div>
-<!-- /#page-wrapper -->
+    <!-- Modal by xtian pls dont delete hehe -->
+    <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Confirm Action
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to <b id="changeText"></b> ?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <a href="#" id="submit" class="btn btn-success success">Yes, I'm sure</a>
+                </div>
+            </div>
+        </div>
+    </div>
 <?php include 'GLOBAL_FOOTER.php' ?>

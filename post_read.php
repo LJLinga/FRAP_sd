@@ -30,8 +30,10 @@ if(!empty($_GET['permalink'])){
         $statusId = $row['statusId'];
     }
 
-    if($statusId!=3 && $authorId!=$userId && $cmsRole!=3){
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_PostsFeed.php");
+    if($statusId!=3){
+        if($authorId!=$userId && $cmsRole!=3){
+            header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_PostsFeed.php");
+        }
     }
 
     $rows = $crud->getData("SELECT 
@@ -68,27 +70,19 @@ include 'CMS_ADMIN_SIDEBAR.php';
 <script>
 
 </script>
-<div id="page-wrapper">
+<div id="container">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-12">
-                <h3 class="page-header">
-                    <?php echo $page_title; ?>
-                </h3>
-                <?php
-                if(isset($message)){
-                    echo"  
-                        <div class='alert alert-warning'>
-                            ". $message ."
-                        </div>
-                        ";
-                }
-                ?>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6">
-                <?php echo $body; ?>
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-lg-6" style="top: 1rem; bottom: 1rem;">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title"><b><?php echo $page_title;?></b></h3>
+                        <h5 class="card-subtitle">by <?php echo $author;?> | <?php echo date("F j, Y g:i A ", strtotime($lastUpdated)) ;?></h5>
+                    </div>
+                    <div class="card-body" style="overflow: hidden";>
+                        <p class="card-text"><?php echo $body ?></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
