@@ -1,0 +1,102 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: nicol
+ * Date: 11/9/2018
+ * Time: 9:51 AM
+ */
+
+include 'GLOBAL_CLASS_CRUD.php';
+$crud = new GLOBAL_CLASS_CRUD();
+require_once('mysql_connect_FA.php');
+session_start();
+
+
+if(empty($_GET['lastTimeStamp'])){
+    $lastTimeStamp = $crud->getData("SELECT CURRENT_TIMESTAMP() AS time");
+    $lastTimeStamp = $lastTimeStamp[0]['time'];
+}else{
+    $lastTimeStamp = $_GET['lastTimeStamp'];
+}
+
+$page_title = "Santinig Feed";
+include 'GLOBAL_HEADER.php';
+include 'CMS_ADMIN_SIDEBAR.php';
+?>
+<style>
+    @media screen and (min-width: 1200px) {
+        #calendarColumn{
+            position: fixed;
+            right:1rem;
+        }
+    }
+    @media screen and (max-width: 1199px) {
+        #calendarColumn{
+            position: relative;
+        }
+    }
+</style>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="column col-lg-7" style="margin-top: 1rem; margin-bottom: 1rem;">
+
+                <?php
+
+                $rows = $crud->getData("SELECT p.permalink, p.title, p.body, 
+                                          CONCAT(a.firstName,' ', a.lastName) AS name, 
+                                          s.description AS status, p.timePublished, p.lastUpdated 
+                                          FROM posts p JOIN employee a ON p.authorId = a.EMP_ID 
+                                          JOIN post_status s ON s.id = p.statusId 
+                                          WHERE s.id=3 AND p.timePublished < '$lastTimeStamp'
+                                          ORDER BY p.timePublished DESC LIMIT 10;");
+
+                foreach ((array) $rows as $key => $row){
+                    ?>
+
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title"><b><?php echo $row['title'];?></b></h3>
+                                <h5 class="card-subtitle">by <?php echo $row['name'];?> | <?php echo date("F j, Y g:i A ", strtotime($row['lastUpdated'])) ;?></h5>
+                            </div>
+                            <div class="card-body" style="overflow: hidden; max-height: 500px">
+                                <p class="card-text"><?php echo $row['body'] ?></>
+                            </div>
+                            <div class="card-body" style="overflow: hidden; max-height: 500px">
+                                <a class="card-link" href="<?php echo "http://localhost/FRAP_sd/read.php?pl=".$row['permalink']?>" >Read More</a>
+                            </div>
+                        </div>
+
+                        <p></p>
+                <?php
+                    $lastTimeStamp = $row['timePublished'];
+                }?>
+
+                <div class="card">
+                    <div class="card-body">
+                        <?php if(!empty($rows[0]['permalink'])) { ?>
+                            <a href="<?php echo "http://localhost/FRAP_sd/feed.php?lastTimeStamp=".$lastTimeStamp ?>" >Load More</a>
+                        <?php } else { ?>
+                            <a href="<?php echo "http://localhost/FRAP_sd/feed.php"?>" >No More Posts. Go Back</a>
+                        <?php }  ?>
+                    </div>
+                </div>
+            </div>
+
+            <div id="calendarColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="googleCalendar">
+                            <iframe src="https://calendar.google.com/calendar/b/3/embed?title=AFED%20Events&amp;height=400&amp;wkst=2&amp;bgcolor=%2399ff99&amp;src=noreply.lapdoc%40gmail.com&amp;color=%231B887A&amp;src=en.philippines%23holiday%40group.v.calendar.google.com&amp;color=%23125A12&amp;ctz=Asia%2FManila" style="border-width:0" width="470" height="400" frameborder="0" scrolling="no"></iframe>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+
+
+    </div>
+
+</div>
+
+<?php include 'GLOBAL_FOOTER.php';?>
+

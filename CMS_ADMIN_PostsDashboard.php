@@ -47,11 +47,10 @@ $userId = $_SESSION['idnum'];
                     'id': $('.archive').val(),
                 },
                 success: function(msg){
-                    alert(msg);
+                    alert("Post archived!");
                 }
-
             });
-            table.row($(this).parents('tr')).remove().draw();
+            $('.status').html("Trashed");
         });
 
         $('#btnAll').on('click', function(){
@@ -181,12 +180,16 @@ $userId = $_SESSION['idnum'];
                                         echo '<td align="left">' . $row['name'] . '</td>';
                                     }
                                 ?>
-                                <td align="left"><?php echo $row['status'] ;?></td>
+                                <td align="left" class="status"><?php echo $row['status'] ;?></td>
                                 <td align="left"><?php echo $row['lastUpdated'] ;?></td>
                                 <td align="right" class="nowrap">
                                     <form method="GET" action="CMS_ADMIN_EditPost.php">
-                                        <button type="submit" name="postId" class="btn btn-default" value=<?php echo $row['id'];?>>Edit</button>&nbsp;&nbsp;
-                                        <button type="button" name="archive" class="archive btn btn-danger" value="<?php echo $row['id']?>">Archive</button>
+                                        <button type="submit" name="postId" class="btn btn-default" value=<?php echo $row['id'];?>>Edit</button>
+                                        <?php if($row['status']!='4') { ?>
+                                            <button type="button" name="archive" class="archive btn btn-danger" value="<?php echo $row['id']?>">Archive</button>
+                                        <?php } elseif($row['status']=='4') { ?>
+                                            <button type="button" name="restore" class="restore btn btn-success" value="<?php echo $row['id']?>">Restore</button>
+                                        <?php } ?>
                                     </form>
                                 </td>
 

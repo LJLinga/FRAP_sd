@@ -75,7 +75,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 											?>
                                         <tr>
 
-                                        <td align="center"><?php echo $ans['FIRSTNAME'].$ans['LASTNAME'];?></td>
+                                        <td align="center"><?php echo $ans['FIRSTNAME'].' '.$ans['LASTNAME'];?></td>
                                         <td align="center"><?php echo $ans['DEPT_NAME'];?></td>
                                         <td align="center"><?php echo $ans['AMOUNT_PAID'];?></td>
                                         <td align="center"><?php echo $ans['PAYABLE'];?></td>

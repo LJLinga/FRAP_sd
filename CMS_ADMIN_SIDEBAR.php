@@ -4,7 +4,7 @@
         <ul class="nav navbar-nav side-nav">
 
             <li>
-                <a href="CMS_PostsFeed.php"><i class="fa fa-newspaper-o" aria-hidden="true"></i> News Feed (Temp Location) </a>
+                <a href="feed.php"><i class="fa fa-newspaper-o" aria-hidden="true"></i> News Feed (Temp Location) </a>
             </li>
 
             <li>

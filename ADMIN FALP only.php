@@ -57,7 +57,6 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
                     $payable = $_POST['amount'] +500;
                     $perPayment = (($_POST['amount']+500) / $payments);
 
-
                     $query3 = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,PICKUP_STATUS)
                                       values({$idNum},1,{$_POST['amount']},500,{$_POST['terms']},{$payable},{$perPayment},2,2,DATE(now()),1);";
 
@@ -78,7 +77,6 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
                 }
 
             }
-
 
 
 

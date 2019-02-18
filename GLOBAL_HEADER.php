@@ -75,7 +75,7 @@
                 </li>
 
                 <li>
-                    <a href="CMS_PostsFeed.php"> News Feed </a>
+                    <a href="feed.php"> News Feed </a>
                 </li>
 
                 <?php

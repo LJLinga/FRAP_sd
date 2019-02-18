@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/Calendar Integration/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
@@ -32,7 +32,7 @@ if(isset($_POST['btnSubmit'])){
 
     if($status == 3) {
 
-        include 'Calendar Integration/addToCalendar.php';
+        include 'addToCalendar.php';
 
         $client = getClient();
         $service = new Google_Service_Calendar($client);
@@ -109,13 +109,9 @@ include 'CMS_ADMIN_SIDEBAR.php';
                 //
                 imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
                 // Set the file upload URL.
-                fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php'
-            }).on('froalaEditor.image.error', function (e, editor, error, response) {
-                console.log(error);
-                console.log(response);
-            }).on('froalaEditor.file.error', function (e, editor, error, response) {
-                console.log(error);
-                console.log(response);
+                fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
+
+                width: 750
             });
 
             $('#datetimepicker1').datetimepicker( {

@@ -34,10 +34,6 @@ if(isset($_POST['btnSubmit'])){
             $crud->execute("UPDATE posts SET archivedById='$userId' WHERE id='$postId';");
         }
         header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditPost.php?postId=" . $postId);
-    }else{
-        echo '<script language="javascript">';
-        echo 'alert("something went wrong")';
-        echo '</script>';
     }
 }
 
@@ -66,13 +62,8 @@ include 'CMS_ADMIN_SIDEBAR.php';
                 //
                 imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
                 // Set the file upload URL.
-                fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php'
-            }).on('froalaEditor.image.error', function (e, editor, error, response) {
-                console.log(error);
-                console.log(response);
-            }).on('froalaEditor.file.error', function (e, editor, error, response) {
-                console.log(error);
-                console.log(response);
+                fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
+                width: 750
             });
         });
     </script>
@@ -103,7 +94,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
                             <textarea name="post_content" id="post_content"></textarea>
                         </div>
                     </div>
-                    <div id="publishColumn" class="column col-lg-4" style="margin-bottom: 1rem;">
+                    <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
 
                         <div class="card" style="margin-bottom: 1rem;">
                             <div class="card-body">
@@ -130,7 +121,6 @@ include 'CMS_ADMIN_SIDEBAR.php';
                                     }
                                     ?>
                                 </div>
-                                <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">
                             </div>
                         </div>
 

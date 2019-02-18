@@ -84,7 +84,6 @@ if(!empty($_GET['postId'])){
 if(isset($_POST['btnSubmit'])) {
 
     $title = $_POST['post_title'];
-    //$body = $_POST['post_content'];
     $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['btnSubmit'];
 
@@ -139,6 +138,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
             // Set the file upload URL.
             fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
             //Allow comments
+            width: 750
         });
 
         if(status == 3 && cmsRole!= 3){
@@ -155,6 +155,8 @@ include 'CMS_ADMIN_SIDEBAR.php';
             $('#comment').html($('textarea').froalaEditor('html.getSelected'));
             alert('hello');
         });
+
+        $('textarea').on('froalaEditor.image')
 
 //        $('#modalTriggerSubmit').click(function() {
 //            $('#changeText').text($('.btn').val());
@@ -202,7 +204,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
                         <textarea name="post_content" id="post_content"></textarea>
                     </div>
                 </div>
-                <div id="publishColumn" class="column col-lg-4" style="margin-bottom: 1rem; right:1rem;">
+                <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem; ">
 
                     <div class="card" style="margin-bottom: 1rem;">
                         <div class="card-body" >
@@ -221,7 +223,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
                             Author: <b><?php echo $author; ?></b><br>
                             <i>Created on: <b><?php echo date("F j, Y g:i:s A ", strtotime($firstPosted)); ?></b></i><br><br>
 
-                            Current Status: <b><?php echo $statusDesc?>
+                            Current Status: <b><?php echo $statusDesc?></b>
                                 <?php if(!empty($permalink)){ ?>
                                     (<a href="<?php echo "http://localhost/FRAP_sd/post_read.php?permalink=".$permalink?>" >Preview</a>)
                                 <?php } ?>
@@ -261,7 +263,6 @@ include 'CMS_ADMIN_SIDEBAR.php';
                             </div>
                         </div>
                     </div>
-
 
                     <div class="card" style="margin-bottom: 1rem;">
                         <div class="card-body" >
