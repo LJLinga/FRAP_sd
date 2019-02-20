@@ -54,7 +54,7 @@ include 'EDMS_USER_SIDEBAR_ViewSection.php';
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Add new document section</h1>
+                    <h1 class="page-header">Edit document section</h1>
                 </div>
             </div>
             <!--Insert success page-->

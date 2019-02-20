@@ -6,15 +6,15 @@
  * Time: 3:48 PM
  */
 
-include_once('GLOBAL_CLASS_CRUD.php');
-$crud = new GLOBAL_CLASS_CRUD();
-require_once('mysql_connect_FA.php');
+//include_once('GLOBAL_CLASS_CRUD.php');
+//$crud = new GLOBAL_CLASS_CRUD();
+//require_once('mysql_connect_FA.php');
 session_start();
-include('GLOBAL_USER_TYPE_CHECKING.php');
-include('GLOBAL_EDMS_ADMIN_CHECKING.php');
+//include('GLOBAL_USER_TYPE_CHECKING.php');
+//include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 include 'GLOBAL_HEADER.php';
-include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
+//include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
 ?>
 
 <script>
@@ -29,26 +29,75 @@ include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
             <div class="col-lg-12">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">General Files</h1>
+                        <h1 class="page-header"><i class="fa fa-fw fa-folder"></i> General Files</h1>
                         <ol class="breadcrumb">
                             <li class="active">
                                 General Files
                             </li>
-                            <!-- *this succeeding lines of codes are for the breakdown of the files.
-                            Modify this to be updated when user clicks on a directory and the page refreshes.
-                            The next <li> should be appended here.
-                            Ex. Gen files > User clicks on contract > Gen Files/Contracts is displayed.
-                            Append the class active on the current directory being displayed. See ex. below
-                            <li>
-                                Contracts
-                            </li>
-                            <li class="active">
-                                2018
-                            </li> -->
                         </ol>
-                        <!-- This table should be updated based on the contents of the current directory being displayed.
-                        Ex. Default, display all the directory as such on the screen. When user navigates to Contracts
-                        > 2018. It should display all contracts for 2018 -->
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <div class="panel-default">
+                                    <div class="panel-heading">
+                                        My Groups
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="col-lg-2">All <b class="caret"></b></div>
+                                        <div class="col-lg-7"></div>
+                                        <div class="col-lg-3"><i class="fa fa-fw fa-plus-circle"></i>Create Groups</div>
+                                        <hr>
+                                        <div class="panel-body">Test</div>
+                                        <hr>
+                                        <div class="panel-body">Test</div>
+                                    </div>
+                                </div>
+                                <div class="panel-default">
+                                    <div class="panel-heading">
+                                        My Tasks
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="col-lg-2">All <b class="caret"></b></div>
+                                        <div class="col-lg-7"></div>
+                                        <div class="col-lg-3"><i class="fa fa-fw fa-plus-circle"></i>Create Groups</div>
+                                        <hr>
+                                        <div class="panel-body">Test</div>
+                                        <hr>
+                                        <div class="panel-body">Test</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-7">
+                                <div class="panel-default">
+                                    <div class="panel-heading">
+                                        My Activities
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="col-lg-2">All <b class="caret"></b></div>
+                                        <div class="col-lg-7"></div>
+                                        <div class="col-lg-3"><i class="fa fa-fw fa-plus-circle"></i>Create Groups</div>
+                                        <hr>
+                                        <div class="panel-body">Test</div>
+                                    </div>
+                                </div>
+                                <div class="panel-default">
+                                    <div class="panel-heading">
+                                        My Documents
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="col-lg-2">
+
+                                            Documents I modified <b class="caret"></b>
+                                        </div>
+                                        <div class="col-lg-7"></div>
+                                        <div class="col-lg-3"><i class="fa fa-fw fa-plus-circle"></i>Create Groups</div>
+                                        <hr>
+                                        <div class="panel-body">Test</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                         <table class="table table-bordered" align="center" id="dataTable">
                             <thead>
                                 <tr>
