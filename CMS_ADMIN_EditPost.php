@@ -143,7 +143,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
 
         if(status == 3 && cmsRole!= 3){
             $('textarea').froalaEditor("edit.off");
-        };
+        }
 
         $('textarea').on('froalaEditor.contentChanged', function (e, editor) {
             $('#btnUpdate').show();
@@ -156,7 +156,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
             alert('hello');
         });
 
-        $('textarea').on('froalaEditor.image')
+        $('textarea').on('froalaEditor.image');
 
 //        $('#modalTriggerSubmit').click(function() {
 //            $('#changeText').text($('.btn').val());
@@ -225,7 +225,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
 
                             Current Status: <b><?php echo $statusDesc?></b>
                                 <?php if(!empty($permalink)){ ?>
-                                    (<a href="<?php echo "http://localhost/FRAP_sd/post_read.php?permalink=".$permalink?>" >Preview</a>)
+                                    (<a href="<?php echo "http://localhost/FRAP_sd/read.php?pl=".$permalink?>" >Preview</a>)
                                 <?php } ?>
                             <br>
                             <?php if(!empty($publisher)){ echo "Publisher: <b>".$publisher."</b><br>"; }?>

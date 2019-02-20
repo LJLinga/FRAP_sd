@@ -48,9 +48,10 @@ $userId = $_SESSION['idnum'];
                 },
                 success: function(msg){
                     alert("Post archived!");
+                    //$('.status').html("Trashed");
                 }
             });
-            $('.status').html("Trashed");
+
         });
 
         $('#btnAll').on('click', function(){
