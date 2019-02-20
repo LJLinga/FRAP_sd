@@ -92,7 +92,7 @@ if(isset($_POST['btnSubmit'])) {
             $crud->execute("UPDATE posts SET publisherId='$userId' WHERE id='$postId';");
             $result = $crud->execute("SELECT permalink FROM posts WHERE id='$postId' AND permalink IS NULL");
             if(empty($result[0]['permalink'])) {
-                include('CMS_FUNCTION_PERMALINK.php');
+                include('CMS_FUNCTION_Permalink.php');
                 $permalink = generate_permalink($title);
                 $crud->execute("UPDATE posts SET permalink='$permalink' WHERE id='$postId' AND permalink IS NULL");
             }
@@ -107,7 +107,7 @@ if(isset($_POST['btnSubmit'])) {
 
 $page_title = 'Santinig - Edit Post';
 include 'GLOBAL_HEADER.php';
-include 'CMS_ADMIN_SIDEBAR.php';
+include 'CMS_SIDEBAR.php';
 ?>
 <style>
     @media screen and (min-width: 1200px) {

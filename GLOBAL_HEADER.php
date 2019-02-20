@@ -103,7 +103,7 @@
 
                             echo '
                                 <li>
-                                    <a href="CMS_ADMIN_PostsDashboard.php"> <i class="fa fa-newspaper-o" aria-hidden="true"></i> Santinig Content </a>
+                                    <a href="CMS_PostsDashboard.php"> <i class="fa fa-newspaper-o" aria-hidden="true"></i> Santinig Content </a>
                                 </li>
                                 ';
                         }
@@ -112,7 +112,7 @@
 
                             echo ' 
                                  <li>
-                                    <a href="EDMS_VIEW_DocumentDashboard.php"> <i class="fa fa-file-text" aria-hidden="true"></i> Documents</a>
+                                    <a href="EDMS_Dashboard.php"> <i class="fa fa-file-text" aria-hidden="true"></i> Documents</a>
                                  </li>';
 
                         }

@@ -15,7 +15,7 @@ include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 $page_title = 'Santinig - Posts Dashboard';
 include 'GLOBAL_HEADER.php';
-include 'CMS_ADMIN_SIDEBAR.php';
+include 'CMS_SIDEBAR.php';
 
 $userId = $_SESSION['idnum'];
 
@@ -95,7 +95,7 @@ $userId = $_SESSION['idnum'];
             <div class="col-lg-12">
                 <h3 class="page-header">
                     Santinig Posts
-                    <a class="btn btn-primary" href="CMS_ADMIN_AddPost.php"> Add New Post </a>
+                    <a class="btn btn-primary" href="CMS_AddPost.php"> Add New Post </a>
                 </h3>
             </div>
             <div class="col-lg-12">
@@ -184,7 +184,7 @@ $userId = $_SESSION['idnum'];
                                 <td align="left" class="status"><?php echo $row['status'] ;?></td>
                                 <td align="left"><?php echo $row['lastUpdated'] ;?></td>
                                 <td align="right" class="nowrap">
-                                    <form method="GET" action="CMS_ADMIN_EditPost.php">
+                                    <form method="GET" action="CMS_EditPost.php">
                                         <button type="submit" name="postId" class="btn btn-default" value=<?php echo $row['id'];?>>Edit</button>
                                         <?php if($row['status']!='4') { ?>
                                             <button type="button" name="archive" class="archive btn btn-danger" value="<?php echo $row['id']?>">Archive</button>

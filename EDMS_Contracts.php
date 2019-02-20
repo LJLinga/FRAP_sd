@@ -29,7 +29,7 @@ include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
             <div class="col-lg-12">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">By Laws</h1>
+                        <h1 class="page-header">Contracts</h1>
                         <ol class="breadcrumb">
                             <li class="active">
                                 General Files
@@ -59,37 +59,37 @@ include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><a href="EDMS_VIEW_ViewDocument.php"><i class="fa fa-fw fa-file"></i> ByLaws_2018</a></td>
+                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Contract_Membership_JuanDelaCruz</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="EDMS_VIEW_ViewDocument.php"><i class="fa fa-fw fa-file"></i> ByLaws_2017</a></td>
+                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Contract_Membership_JuanDelaCruz</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="EDMS_VIEW_ViewDocument.php"><i class="fa fa-fw fa-file"></i> ByLaws_2016</a></td>
+                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Contract_Membership_JuanDelaCruz</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="EDMS_VIEW_ViewDocument.php"><i class="fa fa-fw fa-file"></i> ByLaws_2015</a></td>
+                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Contract_Membership_JuanDelaCruz</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="EDMS_VIEW_ViewDocument.php"><i class="fa fa-fw fa-file"></i> ByLaws_2014</a></td>
+                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Contract_Membership_JuanDelaCruz</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="EDMS_VIEW_ViewDocument.php"><i class="fa fa-fw fa-file"></i> ByLaws_2013</a></td>
+                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Contract_Membership_JuanDelaCruz</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="EDMS_VIEW_ViewDocument.php"><i class="fa fa-fw fa-file"></i> ByLaws_2012</td>
+                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Contract_Membership_JuanDelaCruz</td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>

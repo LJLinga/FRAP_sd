@@ -64,7 +64,7 @@ if(!empty($_GET['pl'])){
 
 $page_title = $title;
 include 'GLOBAL_HEADER.php';
-include 'CMS_ADMIN_SIDEBAR.php';
+include 'CMS_SIDEBAR.php';
 
 ?>
 <script>

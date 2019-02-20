@@ -21,7 +21,7 @@ $page_title = 'Santinig - User Permissions Quick Edit';
 include 'GLOBAL_HEADER.php';
 //include 'SYS_ADMIN_SIDEBAR.php';
 
-include('CMS_ADMIN_SIDEBAR.php')
+include('CMS_SIDEBAR.php')
 
 ?>
 <div id="content-wrapper">

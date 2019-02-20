@@ -86,7 +86,7 @@ if(isset($_POST['btnSubmit'])){
 
 $page_title = 'Santinig - Add Event';
 include 'GLOBAL_HEADER.php';
-include 'CMS_ADMIN_SIDEBAR.php';
+include 'CMS_SIDEBAR.php';
 ?>
     <style>
         @media screen and (min-width: 1200px) {

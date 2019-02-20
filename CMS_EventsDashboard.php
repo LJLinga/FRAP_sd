@@ -17,7 +17,7 @@ $userId = $_SESSION['idnum'];
 
 $page_title = 'Santinig - Events Dashboard';
 include 'GLOBAL_HEADER.php';
-include 'CMS_ADMIN_SIDEBAR.php';
+include 'CMS_SIDEBAR.php';
 ?>
 
 <script>
@@ -34,7 +34,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
             <div class="col-lg-12">
                 <h3 class="page-header">
                     Upcoming Events
-                    <a class="btn btn-primary" href="CMS_ADMIN_AddEvent.php"> Add New Event </a>
+                    <a class="btn btn-primary" href="CMS_AddEvent.php"> Add New Event </a>
                 </h3>
             </div>
         </div>
@@ -122,7 +122,7 @@ include 'CMS_ADMIN_SIDEBAR.php';
                                     ?></td>
                                 <td align="left"><?php echo "-" ;?></td>
                                 <td align="right" class="nowrap">
-                                    <form method="GET" action="CMS_ADMIN_EditPost.php">
+                                    <form method="GET" action="CMS_EditPost.php">
                                         <button type="submit" name="postId" class="btn btn-default" value=<?php echo $row['id'];?>>Edit</button>&nbsp;&nbsp;
                                         <button type="button" name="archive" class="archive btn btn-danger" value="<?php echo $row['id']?>">Archive</button>
                                     </form>

@@ -6,12 +6,12 @@
  * Time: 3:48 PM
  */
 
-include_once('GLOBAL_CLASS_CRUD.php');
-$crud = new GLOBAL_CLASS_CRUD();
-require_once('mysql_connect_FA.php');
+//include_once('GLOBAL_CLASS_CRUD.php');
+//$crud = new GLOBAL_CLASS_CRUD();
+//require_once('mysql_connect_FA.php');
 session_start();
-include('GLOBAL_USER_TYPE_CHECKING.php');
-include('GLOBAL_EDMS_ADMIN_CHECKING.php');
+//include('GLOBAL_USER_TYPE_CHECKING.php');
+//include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 include 'GLOBAL_HEADER.php';
 include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
@@ -29,7 +29,7 @@ include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
             <div class="col-lg-12">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">Faculty Manual</h1>
+                        <h1 class="page-header">Applications</h1>
                         <ol class="breadcrumb">
                             <li class="active">
                                 General Files
@@ -59,37 +59,37 @@ include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><a href="EDMS_VIEW_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Final</a></td>
+                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Application Requiements_JuanDelaCruz</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="EDMS_VIEW_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Post-Negotiation Ver1.1</a></td>
+                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Application Requiements_JuanDelaCruz</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="EDMS_VIEW_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Post-Negotiation Ver1.0</a></td>
+                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Application Requiements_JuanDelaCruz</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="EDMS_VIEW_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Negotiation Ver1.2</a></td>
+                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Application Requiements_JuanDelaCruz</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="EDMS_VIEW_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Negotiation Ver1.1</a></td>
+                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Application Requiements_JuanDelaCruz</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="EDMS_VIEW_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Negotiation Ver1.0</a></td>
+                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Application Requiements_JuanDelaCruz</a></td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>
                                 <tr>
-                                    <td><a href="EDMS_VIEW_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Pre-Negotiation Ver1.0</td>
+                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Application Requiements_JuanDelaCruz</td>
                                     <td>8/4/2018 7:59pm</td>
                                     <td> - </td>
                                 </tr>

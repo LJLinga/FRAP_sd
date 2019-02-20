@@ -8,19 +8,19 @@
             </li>
 
             <li>
-                <a href="CMS_ADMIN_PostsDashboard.php"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Santinig Posts </a>
+                <a href="CMS_PostsDashboard.php"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Santinig Posts </a>
             </li>
 
             <li>
-                <a href="CMS_ADMIN_AddPost.php"><i class="fa fa-pencil" aria-hidden="true"></i> Add Post</a>
+                <a href="CMS_AddPost.php"><i class="fa fa-pencil" aria-hidden="true"></i> Add Post</a>
             </li>
 
             <li>
-                <a href="CMS_ADMIN_EventsDashboard.php"><i class="fa fa-calendar" aria-hidden="true"></i> Events</a>
+                <a href="CMS_EventsDashboard.php"><i class="fa fa-calendar" aria-hidden="true"></i> Events</a>
             </li>
 
             <li>
-                <a href="CMS_ADMIN_AddEvent.php"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Add Event</a>
+                <a href="CMS_AddEvent.php"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Add Event</a>
             </li>
 
 
