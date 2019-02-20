@@ -13,9 +13,9 @@
         <ul class="nav navbar-nav side-nav">
             <br>
             <li><a href="#"><i class="fa fa-fw fa-level-up"></i> Go Up</a></li>
-            <li><a href="#"><i class="fa fa-fw fa-folder"></i> 1.0 Membership</a></li>
-            <li><a href="#"><i class="fa fa-fw fa-folder"></i> 2.0 Loans</a></li>
-            <li><a href="#"><i class="fa fa-fw fa-folder"></i> 3.0 Benefits</a></li>
+            <li><a href="#"><i class="fa fa-fw fa-folder"></i> Appendix A</a></li>
+            <li><a href="#"><i class="fa fa-fw fa-folder"></i> Appendix B</a></li>
+            <li><a href="#"><i class="fa fa-fw fa-folder"></i> Appendix C</a></li>
         </ul>
     </div>
     <!-- /.navbar-collapse -->

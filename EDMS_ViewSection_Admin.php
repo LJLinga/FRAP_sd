@@ -60,10 +60,45 @@ include 'EDMS_USER_SIDEBAR_ViewSection.php';
                             </ul>
                         </div>
                     </div>
+
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading"><i class="fa fa-fw fa-file"></i> References</div>
                     <div class="panel-body">No Document Referenced</div>
+                    <div class="panel-footer">
+                        <button class="btn btn-default"><i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-file"></i> Add New Doc</button>
+                        <button class="btn btn-default"><i class="fa fa-fw fa-link"></i><i class="fa fa-fw fa-file"></i> Link Existing Doc</button>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading"><i class="fa fa-fw fa-comment"></i> Comments</div>
+                        <div class="panel-body">
+                            <div class="panel panel-default">
+                                <div id="" class="panel-heading"><i class="fa fa-fw fa-user"></i><b>Director</b>  February 14, 2019 14:45:01</div>
+                                <div id="">
+                                    <div class="panel-body">
+                                        <p>I think revise this section of the page</p>
+                                    </div>
+                                    <div class="panel-footer">
+                                        <button class="btn btn-default"><i class="fa fa-fw fa-thumbs-up"></i><b>5</b></button>
+                                        <button class="btn btn-default"><i class="fa fa-fw fa-thumbs-down"></i></button>
+                                        <button class="btn btn-default"><i class="fa fa-fw fa-comment"></i>Reply</button></br>
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <b>Darna</b> February 14, 2019 14:55:01 </br>
+                                                I agree COMPELETELY gurl
+                                            </div>
+                                            <div class="panel-footer">
+                                                <button class="btn btn-default"><i class="fa fa-fw fa-thumbs-up"></i><b>3</b></button>
+                                                <button class="btn btn-default" class="btn btn-default"><i class="fa fa-fw fa-thumbs-down"></i></button>
+                                                <button class="btn btn-default"><i class="fa fa-fw fa-comment"></i>Reply</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer"><button>Comment</button></div>
                 </div>
             </div>
         </div>
