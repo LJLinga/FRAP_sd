@@ -603,10 +603,13 @@ if (isset($_POST['submit'])) {
         $resultTransaction = mysqli_query($dbc, $queryTransaction);
 
     }
+    else{
+        echo 'alert("'.$message.'")';
+    }
 
 }
 
-if ($rowForm['APP_STATUS'] == 1) { /* PENDING */
+if ($rowForm['STATUS'] == 1) { /* PENDING */
 
     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/member HA appsent.php");
 
@@ -711,6 +714,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                 <div class="col-lg-12">
                     <h1 class="page-header">Health Aid Application Form</h1>
+
                 </div>
 
             </div>
