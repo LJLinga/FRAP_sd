@@ -23,83 +23,86 @@ include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
     });
 </script>
 
-<div id="page-wrapper">
+<div id="content-wrapper">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">Faculty Manual</h1>
-                        <ol class="breadcrumb">
-                            <li class="active">
-                                General Files
-                            </li>
-                            <!-- *this succeeding lines of codes are for the breakdown of the files.
-                            Modify this to be updated when user clicks on a directory and the page refreshes.
-                            The next <li> should be appended here.
-                            Ex. Gen files > User clicks on contract > Gen Files/Contracts is displayed.
-                            Append the class active on the current directory being displayed. See ex. below
+                <h2 class="page-header">
+                    Faculty Manual
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card" style="margin-bottom: 1rem;">
+                    <div class="card-header">
+                        <ul class="nav">
+                            <i class="fa fa-fw fa-folder-open fa-3x"></i>
+                            <span style="font-size: 150%;"> 2018 (Current) </span>
+                        </ul>
+                    </div>
+
+
+                    <div class="card-body" >
+                        <ul class="nav">
                             <li>
-                                Contracts
+                                <a href="javascript:;" data-toggle="collapse" data-target="#introduction">
+                                    <i class="fa fa-fw fa-folder fa-lg"></i> Introduction
+                                    <i class="fa fa-fw fa-caret-down"></i>
+                                </a>
+                                <ul id="introduction" class="nav collapse">
+                                    <li>
+                                        <a href="#"><i class="fa fa-fw fa-file-text"></i> Message from the President </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fa fa-fw fa-file-text"></i> De La Salle University </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fa fa-fw fa-file-text"></i> Lessons from the Founder </a>
+                                    </li>
+                                </ul>
                             </li>
-                            <li class="active">
-                                2018
-                            </li> -->
-                        </ol>
-                        <!-- This table should be updated based on the contents of the current directory being displayed.
-                        Ex. Default, display all the directory as such on the screen. When user navigates to Contracts
-                        > 2018. It should display all contracts for 2018 -->
-                        <table class="table table-bordered" align="center" id="dataTable">
-                            <thead>
-                                <tr>
-                                    <th>File Name</th>
-                                    <th>Date Created</th>
-                                    <th>Created By</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><a href="EDMS_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Final</a></td>
-                                    <td>8/4/2018 7:59pm</td>
-                                    <td> - </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="EDMS_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Post-Negotiation Ver1.1</a></td>
-                                    <td>8/4/2018 7:59pm</td>
-                                    <td> - </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="EDMS_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Post-Negotiation Ver1.0</a></td>
-                                    <td>8/4/2018 7:59pm</td>
-                                    <td> - </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="EDMS_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Negotiation Ver1.2</a></td>
-                                    <td>8/4/2018 7:59pm</td>
-                                    <td> - </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="EDMS_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Negotiation Ver1.1</a></td>
-                                    <td>8/4/2018 7:59pm</td>
-                                    <td> - </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="EDMS_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Negotiation Ver1.0</a></td>
-                                    <td>8/4/2018 7:59pm</td>
-                                    <td> - </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="EDMS_ViewSection.php"><i class="fa fa-fw fa-book"></i> Faculty Manual 2018 - Pre-Negotiation Ver1.0</td>
-                                    <td>8/4/2018 7:59pm</td>
-                                    <td> - </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            <li>
+                                <a href="javascript:;" data-toggle="collapse" data-target="#general_provisions">
+                                    <i class="fa fa-fw fa-folder fa-lg"></i> General Provisions
+                                    <i class="fa fa-fw fa-caret-down"></i>
+                                </a>
+                                <ul id="general_provisions" class="nav collapse">
+                                    <li>
+                                        <a href="#"><i class="fa fa-fw fa-file-text"></i> Section 1: General Directives </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fa fa-fw fa-file-text"></i> Section 2: Classification </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fa fa-fw fa-file-text"></i> Section 3: Communication </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a href="#"><i class="fa fa-fw fa-folder fa-lg"></i> Undergraduate </a></li>
+                            <li><a href="#"><i class="fa fa-fw fa-folder fa-lg"></i> Graduate </a></li>
+                        </ul>
                     </div>
                 </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card" style="margin-bottom: 1rem;">
+                    <div class="card-header"><i class="fa fa-fw fa-archive fa-lg"></i> Old Editions</div>
+                    <div class="card-body">
+                        <ul class="nav">
+                            <li><a href="#"><i class="fa fa-fw fa-folder fa-lg"></i> 2015 </a></li>
+                            <li><a href="#"><i class="fa fa-fw fa-folder fa-lg"></i> 2012 </a></li>
+                            <li><a href="#"><i class="fa fa-fw fa-folder fa-lg"></i> 2009 </a></li>
+                            <li><a href="#"><i class="fa fa-fw fa-folder fa-lg"></i> 2006 </a></li>
+                            <li><a href="#"><i class="fa fa-fw fa-folder fa-lg"></i> 2003 </a></li>
+                            <li><a href="#"><i class="fa fa-fw fa-folder fa-lg"></i> 2000 </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
     </div>
 </div>
 
-<?php include 'EDMS_TEMPLATE_Footer.php';?>
+<?php include 'GLOBAL_FOOTER.php';?>

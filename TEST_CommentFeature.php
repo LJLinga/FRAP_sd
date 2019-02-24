@@ -85,7 +85,11 @@ include 'CMS_SIDEBAR.php';
             })
         });
 
-        load_comment();
+
+
+        setInterval(function() {
+            load_comment();
+        }, 500); //5
 
         function load_comment()
         {
@@ -96,7 +100,7 @@ include 'CMS_SIDEBAR.php';
                 {
                     $('#display_comment').html(data);
                 }
-            })
+            });
         }
 
         $(document).on('click', '.reply', function(){

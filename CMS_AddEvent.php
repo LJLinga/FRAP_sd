@@ -18,7 +18,7 @@ $userId = $_SESSION['idnum'];
  */
 
 if(isset($_POST['btnSubmit'])){
-    $title = $_POST['post_title'];
+    $title = $crud->escape_string($_POST['post_title']);
     $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['submitStatus'];
     $startTime =  $_POST['event_start'];
@@ -43,11 +43,11 @@ if(isset($_POST['btnSubmit'])){
             'description' => $body,
             'start' => array(
                 'dateTime' => $startTime,
-                //'dateTime' => '2019-02-14T17:00:00',
+                //'dateTime' => '2019-02-21T17:00:00',
                 'timeZone' => 'Asia/Manila',
             ),
             'end' => array(
-                //'dateTime' => '2019-02-14T17:00:00',
+                //'dateTime' => '2019-02-21T17:15:00',
                 'dateTime' => $endTime,
                 'timeZone' => 'Asia/Manila',
             ),
@@ -74,7 +74,7 @@ if(isset($_POST['btnSubmit'])){
 
     }
 
-    $id = $crud->executeGetKey("INSERT INTO events (title, description, posterId, statusId, startTime, endTime, GOOGLE_EVENTID, GOOGLE_EVENTLINK) values ('$title', '$body','$userId','$statusId','$startTime','$endTime','$eventId','$eventLink')");
+    $id = $crud->executeGetKey("INSERT INTO events (title, description, posterId, statusId, startTime, endTime, GOOGLE_EVENTID, GOOGLE_EVENTLINK) values ('$title', '$body','$userId','$status','$startTime','$endTime','$eventId','$eventLink')");
     if(!empty ($id)) {
         header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditEvent.php?postId=" . $id);
     }else{
@@ -118,14 +118,14 @@ include 'CMS_SIDEBAR.php';
                 minDate: moment(),
                 locale: moment().local('ph'),
                 defaultDate: moment().add(5,'minutes'),
-                format: 'YYYY-MM-DD hh:mm:ss'
+                format: 'YYYY-MM-DD HH:mm:ss'
             });
 
             $('#datetimepicker2').datetimepicker( {
                 minDate: moment().add(15, 'minutes'),
                 locale: moment().local('ph'),
                 defaultDate: moment().add(20, 'minutes'),
-                format: 'YYYY-MM-DD hh:mm:ss'
+                format: 'YYYY-MM-DD HH:mm:ss'
             });
 
 

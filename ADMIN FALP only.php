@@ -205,7 +205,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                             <input type="checkbox" name="ifPartTime" value="partTime" id="partTime"> Is the member a part time? <br>
                                             <label class="memfieldlabel">Amount</label><big class="req"> *</big>
-                                            <input type="number" class="form-control" placeholder="Enter Amount (Peso)" name="amount" id="amount" min="1" max="99999" maxlength="5">
+                                            <input type="number" class="form-control" placeholder="Enter Amount (Peso)" name="amount" id="amount" min="5000" max="15000" maxlength="5" required>
 
                                         </div>
 
@@ -268,6 +268,22 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
     <script src="js/bootstrap.min.js"></script>
 <script>
+         $(document).ready(function(){
+             $("#falpcompute").attr("disabled", "disabled");
+
+             $('#table').DataTable();
+
+             $('#amount').on("change", function(){
+                 let a = $('#amount'.val();
+                 if((a > 4999 && a < 15001)){
+                     $("#falpcompute").removeAttr("disabled");
+                 }else{
+                     $("#falpcompute").attr("disabled", "disabled");
+                 }
+             });
+
+         });
+
         document.getElementById("falpcompute").onclick = function() {
             checkform();
         };
@@ -341,14 +357,6 @@ include 'FRAP_ADMIN_SIDEBAR.php';
             }
 
         }
-
-
-        $(document).ready(function(){
-
-            $('#table').DataTable();
-
-        });
-
     </script>
 
 <?php include 'GLOBAL_FOOTER.php'; ?>

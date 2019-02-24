@@ -5,12 +5,12 @@
  * Date: 10/4/2018
  * Time: 3:48 PM
  */
-//include_once('GLOBAL_CLASS_CRUD.php');
-//$crud = new GLOBAL_CLASS_CRUD();
-//require_once('mysql_connect_FA.php');
-//session_start();
-//include('GLOBAL_USER_TYPE_CHECKING.php');
-//include('GLOBAL_EDMS_ADMIN_CHECKING.php');
+include_once('GLOBAL_CLASS_CRUD.php');
+$crud = new GLOBAL_CLASS_CRUD();
+require_once('mysql_connect_FA.php');
+session_start();
+include('GLOBAL_USER_TYPE_CHECKING.php');
+include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 include 'GLOBAL_HEADER.php';
 include 'EDMS_USER_SIDEBAR_ViewSection.php';
@@ -46,9 +46,9 @@ include 'EDMS_USER_SIDEBAR_ViewSection.php';
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading"><i class="fa fa-fw fa-file"></i> Sub Sections</div>
-                    <div class="panel-body">
+                <div class="card" style="margin-bottom: 1rem;">
+                    <div class="card-header"><i class="fa fa-fw fa-file"></i> Sub Sections</div>
+                    <div class="card-body">
                         <div class="collapse navbar-collapse navbar-ex1-collapse">
                             <ul class="nav">
                                 <li><a href="#" class="active"><i class="fa fa-fw fa-folder"></i> 1.0.1.1 Beneficiaries</a></li>
@@ -61,9 +61,9 @@ include 'EDMS_USER_SIDEBAR_ViewSection.php';
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading"><i class="fa fa-fw fa-file"></i> References</div>
-                    <div class="panel-body">No Document Referenced</div>
+                <div class="card">
+                    <div class="card-header"><i class="fa fa-fw fa-file"></i> References</div>
+                    <div class="card-body">No Document Referenced</div>
                 </div>
             </div>
         </div>

@@ -23,8 +23,9 @@
                 <a href="CMS_AddEvent.php"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Add Event</a>
             </li>
 
-
-
+            <li>
+                <a href="CMS_Statistics.php"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Reports </a>
+            </li>
         </ul>
 
     </div>

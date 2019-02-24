@@ -11,6 +11,7 @@ $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 
+$userId=$_SESSION['idnum'];
 
 if(empty($_GET['lastTimeStamp'])){
     $lastTimeStamp = $crud->getData("SELECT CURRENT_TIMESTAMP() AS time");
@@ -35,6 +36,10 @@ include 'CMS_SIDEBAR.php';
             position: relative;
         }
     }
+    .card {
+        font-family: "Verdana", Georgia, Serif;
+        font-size: 14px;
+    }
 </style>
     <div class="container-fluid">
         <div class="row">
@@ -42,7 +47,7 @@ include 'CMS_SIDEBAR.php';
 
                 <?php
 
-                $rows = $crud->getData("SELECT p.permalink, p.title, p.body, 
+                $rows = $crud->getData("SELECT p.id, p.permalink, p.title, p.body, 
                                           CONCAT(a.firstName,' ', a.lastName) AS name, 
                                           s.description AS status, p.timePublished, p.lastUpdated 
                                           FROM posts p JOIN employee a ON p.authorId = a.EMP_ID 
@@ -68,6 +73,9 @@ include 'CMS_SIDEBAR.php';
 
                         <p></p>
                 <?php
+                    $postId = $row['id'];
+                    $insertView = "INSERT INTO post_views (id, viewerId, typeId) VALUE ('$postId','$userId','1')";
+                    $crud->execute($insertView);
                     $lastTimeStamp = $row['timePublished'];
                 }?>
 

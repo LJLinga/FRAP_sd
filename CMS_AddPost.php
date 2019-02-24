@@ -15,7 +15,7 @@ include('GLOBAL_CMS_ADMIN_CHECKING.php');
 $userId = $_SESSION['idnum'];
 
 if(isset($_POST['btnSubmit'])){
-    $title = $_POST['post_title'];
+    $title = $crud->escape_string($_POST['post_title']);
     $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['btnSubmit'];
 
@@ -33,7 +33,7 @@ if(isset($_POST['btnSubmit'])){
         if($status=='4'){
             $crud->execute("UPDATE posts SET archivedById='$userId' WHERE id='$postId';");
         }
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditPost.php?postId=" . $postId);
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_EditPost.php?postId=" . $postId);
     }
 }
 
@@ -53,7 +53,13 @@ include 'CMS_SIDEBAR.php';
                 position: relative;
             }
         }
+        .fr-view {
+            font-family: "Verdana", Georgia, Serif;
+            font-size: 14px;
+            color: #444444;
+        }
     </style>
+    <script type="text/javascript" src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
     <script>
         $(document).ready( function(){
             $('textarea').froalaEditor({
@@ -98,29 +104,28 @@ include 'CMS_SIDEBAR.php';
 
                         <div class="card" style="margin-bottom: 1rem;">
                             <div class="card-body">
-                                <div class="form-group">
-                                    <label for="reference">References</label>
-                                    <div id="reference">
-                                        <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
-                                        <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
-                                    </div>
-                                </div>
+                                No references
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-default"><i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-file"></i> Add New Document</button>
+                                <button class="btn btn-default"><i class="fa fa-fw fa-link"></i><i class="fa fa-fw fa-file"></i> Link Existing Document</button>
                             </div>
                         </div>
 
                         <div class="card" style="margin-bottom: 1rem;">
                             <div class="card-body">
-                                <div class="form-group">
-                                    <?php
-                                    if($cmsRole == '3') {
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
-                                        echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="3">Publish</button> ';
-                                    }else if($cmsRole == '2'){
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
-                                        echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
-                                    }
-                                    ?>
-                                </div>
+                                Unsaved
+                            </div>
+                            <div class="card-footer">
+                                <?php
+                                if($cmsRole == '3') {
+                                    echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
+                                    echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="3">Publish</button> ';
+                                }else if($cmsRole == '2'){
+                                    echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
+                                    echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
+                                }
+                                ?>
                             </div>
                         </div>
 

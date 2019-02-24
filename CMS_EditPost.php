@@ -26,7 +26,7 @@ if(!empty($_GET['postId'])){
     }
 
     if($cmsRole != 3 && $authorId != $_SESSION['idnum']){
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_PostsDashboard.php");
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_PostsDashboard.php");
     }
 
     $rows = $crud->getData("SELECT 
@@ -78,12 +78,12 @@ if(!empty($_GET['postId'])){
     $head = "Edit: ".$title;
 
 }else{
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_PostsDashboard.php");
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_PostsDashboard.php");
 }
 
 if(isset($_POST['btnSubmit'])) {
 
-    $title = $_POST['post_title'];
+    $title = $crud->escape_string($_POST['post_title']);
     $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['btnSubmit'];
 
@@ -100,7 +100,7 @@ if(isset($_POST['btnSubmit'])) {
         if($status=='4'){
             $crud->execute("UPDATE posts SET archivedById='$userId' WHERE id='$postId';");
         }
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditPost.php?postId=" . $postId);
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_EditPost.php?postId=" . $postId);
     }
 
 }
@@ -121,8 +121,14 @@ include 'CMS_SIDEBAR.php';
             position: relative;
         }
     }
+    .fr-view {
+        font-family: "Verdana", Georgia, Serif;
+        font-size: 14px;
+        color: #444444;
+    }
 </style>
-<script>
+    <script type="text/javascript" src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+    <script>
     $(document).ready( function(){
 
         let status = <?php echo $status; ?>;
@@ -232,9 +238,8 @@ include 'CMS_SIDEBAR.php';
                             <i>Last updated: <b><?php  echo date("F j, Y g:i:s A ", strtotime($lastUpdated));?></b></i><br><br>
                         </div>
 
-                        <div class="card-body">
+                        <div class="card-footer">
                             <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;}; ?>">
-                            <div class="form-group">
                                 <?php
                                 if($cmsRole == '3') {
                                     if ($status == '2' || $status == '1') {
@@ -257,10 +262,11 @@ include 'CMS_SIDEBAR.php';
                                         echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="4">Trash</button> ';
                                     } else if ($status == '4') {
                                         echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="' . $prevStatus . '">Restore</button> ';
+                                    } else if ($status == '3') {
+                                        echo '<b>Ask your publisher to unpublish to edit.</b>';
                                     }
                                 }
                                 ?>
-                            </div>
                         </div>
                     </div>
 

@@ -24,7 +24,10 @@ $userId = $_SESSION['idnum'];
 <script>
     $(document).ready(function() {
 
-        table = $('#dataTable').DataTable();
+        table = $('#dataTable').DataTable({
+            rowReorder: true
+        });
+
         displayTable(table,'');
 
         let cmsRole = "<?php echo $cmsRole; ?>";
