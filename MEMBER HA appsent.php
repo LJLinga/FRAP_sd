@@ -113,6 +113,7 @@ include 'FRAP_USER_SIDEBAR.php';
                             </tbody>
 
                         </table>
+                        <br>
                         <?php
                             }
                         ?>
@@ -167,6 +168,7 @@ include 'FRAP_USER_SIDEBAR.php';
                             </tbody>
 
                         </table>
+                        <br>
                                 <?php
                             }
                         ?>
@@ -226,6 +228,7 @@ include 'FRAP_USER_SIDEBAR.php';
                                     </tbody>
 
                                 </table>
+                                <br>
                                 <?php
                             }
                         ?>
@@ -236,13 +239,9 @@ include 'FRAP_USER_SIDEBAR.php';
                         $query = "SELECT * FROM SIBLINGS WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
                         $result = mysqli_query($dbc, $query);
 
-                        if(!empty($row)) {
-
-                            foreach ($result as $resultRow) {
-                        ?>
-                        <p class="healthlabel" align="center">Siblings Details</p>
-
-                        <table class="table table-bordered">
+                        if(!empty($result)) {
+                            echo '<p class="healthlabel" align="center">Siblings Details</p>
+                            <table class="table table-bordered">
                             
                             <thead>
 
@@ -259,19 +258,26 @@ include 'FRAP_USER_SIDEBAR.php';
 
                             </thead>
 
-                            <tbody>
+                            <tbody>';
+
+                            while($resultRow = mysqli_fetch_array($result)) {
+                                
+                        ?>
+                        
+
+                        
 
                                             <tr>
-                                                <td align='center'><?php $resultRow['LASTNAME'] ?></td>
-                                                <td align='center'><?php $resultRow['FIRSTNAME'] ?></td>
-                                                <td align='center'><?php $resultRow['MIDDLENAME'] ?></td>
+                                                <td align='center'><?php echo $resultRow['LASTNAME']; ?></td>
+                                                <td align='center'><?php echo $resultRow['FIRSTNAME']; ?></td>
+                                                <td align='center'><?php echo $resultRow['MIDDLENAME'] ;?></td>
                                                 <td align='center'>
                                                     <?php
                                                         if($row['SEX'] == 1) echo "Female";
-                                                        else if($row['SEX'] === 0) echo "Male";
+                                                        else if($row['SEX'] == 0) echo "Male";
                                                     ?>
                                                 </td>
-                                                <td align='center'><?php $resultRow['BIRTHDATE'] ?></td>
+                                                <td align='center'><?php echo $resultRow['BIRTHDATE']; ?></td>
                                                 <td align='center'>
                                                     <?php
                                                         if($resultRow['STATUS'] == 1) echo"Alive";
@@ -288,6 +294,7 @@ include 'FRAP_USER_SIDEBAR.php';
                             </tbody>
 
                         </table>
+                        <br>
                             <?php
                         }
                         ?>
@@ -298,15 +305,9 @@ include 'FRAP_USER_SIDEBAR.php';
                         $query = "SELECT * FROM CHILDREN WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
                         $result = mysqli_query($dbc, $query);
 
-                        if(!empty($row)) {
-
-
-                        foreach ($result as $resultRow) {
-                        ?>
-
-                        <p class="healthlabel" align="center">Children Details</p>
-
-                        <table class="table table-bordered table-stripped">
+                        if(!empty($result)) {
+                            echo '<p class="healthlabel" align="center">Children Details</p>
+                             <table class="table table-bordered table-stripped">
 
                             <thead>
 
@@ -323,17 +324,24 @@ include 'FRAP_USER_SIDEBAR.php';
 
                             </thead>
 
-                            <tbody>
+                            <tbody>';
+
+                        while($resultRow = mysqli_fetch_array($result)) {
+                        ?>
+
+                        
+
+                       
 
                                 <tr>
 
 
                                             <tr>
-                                                <td align='center'><?php $resultRow['LASTNAME'] ?></td>
-                                                <td align='center'><?php $resultRow['FIRSTNAME'] ?></td>
-                                                <td align='center'><?php $resultRow['MIDDLENAME'] ?></td>
-                                                <td align='center'><?php $resultRow['SEX'] ?></td>
-                                                <td align='center'><?php $resultRow['BIRTHDATE'] ?></td>
+                                                <td align='center'><?php echo $resultRow['LASTNAME']; ?></td>
+                                                <td align='center'><?php echo  $resultRow['FIRSTNAME']; ?></td>
+                                                <td align='center'><?php echo  $resultRow['MIDDLENAME']; ?></td>
+                                                <td align='center'><?php echo  $resultRow['SEX']; ?></td>
+                                                <td align='center'><?php echo  $resultRow['BIRTHDATE']; ?></td>
                                                 <td align='center'>
                                                     <?php
                                                         if($resultRow['STATUS'] == 1) echo"Alive";
@@ -350,6 +358,7 @@ include 'FRAP_USER_SIDEBAR.php';
                             </tbody>
 
                         </table>
+
                             <?php
                             }
                         ?>

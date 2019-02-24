@@ -4,17 +4,17 @@ require_once ("mysql_connect_FA.php");
 session_start();
 include 'GLOBAL_USER_TYPE_CHECKING.php';
 
-$query = "SELECT RECORD_ID, APP_STATUS from health_aid where member_id = {$_SESSION['idnum']} ORDER BY RECORD_ID DESC LIMIT 1";
+$query = "SELECT RECORD_ID, APP_STATUS as 'STATUS' from health_aid where member_id = {$_SESSION['idnum']} ORDER BY RECORD_ID DESC LIMIT 1";
 $result = mysqli_query($dbc,$query);
 $row = mysqli_fetch_assoc($result);
 
     if(!empty($row)){
 
-        if($row['APP_STATUS'] == 1){ //checks if you have a pending application
+        if($row['STATUS'] == 1){ //checks if you have a pending application
 
             header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA appsent.php");
 
-        }else if($row['APP_STATUS'] == 2){ //checks if you have an approved application
+        }else if($row['STATUS'] == 2){ //checks if you have an approved application
 
             header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
 
@@ -84,9 +84,7 @@ $queryCiv = "SELECT CIV_STATUS FROM MEMBER WHERE MEMBER_ID = '{$idnum}'";
 $resultCiv = mysqli_query($dbc, $queryCiv);
 $rowCiv = mysqli_fetch_array($resultCiv);
 
-$queryForm = "SELECT H.APP_STATUS FROM HEALTH_AID H JOIN MEMBER M ON H.MEMBER_ID = M.MEMBER_ID WHERE M.MEMBER_ID = '{$idnum}'";
-$resultForm = mysqli_query($dbc, $queryForm);
-$rowForm = mysqli_fetch_array($resultForm);
+
 
 /* check if empty fields */
 
@@ -329,7 +327,7 @@ if (isset($_POST['submit'])) {
         }
     }
 
-    if ($rowCiv['CIV_STATUS'] != 1) {
+    
 
         if (!isset($_POST['hasChild'])) {
 
@@ -479,7 +477,7 @@ if (isset($_POST['submit'])) {
 
         }
 
-    }
+    
 
     if ($flag == 0) {
 
@@ -575,7 +573,7 @@ if (isset($_POST['submit'])) {
 
         /* children insert */
 
-        if ($rowCiv['CIV_STATUS'] != 1) {
+       
 
             for ($c = 0; $c < count($childlastarray); $c++) {
 
@@ -595,7 +593,7 @@ if (isset($_POST['submit'])) {
                 $_SESSION['CI_Child']++;
             }
 
-        }
+        
 
         $queryTransaction = "INSERT INTO TRANSACTIONS (MEMBER_ID, AMOUNT, TXN_DATE, TXN_TYPE, TXN_STATUS) 
                              VALUES ({$_SESSION['idnum']}, 0, NOW(), 1, 'Health Aid Application Submitted')";
@@ -603,22 +601,25 @@ if (isset($_POST['submit'])) {
         $resultTransaction = mysqli_query($dbc, $queryTransaction);
 
     }
+    
 
 }
-
-if ($rowForm['APP_STATUS'] == 1) { /* PENDING */
+$queryForm = "SELECT H.APP_STATUS as 'STATUS' FROM HEALTH_AID H JOIN MEMBER M ON H.MEMBER_ID = M.MEMBER_ID WHERE M.MEMBER_ID = '{$idnum}'";
+$resultForm = mysqli_query($dbc, $queryForm);
+$rowForm = mysqli_fetch_array($resultForm);
+if ($rowForm['STATUS'] == 1 && empty($message)) { /* PENDING */
 
     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/member HA appsent.php");
 
 }
 
-else if ($rowForm['APP_STATUS'] == 2) { /* ACCEPTED */
+else if ($rowForm['STATUS'] == 2 && empty($message)) { /* ACCEPTED */
 
     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/member HA summary.php");
 
 }
 
-else if ($rowForm['APP_STATUS'] == 3) { /* REJECTED */
+else if ($rowForm['STATUS'] == 3 && empty($message)) { /* REJECTED */
 
     $message .=  "Your last application for Health Aid Benefits was rejected. You can apply for another one.";
 
@@ -711,6 +712,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                 <div class="col-lg-12">
                     <h1 class="page-header">Health Aid Application Form</h1>
+
                 </div>
 
             </div>
@@ -1253,7 +1255,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                         <p>
 
-                            <input type="checkbox" name="hasChild" value="1"> I don't have children<p>
+                            <input type="checkbox" name="hasChild"> I don't have children<p>
 
                     </div>
 
@@ -1457,7 +1459,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                         <p>
 
-                            <input type="checkbox" name="hasSibling" value="1"> I don't have siblings<p>
+                            <input type="checkbox" name="hasSibling" > I don't have siblings<p>
 
                     </div>
 
