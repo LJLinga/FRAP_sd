@@ -95,9 +95,7 @@ include 'CMS_SIDEBAR.php';
                     </div>
                     <div class="card-footer">
                         <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
-                        <br />
                         <span id="comment_message"></span>
-                        <br />
                         <div id="display_comment"></div>
                     </div>
                 </div>

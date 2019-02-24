@@ -60,9 +60,6 @@ include 'CMS_SIDEBAR.php';
 <script>
     $(document).ready(function(){
 
-        $('.reply').click(function(){
-        });
-
         $('#comment_form').on('submit', function(event){
             event.preventDefault();
             $('#myModal').modal('toggle');
@@ -106,7 +103,7 @@ include 'CMS_SIDEBAR.php';
         $(document).on('click', '.reply', function(){
             var comment_id = $(this).attr("id");
             $('#comment_id').val(comment_id);
-            $('#comment_name').focus();
+            $('#comment_content').focus();
         });
 
     });

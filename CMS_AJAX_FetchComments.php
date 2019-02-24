@@ -87,7 +87,7 @@ foreach($result as $row)
  <div class="card" style="margin-top: 1rem; font-size: small">
   <div class="card-header" style="font-size: x-small">by <b>'.$row["commenterName"].'</b> on <i>'.date("F j, Y g:i A ", strtotime($row['timePosted'])).'</i></div>
   <div class="card-body">'.$row["content"].'</div>
-  <div class="card-footer" align="right"><button type="button" class="btn btn-default fa fa-reply" data-toggle="modal" data-target="#myModal" id="'.$row["id"].'"> Reply </button></div>
+  <div class="card-footer" align="right"><button type="button" class="btn btn-default fa fa-reply reply" data-toggle="modal" data-target="#myModal" id="'.$row["id"].'"> Reply </button></div>
  </div>
  ';
     $output .= get_reply_comment($connect, $row["id"]);
@@ -126,7 +126,7 @@ ORDER BY id DESC
     <div class="card-header" style="font-size: x-small">by <b>'.$row["commenterName"].'</b> on <i>'.date("F j, Y g:i A ", strtotime($row['timePosted'])).'</i></div>
     <div class="card-body">'.$row["content"].'</div>
     <div class="card-footer" align="right">
-        <a class="btn btn-default  fa fa-reply" data-toggle="modal" data-target="#myModal" id="'.$row["id"].'"> Reply </a>
+        <button class="btn btn-default fa fa-reply reply" data-toggle="modal" data-target="#myModal" id="'.$row["id"].'"> Reply </button>
     </div>
    </div>
    ';
