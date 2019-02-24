@@ -21,18 +21,18 @@ if(isset($_POST['mode']) && isset($_POST['option'])){
     }
 
     if($option == '1'){
-        $query = "SELECT COUNT(id) AS view_count, HOUR(timeStamp) as 'xmin'
+        $query = "SELECT COUNT(id) AS view_count, DATE_FORMAT(timeStamp, '%l %p') as 'xmin'
                   FROM facultyassocnew.post_views WHERE post_views.typeId = '$type'
                   AND DATE(timeStamp) = CURDATE()
                   GROUP BY HOUR(timeStamp) ORDER BY timeStamp ASC;";
     }else if($option == '2'){
-        $query = "SELECT COUNT(id) AS view_count, DAY(timeStamp) as 'xmin' 
+        $query = "SELECT COUNT(id) AS view_count, DATE_FORMAT(timeStamp, '%b %d') as 'xmin' 
                   FROM facultyassocnew.post_views WHERE post_views.typeId = '2' 
                   AND timeStamp >= NOW() + INTERVAL -7 DAY
 				  AND timeStamp <  NOW() + INTERVAL  0 DAY
                   GROUP BY DAY(timeStamp) ASC;";
     }else if($option == '3'){
-        $query = "SELECT COUNT(id) AS view_count, DAY(timeStamp) as 'xmin'
+        $query = "SELECT COUNT(id) AS view_count, DATE_FORMAT(timeStamp, '%b %d') as 'xmin'
                   FROM facultyassocnew.post_views WHERE post_views.typeId = '2'
                   AND timeStamp >= NOW() + INTERVAL -1 MONTH
 				  AND timeStamp < NOW() + INTERVAL 0 MONTH
