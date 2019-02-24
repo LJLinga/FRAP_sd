@@ -22,6 +22,9 @@
                 <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-folder-open"></i> Documents <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="demo" class="collapse"> -->
             <li>
+                <a href="EDMS_Dashboard.php"><i class="fa fa-fw fa-folder"></i> Dashboard </a>
+            </li>
+            <li>
                 <a href="EDMS_Applications.php"><i class="fa fa-fw fa-folder"></i> Applications</a>
             </li>
             <li>

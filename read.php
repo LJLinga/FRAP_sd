@@ -69,7 +69,7 @@ if(!empty($_GET['pl'])){
 
 $page_title = $title;
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR.php';
+include 'CMS_SIDEBAR_Admin.php';
 
 ?>
 <style>
@@ -93,7 +93,9 @@ include 'CMS_SIDEBAR.php';
                     <div class="card-body" style="overflow: hidden";>
                         <p class="card-text"><?php echo $body ?></p>
                     </div>
-                    <div class="card-footer">
+                </div>
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-body">
                         <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
                         <span id="comment_message"></span>
                         <div id="display_comment"></div>

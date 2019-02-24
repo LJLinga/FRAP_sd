@@ -14,7 +14,7 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 include 'GLOBAL_HEADER.php';
-include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
+include 'EDMS_SIDEBAR_Dashboard.php';
 ?>
 
 <script>
@@ -23,21 +23,22 @@ include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
     });
 </script>
 
-<div id="content-wrapper">
+<div class="content-wrapper">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <h2 class="page-header">
+                <h3 class="page-header">
                     Faculty Manual
-                </h2>
+                    <a type="button" class="btn btn-primary"> Initiate Revisions </a>
+                </h3>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-7">
+            <div class="col-lg-8">
                 <div class="card" style="margin-bottom: 1rem;">
                     <div class="card-header">
                         <ul class="nav">
-                            <i class="fa fa-fw fa-folder-open fa-3x"></i>
+                            <i class="fa fa-folder-open fa-2x"></i>
                             <span style="font-size: 150%;"> 2018 (Current) </span>
                         </ul>
                     </div>
@@ -87,7 +88,7 @@ include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
             </div>
             <div class="col-lg-4">
                 <div class="card" style="margin-bottom: 1rem;">
-                    <div class="card-header"><i class="fa fa-fw fa-archive fa-lg"></i> Old Editions</div>
+                    <div class="card-header"><i class="fa fa-archive fa-lg"></i> Old Editions</div>
                     <div class="card-body">
                         <ul class="nav">
                             <li><a href="#"><i class="fa fa-fw fa-folder fa-lg"></i> 2015 </a></li>

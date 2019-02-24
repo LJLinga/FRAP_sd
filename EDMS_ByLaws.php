@@ -6,15 +6,15 @@
  * Time: 3:48 PM
  */
 
-//include_once('GLOBAL_CLASS_CRUD.php');
-//$crud = new GLOBAL_CLASS_CRUD();
-//require_once('mysql_connect_FA.php');
+include_once('GLOBAL_CLASS_CRUD.php');
+$crud = new GLOBAL_CLASS_CRUD();
+require_once('mysql_connect_FA.php');
 session_start();
-//include('GLOBAL_USER_TYPE_CHECKING.php');
-//include('GLOBAL_EDMS_ADMIN_CHECKING.php');
+include('GLOBAL_USER_TYPE_CHECKING.php');
+include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 include 'GLOBAL_HEADER.php';
-include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
+include 'EDMS_SIDEBAR_Dashboard.php';
 ?>
 
 <script>
@@ -23,13 +23,18 @@ include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
     });
 </script>
 
-<div id="page-wrapper">
+<div class="content-wrapper">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">By Laws</h1>
+                <h3 class="page-header">By Laws</h3>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="column-lg-12">
+                <div class="card">
+                    <div class="card-body">
                         <ol class="breadcrumb">
                             <li class="active">
                                 General Files
@@ -51,55 +56,56 @@ include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
                         > 2018. It should display all contracts for 2018 -->
                         <table class="table table-bordered" align="center" id="dataTable">
                             <thead>
-                                <tr>
-                                    <th>File Name</th>
-                                    <th>Date Created</th>
-                                    <th>Created By</th>
-                                </tr>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Date Created</th>
+                                <th>Created By</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> ByLaws_2018</a></td>
-                                    <td>8/4/2018 7:59pm</td>
-                                    <td> - </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> ByLaws_2017</a></td>
-                                    <td>8/4/2018 7:59pm</td>
-                                    <td> - </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> ByLaws_2016</a></td>
-                                    <td>8/4/2018 7:59pm</td>
-                                    <td> - </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> ByLaws_2015</a></td>
-                                    <td>8/4/2018 7:59pm</td>
-                                    <td> - </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> ByLaws_2014</a></td>
-                                    <td>8/4/2018 7:59pm</td>
-                                    <td> - </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> ByLaws_2013</a></td>
-                                    <td>8/4/2018 7:59pm</td>
-                                    <td> - </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> ByLaws_2012</td>
-                                    <td>8/4/2018 7:59pm</td>
-                                    <td> - </td>
-                                </tr>
+                            <tr>
+                                <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Application Requiements_JuanDelaCruz</a></td>
+                                <td>8/4/2018 7:59pm</td>
+                                <td> - </td>
+                            </tr>
+                            <tr>
+                                <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Application Requiements_JuanDelaCruz</a></td>
+                                <td>8/4/2018 7:59pm</td>
+                                <td> - </td>
+                            </tr>
+                            <tr>
+                                <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Application Requiements_JuanDelaCruz</a></td>
+                                <td>8/4/2018 7:59pm</td>
+                                <td> - </td>
+                            </tr>
+                            <tr>
+                                <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Application Requiements_JuanDelaCruz</a></td>
+                                <td>8/4/2018 7:59pm</td>
+                                <td> - </td>
+                            </tr>
+                            <tr>
+                                <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Application Requiements_JuanDelaCruz</a></td>
+                                <td>8/4/2018 7:59pm</td>
+                                <td> - </td>
+                            </tr>
+                            <tr>
+                                <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Application Requiements_JuanDelaCruz</a></td>
+                                <td>8/4/2018 7:59pm</td>
+                                <td> - </td>
+                            </tr>
+                            <tr>
+                                <td><a href="EDMS_ViewDocument.php"><i class="fa fa-fw fa-file"></i> Application Requiements_JuanDelaCruz</td>
+                                <td>8/4/2018 7:59pm</td>
+                                <td> - </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<?php include 'EDMS_TEMPLATE_Footer.php';?>
+<?php include 'GLOBAL_FOOTER.php';?>

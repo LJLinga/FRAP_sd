@@ -13,7 +13,7 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 include 'GLOBAL_HEADER.php';
-include 'EDMS_USER_SIDEBAR_ViewSection.php';
+include 'EDMS_SIDEBAR_ViewSection.php';
 ?>
 <script src="js/aesthetics.js"></script>
 
