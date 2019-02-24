@@ -22,7 +22,7 @@ if(empty($_GET['lastTimeStamp'])){
 
 $page_title = "Santinig Feed";
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR.php';
+include 'CMS_SIDEBAR_Admin.php';
 ?>
 <style>
     @media screen and (min-width: 1200px) {

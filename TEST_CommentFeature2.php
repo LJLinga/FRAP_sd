@@ -10,7 +10,7 @@ include('GLOBAL_COMMENT_FUNCTIONS.php');
 
 $page_title = 'Santinig - Comments';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR.php';
+include 'CMS_SIDEBAR_Admin.php';
 ?>
 <style>
     form button { margin: 5px 0px; }

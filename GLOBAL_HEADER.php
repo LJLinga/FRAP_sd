@@ -74,11 +74,11 @@
             <ul class="nav navbar-right top-nav"> <!-- Top Menu Items / Notifications area -->
 
                 <li>
-                    <a href="MEMBER%20dashboard.php"> Home </a>
+                    <a href="feed.php"> Home </a>
                 </li>
 
                 <li>
-                    <a href="feed.php"> News Feed </a>
+                    <a href="MEMBER%20dashboard.php"> Loans </a>
                 </li>
 
                 <?php

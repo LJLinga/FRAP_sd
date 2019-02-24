@@ -39,7 +39,7 @@ if(isset($_POST['btnSubmit'])){
 
 $page_title = 'Santinig - Add Post';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR.php';
+include 'CMS_SIDEBAR_Admin.php';
 ?>
     <style>
         @media screen and (min-width: 1200px) {
