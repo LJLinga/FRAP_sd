@@ -26,6 +26,7 @@
             <li>
                 <a href="CMS_Statistics.php"><i class="fa fa-fw fa-dashboard" aria-hidden="true"></i> Reports </a>
             </li>
+
         </ul>
 
     </div>

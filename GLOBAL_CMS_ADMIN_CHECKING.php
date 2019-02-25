@@ -7,10 +7,7 @@
  */
 
     $cmsRole = $_SESSION['CMS_ROLE'];
-    if($cmsRole!=2 && $cmsRole!=3) { // 1 = Member in frap/cms/edms terms basically the most basic privilege.
-        echo '<script language="javascript">';
-        echo 'alert("Unauthorized module access is prohibited.")';  //not showing an alert box.
-        echo '</script>';
+    if($cmsRole!=2 && $cmsRole!=3 && $cmsRole!=4) { // 1 = Member in frap/cms/edms terms basically the most basic privilege.
         header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/MEMBER dashboard.php");
     }
 
