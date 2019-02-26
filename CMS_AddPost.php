@@ -13,6 +13,7 @@ include('GLOBAL_CMS_ADMIN_CHECKING.php');
  * Time: 3:48 PM
  */
 $userId = $_SESSION['idnum'];
+$cmsRole = $_SESSION['CMS_ROLE'];
 
 if(isset($_POST['btnSubmit'])){
     $title = $crud->escape_string($_POST['post_title']);
@@ -22,6 +23,9 @@ if(isset($_POST['btnSubmit'])){
     $postId = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body','$userId','$status')");
     if(!empty ($postId)) {
         if($status=='3' && $cmsRole=='3'){
+            $crud->execute("UPDATE posts SET reviewerId='$userId' WHERE id='$postId';");
+        }
+        if($status=='4' && $cmsRole=='4'){
             $crud->execute("UPDATE posts SET publisherId='$userId' WHERE id='$postId';");
             $result = $crud->execute("SELECT timePublished FROM posts WHERE id='$postId' AND permalink IS NULL");
             if(empty($result[0]['permalink'])) {
@@ -30,7 +34,7 @@ if(isset($_POST['btnSubmit'])){
                 $crud->execute("UPDATE posts SET permalink='$permalink' WHERE id='$postId' AND permalink IS NULL");
             }
         }
-        if($status=='4'){
+        if($status=='5'){
             $crud->execute("UPDATE posts SET archivedById='$userId' WHERE id='$postId';");
         }
         header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_EditPost.php?postId=" . $postId);
@@ -59,7 +63,6 @@ include 'CMS_SIDEBAR_Admin.php';
             color: #444444;
         }
     </style>
-    <script type="text/javascript" src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
     <script>
         $(document).ready( function(){
             $('textarea').froalaEditor({
@@ -120,10 +123,13 @@ include 'CMS_SIDEBAR_Admin.php';
                                 <?php
                                 if($cmsRole == '3') {
                                     echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
-                                    echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="3">Publish</button> ';
+                                    echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="3">Submit for Publication</button> ';
                                 }else if($cmsRole == '2'){
                                     echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
                                     echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
+                                }else if($cmsRole == '4'){
+                                    echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
+                                    echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
                                 }
                                 ?>
                             </div>
