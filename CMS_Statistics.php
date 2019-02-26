@@ -132,7 +132,7 @@ $userId = $_SESSION['idnum'];
                 </div>
             </div>
             <div class="col-lg-5">
-                <div class="card" style="margin-top: 1rem;">
+                <div class="card" >
                     <div class="card-header">
                         <b>Collective Post Views</b>
                         <span class="loading_chart"></span>
