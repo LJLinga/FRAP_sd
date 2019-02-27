@@ -34,8 +34,8 @@ if(!empty($_GET['pl'])){
     $insertView = "INSERT INTO post_views (id, viewerId, typeId) VALUE ('$postId','$userId','2')";
     $crud->execute($insertView);
 
-    if($statusId!=3){
-        if($authorId!=$userId && $cmsRole!=3){
+    if($statusId!='4'){
+        if($authorId!=$userId && $cmsRole!='4'){
             header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/feed.php");
         }
     }

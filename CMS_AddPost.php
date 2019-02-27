@@ -1,4 +1,5 @@
 <?php
+
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
@@ -23,7 +24,7 @@ if(isset($_POST['btnSubmit'])){
     $postId = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body','$userId','$status')");
     if(!empty ($postId)) {
         if($status=='3' && $cmsRole=='3'){
-            $crud->execute("UPDATE posts SET reviewerId='$userId' WHERE id='$postId';");
+            $crud->execute("UPDATE posts SET reviewedById='$userId' WHERE id='$postId';");
         }
         if($status=='4' && $cmsRole=='4'){
             $crud->execute("UPDATE posts SET publisherId='$userId' WHERE id='$postId';");

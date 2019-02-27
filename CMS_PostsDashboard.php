@@ -145,7 +145,7 @@ $userId = $_SESSION['idnum'];
                         <tbody id="tbody">
                         <?php
 
-                            if($cmsRole == 3){
+                            if($cmsRole == '4'){
                                 // Editor can see all his posts and drafts, and all "pending","published",and "archived" posts that are not his but not other's drafts
                                 $query = "SELECT p.id,
                                                                   p.title, p.authorId,
@@ -154,11 +154,11 @@ $userId = $_SESSION['idnum'];
                                                                   p.lastUpdated
                                                                   FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
                                                                   JOIN post_status s ON s.id = p.statusId
-                                                                  WHERE s.id = 2 || s.id=3
-                                                                  OR s.id = 1 AND p.authorId = '$userId'
-                                                                  OR s.id = 4 AND p.archivedById = '$userId'
+                                                                  WHERE s.id = 3 OR s.id = 4
+                                                                  OR p.authorId = '$userId'
+                                                                  OR p.archivedById = '$userId'
                                                                   ORDER BY p.lastUpdated DESC;";
-                            }else{
+                            }else if($cmsRole == '3'){
                                 // Non-editors can only view their posts, can also see their "published" and "archived" but would not be able to modify them.
                                 $query = "SELECT p.id,
                                             p.title, p.authorId,
@@ -167,7 +167,22 @@ $userId = $_SESSION['idnum'];
                                                                   p.lastUpdated
                                                                   FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
                                                                   JOIN post_status s ON s.id = p.statusId
+                                                                  WHERE s.id = 2 
+                                                                  OR s.id = 3 AND p.reviewedById = '$userId'
+                                                                  OR s.id = 4 AND p.reviewedById = '$userId'
+                                                                  OR p.authorId = '$userId'
+                                                                  OR p.archivedById = '$userId'
+                                                                  ORDER BY p.lastUpdated DESC;";
+                            }else if($cmsRole == '2'){
+                                $query = "SELECT p.id,
+                                            p.title, p.authorId,
+                                            CONCAT(a.firstName,' ', a.lastName) AS name,
+                                            s.description AS status,
+                                                                  p.lastUpdated
+                                                                  FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
+                                                                  JOIN post_status s ON s.id = p.statusId
                                                                   WHERE p.authorId = '$userId'
+                                                                  OR p.archivedById = '$userId'
                                                                   ORDER BY p.lastUpdated DESC;";
                             }
 

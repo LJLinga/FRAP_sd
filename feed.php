@@ -52,7 +52,7 @@ include 'CMS_SIDEBAR_Admin.php';
                                           s.description AS status, p.timePublished, p.lastUpdated 
                                           FROM posts p JOIN employee a ON p.authorId = a.EMP_ID 
                                           JOIN post_status s ON s.id = p.statusId 
-                                          WHERE s.id=3 AND p.timePublished < '$lastTimeStamp'
+                                          WHERE s.id='4' AND p.timePublished < '$lastTimeStamp'
                                           ORDER BY p.timePublished DESC LIMIT 10;");
 
                 foreach ((array) $rows as $key => $row){

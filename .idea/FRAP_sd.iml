@@ -18,18 +18,24 @@
       <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/psr/http-message" />
       <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/psr/log" />
       <excludeFolder url="file://$MODULE_DIR$/Calendar Integration/vendor/ralouphie/getallheaders" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/deanblackborough/php-quill-renderer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/firebase/php-jwt" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/froala/wysiwyg-editor-php-sdk" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/google/apiclient" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/google/apiclient-services" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/google/auth" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/guzzle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/promises" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/monolog/monolog" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpseclib/phpseclib" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/log" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/ralouphie/getallheaders" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library name="PHARS">
-        <CLASSES>
-          <root url="phar://$MODULE_DIR$/composer.phar/" />
-        </CLASSES>
-        <SOURCES>
-          <root url="phar://$MODULE_DIR$/composer.phar/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
   </component>
 </module>
