@@ -10,23 +10,29 @@
 require 'GLOBAL_CLASS_CRUD.php';
 $crud = new GLOBAL_CLASS_CRUD();
 
-$currentDir = getcwd();
-$uploadDirectory = "/EDMS_Documents/";
+//$currentDir = getcwd();
+//$uploadDirectory = "/EDMS_Documents/";
+$uploadDirectory = "EDMS_Documents/";
 
 $errors = []; // Store all foreseen and unforseen errors here
 
-
 $fileExtensions = ['jpeg','jpg','png','ppt','doc','docx','pptx','pdf']; // Get all the file extensions
 
-if(isset($_POST['btnSubmit']) && !empty($_POST['documentTitle']) && !empty($_FILES['fileName']) && $_FILES['selectedTask'] && !empty($_POST['userId']) ) {
+if(!empty($_POST['documentTitle']) && !empty($_POST['selectedTask']) && !empty($_POST['userId']) ) {
 
-    $fileName = $_FILES['fileName']['name'];
-    $fileSize = $_FILES['fileName']['size'];
-    $fileTmpName = $_FILES['fileName']['tmp_name'];
-    $fileType = $_FILES['fileName']['type'];
-    $fileExtension = strtolower(end(explode('.', $fileName)));
+    $userId = $_POST['userId'];
+    $title = $_POST['documentTitle'];
+    $process = $_POST['selectedTask'];
 
-    $uploadPath = $currentDir . $uploadDirectory . basename($fileName);
+    $fileName = $_FILES['file']['name'];
+    $fileSize = $_FILES['file']['size'];
+    $fileTmpName = $_FILES['file']['tmp_name'];
+    $fileType = $_FILES['file']['type'];
+    $string = explode('.', $fileName);
+    $fileExtension = strtolower(end($string));
+
+    //$uploadPath = $currentDir . $uploadDirectory . basename($fileName);
+    $uploadPath = $uploadDirectory . basename($fileName);
 
     if (!in_array($fileExtension, $fileExtensions)) {
         $errors[] = "This file extension is not allowed. Only JPEG, PNG, PPT, DOC, DOCX, PPTX, and PDF are accepted.";
@@ -43,14 +49,21 @@ if(isset($_POST['btnSubmit']) && !empty($_POST['documentTitle']) && !empty($_FIL
         $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
 
         if ($didUpload) {
-            echo "The file " . basename($fileName) . " has been uploaded";
+            //echo "success";
         } else {
             echo "An error occurred somewhere. Try again or contact the admin";
         }
 
-        $insert = $crud->execute("INSERT document (name,email,file_name) VALUES ('".$name."','".$email."','".$path."')");
-        if(!$insert){
-            echo "Database insert error.";
+        $insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, processId) VALUES ('$userId', '$process')");
+        if(!$insertDocument){
+            echo "Database document insert error.";
+        }
+
+        $insertVersion = $crud->execute("INSERT into doc_versions (documentId, authorId, versionNo, title, filePath) VALUES ('$insertDocument','$userId','1.0','$title','$uploadPath')");
+        if(!$insertVersion){
+            echo "Database version insert error.";
+        }else{
+            echo $insertDocument;
         }
 
     } else {
@@ -59,4 +72,6 @@ if(isset($_POST['btnSubmit']) && !empty($_POST['documentTitle']) && !empty($_FIL
         }
     }
 
+}else{
+    echo 'PHP Error.'.$_POST['userId'].' '.$_POST['documentTitle'].' '.$_POST['selectedTask'].' '.$_FILES['file'];
 }

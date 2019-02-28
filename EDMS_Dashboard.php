@@ -129,7 +129,7 @@ $userId = $_SESSION['idnum'];
                     <label for="documentTitle">Assigned Task</label>
                     <div class="form-group">
                         <select class="form-control" id="selectedTask" name="selectedTask">
-                            <option value="1">None</option>
+                            <option value="1" selected>None</option>
                             <option value="2">Application</option>
                             <option value="3">By Laws</option>
                             <option value="4">Contract</option>
@@ -137,15 +137,15 @@ $userId = $_SESSION['idnum'];
                     </div>
                     <div class="form-group">
                         <label for="fileName">Upload</label>
-                        <input type="file" class="form-control-file" id="fileName" name="fileName" required>
+                        <input type="file" class="form-control-file" id="file" name="file" required>
                     </div>
-                <span id="#err"></span>
+                <span id="err"></span>
                 </div>
                 <div class="modal-footer">
                     <div class="form-group">
                         <input type="hidden" name="userId" value="<?php echo $userId; ?>">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <input type="submit" name="btnSubmit" id="submit" class="btn btn-primary" value="Submit"/>
+                        <input type="submit" name="btnSubmit" id="btnSubmit" class="btn btn-primary"></input>
                     </div>
                 </div>
             </div>
@@ -177,35 +177,65 @@ $userId = $_SESSION['idnum'];
                 ]
         } );
 
-        $(document).ready(function (e) {
-            $("#form").on('submit',(function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: "EDMS_AddDocument.php",
-                    type: "POST",
-                    data:  new FormData(this),
-                    contentType: false,
-                    cache: false,
-                    processData:false,
-                    beforeSend : function()
-                    {
-                        $("#err").fadeOut();
-                    },
-                    success: function(data)
-                    {
-                        $("#err").html(data).fadeIn();
-                    },
-                    error: function(e)
-                    {
-                        $("#err").html(e).fadeIn();
-                    }
-                });
-            }));
+        $(document).ready(function(){
+
         });
+
+        $("#documentUploadForm").on('submit', function(e){
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "EDMS_AJAX_UploadDocument.php",
+                cache: false,
+                processData: false,
+                contentType: false,
+                data: new FormData(this),
+                success: function(response){
+                    $("#err").html(response);
+                    //$("#contact-modal").modal('hide');
+                    if(response !== 'error') location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+response
+                },
+                error: function(){
+                    alert("Error");
+                }
+            });
+            return false;
+        });
+
+        // $("#documentUploadForm").on('submit', function(e){
+        //     e.preventDefault();
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: 'EDMS_AJAX_UploadDocument.php',
+        //         data: new FormData(this),
+        //         contentType: false,
+        //         cache: false,
+        //         processData:false,
+        //         beforeSend: function(){
+        //             $('#btnSubmit').attr("disabled","disabled");
+        //             $('#documentUploadForm').css("opacity",".5");
+        //         },
+        //         success: function(msg){
+        //             if(msg === 'ok'){
+        //                 $('#documentUploadForm')[0].reset();
+        //                 $('#err').html(msg);
+        //             }else{
+        //                 $('#err').html(msg);
+        //             }
+        //             $('#documentUploadForm').css("opacity","");
+        //             $("#btnSubmit").removeAttr("disabled");
+        //         }
+        //     });
+
 
         // Apply a search to the second table for the demo
         $('#myTable2').DataTable().search( 'New York' ).draw();
     } );
+
+
+    function submitForm(){
+
+    }
 </script>
 
 <?php include 'GLOBAL_FOOTER.php';?>
