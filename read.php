@@ -11,27 +11,31 @@ $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
-include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 $userId = $_SESSION['idnum'];
+$postId = '';
 //$cmsRole = $_SESSION['CMS_ROLE'];
 
 if(!empty($_GET['pl'])){
 
     $permalink = $_GET['pl'];
 
-    $rows = $crud->getData("SELECT p.authorId, p.publisherId, p.statusId
+    $rows = $crud->getData("SELECT p.id, p.authorId, p.publisherId, p.statusId
                             FROM posts p
                             WHERE p.permalink = '$permalink'");
 
     foreach ((array) $rows as $key => $row) {
+        $postId = $row['id'];
         $authorId = $row['authorId'];
         $publisherId = $row['publisherId'];
         $statusId = $row['statusId'];
     }
 
-    if($statusId!=3){
-        if($authorId!=$userId && $cmsRole!=3){
+    $insertView = "INSERT INTO post_views (id, viewerId, typeId) VALUE ('$postId','$userId','2')";
+    $crud->execute($insertView);
+
+    if($statusId!='4'){
+        if($authorId!=$userId && $cmsRole!='4'){
             header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/feed.php");
         }
     }
@@ -64,9 +68,15 @@ if(!empty($_GET['pl'])){
 
 $page_title = $title;
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR.php';
+include 'CMS_SIDEBAR_Admin.php';
 
 ?>
+<style>
+    .card {
+        font-family: "Verdana", Georgia, Serif;
+        font-size: 14px;
+    }
+</style>
 <script>
 
 </script>
@@ -83,8 +93,101 @@ include 'CMS_SIDEBAR.php';
                         <p class="card-text"><?php echo $body ?></p>
                     </div>
                 </div>
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-body">
+                        <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
+                        <span id="comment_message"></span>
+                        <div id="display_comment"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <form method="POST" id="comment_form">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="hidden" name="comment_name" id="comment_name" class="form-control" placeholder="Enter Name" value="<?php echo $userId; ?>"/>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="comment_content" id="comment_content" class="form-control" placeholder="Enter Comment" rows="5"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <input type="hidden" name="comment_id" id="comment_id" value="0" />
+                        <input type="hidden" name="post_id" id="post_id" value="<?php echo $postId?>" />
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit"/>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+
+        $('.reply').click(function(){
+        });
+
+        let postId = "<?php echo $postId?>";
+
+        $('#comment_form').on('submit', function(event){
+            event.preventDefault();
+            $('#myModal').modal('toggle');
+            var form_data = $(this).serialize();
+            $.ajax({
+                url:"CMS_AJAX_AddComment.php",
+                method:"POST",
+                data:form_data,
+                dataType:"JSON",
+                success:function(data)
+                {
+                    if(data.error != '')
+                    {
+                        $('#comment_form')[0].reset();
+                        $('#comment_message').html(data.error);
+                        $('#comment_id').val('0');
+                        load_comment(postId);
+                    }
+                }
+            })
+        });
+
+
+        setInterval(function() {
+            load_comment(postId);
+        }, 1000); //5
+
+        function load_comment(postId)
+        {
+            $.ajax({
+                url:"CMS_AJAX_FetchComments.php",
+                method:"POST",
+                data:{postId: postId},
+                success:function(data)
+                {
+                    $('#display_comment').html(data);
+                }
+            })
+        }
+
+        $(document).on('click', '.reply', function(){
+            var comment_id = $(this).attr("id");
+            $('#comment_id').val(comment_id);
+            $('#comment_name').focus();
+        });
+
+    });
+</script>
 <?php include 'GLOBAL_FOOTER.php'; ?>

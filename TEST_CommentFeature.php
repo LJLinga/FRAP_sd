@@ -16,7 +16,7 @@ $userId = $_SESSION['idnum'];
 
 $page_title = 'Santinig - Add Post';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR.php';
+include 'CMS_SIDEBAR_Admin.php';
 ?>
 <br/>
 
@@ -60,9 +60,6 @@ include 'CMS_SIDEBAR.php';
 <script>
     $(document).ready(function(){
 
-        $('.reply').click(function(){
-        });
-
         $('#comment_form').on('submit', function(event){
             event.preventDefault();
             $('#myModal').modal('toggle');
@@ -85,7 +82,11 @@ include 'CMS_SIDEBAR.php';
             })
         });
 
-        load_comment();
+
+
+        setInterval(function() {
+            load_comment();
+        }, 500); //5
 
         function load_comment()
         {
@@ -96,13 +97,13 @@ include 'CMS_SIDEBAR.php';
                 {
                     $('#display_comment').html(data);
                 }
-            })
+            });
         }
 
         $(document).on('click', '.reply', function(){
             var comment_id = $(this).attr("id");
             $('#comment_id').val(comment_id);
-            $('#comment_name').focus();
+            $('#comment_content').focus();
         });
 
     });

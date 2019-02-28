@@ -24,6 +24,7 @@
     <script src="js/moment.js"></script>
     <script src="js/bootstrap-datetimepicker.min.js"></script>
 
+
     <link href="datatables/dataTables.bootstrap4.css" rel="stylesheet">
     <script src="datatables/jquery.dataTables.js"></script>
     <script src="datatables/dataTables.bootstrap4.js"></script>
@@ -38,9 +39,15 @@
     <link href="froala/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
     <link href="froala/css/froala_style.min.css" rel="stylesheet" type="text/css" />
 
+    <link href="morris/morris.css" rel="stylesheet" type="text/css"/>
+
     <!-- Include JS file. -->
 
     <script type="text/javascript" src="froala/js/froala_editor.pkgd.min.js"></script>
+
+    <script type="text/javascript" src="morris/morris.js"></script>
+    <script type="text/javascript" src="morris/raphael-min.js"></script>
+
 </head>
 <style>
     head{
@@ -54,10 +61,6 @@
         padding-right: 1rem;
         background-color: #f0f0f0;
     }
-
-
-
-
 </style>
 
 <body>
@@ -71,11 +74,11 @@
             <ul class="nav navbar-right top-nav"> <!-- Top Menu Items / Notifications area -->
 
                 <li>
-                    <a href="MEMBER%20dashboard.php"> Home </a>
+                    <a href="feed.php"> Home </a>
                 </li>
 
                 <li>
-                    <a href="feed.php"> News Feed </a>
+                    <a href="MEMBER%20dashboard.php"> Loans </a>
                 </li>
 
                 <?php

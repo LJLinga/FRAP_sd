@@ -17,7 +17,7 @@ $userId = $_SESSION['idnum'];
 
 $page_title = 'Santinig - Events Dashboard';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR.php';
+include 'CMS_SIDEBAR_Admin.php';
 ?>
 
 <script>

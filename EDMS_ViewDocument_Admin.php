@@ -5,15 +5,15 @@
  * Date: 10/4/2018
  * Time: 3:48 PM
  */
-//include_once('GLOBAL_CLASS_CRUD.php');
-//$crud = new GLOBAL_CLASS_CRUD();
-//require_once('mysql_connect_FA.php');
-//session_start();
-//include('GLOBAL_USER_TYPE_CHECKING.php');
-//include('GLOBAL_EDMS_ADMIN_CHECKING.php');
+include_once('GLOBAL_CLASS_CRUD.php');
+$crud = new GLOBAL_CLASS_CRUD();
+require_once('mysql_connect_FA.php');
+session_start();
+include('GLOBAL_USER_TYPE_CHECKING.php');
+include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 include 'GLOBAL_HEADER.php';
-include 'EDMS_USER_SIDEBAR_ViewDocument.php';
+include 'EDMS_SIDEBAR_ViewDocument.php';
 ?>
 <script src="js/aesthetics.js"></script>
 

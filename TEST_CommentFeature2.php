@@ -10,7 +10,7 @@ include('GLOBAL_COMMENT_FUNCTIONS.php');
 
 $page_title = 'Santinig - Comments';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR.php';
+include 'CMS_SIDEBAR_Admin.php';
 ?>
 <style>
     form button { margin: 5px 0px; }
@@ -113,11 +113,14 @@ include 'CMS_SIDEBAR.php';
     </div>
 </div>
 
+$_POST['comment_text']
+
 <script >
     $(document).ready(function(){
         // When user clicks on submit comment to add comment under post
         $(document).on('click', '#submit_comment', function(e) {
             e.preventDefault();
+
             var comment_text = $('#comment_text').val();
             var url = $('#comment_form').attr('action');
             // Stop executing if not value is entered

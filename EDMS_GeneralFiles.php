@@ -14,7 +14,7 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 include 'GLOBAL_HEADER.php';
-include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
+include 'EDMS_SIDEBAR_Dashboard.php';
 ?>
 
 <script>
@@ -102,4 +102,4 @@ include 'EDMS_USER_SIDEBAR_DocumentDashboard.php';
     </div>
 </div>
 
-<?php include 'EDMS_TEMPLATE_Footer.php';?>
+<?php include 'GLOBAL_FOOTER.php';?>

@@ -1,4 +1,5 @@
 <?php
+
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
@@ -13,15 +14,19 @@ include('GLOBAL_CMS_ADMIN_CHECKING.php');
  * Time: 3:48 PM
  */
 $userId = $_SESSION['idnum'];
+$cmsRole = $_SESSION['CMS_ROLE'];
 
 if(isset($_POST['btnSubmit'])){
-    $title = $_POST['post_title'];
+    $title = $crud->escape_string($_POST['post_title']);
     $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['btnSubmit'];
 
     $postId = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body','$userId','$status')");
     if(!empty ($postId)) {
         if($status=='3' && $cmsRole=='3'){
+            $crud->execute("UPDATE posts SET reviewedById='$userId' WHERE id='$postId';");
+        }
+        if($status=='4' && $cmsRole=='4'){
             $crud->execute("UPDATE posts SET publisherId='$userId' WHERE id='$postId';");
             $result = $crud->execute("SELECT timePublished FROM posts WHERE id='$postId' AND permalink IS NULL");
             if(empty($result[0]['permalink'])) {
@@ -30,16 +35,16 @@ if(isset($_POST['btnSubmit'])){
                 $crud->execute("UPDATE posts SET permalink='$permalink' WHERE id='$postId' AND permalink IS NULL");
             }
         }
-        if($status=='4'){
+        if($status=='5'){
             $crud->execute("UPDATE posts SET archivedById='$userId' WHERE id='$postId';");
         }
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditPost.php?postId=" . $postId);
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_EditPost.php?postId=" . $postId);
     }
 }
 
 $page_title = 'Santinig - Add Post';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR.php';
+include 'CMS_SIDEBAR_Admin.php';
 ?>
     <style>
         @media screen and (min-width: 1200px) {
@@ -52,6 +57,11 @@ include 'CMS_SIDEBAR.php';
             #publishColumn{
                 position: relative;
             }
+        }
+        .fr-view {
+            font-family: "Verdana", Georgia, Serif;
+            font-size: 14px;
+            color: #444444;
         }
     </style>
     <script>
@@ -98,29 +108,31 @@ include 'CMS_SIDEBAR.php';
 
                         <div class="card" style="margin-bottom: 1rem;">
                             <div class="card-body">
-                                <div class="form-group">
-                                    <label for="reference">References</label>
-                                    <div id="reference">
-                                        <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
-                                        <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
-                                    </div>
-                                </div>
+                                No references
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-default"><i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-file"></i> Add New Document</button>
+                                <button class="btn btn-default"><i class="fa fa-fw fa-link"></i><i class="fa fa-fw fa-file"></i> Link Existing Document</button>
                             </div>
                         </div>
 
                         <div class="card" style="margin-bottom: 1rem;">
                             <div class="card-body">
-                                <div class="form-group">
-                                    <?php
-                                    if($cmsRole == '3') {
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
-                                        echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="3">Publish</button> ';
-                                    }else if($cmsRole == '2'){
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
-                                        echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
-                                    }
-                                    ?>
-                                </div>
+                                Unsaved
+                            </div>
+                            <div class="card-footer">
+                                <?php
+                                if($cmsRole == '3') {
+                                    echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
+                                    echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="3">Submit for Publication</button> ';
+                                }else if($cmsRole == '2'){
+                                    echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
+                                    echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
+                                }else if($cmsRole == '4'){
+                                    echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
+                                    echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
+                                }
+                                ?>
                             </div>
                         </div>
 
