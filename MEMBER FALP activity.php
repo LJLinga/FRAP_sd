@@ -15,12 +15,12 @@
     }
     
     $query = "SELECT * FROM LOANS where MEMBER_ID = {$_SESSION['idnum']} 
-              AND loan_detail_id = 1 AND 	loan_status != 3";
+              AND loan_detail_id = 1 AND 	loan_status != 3 ";
     $result = mysqli_query($dbc,$query);
     $ans = mysqli_fetch_assoc($result);
 
-    $query = "SELECT * FROM txn_reference where LOAN_REF = {$ans['LOAN_ID']} AND txn_type = 2";
-    $result = mysqli_query($dbc,$query);
+    $query2 = "SELECT * FROM txn_reference where LOAN_REF = {$ans['LOAN_ID']} AND txn_type = 2";
+    $result2 = mysqli_query($dbc,$query2);
 
     $page_title = 'Loans - FALP Activity';
     include 'GLOBAL_HEADER.php';
@@ -41,68 +41,66 @@
 
                 </div>
 
-                    <div class="row">
+                <div class="row">
 
-                        <div class="col-lg-12">
+                    <div class="col-lg-12">
 
-                            <div class="panel panel-green">
+                        <div class="panel panel-green">
 
-                                <div class="panel-heading">
+                            <div class="panel-heading">
 
-                                    <b>FALP Loan Payment Activity</b>
+                                <b>FALP Loan Payment Activity</b>
 
-                                </div>
+                            </div>
 
-                                <div class="panel-body">
+                            <div class="panel-body">
 
-                                    <table class="table table-bordered">
-                                        
-                                        <thread>
-											
-                                            <tr>
+                                <table id = "table" class="table table-bordered">
+
+                                    <thread>
+
+                                        <tr>
 
                                             <td align="center"><b>Date</b></td>
                                             <td align="center"><b>Deducted Amount</b></td>
                                             <td align="center"><b>Status</b></td>
 
-                                            </tr>
+                                        </tr>
 
-                                        </thread>
+                                    </thread>
 
-                                        <tbody>
-											<?php
-											
-											
-											while($ans= mysqli_fetch_assoc($result)){
-											$dt = new DateTime($ans['TXN_DATE']);
-											$date = $dt->format('d/m/Y');
-											$amount = $ans['AMOUNT'];
-											$status = "Complete";
-											
-											?>
-                                            <tr>
-											
+                                    <tbody>
+
+                                    <?php
+
+
+                                    while($ans2 = mysqli_fetch_assoc($result2)){
+                                        $dt = new DateTime($ans2['TXN_DATE']);
+                                        $date = $dt->format('d/m/Y');
+                                        $amount = $ans2['AMOUNT'];
+
+
+                                        ?>
+                                        <tr>
+
                                             <td align="center"><?php echo $date;?></td>
                                             <td align="center">₱ <?php echo $amount;?></td>
                                             <td align="center">Completed</td>
-											
-                                            </tr>
-											<?php } ?>
-                                            
 
-                                            
+                                        </tr>
+                                    <?php } ?>
 
-                                        </tbody>
+                                    </tbody>
 
-                                    </table>
-
-                                </div>
+                                </table>
 
                             </div>
 
                         </div>
 
                     </div>
+
+                </div>
 
 
 

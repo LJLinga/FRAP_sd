@@ -9,7 +9,7 @@
 
     $row = mysqli_fetch_assoc($result);
 
-    if($row['LOAN_STATUS'] = 1){ //checks if you have a pending loan
+    if($row['LOAN_STATUS'] == 1){ //checks if you have a pending loan
 
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
 
@@ -71,51 +71,49 @@
 
                                 </thread>
 
-                                <tbody>
+                                    <tbody>
 
                                     <tr>
 
-                                    <td>Amount to Borrow</td>
-                                    <td>₱ <?php echo $ans['AMOUNT'];?></td>
+                                        <td>Amount to Borrow</td>
+                                        <td>₱ <?php echo $ans['AMOUNT'];?></td>
 
                                     </tr>
 
                                     <tr>
 
-                                    <td>Amount Payable</td>
-                                    <td>₱ <?php echo $ans['PAYABLE'];?></td>
+                                        <td>Amount Payable</td>
+                                        <td>₱ <?php echo $ans['PAYABLE'];?></td>
 
                                     </tr>
 
                                     <tr>
 
-                                    <td>Payment Terms</td>
-                                    <td><?php echo $ans['PAYMENT_TERMS'];?> months</td>
+                                        <td>Payment Terms</td>
+                                        <td><?php echo $ans['PAYMENT_TERMS'];?> months</td>
 
                                     </tr>
 
                                     <tr>
 
-                                    <td>Monthly Deduction</td>
-                                    <td>₱ <?php echo $ans['PER_PAYMENT'];?></td>
+                                        <td>Monthly Deduction</td>
+                                        <td>₱ <?php echo sprintf("%.2f",(float)$ans['PER_PAYMENT']*2);?></td>
 
                                     </tr>
 
                                     <tr>
 
-                                    <td>Number of Payments</td>
-                                    <td><?php echo $ans['PAYMENT_TERMS']*2;?> payments</td>
+                                        <td>Number of Payments</td>
+                                        <td><?php echo $ans['PAYMENT_TERMS']*2;?> payments</td>
 
                                     </tr>
 
                                     <tr>
 
-                                    <td>Per Payment Deduction</td>
-                                    <td>₱ <?php echo $ans['PER_PAYMENT'];?></td>
+                                        <td>Per Payment Deduction</td>
+                                        <td>₱ <?php echo $ans['PER_PAYMENT'] ;?></td>
 
                                     </tr>
-
-                                </tbody>
 
                                 </table>
 
@@ -150,51 +148,51 @@
 
                                 </thread>
 
-                                <tbody>
+                                        <tbody>
 
-                                    <tr>
+                                        <tr>
 
-                                    <td>Date Approved</td>
-                                    <td><?php echo $ans['DATE_APPROVED'];?></td>
+                                            <td>Date Approved</td>
+                                            <td><?php echo $ans['DATE_APPROVED'];?></td>
 
-                                    </tr>
+                                        </tr>
 
-                                    <tr>
+                                        <tr>
 
-                                    <td>Payments Made</td>
-                                    <td><?php echo $ans['PAYMENTS_MADE'];?> Payments</td>
+                                            <td>Payments Made</td>
+                                            <td><?php echo (int)$ans['PAYMENTS_MADE'];?> Payments</td>
 
-                                    </tr>
+                                        </tr>
 
-                                    <tr>
+                                        <tr>
 
-                                    <td>Payments Left</td>
-                                    <td><?php echo $ans['PAYMENT_TERMS'] - $ans['PAYMENTS_MADE'];?> Payments</td>
+                                            <td>Payments Left</td>
+                                            <td><?php echo ($ans['PAYMENT_TERMS']*2) - $ans['PAYMENTS_MADE'];?> Payments</td>
 
-                                    </tr>
+                                        </tr>
 
-                                    <tr>
+                                        <tr>
 
-                                    <td>Total Amount Paid</td>
-                                    <td>₱ <?php echo $ans['AMOUNT_PAID'];?></td>
+                                            <td>Total Amount Paid</td>
+                                            <td>₱ <?php echo sprintf("%.2f",(float)$ans['AMOUNT_PAID']);?></td>
 
-                                    </tr>
+                                        </tr>
 
-                                    <tr>
+                                        <tr>
 
-                                    <td>Outstanding Balance</td>
-                                    <td>₱ <?php echo $ans['PAYABLE']-$ans['AMOUNT_PAID'];?></td>
+                                            <td>Outstanding Balance</td>
+                                            <td>₱ <?php echo sprintf("%.2f",$ans['PAYABLE']-$ans['AMOUNT_PAID']);?></td>
 
-                                    </tr>
+                                        </tr>
 
-                                    <tr>
+                                        <tr>
 
-                                    <td>Status</td>
-                                    <td><?php echo $ans1['Status'];?></td>
+                                            <td>Status</td>
+                                            <td><?php echo $ans1['Status'];?></td>
 
-                                    </tr>
+                                        </tr>
 
-                                </tbody>
+                                        </tbody>
 
                                 </table>
 

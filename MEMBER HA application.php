@@ -509,7 +509,7 @@ if (isset($_POST['submit'])) {
 
 
         //This retrieves the Health Aid Table's maximum
-        $queryHARI = "SELECT MAX(RECORD_ID) as RECORD_ID FROM HEALTH_AID;";
+        $queryHARI = "SELECT MAX(RECORD_ID) as RECORD_ID FROM HEALTH_AID WHERE MEMBER_ID = {$_SESSION['idnum']};";
         $resultHARI = mysqli_query($dbc, $queryHARI);
         $rowHARI = mysqli_fetch_array($resultHARI);
         $_SESSION['HA_RecordID'] = $rowHARI['RECORD_ID'];

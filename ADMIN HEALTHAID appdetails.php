@@ -4,8 +4,7 @@
     include 'GLOBAL_USER_TYPE_CHECKING.php';
     include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
-     //Test value
-    //$_SESSION['idnum']=1141231234;
+
 
 
     if(isset($_POST['action'])){

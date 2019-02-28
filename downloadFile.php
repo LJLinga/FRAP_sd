@@ -1,9 +1,9 @@
 <?php
-$name= $_GET['loanID'];
+$name = $_GET['loanID'];
 
 $name = str_replace('\'', '/', $name);
 
-	
+
     header('Content-Description: File Transfer');
     header('Content-Type: application/force-download');
     header("Content-Disposition: attachment; filename=\"" . basename($name) . "\";");
@@ -16,6 +16,6 @@ $name = str_replace('\'', '/', $name);
     flush();
     readfile($name); //showing the path to the server where the file is to be download
 	
-	header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN BANK appdetails.php");
+	header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN FALP appdetails.php");
 
 ?>

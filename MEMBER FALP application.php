@@ -6,7 +6,7 @@
 
     //to check if the user has applied in FALP but this code can be edited to check other applications. e.g. Health aid and shi like th sort
 
-    $query = "SELECT LOAN_ID, LOAN_STATUS, APP_STATUS from loans where member_id = {$_SESSION['idnum']} &&  app_status != 3 ORDER BY LOAN_ID DESC LIMIT 1";
+    $query = "SELECT LOAN_ID, LOAN_STATUS, APP_STATUS from loans where member_id = {$_SESSION['idnum']} && app_status != 3 ORDER BY LOAN_ID DESC LIMIT 1";
     $result = mysqli_query($dbc,$query);
     $row = mysqli_fetch_assoc($result);
 
@@ -41,71 +41,15 @@
     }
 
 
+
+
+
+
     $page_title = 'Loans - FALP Application';
     include 'GLOBAL_HEADER.php';
     include 'FRAP_USER_SIDEBAR.php';
 ?>
-<script>
 
-    $(document).ready(function(){
-
-        document.getElementById("falpcompute").onclick = function() {
-            checkform();
-        };
-        document.getElementById("falpcompute").onclick = function() {
-            checkform();
-        };
-        //HERES A FUCKING NOTE SO I DONT FUCKING FORGET
-        // JESUS CHRIST TERM = MONTH OKAY
-        // DONT GO CONFUSING TERMS OK
-        // 1 TERM = 1 MONTH
-        // 5 TERMS = 5 MONTHS
-        // 1 TERM = 2 PAYMENTS
-        // 5 TERMS = 10 PAYMETNS
-        function calculate(){
-
-            var amount = parseFloat(document.getElementById("amount").value);
-            var terms = parseFloat(document.getElementById("terms").value);
-            var interest = 500;
-
-            document.getElementById("totalI").innerHTML ="<b>Total Interest Payable: </b>₱"+ parseFloat((interest*terms)).toFixed(2);
-            document.getElementById("totalP").innerHTML ="<b>Total Amount Payable: </b> ₱"+ parseFloat((amount+(interest*terms))).toFixed(2);
-            document.getElementById("PerP").innerHTML ="<b>Per Payment Period Payable: </b> ₱ "+ parseFloat(((amount/terms*2)+interest/2)).toFixed(2);
-            document.getElementById("Monthly").innerHTML ="<b>Monthly Payable: </b> ₱"+ parseFloat(((amount/terms)+interest)).toFixed(2);
-
-        }
-
-
-        function checkform(){
-
-            var amount = parseFloat(document.getElementById("amount").value);
-            var terms = parseFloat(document.getElementById("terms").value);
-
-            if(amount<5000){
-                alert("Amount entered is below minimum. Please enter amount within the range.");
-                return false;
-            }
-            else if(amount >25000){
-                alert("Amount entered is above maximum. Please enter amount within the range.");
-                return false;
-            }
-            else if(isNaN(amount)){
-                alert("Invalid Input");
-                return false;
-            }else if (isNaN(terms)){
-                alert("No Terms");
-                return false;
-            } else{
-                calculate();
-                return true;
-            }
-
-        }
-    });
-
-
-
-</script>
         <div id="page-wrapper">
 
             <div class="container-fluid">
@@ -123,7 +67,7 @@
 
                 <div class="row">
 
-                    <div class="col-lg-4 col-1">
+                    <div class="col-lg-3 col-1">
 
                         <div class="panel panel-success" align="center">
 
@@ -133,17 +77,32 @@
 
                             </div>
 
+
+
                             <div class="panel-body">
 
-                                ₱ 5,000.00 to ₱ 25,000.00
+                                <?php
+                                    $userStatus = "SELECT USER_STATUS from member where MEMBER_ID = {$_SESSION['idnum']}";
+                                    $userStatusResult = mysqli_query($dbc,$userStatus);
+                                    $userStatusRow= mysqli_fetch_assoc($userStatusResult);
 
+                                    if($userStatusRow['USER_STATUS'] = 1) { // this means the user is a full time.
+
+                                        echo "₱ 5,000.00 to ₱ 25,000.00";
+
+                                    }else { // meaning the user is a part time
+
+                                        echo"₱ 5,000.00 to ₱ 15,000.00";
+
+                                    }
+                                ?>
                             </div>
 
                         </div>
 
                     </div>
 
-                    <div class="col-lg-4 col-2">
+                    <div class="col-lg-3 col-2">
 
                         <div class="panel panel-success" align="center">
 
@@ -163,7 +122,7 @@
 
                     </div>
 
-                    <div class="col-lg-4 col-3">
+                    <div class="col-lg-3 col-3">
 
                         <div class="panel panel-success" align="center">
 
@@ -174,8 +133,43 @@
                             </div>
 
                             <div class="panel-body">
+                                <?php
+                                    if($userStatusRow['USER_STATUS'] = 1){
+                                        echo "5 Months";
+                                    }else{
+                                        echo "3 Months";
+                                    }
+                                ?>
 
-                                5 Months to 10 Months
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-3 col-3">
+
+                        <div class="panel panel-success" align="center">
+
+                            <div class="panel-heading">
+
+                                <b>Payment Terms </b>
+
+                            </div>
+
+                            <div class="panel-body">
+                                <?php
+                                if($userStatusRow['USER_STATUS'] = 1){
+                                    echo "Full-Time";
+                                }else{
+                                    echo "Part-Time";
+                                }
+
+
+                                $userStatusType = $userStatusRow['USER_STATUS'];
+                                ?>
+
 
                             </div>
 
@@ -254,15 +248,30 @@
 
                                             <select class="form-control" name = "terms" id = "terms">
 
-                                                <option value = 5>5</option>
-                                                <option value = 6>6</option>
-                                                <option value = 7>7</option>
-                                                <option value = 8>8</option>
-                                                <option value = 9>9</option>
-                                                <option value = 10>10</option>
+                                                <?php
+                                                    if($userStatusRow['USER_STATUS'] = 1) {
+                                                        ?>
+
+                                                        <option value=1>1</option>
+                                                        <option value=2>2</option>
+                                                        <option value=3>3</option>
+                                                        <option value=4>4</option>
+                                                        <option value=5>5</option>
+
+                                                        <?php
+                                                    }else {
+                                                        ?>
+                                                        <option value=1>1</option>
+                                                        <option value=2>2</option>
+                                                        <option value=3>3</option>
+                                                        <?php
+                                                    }
+                                                ?>
 
                                             </select>
+
 											<input type = "text" name = "interest" value = 5 hidden>
+
                                         </div>
 
                                     </div>
@@ -336,6 +345,94 @@
             <!-- /.container-fluid -->
 
         </div>
+
+<script>
+
+    $(document).ready(function(){
+
+
+        let userType = <?php echo json_encode($userStatusType); ?>;
+
+
+        document.getElementById("falpcompute").onclick = function() {
+            checkform();
+        };
+
+
+
+
+        function calculate(){
+            let amount = parseFloat(document.getElementById("amount").value);
+            let terms = parseFloat(document.getElementById("terms").value);
+            let interest = 0;
+
+            if(userType = 1){
+                interest = 500;
+            }else{
+                interest = 300;
+            }
+
+            document.getElementById("totalI").innerHTML ="<b>Total Interest Payable: </b>₱"+ parseFloat((interest)).toFixed(2);
+            document.getElementById("totalP").innerHTML ="<b>Total Amount Payable: </b> ₱"+ parseFloat((amount+interest)).toFixed(2);
+            document.getElementById("PerP").innerHTML ="<b>Per Payment Period Payable: </b> ₱ "+ parseFloat(((amount+interest)/(terms*2))).toFixed(2);
+            document.getElementById("Monthly").innerHTML ="<b>Monthly Payable: </b> ₱"+ parseFloat(((amount+interest)/(terms))).toFixed(2);
+
+        }
+
+        function checkform(){
+
+            let elemAmount = document.getElementById("amount");
+            let elemTerms = document.getElementById("terms");
+
+            let amount = parseFloat(elemAmount.value);
+            let terms = parseFloat(elemTerms.value);
+
+            let amountLimit;
+            let termMax;
+
+            if(userType = 1){
+                amountLimit = 25000;
+                termMax = 5;
+            }else{
+                amountLimit = 15000;
+                termMax = 3;
+            }
+
+            elemAmount.setAttribute("max",amountLimit+"");
+            elemTerms.setAttribute("max",termMax+"");
+
+
+            if(amount<5000){
+                alert("Amount entered is below minimum. Please enter amount within the range.");
+                return false;
+            }
+            else if(amount > amountLimit){
+                alert("Amount entered is above maximum. Please enter amount within the range.");
+                return false;
+            }
+            else if(terms  < 0){ // if terms are below 3, deins dapat to
+                alert("Terms entered is below minimum . Please enter amount within the range.");
+                return false;
+            }else if(terms > termMax) {
+                alert("Terms entered is above maximum . Please enter amount within the range.");
+                return false;
+            } else if(isNaN(amount)){
+                alert("Invalid Input");
+                return false;
+            }else if (isNaN(terms)){
+                alert("No Terms");
+                return false;
+            } else{
+                calculate();
+                return true;
+            }
+
+        }
+    });
+
+
+
+</script>
         <!-- /#page-wrapper -->
 <?php include 'GLOBAL_FOOTER.php' ?>
 
