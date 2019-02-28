@@ -86,9 +86,11 @@ foreach($result as $row)
     $output .= '
  <div class="card" style="margin-top: 1rem; font-size: small">
   <div class="card-header" style="font-size: x-small">by <b>'.$row["commenterName"].'</b> on <i>'.date("F j, Y g:i A ", strtotime($row['timePosted'])).'</i></div>
-  <div class="card-body">'.$row["content"].'</div>
-  <div class="card-footer" align="right"><button type="button" class="btn btn-default fa fa-reply reply" data-toggle="modal" data-target="#myModal" id="'.$row["id"].'"> Reply </button></div>
- </div>
+  <div class="card-body">
+    <div class="card-text">'.$row["content"].'</div>
+    <div class="card-link"><a type="button" class="btn btn-sm fa fa-reply reply" data-toggle="modal" data-target="#myModal" id="'.$row["id"].'"> Reply </a></div>
+    </div>
+    </div>
  ';
     $output .= get_reply_comment($connect, $row["id"]);
 }
@@ -115,7 +117,7 @@ ORDER BY id DESC
     }
     else
     {
-        $marginleft = $marginleft + 48;
+        $marginleft = 48;
     }
     if($count > 0)
     {
@@ -124,11 +126,13 @@ ORDER BY id DESC
             $output .= '
    <div class="card" style="margin-left:'.$marginleft.'px; margin-top: 1rem; font-size: small">
     <div class="card-header" style="font-size: x-small">by <b>'.$row["commenterName"].'</b> on <i>'.date("F j, Y g:i A ", strtotime($row['timePosted'])).'</i></div>
-    <div class="card-body">'.$row["content"].'</div>
-    <div class="card-footer" align="right">
-        <button class="btn btn-default fa fa-reply reply" data-toggle="modal" data-target="#myModal" id="'.$row["id"].'"> Reply </button>
+    
+    <div class="card-body">
+    <div class="card-text">'.$row["content"].'</div>
+    <div class="card-link"><a type="button" class="btn btn-sm fa fa-reply reply" data-toggle="modal" data-target="#myModal" id="'.$row["id"].'"> Reply </a></div>
     </div>
-   </div>
+    
+    </div>
    ';
             $output .= get_reply_comment($connect, $row["id"], $marginleft);
         }

@@ -174,97 +174,97 @@ $page_title = 'Santinig - Edit Post';
 include 'GLOBAL_HEADER.php';
 include 'CMS_SIDEBAR_Admin.php';
 ?>
-<style>
-    @media screen and (min-width: 1200px) {
-        #publishColumn{
-            position: fixed;
-            right:1rem;
+    <style>
+        @media screen and (min-width: 1200px) {
+            #publishColumn{
+                position: fixed;
+                right:1rem;
+            }
         }
-    }
-    @media screen and (max-width: 1199px) {
-        #publishColumn{
-            position: relative;
+        @media screen and (max-width: 1199px) {
+            #publishColumn{
+                position: relative;
+            }
         }
-    }
-    .fr-view {
-        font-family: "Verdana", Georgia, Serif;
-        font-size: 14px;
-        color: #444444;
-    }
-</style>
+        .fr-view {
+            font-family: "Verdana", Georgia, Serif;
+            font-size: 14px;
+            color: #444444;
+        }
+    </style>
     <script>
-    $(document).ready( function(){
+        $(document).ready( function(){
 
-        let mode = '<?php echo $mode; ?>';
-        let postId = "<?php echo $postId?>";
+            let mode = '<?php echo $mode; ?>';
+            let postId = "<?php echo $postId?>";
 
-        $('#btnUpdate').hide();
+            $('#btnUpdate').hide();
 
-        $('#post_content').froalaEditor({
-            //Disables video upload
-            videoUpload: false,
-            // Set the image upload URL
-            imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
-            // Set the file upload URL.
-            fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
-            //Allow comments
-            width: 750
-        });
+            $('#post_content').froalaEditor({
+                //Disables video upload
+                videoUpload: false,
+                // Set the image upload URL
+                imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
+                // Set the file upload URL.
+                fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
+                //Allow comments
+                width: 750
+            });
 
-        if(mode==='view' || mode==='view_with_button'){
-            $('#post_content').froalaEditor("edit.off");
-        }
+            if(mode==='view' || mode==='view_with_button'){
+                $('#post_content').froalaEditor("edit.off");
+            }
 
-        $('#post_content').on('froalaEditor.contentChanged', function (e, editor) {
-            $('#btnUpdate').show();
-        });
+            $('#post_content').on('froalaEditor.contentChanged', function (e, editor) {
+                $('#btnUpdate').show();
+            });
 
-        $('#post_content').froalaEditor('html.set', '<?php echo $body?>');
+            $('#post_content').froalaEditor('html.set', '<?php echo $body?>');
 
-        $('#comment_form').on('submit', function(event){
-            event.preventDefault();
-            $('#myModal').modal('toggle');
-            var form_data = $(this).serialize();
-            $.ajax({
-                url:"CMS_AJAX_AddEditComment.php",
-                method:"POST",
-                data:form_data,
-                dataType:"JSON",
-                success:function(data)
-                {
-                    if(data.error != '')
+            $('#comment_form').on('submit', function(event){
+                event.preventDefault();
+                $('#myModal').modal('toggle');
+                var form_data = $(this).serialize();
+                $.ajax({
+                    url:"CMS_AJAX_AddEditComment.php",
+                    method:"POST",
+                    data:form_data,
+                    dataType:"JSON",
+                    success:function(data)
                     {
-                        $('#comment_form')[0].reset();
-                        $('#comment_message').html(data.error);
-                        $('#comment_id').val('0');
-                        load_comment(postId);
+                        if(data.error != '')
+                        {
+                            $('#comment_form')[0].reset();
+                            $('#comment_message').html(data.error);
+                            $('#comment_id').val('0');
+                            load_comment(postId);
+                        }
                     }
-                }
-            })
-        });
+                })
+            });
 
-        setInterval(function() {
-            load_comment(postId);
-        }, 1000);
+            setInterval(function() {
+                load_comment(postId);
+            }, 1000);
 
-        function load_comment(postId)
-        {
-            $.ajax({
-                url:"CMS_AJAX_FetchEditComments.php",
-                method:"POST",
-                data:{postId: postId},
-                success:function(data)
-                {
-                    $('#display_comment').html(data);
-                }
-            })
-        }
+            function load_comment(postId)
+            {
+                $.ajax({
+                    url:"CMS_AJAX_FetchEditComments.php",
+                    method:"POST",
+                    data:{postId: postId},
+                    success:function(data)
+                    {
+                        $('#display_comment').html(data);
+                    }
+                })
+            }
 
-        $(document).on('click', '.reply', function(){
-            var comment_id = $(this).attr("id");
-            $('#comment_id').val(comment_id);
-            $('#comment_name').focus();
-        });
+            $(document).on('click', '.reply', function(){
+                var comment_id = $(this).attr("id");
+                $('#comment_id').val(comment_id);
+                $('#comment_name').focus();
+            });
 
 //        $('#modalTriggerSubmit').click(function() {
 //            $('#changeText').text($('.btn').val());
@@ -281,75 +281,75 @@ include 'CMS_SIDEBAR_Admin.php';
 
 
 
-    });
+        });
 
-</script>
+    </script>
 
-<div id="content-wrapper">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-12">
-                <h3 class="page-header">
-                    <?php echo $head;?>
-                </h3>
-
-            </div>
-        </div>
-        <!--Insert success page-->
-        <form id="form" name="form" method="POST" action="<?php $_SERVER["PHP_SELF"]?>">
+    <div id="content-wrapper">
+        <div class="container-fluid">
             <div class="row">
-                <div class="column col-lg-7">
-                    <!-- Text input-->
-                    <div class="form-group">
-                        <label for="post_title">Title</label>
-                        <input <?php if($mode == 'view') echo 'disabled' ?> id="post_title" name="post_title" type="text" placeholder="Put your post title here..." class="form-control input-md" value="<?php if(isset($title)){ echo $title; }; ?>" required>
-                    </div>
+                <div class="col-lg-12">
+                    <h3 class="page-header">
+                        <?php echo $head;?>
+                    </h3>
 
-                    <!-- Textarea -->
-                    <div class="form-group">
-                        <label for="post_content">Content</label>
-                        <textarea name="post_content" id="post_content"></textarea>
-                    </div>
-
-                    <div class="card" style="margin-top: 1rem;">
-                        <div class="card-body">
-                            <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
-                            <span id="comment_message"></span>
-                            <div id="display_comment"></div>
-                        </div>
-                    </div>
                 </div>
-                <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem; ">
+            </div>
+            <!--Insert success page-->
+            <form id="form" name="form" method="POST" action="<?php $_SERVER["PHP_SELF"]?>">
+                <div class="row">
+                    <div class="column col-lg-7">
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label for="post_title">Title</label>
+                            <input <?php if($mode == 'view') echo 'disabled' ?> id="post_title" name="post_title" type="text" placeholder="Put your post title here..." class="form-control input-md" value="<?php if(isset($title)){ echo $title; }; ?>" required>
+                        </div>
 
-                    <div class="card" style="margin-bottom: 1rem;">
-                        <div class="card-body" >
-                            <div class="form-group">
-                                <label for="reference">References</label>
-                                <div id="reference">
-                                    <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
-                                    <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
-                                </div>
+                        <!-- Textarea -->
+                        <div class="form-group">
+                            <label for="post_content">Content</label>
+                            <textarea name="post_content" id="post_content"></textarea>
+                        </div>
+
+                        <div class="card" style="margin-top: 1rem;">
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
+                                <span id="comment_message"></span>
+                                <div id="display_comment"></div>
                             </div>
                         </div>
                     </div>
+                    <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem; ">
 
-                    <div class="card" style="margin-bottom: 1rem;">
-                        <div class="card-body" >
-                            Author: <b><?php echo $author; ?></b><br>
-                            <i>Created on: <b><?php echo date("F j, Y g:i:s A ", strtotime($firstPosted)); ?></b></i><br><br>
+                        <div class="card" style="margin-bottom: 1rem;">
+                            <div class="card-body" >
+                                <div class="form-group">
+                                    <label for="reference">References</label>
+                                    <div id="reference">
+                                        <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
+                                        <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                            Current Status: <b><?php echo $statusDesc?></b>
+                        <div class="card" style="margin-bottom: 1rem;">
+                            <div class="card-body" >
+                                Author: <b><?php echo $author; ?></b><br>
+                                <i>Created on: <b><?php echo date("F j, Y g:i:s A ", strtotime($firstPosted)); ?></b></i><br><br>
+
+                                Current Status: <b><?php echo $statusDesc?></b>
                                 <?php if(!empty($permalink)){ ?>
                                     (<a href="<?php echo "http://localhost/FRAP_sd/read.php?pl=".$permalink?>" >Preview</a>)
                                 <?php } ?>
-                            <br>
-                            <?php if($status == '3' && !empty($reviewer)){ echo "Reviewed by: <b>".$reviewer."</b><br>"; }?>
-                            <?php if($status == '4'  && !empty($publisher)){ echo "Publisher: <b>".$publisher."</b><br>"; }?>
-                            <i>Last updated: <b><?php  echo date("F j, Y g:i:s A ", strtotime($lastUpdated));?></b></i><br><br>
-                            <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;}; ?>">
-                        </div>
+                                <br>
+                                <?php if($status == '3' && !empty($reviewer)){ echo "Reviewed by: <b>".$reviewer."</b><br>"; }?>
+                                <?php if($status == '4'  && !empty($publisher)){ echo "Publisher: <b>".$publisher."</b><br>"; }?>
+                                <i>Last updated: <b><?php  echo date("F j, Y g:i:s A ", strtotime($lastUpdated));?></b></i><br><br>
+                                <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;}; ?>">
+                            </div>
 
-                        <div class="card-footer">
+                            <div class="card-footer">
                                 <?php
                                 if($mode == 'edit'){
                                     if($cmsRole == '4') {
@@ -398,19 +398,19 @@ include 'CMS_SIDEBAR_Admin.php';
                                 }
 
                                 ?>
+                            </div>
                         </div>
                     </div>
+
                 </div>
 
-            </div>
 
+                <div class="row">
 
-            <div class="row">
-
-            </div>
-        </form>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
     <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
 
@@ -443,7 +443,19 @@ include 'CMS_SIDEBAR_Admin.php';
     <script>
         $(document).ready(function(){
 
-
+            $('#btnSubmit').click(function(){
+                $.ajax({
+                    url: '/whereEver/itNeedsToGo',
+                    data: {
+                        id: $(this).val(), //the value of what you clicked on
+                        status: 'Approved' //you clicked on it so you know the status might aswell hardcode it
+                    },
+                    success: function(data) {
+                        //do something with the data that got returned
+                    },
+                    type: 'POST'
+                });
+            });
 
         });
     </script>

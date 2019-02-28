@@ -64,7 +64,8 @@ if(isset($_POST['option'])){
             'title' => $row['title'],
             'views' => $row['total views'].' ('.$row['unique views'].')',
             'previews' => $row['total previews'].' ('.$row['unique previews'].')',
-            'comments' => $row['total comments'].' ('.$row['unique commenters'].')'
+            'comments' => $row['total comments'].' ('.$row['unique commenters'].')',
+            'action' => '<form method="GET" action="CMS_EditPost.php"><button type="submit" name="postId" class="btn btn-default" value='.$row['id'].'>Edit</button></form>'
         );
     }
     echo json_encode($data);

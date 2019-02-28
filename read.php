@@ -164,7 +164,10 @@ include 'CMS_SIDEBAR_Admin.php';
             })
         });
 
-        load_comment(postId);
+
+        setInterval(function() {
+            load_comment(postId);
+        }, 1000); //5
 
         function load_comment(postId)
         {

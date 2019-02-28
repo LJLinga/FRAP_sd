@@ -110,6 +110,7 @@ $userId = $_SESSION['idnum'];
                                     <th align="left" width="100px"><b>Previews</b></th>
                                     <th align="left" width="100px"><b>Views</b></th>
                                     <th align="right" width="100px"><b>Comments</b></th>
+                                    <th></th>
 
                                 </tr>
                                 </thead>
@@ -120,6 +121,7 @@ $userId = $_SESSION['idnum'];
                                     <th align="left" width="100px"><b>Previews</b></th>
                                     <th align="left" width="100px"><b>Views</b></th>
                                     <th align="right" width="100px"><b>Comments</b></th>
+                                    <th></th>
 
                                 </tr>
                                 </tfoot>
@@ -335,13 +337,10 @@ $userId = $_SESSION['idnum'];
                 { data: "title" },
                 { data: "views" },
                 { data: "previews" },
-                { data: "comments" }
+                { data: "comments" },
+                { data: "action" }
                 /*and so on, keep adding data elements here for all your columns.*/
-            ],  columnDefs: [ {
-                orderable: false,
-                className: 'select-checkbox',
-                targets:   0
-            } ],
+            ]
         } );
         return table;
     }
