@@ -206,9 +206,11 @@ include 'CMS_SIDEBAR_Admin.php';
             // Set the image upload URL
             imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
             // Set the file upload URL.
-            fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
+            //fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
+            fileUpload: false,
             //Allow comments
-            width: 750
+            width: 750,
+            toolbarInline: false
         });
 
         if(mode==='view' || mode==='view_with_button'){

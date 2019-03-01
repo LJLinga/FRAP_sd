@@ -19,11 +19,18 @@ class ComposerStaticInit90b6202512e01e2d3139fbd9bbf8ab5f
         array (
             'phpseclib\\' => 10,
         ),
+        'Z' => 
+        array (
+            'Zend\\Escaper\\' => 13,
+        ),
         'P' => 
         array (
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Cache\\' => 10,
+            'PhpOffice\\PhpWord\\' => 18,
+            'PhpOffice\\PhpPresentation\\' => 26,
+            'PhpOffice\\Common\\' => 17,
         ),
         'M' => 
         array (
@@ -52,6 +59,10 @@ class ComposerStaticInit90b6202512e01e2d3139fbd9bbf8ab5f
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
+        'Zend\\Escaper\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-escaper/src',
+        ),
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
@@ -63,6 +74,18 @@ class ComposerStaticInit90b6202512e01e2d3139fbd9bbf8ab5f
         'Psr\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
+        ),
+        'PhpOffice\\PhpWord\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/phpword/src/PhpWord',
+        ),
+        'PhpOffice\\PhpPresentation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/phppowerpoint/src/PhpPresentation',
+        ),
+        'PhpOffice\\Common\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/common/src/Common',
         ),
         'Monolog\\' => 
         array (
@@ -122,6 +145,7 @@ class ComposerStaticInit90b6202512e01e2d3139fbd9bbf8ab5f
     public static $classMap = array (
         'Google_Service_Exception' => __DIR__ . '/..' . '/google/apiclient/src/Google/Service/Exception.php',
         'Google_Service_Resource' => __DIR__ . '/..' . '/google/apiclient/src/Google/Service/Resource.php',
+        'PclZip' => __DIR__ . '/..' . '/pclzip/pclzip/pclzip.lib.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

@@ -49,22 +49,28 @@ if(!empty($_POST['documentTitle']) && !empty($_POST['selectedTask']) && !empty($
         $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
 
         if ($didUpload) {
-            //echo "success";
+//            $insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, processId) VALUES ('$userId', '$process')");
+//            if(!$insertDocument){
+//                echo "Database document insert error.";
+//                $insertVersion = $crud->execute("INSERT into doc_versions (documentId, authorId, versionNo, title, filePath) VALUES ('$insertDocument','$userId','1.0','$title','$uploadPath')");
+//                if(!$insertVersion){
+//                    echo "Database version insert error.";
+//                }else{
+//                    echo $insertDocument;
+//                }
+//            }
+
+            //$insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, processId) VALUES ('$userId', '$process')");
+            //$crud->execute("INSERT into doc_versions (documentId, authorId, versionNo, title, filePath) VALUES ('$insertDocument','$userId','1.0','$title','$uploadPath')");
+
         } else {
             echo "An error occurred somewhere. Try again or contact the admin";
         }
 
-        $insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, processId) VALUES ('$userId', '$process')");
-        if(!$insertDocument){
-            echo "Database document insert error.";
-        }
 
-        $insertVersion = $crud->execute("INSERT into doc_versions (documentId, authorId, versionNo, title, filePath) VALUES ('$insertDocument','$userId','1.0','$title','$uploadPath')");
-        if(!$insertVersion){
-            echo "Database version insert error.";
-        }else{
-            echo $insertDocument;
-        }
+        $insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, processId) VALUES ('$userId', '$process')");
+        $crud->execute("INSERT into doc_versions (documentId, authorId, versionNo, title, filePath) VALUES ('$insertDocument','$userId','1.0','$title','$uploadPath')");
+
 
     } else {
         foreach ($errors as $error) {

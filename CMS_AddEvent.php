@@ -32,7 +32,7 @@ if(isset($_POST['btnSubmit'])){
 
     if($status == 3) {
 
-        include 'addToCalendar.php';
+        include 'CMS_API_AddToCalendar.php';
 
         $client = getClient();
         $service = new Google_Service_Calendar($client);

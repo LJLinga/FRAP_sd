@@ -15,9 +15,6 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR_ViewDocument.php';
 
-
-
-
 if(isset($_GET['docId'])){
 
     $query = "SELECT d.firstAuthorId, d.timeFirstPosted, d.processId, v.versionId, v.versionNo, v.authorId, v.title, v.filePath 
@@ -35,7 +32,7 @@ if(isset($_GET['docId'])){
         $filePath = $row['filePath'];
     }
 
-    $query = "SELECT name FROM facultyassocnew.process WHERE id='1';";
+    $query = "SELECT name FROM facultyassocnew.process WHERE id='$processId';";
     $rows = $crud->getData($query);
     foreach((array) $rows as $key => $row){
         $folder = $row['name'];
@@ -48,7 +45,7 @@ if(isset($_GET['docId'])){
 <div id="content-wrapper">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-7">
+            <div class="col-lg-8">
                 <h3 class="page-header"><?php echo $title ?></h3>
                 <ol class="breadcrumb">
                     <li>
@@ -74,7 +71,7 @@ if(isset($_GET['docId'])){
                     Version No.: <b><?php echo $versionNo;?></b>
                 </div>
                 <div class="card-body" >
-                    Assigned Process: <b><?php echo $processId?></b><br>
+                    Assigned Process: <b><?php echo $folder?></b><br>
                     Creator: <b><?php echo $firstAuthorId; ?></b><br>
                     <i>Created on: <b><?php echo date("F j, Y g:i:s A ", strtotime($timeFirstPosted)); ?></b></i><br><br>
                 </div>

@@ -61,18 +61,8 @@ $userId = $_SESSION['idnum'];
                             <tr>
                                 <th>Title</th>
                                 <th>Author</th>
-                                <th>Status</th>
-                                <th>Last Updated</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                        </table>
-                        <table id="myTable2" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                            <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Author</th>
-                                <th>Status</th>
+                                <th>Updated By</th>
+                                <th>Process</th>
                                 <th>Last Updated</th>
                                 <th>Action</th>
                             </tr>
@@ -136,7 +126,7 @@ $userId = $_SESSION['idnum'];
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="fileName">Upload</label>
+                        <label for="file">Upload</label>
                         <input type="file" class="form-control-file" id="file" name="file" required>
                     </div>
                 <span id="err"></span>
@@ -145,7 +135,7 @@ $userId = $_SESSION['idnum'];
                     <div class="form-group">
                         <input type="hidden" name="userId" value="<?php echo $userId; ?>">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <input type="submit" name="btnSubmit" id="btnSubmit" class="btn btn-primary"></input>
+                        <input type="submit" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
                     </div>
                 </div>
             </div>
@@ -158,28 +148,25 @@ $userId = $_SESSION['idnum'];
 
 <script>
     $(document).ready(function() {
-        $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
-            $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
-        } );
+
 
         $('table.table').DataTable( {
             "ajax": {
-                "url":"CMS_AJAX_FetchPosts.php",
+                "url":"EDMS_AJAX_FetchDocuments.php",
                 "type":"POST",
+                "data":{ mode: '1'},
                 "dataSrc": ''
             },
             columns: [
-                { data: "title" },
-                { data: "name" },
-                { data: "status" },
+                { data: "title_version" },
+                { data: "originalAuthor" },
+                { data: "currentAuthor" },
+                { data: "currentStep" },
                 { data: "lastUpdated" },
                 { data: "actions"}
                 ]
         } );
 
-        $(document).ready(function(){
-
-        });
 
         $("#documentUploadForm").on('submit', function(e){
             e.preventDefault();
@@ -192,8 +179,8 @@ $userId = $_SESSION['idnum'];
                 data: new FormData(this),
                 success: function(response){
                     $("#err").html(response);
-                    //$("#contact-modal").modal('hide');
-                    if(response !== 'error') location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+response
+                    $("#contact-modal").modal('hide');
+                    if(response !== 'error') location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+response;
                 },
                 error: function(){
                     alert("Error");
@@ -202,40 +189,12 @@ $userId = $_SESSION['idnum'];
             return false;
         });
 
-        // $("#documentUploadForm").on('submit', function(e){
-        //     e.preventDefault();
-        //     $.ajax({
-        //         type: 'POST',
-        //         url: 'EDMS_AJAX_UploadDocument.php',
-        //         data: new FormData(this),
-        //         contentType: false,
-        //         cache: false,
-        //         processData:false,
-        //         beforeSend: function(){
-        //             $('#btnSubmit').attr("disabled","disabled");
-        //             $('#documentUploadForm').css("opacity",".5");
-        //         },
-        //         success: function(msg){
-        //             if(msg === 'ok'){
-        //                 $('#documentUploadForm')[0].reset();
-        //                 $('#err').html(msg);
-        //             }else{
-        //                 $('#err').html(msg);
-        //             }
-        //             $('#documentUploadForm').css("opacity","");
-        //             $("#btnSubmit").removeAttr("disabled");
-        //         }
-        //     });
 
 
         // Apply a search to the second table for the demo
         $('#myTable2').DataTable().search( 'New York' ).draw();
     } );
 
-
-    function submitForm(){
-
-    }
 </script>
 
 <?php include 'GLOBAL_FOOTER.php';?>
