@@ -40,7 +40,6 @@ if(isset($_GET['docId'])){
 
 }
 ?>
-<script src="js/aesthetics.js"></script>
 
 <div id="content-wrapper">
     <div class="container-fluid">
@@ -60,7 +59,7 @@ if(isset($_GET['docId'])){
         </div>
         <div class="row">
             <div class="col-lg-8">
-                <iframe src = "/ViewerJS/../FRAP_sd/<?php echo $filePath;?>" width='850' height='1100'  allowfullscreen webkitallowfullscreen></iframe>
+                <iframe src = "/ViewerJS/../FRAP_sd/<?php echo $filePath;?>" width='850' style="position:fixed !important; position:absolute; height:66.67vh;"; allowfullscreen webkitallowfullscreen></iframe>
             </div>
             <div class="col-lg-4">
 

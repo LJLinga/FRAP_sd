@@ -15,8 +15,6 @@ include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR_ViewSection.php';
 ?>
-<script src="js/aesthetics.js"></script>
-
 <div id="content-wrapper">
     <div class="container-fluid">
         <div class="row">
