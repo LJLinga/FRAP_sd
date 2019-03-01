@@ -24,7 +24,6 @@
     <script src="js/moment.js"></script>
     <script src="js/bootstrap-datetimepicker.min.js"></script>
 
-
     <link href="datatables/dataTables.bootstrap4.css" rel="stylesheet">
     <script src="datatables/jquery.dataTables.js"></script>
     <script src="datatables/dataTables.bootstrap4.js"></script>
@@ -39,15 +38,9 @@
     <link href="froala/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
     <link href="froala/css/froala_style.min.css" rel="stylesheet" type="text/css" />
 
-    <link href="morris/morris.css" rel="stylesheet" type="text/css"/>
-
     <!-- Include JS file. -->
 
     <script type="text/javascript" src="froala/js/froala_editor.pkgd.min.js"></script>
-
-    <script type="text/javascript" src="morris/morris.js"></script>
-    <script type="text/javascript" src="morris/raphael-min.js"></script>
-
 </head>
 <style>
     head{
@@ -61,6 +54,10 @@
         padding-right: 1rem;
         background-color: #f0f0f0;
     }
+
+
+
+
 </style>
 
 <body>
@@ -74,18 +71,18 @@
             <ul class="nav navbar-right top-nav"> <!-- Top Menu Items / Notifications area -->
 
                 <li>
-                    <a href="feed.php"> Home </a>
+                    <a href="MEMBER%20dashboard.php"> Home </a>
                 </li>
 
                 <li>
-                    <a href="MEMBER%20dashboard.php"> Loans </a>
+                    <a href="feed.php"> News Feed </a>
                 </li>
 
                 <?php
 
-                    if($_SESSION['FRAP_ROLE'] > 1 || $_SESSION['EDMS_ROLE'] > 1 || $_SESSION['CMS_ROLE'] > 1) {
+                if($_SESSION['FRAP_ROLE'] > 1 || $_SESSION['EDMS_ROLE'] > 1 || $_SESSION['CMS_ROLE'] > 1) {
 
-                        echo '
+                    echo '
     
                             <li class="dropdown sideicons">
     
@@ -93,80 +90,62 @@
     
                                 <ul class="dropdown-menu alert-dropdown">';
 
-                        if($_SESSION['FRAP_ROLE'] > 1) {
+                    if($_SESSION['FRAP_ROLE'] > 1) {
 
-                            echo '
+                        echo '
                                 <li>
                                     <a href="ADMIN%20dashboard.php"> <i class="fa fa-money" aria-hidden="true"></i> Loans </a>
                                 </li>
                                 ';
-                        }
+                    }
 
-                        if($_SESSION['CMS_ROLE'] > 1) {
-
-                            echo '
-                                <li>
-                                    <a href="CMS_PostsDashboard.php"> <i class="fa fa-newspaper-o" aria-hidden="true"></i> Santinig Content </a>
-                                </li>
-                                ';
-                        }
-
-                        if($_SESSION['EDMS_ROLE'] > 1){
-
-                            echo ' 
-                                 <li>
-                                    <a href="EDMS_Dashboard.php"> <i class="fa fa-file-text" aria-hidden="true"></i> Documents</a>
-                                 </li>';
-
-                        }
+                    if($_SESSION['CMS_ROLE'] > 1) {
 
                         echo '
+                                <li>
+                                    <a href="CMS_ADMIN_PostsDashboard.php"> <i class="fa fa-newspaper-o" aria-hidden="true"></i> Santinig Content </a>
+                                </li>
+                                ';
+                    }
+
+                    if($_SESSION['EDMS_ROLE'] > 1){
+
+                        echo ' 
+                                 <li>
+                                    <a href="EDMS_VIEW_DocumentDashboard.php"> <i class="fa fa-file-text" aria-hidden="true"></i> Documents</a>
+                                 </li>';
+
+                    }
+
+                    echo '
                                 </ul>
                     
                             </li> ';
 
-                    }
+                }
                 ?>
 
 
                 <li class="dropdown sideicons">
 
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i>
+
+
+
+
+                        <b class="caret"></b></a>
 
                     <ul class="dropdown-menu alert-dropdown">
 
-                        <li>
-                            <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
-                        </li>
-
-                        <li>
-                            <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
-                        </li>
-
-                        <li>
-                            <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
-                        </li>
-
-                        <li>
-                            <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
-                        </li>
-
-                        <li>
-                            <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
-                        </li>
-
-                        <li>
-                            <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
-                        </li>
+                        <div class="notifications"></div>
 
                         <li class="divider"></li>
 
                         <li>
-                            <a href="#">View All</a>
+                            <a href="GLOBAL_ALL_NOTIFS.php">View All</a>
                         </li>
 
                     </ul>
-
                 </li>
 
                 <li class="dropdown sideicons">
@@ -199,3 +178,44 @@
 
             </ul>
 
+
+
+            <script>
+                $(document).ready(function(){
+                    // updating the view with notifications using ajax
+
+                    let temp = "<?php echo $_SESSION['idnum'] ?>";
+
+                    function load_unseen_notification(idnum)
+                    {
+                        $.ajax({
+                            url:"fetch_header_notifs.php",
+                            method:"POST",
+                            data:{idnum:idnum},
+                            dataType:"json",
+                            success:function(data)
+                            {
+                                $('.notifications').html(data.notification);
+                                if(data.unseen_notification > 0)
+                                {
+                                    $('.counts').html(data.unseen_notification);
+                                }
+                            }
+                        });
+                    }
+
+                    setInterval(function(){
+                        load_unseen_notification(temp); // this will run after every 1 second
+                    }, 1000);
+
+
+// load new notifications
+                    $(document).on('click', '.dropdown-toggle', function(){
+                        $('.counts').html('');
+                        load_unseen_notification('yes');
+                    });
+                    setInterval(function(){
+                        load_unseen_notification();;
+                    }, 5000);
+                });
+            </script>

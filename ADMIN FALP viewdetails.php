@@ -46,21 +46,38 @@ if(isset($_POST['addToPay'])){
         if($matured['PAYMENTS_MADE'] >= $totalPayments){ //checks if the loan will mature
             $update = "UPDATE loans SET DATE_MATURED = NOW(), LOAN_STATUS = 3 where LOAN_ID  = {$_SESSION['details']}";
             mysqli_query($dbc,$update);
+
+            $description = 'Loan has successfully Matured';
+
+            $query = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE , LOAN_REF, EMP_ID, SERVICE_ID)
+                                      values({$ans['MEMBER_ID']}, 2, '{$description}' ,{$payment}, NOW(), {$ans['LOAN_ID']}, {$_SESSION['idnum']}, 4);";
+
+
+            if (!mysqli_query($dbc,$query))
+            {
+                echo("Error description: " . mysqli_error($dbc));
+            }
+
+        }else{
+
+            $description = 'Deduction from Loan';
+
+            $query = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE , LOAN_REF, EMP_ID, SERVICE_ID)
+                                      values({$ans['MEMBER_ID']}, 2, '{$description}' ,{$payment}, NOW(), {$ans['LOAN_ID']}, {$_SESSION['idnum']}, 4);";
+
+
+            if (!mysqli_query($dbc,$query))
+            {
+                echo("Error description: " . mysqli_error($dbc));
+            }
+
+
         }
 
 
         //updates transaction table
 
-        $description = 'Deduction from Loan';
 
-        $query = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE , LOAN_REF, EMP_ID, SERVICE_ID)
-                                      values({$ans['MEMBER_ID']}, 2, '{$description}' ,{$payment}, NOW(), {$ans['LOAN_ID']}, {$_SESSION['idnum']}, 4);";
-
-
-        if (!mysqli_query($dbc,$query))
-        {
-            echo("Error description: " . mysqli_error($dbc));
-        }
 
     }else{
         echo '<script language="javascript">';
@@ -182,276 +199,276 @@ include 'FRAP_ADMIN_SIDEBAR.php';
     }
 </style>
 
-        <div id="page-wrapper">
+<div id="page-wrapper">
 
-            <div class="container-fluid">
+    <div class="container-fluid">
 
-                <!-- Page Heading -->
-                <div class="row">
-                
-                    <div class="col-lg-12">
-                        <?php
-                            $query2 = "SELECT m.firstname as 'First',m.lastname as 'Last' FROM LOANS l join member m on l.member_id = m.member_id where LOAN_ID = {$_SESSION['details']} 
+        <!-- Page Heading -->
+        <div class="row">
+
+            <div class="col-lg-12">
+                <?php
+                $query2 = "SELECT m.firstname as 'First',m.lastname as 'Last' FROM LOANS l join member m on l.member_id = m.member_id where LOAN_ID = {$_SESSION['details']} 
                                                  ";
-                                        $result2 = mysqli_query($dbc,$query2);
-                                        $ans2 = mysqli_fetch_assoc($result2);
-
-                        ?>
-                        <h1 class="page-header"><?php echo $ans2['First']." ".$ans2['Last'];?> 's FALP Loan Summary</h1>
-                    
-                    </div>
-
-                </div>
-
-                    <div class="row">
-
-                        <div class="col-lg-6">
-
-                            <div class="panel panel-primary">
-
-                                <div class="panel-heading">
-
-                                    <b>Current FALP Loan Plan</b>
-
-                                </div>
-
-                                <div class="panel-body">
-
-                                <table class="table table-bordered" style="width: 100%;">
-                                
-                                <thread>
-
-                                    <tr>
-
-                                    <td align="center"><b>Description</b></td>
-                                    <td align="center"><b>Amount</b></td>
-
-                                    </tr>
-
-                                </thread>
-
-                                <tbody>
-
-                                    <tr>
-
-                                    <td>Amount to Borrow</td>
-                                    <td>₱ <?php echo $updated['AMOUNT'];?></td>
-
-                                    </tr>
-
-                                    <tr>
-
-                                    <td>Amount Payable</td>
-                                    <td>₱ <?php echo $updated['PAYABLE'];?></td>
-
-                                    </tr>
-
-                                    <tr>
-
-                                    <td>Payment Terms</td>
-                                    <td><?php echo $updated['PAYMENT_TERMS'];?> months</td>
-
-                                    </tr>
-
-                                    <tr>
-
-                                    <td>Monthly Deduction</td>
-                                    <td>₱ <?php echo sprintf("%.2f",(float)$updated['PER_PAYMENT']*2);?></td>
-
-                                    </tr>
-
-                                    <tr>
-
-                                    <td>Number of Payments</td>
-                                    <td><?php echo $updated['PAYMENT_TERMS']*2;?> payments</td>
-
-                                    </tr>
-
-                                    <tr>
-
-                                    <td>Per Payment Deduction</td>
-                                    <td>₱ <?php echo $updated['PER_PAYMENT'] ;?></td>
-
-                                    </tr>
-
-                                </tbody>
-
-                                </table>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="col-lg-6">
-
-                            <div class="panel panel-green">
-
-                                <div class="panel-heading">
-
-                                    <b>Current FALP Loan Summary</b>
-
-                                </div>
-
-                                <div class="panel-body">
-
-                                    <table class="table table-bordered" style="width: 100%;">
-                                
-                                <thread>
-
-                                    <tr>
-
-                                    <td align="center"><b>Description</b></td>
-                                    <td align="center"><b>Amount</b></td>
-
-                                    </tr>
-
-                                </thread>
-
-                                <tbody>
-
-                                     <tr>
-
-                                    <td>Date Approved</td>
-                                    <td><?php echo $updated['DATE_APPROVED'];?></td>
-
-                                    </tr>
-
-                                    <tr>
-
-                                    <td>Payments Made</td>
-                                    <td><?php echo (int)$updated['PAYMENTS_MADE'];?> Payments</td>
-
-                                    </tr>
-
-                                    <tr>
-
-                                    <td>Payments Left</td>
-                                    <td><?php echo ($updated['PAYMENT_TERMS']*2) - $updated['PAYMENTS_MADE'];?> Payments</td>
-
-                                    </tr>
-
-                                    <tr>
-
-                                    <td>Total Amount Paid</td>
-                                    <td>₱ <?php echo sprintf("%.2f",(float)$updated['AMOUNT_PAID']);?></td>
-
-                                    </tr>
-
-                                    <tr>
-
-                                    <td>Outstanding Balance</td>
-                                    <td>₱ <?php echo sprintf("%.2f",$updated['PAYABLE']-$updated['AMOUNT_PAID']);?></td>
-
-                                    </tr>
-
-                                    <tr>
-
-                                    <td>Status</td>
-                                    <td><?php echo $status['Status'];?></td>
-
-                                    </tr>
-
-                                </tbody>
-
-                                </table>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-                        <div class = "col-lg-4">
-
-
-                        </div>
-
-                        <div class="col-lg-4">
-                            <form action = "ADMIN%20FALP%20viewdetails.php" method = "POST">
-                                <div class="panel panel-primary">
-
-                                    <div class="panel-heading">
-
-                                        <b>Manual Add to FALP</b>
-                                    </div>
-
-                                    <div class="panel-body">
-
-                                        <!---<input type="number" value="0" min="0" max="" class="form-control" placeholder="Amount to Add" name="terms"  id="terms">
-                                        --->
-                                        <div class="slidecontainer">
-                                            <input type="range" min="0" max="<?php echo ($updated['PAYMENT_TERMS']*2)-$updated['PAYMENTS_MADE']; ?>" value="0" class="slider" name="terms" id="myRange">
-                                            <p>Number of Payments to be Paid For: <span id="demo"> </span></p>
-                                        </div>
-
-                                        <button type="submit" name="addToPay" id="addToPay" hidden></button>
-                                        <button type="submit" name="addFifty" id="addFifty" hidden></button>
-
-                                        <button type="button" name="modalTriggerPay" id="modalTriggerPay" class="btn btn-primary" data-toggle="modal" data-target="#confirm-submit">Pay with number of terms</button>
-                                        <br><br>
-                                        <button type="button" name="modalTriggerFifty" id="modalTriggerFifty" class="btn btn-primary" data-toggle="modal" data-target="#confirm-submit">Pay 50% Immediately</button>
-
-                                    </div>
-
-                                </div>
-
-                            </form>
-
-                        </div>
-
-                        <div class = "col-lg-4">
-
-
-                        </div>
-
-
-                    </div>
-
-
-
-                    <div class="row">
-
-                        <div class="col-lg-12">
-
-                            <div align="center">
-                            <form action = "ADMIN FALP viewactivity.php" method = "POST">
-                            <button type = "submit" class="btn btn-success" role="button" value = <?php echo $_SESSION['details']?> name = "details" >View Payment Activity</button>
-
-                            <a href="ADMIN dashboard.php" class="btn btn-default" role="button">Go Back</a>
-                            </form>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-lg-12">
-
-                            &nbsp;
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <!-- /.row -->
+                $result2 = mysqli_query($dbc,$query2);
+                $ans2 = mysqli_fetch_assoc($result2);
+
+                ?>
+                <h1 class="page-header"><?php echo $ans2['First']." ".$ans2['Last'];?> 's FALP Loan Summary</h1>
 
             </div>
-            <!-- /.container-fluid -->
 
         </div>
-        <!-- /#page-wrapper -->
+
+        <div class="row">
+
+            <div class="col-lg-6">
+
+                <div class="panel panel-primary">
+
+                    <div class="panel-heading">
+
+                        <b>Current FALP Loan Plan</b>
+
+                    </div>
+
+                    <div class="panel-body">
+
+                        <table class="table table-bordered" style="width: 100%;">
+
+                            <thread>
+
+                                <tr>
+
+                                    <td align="center"><b>Description</b></td>
+                                    <td align="center"><b>Amount</b></td>
+
+                                </tr>
+
+                            </thread>
+
+                            <tbody>
+
+                            <tr>
+
+                                <td>Amount to Borrow</td>
+                                <td>₱ <?php echo $updated['AMOUNT'];?></td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>Amount Payable</td>
+                                <td>₱ <?php echo $updated['PAYABLE'];?></td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>Payment Terms</td>
+                                <td><?php echo $updated['PAYMENT_TERMS'];?> months</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>Monthly Deduction</td>
+                                <td>₱ <?php echo sprintf("%.2f",(float)$updated['PER_PAYMENT']*2);?></td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>Number of Payments</td>
+                                <td><?php echo $updated['PAYMENT_TERMS']*2;?> payments</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>Per Payment Deduction</td>
+                                <td>₱ <?php echo $updated['PER_PAYMENT'] ;?></td>
+
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-6">
+
+                <div class="panel panel-green">
+
+                    <div class="panel-heading">
+
+                        <b>Current FALP Loan Summary</b>
+
+                    </div>
+
+                    <div class="panel-body">
+
+                        <table class="table table-bordered" style="width: 100%;">
+
+                            <thread>
+
+                                <tr>
+
+                                    <td align="center"><b>Description</b></td>
+                                    <td align="center"><b>Amount</b></td>
+
+                                </tr>
+
+                            </thread>
+
+                            <tbody>
+
+                            <tr>
+
+                                <td>Date Approved</td>
+                                <td><?php echo $updated['DATE_APPROVED'];?></td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>Payments Made</td>
+                                <td><?php echo (int)$updated['PAYMENTS_MADE'];?> Payments</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>Payments Left</td>
+                                <td><?php echo ($updated['PAYMENT_TERMS']*2) - $updated['PAYMENTS_MADE'];?> Payments</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>Total Amount Paid</td>
+                                <td>₱ <?php echo sprintf("%.2f",(float)$updated['AMOUNT_PAID']);?></td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>Outstanding Balance</td>
+                                <td>₱ <?php echo sprintf("%.2f",$updated['PAYABLE']-$updated['AMOUNT_PAID']);?></td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>Status</td>
+                                <td><?php echo $status['Status'];?></td>
+
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class = "col-lg-4">
+
+
+            </div>
+
+            <div class="col-lg-4">
+                <form action = "ADMIN%20FALP%20viewdetails.php" method = "POST">
+                    <div class="panel panel-primary">
+
+                        <div class="panel-heading">
+
+                            <b>Manual Add to FALP</b>
+                        </div>
+
+                        <div class="panel-body">
+
+                            <!---<input type="number" value="0" min="0" max="" class="form-control" placeholder="Amount to Add" name="terms"  id="terms">
+                            --->
+                            <div class="slidecontainer">
+                                <input type="range" min="0" max="<?php echo ($updated['PAYMENT_TERMS']*2)-$updated['PAYMENTS_MADE']; ?>" value="0" class="slider" name="terms" id="myRange">
+                                <p>Number of Payments to be Paid For: <span id="demo"> </span></p>
+                            </div>
+
+                            <button type="submit" name="addToPay" id="addToPay" hidden>Pay with number of terms</button>
+                            <button type="submit" name="addFifty" id="addFifty" hidden>Pay 50% Immediately</button>
+
+                            <button type="button" name="modalTriggerPay" id="modalTriggerPay" class="btn btn-primary" data-toggle="modal" data-target="#confirm-submit">Pay with number of terms</button>
+                            <br><br>
+                            <button type="button" name="modalTriggerFifty" id="modalTriggerFifty" class="btn btn-primary" data-toggle="modal" data-target="#confirm-submit">Pay 50% Immediately</button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class = "col-lg-4">
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="row">
+
+            <div class="col-lg-12">
+
+                <div align="center">
+                    <form action = "ADMIN FALP viewactivity.php" method = "POST">
+                        <button type = "submit" class="btn btn-success" role="button" value = <?php echo $_SESSION['details']?> name = "details" >View Payment Activity</button>
+
+                        <a href="ADMIN dashboard.php" class="btn btn-default" role="button">Go Back</a>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-lg-12">
+
+                &nbsp;
+
+            </div>
+
+        </div>
 
     </div>
-    <!-- /#wrapper -->
+
+    <!-- /.row -->
+
+</div>
+<!-- /.container-fluid -->
+
+</div>
+<!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
 
 <!-- Modal by xtian pls dont delete hehe -->
 <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -471,42 +488,42 @@ include 'FRAP_ADMIN_SIDEBAR.php';
         </div>
     </div>
 </div>
-    <script>
-        var slider = document.getElementById("myRange");
-        var output = document.getElementById("demo");
-        var addToPay = document.getElementById("modalTriggerPay");
+<script>
+    var slider = document.getElementById("myRange");
+    var output = document.getElementById("demo");
+    var addToPay = document.getElementById("modalTriggerPay");
 
-        addToPay.disabled = true;
-        output.innerHTML = slider.value;
+    addToPay.disabled = true;
+    output.innerHTML = slider.value;
 
-        slider.oninput = function() {
-            output.innerHTML = this.value;
-            if(this.value==0){
-                addToPay.disabled=true;
-            }else if(this.value>0){
-                addToPay.disabled=false;
-            }
+    slider.oninput = function() {
+        output.innerHTML = this.value;
+        if(this.value==0){
+            addToPay.disabled=true;
+        }else if(this.value>0){
+            addToPay.disabled=false;
         }
+    }
 
-        $('#modalTriggerPay').click(function() {
-            $('#changeText').text('for '+output.innerHTML+' month(s)');
-            $('#submit').click(function() {
-                document.getElementById("addToPay").click();
-            });
+    $('#modalTriggerPay').click(function() {
+        $('#changeText').text('for '+output.innerHTML+' month(s)');
+        $('#submit').click(function() {
+            document.getElementById("addToPay").click();
         });
-        $('#modalTriggerFifty').click(function() {
-            $('#changeText').text('50 % immediately');
-            $('#submit').click(function() {
-                document.getElementById("addFifty").click();
-            });
+    });
+    $('#modalTriggerFifty').click(function() {
+        $('#changeText').text('50 % immediately');
+        $('#submit').click(function() {
+            document.getElementById("addFifty").click();
         });
+    });
 
-    </script>
+</script>
 
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
+<!-- jQuery -->
+<script src="js/jquery.js"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
 
 <?php include "GLOBAL_FOOTER.php"; ?>
