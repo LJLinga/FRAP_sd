@@ -49,15 +49,19 @@ if(!empty($_POST['documentTitle']) && !empty($_POST['selectedTask']) && !empty($
         $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
 
         if ($didUpload) {
+            $stepId = '1';
+
+            $rows = $crud->getData("SELECT id FROM steps WHERE steps.processId = '$process' AND steps.stepNo = '1' LIMIT 1;");
+            foreach((array) $rows as $key => $row){
+                $stepId= $row['id'];
+            }
+
+            $insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, processId, currentStepId) VALUES ('$userId', '$process','$stepId')");
+            $crud->execute("INSERT into doc_versions (documentId, authorId, versionNo, title, filePath) VALUES ('$insertDocument','$userId','1.0','$title','$uploadPath')");
 
         } else {
             echo "An error occurred somewhere. Try again or contact the admin";
         }
-
-        
-        $insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, processId) VALUES ('$userId', '$process')");
-        $crud->execute("INSERT into doc_versions (documentId, authorId, versionNo, title, filePath) VALUES ('$insertDocument','$userId','1.0','$title','$uploadPath')");
-
 
     } else {
         foreach ($errors as $error) {

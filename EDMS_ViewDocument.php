@@ -19,45 +19,76 @@ if(isset($_GET['docId'])){
 
     $documentId = $_GET['docId'];
 
-    // Load Process and Steps
-    $query = "SELECT d.processId, d.currentStepId FROM documents d WHERE d.documentId='$documentId';";
+    // Load Process and Steps assigned to current document
+    $query = "SELECT d.processId, d.currentStepId, p.processName, s.stepName FROM documents d 
+              JOIN process p ON d.processId = p.id 
+              JOIN steps s ON d.currentStepId = s.id WHERE d.documentId='$documentId';";
     $rows = $crud->getData($query);
     foreach((array) $rows as $key => $row){
         $processId = $row['processId'];
         $currentStepId= $row['currentStepId'];
+        $processName = $row['processName'];
+        $stepName = $row['stepName'];
     }
 
-    // Load User Credentials
     $userId = $_SESSION['idnum'];
 
-    // Load User Roles and Properties relating to this document.
-    $query = "SELECT sp.EMP_ID FROM documents d WHERE d.documentId='$documentId';";
+    // Load User Permissions
+    $query = "SELECT su.read, su.write, su.route FROM step_users su
+                JOIN employee e ON su.userId = e.EMP_ID
+                WHERE su.stepId='$currentStepId' AND e.EMP_ID = '$userId' LIMIT 1;";
     $rows = $crud->getData($query);
-    foreach((array) $rows as $key => $row){
-        $processId = $row['processId'];
-        $currentStepId= $row['currentStepId'];
+    if(empty($rows)){
+        // If user does not have individual permissions, check group permissions of user.
+        // Individual rights supersede collective rights.
+        // If user belongs to multiple groups in the same step, query only the 1st one.
+        $query= "SELECT sg.read, sg.write, sg.route FROM step_groups sg 
+                JOIN user_groups ug ON sg.groupId = ug.groupId
+                JOIN employee e ON ug.employeeId = e.EMP_ID
+                WHERE sg.stepId='$currentStepId' AND e.EMP_ID='$userId' LIMIT 1;";
+        $rows = $crud->getData($query);
+        if(empty($rows)){
+            // If user also does not have group rights, redirect out of page.
+            echo '<script language="javascript">';
+            echo 'alert("empty rows, redirect out")';
+            echo '</script>';
+        }else{
+            foreach((array) $rows as $key => $row){
+                $read= $row['read'];
+                $write= $row['write'];
+                $route= $row['route'];
+                $comment = $row['comment'];
+            }
+        }
+    }else{
+        foreach((array) $rows as $key => $row){
+            $read= $row['read'];
+            $write= $row['write'];
+            $route= $row['route'];
+            $comment = $row['comment'];
+        }
     }
 
-    $query = "SELECT d.firstAuthorId, d.timeFirstPosted, v.versionId, v.versionNo, v.authorId, v.title, v.filePath 
-              FROM documents d JOIN doc_versions v ON d.documentId = v.documentId WHERE d.documentId='$documentId';";
+    //Get the rest of the document.
+    $query = "SELECT d.firstAuthorId, d.timeFirstPosted, v.timeCreated, v.versionId, v.versionNo, v.authorId, v.title, v.filePath, 
+              CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS originalAuthor,
+              (SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) FROM employee e WHERE e.EMP_ID = v.authorId) AS currentAuthor
+              FROM documents d JOIN doc_versions v ON d.documentId = v.documentId 
+              JOIN employee e ON d.firstAuthorId = e.EMP_ID WHERE d.documentId='$documentId';";
 
     $rows = $crud->getData($query);
     foreach((array) $rows as $key => $row){
         $firstAuthorId = $row['firstAuthorId'];
+        $originalAuthor = $row['originalAuthor'];
         $timeFirstPosted = $row['timeFirstPosted'];
+        $timeUpdated = $row['timeCreated'];
         $versionId = $row['versionId'];
         $versionNo = $row['versionNo'];
         $currentAuthorId = $row['authorId'];
+        $currentAuthor = $row['originalAuthor'];
         $title = $row['title'];
         $filePath = $row['filePath'];
     }
-
-    $query = "SELECT name FROM facultyassocnew.process WHERE id='$processId';";
-    $rows = $crud->getData($query);
-    foreach((array) $rows as $key => $row){
-        $folder = $row['name'];
-    }
-
 }
 ?>
 
@@ -70,7 +101,7 @@ if(isset($_GET['docId'])){
                         <a href="http://localhost/FRAP_sd/EDMS_Dashboard.php">Documents</a>
                     </li>
                     <li>
-                        <?php echo $folder;?>
+                        <?php echo $processName;?>
                     </li>
                     <li class="active">
                         <?php echo $title ?>
@@ -90,9 +121,12 @@ if(isset($_GET['docId'])){
                         Version No.: <b><?php echo $versionNo;?></b>
                     </div>
                     <div class="card-body" >
-                        Process: <b><?php echo $folder?></b><br>
-                        Created by <b><?php echo $firstAuthorId; ?></b><br>
-                        <i>on <b><?php echo date("F j, Y g:i:s A ", strtotime($timeFirstPosted)); ?></b></i>
+                        Process: <b><?php echo $processName?></b><br>
+                        Stage: <b><?php echo $stepName?></b><br>
+                        Created by <b><?php echo $originalAuthor; ?></b><br>
+                        <i>on <b><?php echo date("F j, Y g:i:s A ", strtotime($timeFirstPosted)); ?></b></i><br>
+                        Updated by <b><?php echo $currentAuthor; ?></b><br>
+                        <i>on <b><?php echo date("F j, Y g:i:s A ", strtotime($timeUpdated)); ?></b></i>
                     </div>
                 </div>
                 <div class="card" style="margin-top: 1rem;">
@@ -100,13 +134,21 @@ if(isset($_GET['docId'])){
                         <b>Document Actions</b>
                     </div>
                     <div class="card-body" >
-                        <div class="btn-group btn-group-vertical">
-
-                            <button class="btn btn-success">Approve</button>
-                            <button class="btn btn-warning">Reject</button>
-                            <button class="btn btn-default">Download and Edit</button>
-                            <button class="btn btn-default">Upload New Version</button>
-                            <button class="btn btn-default">Archive</button>
+                        <div class="btn-group btn-group-vertical" style="width: 100%;">
+                            <?php
+                                $query = "SELECT routeName, nextProcessId, nextStepId FROM routes WHERE stepId ='$currentStepId' AND processId = '$processId';";
+                                $rows = $crud->getData($query);
+                                if(!empty($rows)) {
+                                    foreach ((array)$rows as $key => $row) {
+                                        $nextStepId = $row['nextStepId'];
+                                        $nextProcessId = $row['nextStepId'];
+                                        echo '<button class="btn btn-info" style="text-align: left" type="submit">' . $row['routeName'] . '</button>';
+                                    }
+                                }
+                                ?>
+                            <button class="btn btn-default" style="text-align: left">Download <?php if(isset($write) && $write=='2'){ echo "and Edit"; }?></button>
+                            <?php if(isset($write) && $write=='2'){ echo '<button class="btn btn-default" style="text-align: left">Upload New Version</button>' ; }?>
+                            <button class="btn btn-default" style="text-align: left">Archive</button>
                         </div>
                     </div>
                 </div>

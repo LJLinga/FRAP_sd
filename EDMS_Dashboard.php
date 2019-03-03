@@ -114,10 +114,12 @@ $userId = $_SESSION['idnum'];
                     <label for="documentTitle">Assigned Task</label>
                     <div class="form-group">
                         <select class="form-control" id="selectedTask" name="selectedTask">
-                            <option value="1" selected>None</option>
-                            <option value="2">Application</option>
-                            <option value="3">By Laws</option>
-                            <option value="4">Contract</option>
+                            <?php
+                                $rows = $crud->getData("SELECT id, processName FROM process WHERE processForId='2' OR processForId='99';");
+                                foreach((array) $rows as $key => $row) {
+                                    echo '<option value="'.$row['id'].'">'.$row['processName'].'</option>';
+                                }
+                            ?>
                         </select>
                     </div>
                     <div class="form-group">
@@ -156,7 +158,7 @@ $userId = $_SESSION['idnum'];
                 { data: "title_version" },
                 { data: "originalAuthor" },
                 { data: "currentAuthor" },
-                { data: "currentStep" },
+                { data: "currentProcess" },
                 { data: "lastUpdated" },
                 { data: "actions"}
                 ]
@@ -175,7 +177,7 @@ $userId = $_SESSION['idnum'];
                 success: function(response){
                     $("#err").html(response);
                     $("#contact-modal").modal('hide');
-                    if(response !== 'error') location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+response;
+                    //if(response !== 'error') location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+response;
                 },
                 error: function(){
                     alert("Error");
