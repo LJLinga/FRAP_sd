@@ -14,7 +14,7 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 include 'GLOBAL_HEADER.php';
-include 'EDMS_SIDEBAR_Dashboard.php';
+include 'EDMS_Sidebar.php';
 ?>
 
 <script>
@@ -39,21 +39,9 @@ include 'EDMS_SIDEBAR_Dashboard.php';
                             <li class="active">
                                 General Files
                             </li>
-                            <!-- *this succeeding lines of codes are for the breakdown of the files.
-                            Modify this to be updated when user clicks on a directory and the page refreshes.
-                            The next <li> should be appended here.
-                            Ex. Gen files > User clicks on contract > Gen Files/Contracts is displayed.
-                            Append the class active on the current directory being displayed. See ex. below
-                            <li>
-                                Contracts
-                            </li>
-                            <li class="active">
-                                2018
-                            </li> -->
+
                         </ol>
-                        <!-- This table should be updated based on the contents of the current directory being displayed.
-                        Ex. Default, display all the directory as such on the screen. When user navigates to Contracts
-                        > 2018. It should display all contracts for 2018 -->
+
                         <div class="table-responsive">
                             <table class="table table-bordered" align="center" id="dataTable">
                                 <thead>

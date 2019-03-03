@@ -14,7 +14,7 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 include 'GLOBAL_HEADER.php';
-include 'EDMS_SIDEBAR_Dashboard.php';
+include 'EDMS_Sidebar.php';
 
 
 $userId = $_SESSION['idnum'];
@@ -41,11 +41,6 @@ $userId = $_SESSION['idnum'];
         </div>
         <div class="row">
             <div class="col-lg-8">
-                <ol class="breadcrumb">
-                    <li class="active">
-                        Document Repository
-                    </li>
-                </ol>
                 <div class="card">
                     <div class="card-header btn-group" data-toggle="buttons">
                         <a type="button" class="btn btn-default" id="btnAll">All</a>

@@ -15,7 +15,6 @@ include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR_ViewDocument.php';
 ?>
-<script src="js/aesthetics.js"></script>
 
 <div id="content-wrapper">
     <div class="container-fluid">
@@ -46,7 +45,7 @@ include 'EDMS_SIDEBAR_ViewDocument.php';
             </div>
             <div class="col-lg-4">
 
-                <div class="panel panel-default">
+                <div class="card">
                     <div class="panel-heading"><i class="fa fa-fw fa-file"></i> References</div>
                     <div class="panel-body">No Document Referenced</div>
 

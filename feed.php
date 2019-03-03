@@ -38,12 +38,12 @@ include 'CMS_SIDEBAR_Admin.php';
     }
     .card {
         font-family: "Verdana", Georgia, Serif;
-        font-size: 14px;
+        font-size: 12px;
     }
 </style>
     <div class="container-fluid">
         <div class="row">
-            <div class="column col-lg-7" style="margin-top: 1rem; margin-bottom: 1rem;">
+            <div class="column col-lg-7" style="margin-top: 2rem; margin-bottom: 2rem;">
 
                 <?php
 
@@ -58,15 +58,13 @@ include 'CMS_SIDEBAR_Admin.php';
                 foreach ((array) $rows as $key => $row){
                     ?>
 
-                        <div class="card">
-                            <div class="card-body">
-                                <h3 class="card-title"><b><?php echo $row['title'];?></b></h3>
+                        <div class="card" >
+                            <div class="card-body" style="overflow: hidden; max-height: 50rem;">
+                                <h4 class="card-title"><b><?php echo $row['title'];?></b></h4>
                                 <h5 class="card-subtitle">by <?php echo $row['name'];?> | <?php echo date("F j, Y g:i A ", strtotime($row['lastUpdated'])) ;?></h5>
-                            </div>
-                            <div class="card-body" style="overflow: hidden; max-height: 500px">
                                 <p class="card-text"><?php echo $row['body'] ?></>
                             </div>
-                            <div class="card-body" style="overflow: hidden; max-height: 500px">
+                            <div class="card-body">
                                 <a class="card-link" href="<?php echo "http://localhost/FRAP_sd/read.php?pl=".$row['permalink']?>" >Read More</a>
                             </div>
                         </div>
@@ -90,11 +88,32 @@ include 'CMS_SIDEBAR_Admin.php';
                 </div>
             </div>
 
-            <div id="calendarColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="googleCalendar">
-                            <iframe src="https://calendar.google.com/calendar/b/3/embed?title=AFED%20Events&amp;height=400&amp;wkst=2&amp;bgcolor=%2399ff99&amp;src=noreply.lapdoc%40gmail.com&amp;color=%231B887A&amp;src=en.philippines%23holiday%40group.v.calendar.google.com&amp;color=%23125A12&amp;ctz=Asia%2FManila" style="border-width:0" width="470" height="400" frameborder="0" scrolling="no"></iframe>
+            <div id="calendarColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 2rem;">
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-header">
+                        <b> Events (You only see 'public' or specified to you) </b>
+                    </div>
+                    <div class="card-body" style="max-height: 20rem; overflow: auto;" >
+                        <div class="card-body" style="position: relative;">
+                            Crisis Meeting
+                            <div class="btn-group-sm" style="position: absolute;right: 10px;top: 5px;">
+                                <button type="button" class="btn btn-sm">Jan 20 2019</button>
+                                <button type="button" class="btn btn-sm">Revert</button>
+                            </div>
+                        </div>
+                        <div class="card-body" style="position: relative;">
+                            Bernie Sanders Town Hall #Bernie2020
+                            <div class="btn-group-sm" style="position: absolute;right: 10px;top: 5px;">
+                                <button type="button" class="btn btn-sm">Jan 20 2019</button>
+                                <button type="button" class="btn btn-sm">Revert</button>
+                            </div>
+                        </div>
+                        <div class="card-body" style="position: relative;">
+                            War of the Lions
+                            <div class="btn-group-sm" style="position: absolute;right: 10px;top: 5px;">
+                                <button type="button" class="btn btn-sm">Jan 20 2019</button>
+                                <button type="button" class="btn btn-sm">Revert</button>
+                            </div>
                         </div>
                     </div>
                 </div>

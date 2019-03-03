@@ -38,6 +38,10 @@
     <link href="froala/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
     <link href="froala/css/froala_style.min.css" rel="stylesheet" type="text/css" />
 
+    <link href="morris/morris.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="morris/morris.js"></script>
+    <script type="text/javascript" src="morris/raphael-min.js"></script>
+
     <!-- Include JS file. -->
 
     <script type="text/javascript" src="froala/js/froala_editor.pkgd.min.js"></script>
@@ -103,7 +107,7 @@
 
                         echo '
                                 <li>
-                                    <a href="CMS_ADMIN_PostsDashboard.php"> <i class="fa fa-newspaper-o" aria-hidden="true"></i> Santinig Content </a>
+                                    <a href="CMS_PostsDashboard.php"> <i class="fa fa-newspaper-o" aria-hidden="true"></i> Santinig Content </a>
                                 </li>
                                 ';
                     }
@@ -112,7 +116,7 @@
 
                         echo ' 
                                  <li>
-                                    <a href="EDMS_VIEW_DocumentDashboard.php"> <i class="fa fa-file-text" aria-hidden="true"></i> Documents</a>
+                                    <a href="EDMS_Dashboard.php"> <i class="fa fa-file-text" aria-hidden="true"></i> Documents</a>
                                  </li>';
 
                     }

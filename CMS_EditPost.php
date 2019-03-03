@@ -201,14 +201,9 @@ include 'CMS_SIDEBAR_Admin.php';
         $('#btnUpdate').hide();
 
         $('#post_content').froalaEditor({
-            //Disables video upload
             videoUpload: false,
-            // Set the image upload URL
             imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
-            // Set the file upload URL.
-            //fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
             fileUpload: false,
-            //Allow comments
             width: 750,
             toolbarInline: false
         });
@@ -289,17 +284,9 @@ include 'CMS_SIDEBAR_Admin.php';
 
 <div id="content-wrapper">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-12">
-                <h3 class="page-header">
-                    <?php echo $head;?>
-                </h3>
-
-            </div>
-        </div>
         <!--Insert success page-->
         <form id="form" name="form" method="POST" action="<?php $_SERVER["PHP_SELF"]?>">
-            <div class="row">
+            <div class="row" style="margin-top: 2rem;">
                 <div class="column col-lg-7">
                     <!-- Text input-->
                     <div class="form-group">
@@ -347,24 +334,24 @@ include 'CMS_SIDEBAR_Admin.php';
                             <br>
                             <?php if($status == '3' && !empty($reviewer)){ echo "Reviewed by: <b>".$reviewer."</b><br>"; }?>
                             <?php if($status == '4'  && !empty($publisher)){ echo "Publisher: <b>".$publisher."</b><br>"; }?>
-                            <i>Last updated: <b><?php  echo date("F j, Y g:i:s A ", strtotime($lastUpdated));?></b></i><br><br>
+                            <i>Last updated: <b><?php  echo date("F j, Y g:i:s A ", strtotime($lastUpdated));?></b></i>
                             <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;}; ?>">
                         </div>
 
                         <div class="card-footer">
                                 <?php
                                 if($mode == 'edit'){
+                                    echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnUpdate" value="'.$status.'" hidden>Save</button> ';
                                     if($cmsRole == '4') {
                                         if($status == '1'){
                                             echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
                                             echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
                                         }else if ($status == '3') {
-                                            echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
+                                            echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
                                             echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
                                             echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Back to Author</button> ';
                                             echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
                                         } else if ($status == '4') {
-                                            echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnUpdate" value="4" hidden>Publish Changes</button> ';
                                             echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="3">Unpublish</button> ';
                                             echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
                                             echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
@@ -372,15 +359,15 @@ include 'CMS_SIDEBAR_Admin.php';
                                         }
                                     }else if($cmsRole == '3') {
                                         if($status == '1'){
-                                            echo '<button type="submit" class="b5tn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
                                         } else if ($status == '2') {
-                                            echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="3">Submit for Publication</button> ';
+                                            echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="3">Submit for Publication</button> ';
                                             echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
                                             echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
                                         }
                                     }else if($cmsRole == '2'){
                                         if ($status == '1') {
-                                            echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
+                                            echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
                                             echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
                                         }
                                     }

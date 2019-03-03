@@ -35,7 +35,7 @@ if(!empty($_GET['pl'])){
     $crud->execute($insertView);
 
     if($statusId!='4'){
-        if($authorId!=$userId && $cmsRole!='4'){
+        if($authorId!=$userId && $cmsRole!='4' && $cmsRole!='3'){
             header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/feed.php");
         }
     }
@@ -74,7 +74,7 @@ include 'CMS_SIDEBAR_Admin.php';
 <style>
     .card {
         font-family: "Verdana", Georgia, Serif;
-        font-size: 14px;
+        font-size: 12px;
     }
 </style>
 <script>
@@ -86,10 +86,8 @@ include 'CMS_SIDEBAR_Admin.php';
             <div class="column col-lg-7" style="top: 1rem; margin-bottom: 1rem; ">
                 <div class="card">
                     <div class="card-body">
-                        <h3 class="card-title"><b><?php echo $page_title;?></b></h3>
+                        <h4 class="card-title"><b><?php echo $page_title;?></b></h4>
                         <h5 class="card-subtitle">by <?php echo $author;?> | <?php echo date("F j, Y g:i A ", strtotime($lastUpdated)) ;?></h5>
-                    </div>
-                    <div class="card-body" style="overflow: hidden";>
                         <p class="card-text"><?php echo $body ?></p>
                     </div>
                 </div>
