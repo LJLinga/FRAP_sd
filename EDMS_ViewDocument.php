@@ -34,7 +34,7 @@ if(isset($_GET['docId'])){
     $userId = $_SESSION['idnum'];
 
     // Load User Permissions
-    $query = "SELECT su.read, su.write, su.route FROM step_users su
+    $query = "SELECT su.read, su.write, su.route, su.comment FROM step_users su
                 JOIN employee e ON su.userId = e.EMP_ID
                 WHERE su.stepId='$currentStepId' AND e.EMP_ID = '$userId' LIMIT 1;";
     $rows = $crud->getData($query);
@@ -42,7 +42,7 @@ if(isset($_GET['docId'])){
         // If user does not have individual permissions, check group permissions of user.
         // Individual rights supersede collective rights.
         // If user belongs to multiple groups in the same step, query only the 1st one.
-        $query= "SELECT sg.read, sg.write, sg.route FROM step_groups sg 
+        $query= "SELECT sg.read, sg.write, sg.route, sg.comment FROM step_groups sg 
                 JOIN user_groups ug ON sg.groupId = ug.groupId
                 JOIN employee e ON ug.employeeId = e.EMP_ID
                 WHERE sg.stepId='$currentStepId' AND e.EMP_ID='$userId' LIMIT 1;";
@@ -111,7 +111,15 @@ if(isset($_GET['docId'])){
         </div>
         <div class="row">
             <div class="col-lg-8">
-                <iframe src = "/ViewerJS/../FRAP_sd/<?php echo $filePath;?>" width='850' style="position:fixed !important; position:absolute; height:80vh;"; allowfullscreen webkitallowfullscreen></iframe>
+                <iframe src = "/ViewerJS/../FRAP_sd/<?php echo $filePath;?>" width='850' style="height:80vh;"; allowfullscreen webkitallowfullscreen></iframe>
+
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-body">
+                        <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
+                        <span id="comment_message"></span>
+                        <div id="display_comment"></div>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-4">
 
@@ -136,13 +144,17 @@ if(isset($_GET['docId'])){
                     <div class="card-body" >
                         <div class="btn-group btn-group-vertical" style="width: 100%;">
                             <?php
-                                $query = "SELECT routeName, nextProcessId, nextStepId FROM routes WHERE stepId ='$currentStepId' AND processId = '$processId';";
-                                $rows = $crud->getData($query);
-                                if(!empty($rows)) {
-                                    foreach ((array)$rows as $key => $row) {
-                                        $nextStepId = $row['nextStepId'];
-                                        $nextProcessId = $row['nextStepId'];
-                                        echo '<button class="btn btn-info" style="text-align: left" type="submit">' . $row['routeName'] . '</button>';
+                                if($processId == '1' || $currentStepId == '1'){
+                                    echo '<button class="btn btn-info" style="text-align: left" type="button" id="btnAssignTask">';
+                                }else if(isset($route) && $route=='2') {
+                                    $query = "SELECT routeName, nextProcessId, nextStepId FROM routes WHERE stepId ='$currentStepId' AND processId = '$processId';";
+                                    $rows = $crud->getData($query);
+                                    if (!empty($rows)) {
+                                        foreach ((array)$rows as $key => $row) {
+                                            $nextStepId = $row['nextStepId'];
+                                            $nextProcessId = $row['nextStepId'];
+                                            echo '<button class="btn btn-info" style="text-align: left" type="submit">' . $row['routeName'] . '</button>';
+                                        }
                                     }
                                 }
                                 ?>
@@ -153,37 +165,119 @@ if(isset($_GET['docId'])){
                     </div>
                 </div>
 
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-header">
-                        <b>Version History</b>
-                    </div>
-                    <div class="card-body" style="max-height: 20rem; overflow: auto;" >
-                        <div class="card-body" style="position: relative;">
-                            Version 2.0
-                            <div class="btn-group-sm" style="position: absolute;right: 10px;top: 5px;">
-                                <button type="button" class="btn btn-sm">Download</button>
-                                <button type="button" class="btn btn-sm">Revert</button>
-                            </div>
-                        </div>
-                        <div class="card-body" style="position: relative;">
-                            Version 1.1
-                            <div class="btn-group-sm" style="position: absolute;right: 10px;top: 5px;">
-                                <button type="button" class="btn btn-sm">Download</button>
-                                <button type="button" class="btn btn-sm">Revert</button>
-                            </div>
-                        </div>
-                        <div class="card-body" style="position: relative;">
-                            Version 1.0
-                            <div class="btn-group-sm" style="position: absolute;right: 10px;top: 5px;">
-                                <button type="button" class="btn btn-sm">Download</button>
-                                <button type="button" class="btn btn-sm">Revert</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <?php
+
+                    $query = "SELECT v.versionId, v.timeCreated, v.versionNo, v.title, v.filePath, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
+                              FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
+                              WHERE v.documentId = '$documentId' AND v.versionId != '$versionId';";
+                    $rows = $crud->getData($query);
+                    if (!empty($rows)) {
+
+                        echo '<div class="card" style="margin-top: 1rem;"><div class="card-header"><b>Version History</b></div>
+                                <div class="card-body" style="max-height: 20rem; overflow: auto;" >';
+                        foreach ((array)$rows as $key => $row) {
+                            echo '<div class="card-body" style="position: relative;">
+                                        <span class="label label-default">Version '.$row['versionNo'].'</span><br>
+                                        <b>'.$row['title'].'</b><br>
+                                        '.$row['timeCreated'].'<br>
+                                        <div class="btn-group-sm" style="position: absolute;right: 10px;top: 10px;">
+                                            <a class="btn btn-sm" href="'.$row['filePath'].'" download>Download</a>
+                                            <button type="button" class="btn btn-sm">Revert</button>
+                                        </div>
+                                    </div>';
+                        }
+                        echo '</div></div>';
+                    }
+                ?>
             </div>
         </div>
     </div>
 </div>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <form method="POST" id="comment_form">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="hidden" name="comment_name" id="comment_name" class="form-control" placeholder="Enter Name" value="<?php echo $userId; ?>"/>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="comment_content" id="comment_content" class="form-control" placeholder="Enter Comment" rows="5"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <input type="hidden" name="comment_id" id="comment_id" value="0" />
+                        <input type="hidden" name="documentId" id="documentId" value="<?php echo $documentId?>" />
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit"/>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function(){
+
+        let documentId = "<?php echo $documentId?>";
+
+        $('#comment_form').on('submit', function(event){
+            event.preventDefault();
+            $('#myModal').modal('toggle');
+            var form_data = $(this).serialize();
+            $.ajax({
+                url:"EDMS_AJAX_AddEditComment.php",
+                method:"POST",
+                data:form_data,
+                dataType:"JSON",
+                success:function(data)
+                {
+                    if(data.error != '')
+                    {
+                        $('#comment_form')[0].reset();
+                        $('#comment_message').html(data.error);
+                        $('#comment_id').val('0');
+                        load_comment(documentId);
+                    }
+                }
+            })
+        });
+
+        $(document).on('click', '.reply', function(){
+            var comment_id = $(this).attr("id");
+            $('#comment_id').val(comment_id);
+            $('#comment_name').focus();
+        });
+
+        setInterval(function() {
+            load_comment(documentId);
+        }, 1000);
+
+        function load_comment(documentId)
+        {
+            $.ajax({
+                url:"EDMS_AJAX_FetchEditComments.php",
+                method:"POST",
+                data:{documentId: documentId},
+                success:function(data)
+                {
+                    $('#display_comment').html(data);
+                }
+            })
+        }
+    });
+
+
+
+</script>
 
 <?php include 'GLOBAL_FOOTER.php';?>

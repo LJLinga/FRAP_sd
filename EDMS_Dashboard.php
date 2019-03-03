@@ -34,7 +34,7 @@ $userId = $_SESSION['idnum'];
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <h3 class="page-header"> Documents
+                <h3 class="page-header"> My Documents
                     <button name="btnAddDocument" id="btnAddDocument" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Add Document</button>
                 </h3>
             </div>
