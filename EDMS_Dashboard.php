@@ -177,7 +177,7 @@ $userId = $_SESSION['idnum'];
                 success: function(response){
                     $("#err").html(response);
                     $("#contact-modal").modal('hide');
-                    //if(response !== 'error') location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+response;
+                    if(response !== 'error') location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+response;
                 },
                 error: function(){
                     alert("Error");
@@ -186,10 +186,6 @@ $userId = $_SESSION['idnum'];
             return false;
         });
 
-
-
-        // Apply a search to the second table for the demo
-        $('#myTable2').DataTable().search( 'New York' ).draw();
     } );
 
 </script>

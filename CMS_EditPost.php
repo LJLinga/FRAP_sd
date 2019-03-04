@@ -148,7 +148,9 @@ if(isset($_POST['btnSubmit'])) {
     $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['btnSubmit'];
 
-    if($crud->execute("UPDATE posts SET title='$title', body='$body', statusId='$status' WHERE id='$postId';")) {
+    if(empty($status)){
+        $crud->execute("UPDATE posts SET title='$title', body='$body' WHERE id='$postId';");
+    }else if($crud->execute("UPDATE posts SET title='$title', body='$body', statusId='$status' WHERE id='$postId';")) {
         if($status=='3' && $cmsRole=='3'){
             $crud->execute("UPDATE posts SET reviewedById='$userId' WHERE id='$postId';");
         }else if($status=='4' && $cmsRole=='4'){
@@ -163,10 +165,9 @@ if(isset($_POST['btnSubmit'])) {
             $crud->execute("UPDATE posts SET archivedById='$userId' WHERE id='$postId';");
         }
 
-        //$availQuery = "UPDATE posts SET availabilityId='2' WHERE id='$postId'";
-        //$crud->execute($availQuery);
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_EditPost.php?postId=" . $postId);
+        $crud->execute("UPDATE posts SET availabilityId='2' WHERE id='$postId'");
     }
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_EditPost.php?postId=" . $postId);
 }
 
 
@@ -341,7 +342,7 @@ include 'CMS_SIDEBAR_Admin.php';
                         <div class="card-footer">
                                 <?php
                                 if($mode == 'edit'){
-                                    echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnUpdate" value="'.$status.'" hidden>Save</button> ';
+                                    echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnUpdate" hidden>Save</button> ';
                                     if($cmsRole == '4') {
                                         if($status == '1'){
                                             echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';

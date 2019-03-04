@@ -70,7 +70,7 @@ if(isset($_GET['docId'])){
     }
 
     //Get the rest of the document.
-    $query = "SELECT d.firstAuthorId, d.timeFirstPosted, v.timeCreated, v.versionId, v.versionNo, v.authorId, v.title, v.filePath, 
+    $query = "SELECT d.firstAuthorId, d.timeFirstPosted, d.availabilityId, v.timeCreated, v.versionId, v.versionNo, v.authorId, v.title, v.filePath, 
               CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS originalAuthor,
               (SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) FROM employee e WHERE e.EMP_ID = v.authorId) AS currentAuthor
               FROM documents d JOIN doc_versions v ON d.documentId = v.documentId 
@@ -88,7 +88,30 @@ if(isset($_GET['docId'])){
         $currentAuthor = $row['originalAuthor'];
         $title = $row['title'];
         $filePath = $row['filePath'];
+        $availability = $row['availabilityId'];
     }
+}
+
+if(isset($_POST['btnLock'])){
+    $file = $_POST['btnLock'];
+
+    echo "<script>";
+    echo "alert('btNlock');";
+    echo "</script>";
+
+    if (file_exists($file)) {
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="'.basename($file).'"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($file));
+        readfile($file);
+        exit;
+    }
+
+    //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewDocument.php?docId=" . $documentId);
 }
 ?>
 
@@ -142,6 +165,7 @@ if(isset($_GET['docId'])){
                         <b>Document Actions</b>
                     </div>
                     <div class="card-body" >
+                        <form id="form" name="form" method="POST" action="<?php $_SERVER["PHP_SELF"]?>">
                         <div class="btn-group btn-group-vertical" style="width: 100%;">
                             <?php
                                 if($processId == '1' || $currentStepId == '1'){
@@ -157,11 +181,19 @@ if(isset($_GET['docId'])){
                                         }
                                     }
                                 }
+
+
+                                if(isset($write) && $write=='2' && $availability='2'){
+                                    echo '<button class="btn btn-default" type="submit" name="btnLock" id="btnLock" value="'.$filePath.'" style="text-align: left">Download and Edit</button>';
+                                }else{
+                                    echo '<button href="'.$filePath.'" class="btn btn-default" style="text-align: left">Download</button>';
+                                }
+
                                 ?>
-                            <button class="btn btn-default" style="text-align: left">Download <?php if(isset($write) && $write=='2'){ echo "and Edit"; }?></button>
                             <?php if(isset($write) && $write=='2'){ echo '<button class="btn btn-default" style="text-align: left">Upload New Version</button>' ; }?>
                             <button class="btn btn-default" style="text-align: left">Archive</button>
-                        </div>
+                         </div>
+                        </form>
                     </div>
                 </div>
 
@@ -227,6 +259,7 @@ if(isset($_GET['docId'])){
 <script>
 
     $(document).ready(function(){
+
 
         let documentId = "<?php echo $documentId?>";
 

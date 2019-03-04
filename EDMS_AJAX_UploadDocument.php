@@ -31,8 +31,11 @@ if(!empty($_POST['documentTitle']) && !empty($_POST['selectedTask']) && !empty($
     $string = explode('.', $fileName);
     $fileExtension = strtolower(end($string));
 
+    $temp = explode(".", $fileName);
+    $newfilename = round(microtime(true)) . '.' . end($temp);
+
     //$uploadPath = $currentDir . $uploadDirectory . basename($fileName);
-    $uploadPath = $uploadDirectory . basename($fileName);
+    $uploadPath = $uploadDirectory . basename($newfilename);
 
     if (!in_array($fileExtension, $fileExtensions)) {
         $errors[] = "This file extension is not allowed. Only JPEG, PNG, PPT, DOC, DOCX, PPTX, and PDF are accepted.";
@@ -58,6 +61,7 @@ if(!empty($_POST['documentTitle']) && !empty($_POST['selectedTask']) && !empty($
 
             $insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, processId, currentStepId) VALUES ('$userId', '$process','$stepId')");
             $crud->execute("INSERT into doc_versions (documentId, authorId, versionNo, title, filePath) VALUES ('$insertDocument','$userId','1.0','$title','$uploadPath')");
+            echo $insertDocument;
 
         } else {
             echo "An error occurred somewhere. Try again or contact the admin";
