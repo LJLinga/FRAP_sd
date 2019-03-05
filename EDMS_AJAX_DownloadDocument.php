@@ -8,9 +8,9 @@
 require('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 
-if(isset($_POST['btnLock']) && !empty($_POST['filePath']) && !empty($_POST['userId'])){
+if(!empty($_POST['documentId']) && !empty($_POST['filePath']) && !empty($_POST['userId'])){
     $file = $_POST['filePath'];
-    $documentId = $_POST['btnLock'];
+    $documentId = $_POST['documentId'];
     $userId = $_POST['userId'];
 
     if (file_exists($file)) {

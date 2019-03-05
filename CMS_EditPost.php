@@ -429,11 +429,4 @@ include 'CMS_SIDEBAR_Admin.php';
 
         </div>
     </div>
-    <script>
-        $(document).ready(function(){
-
-
-
-        });
-    </script>
 <?php include 'GLOBAL_FOOTER.php' ?>

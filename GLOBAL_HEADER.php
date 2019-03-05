@@ -1,3 +1,4 @@
+<?php ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -82,51 +83,20 @@
                     <a href="feed.php"> News Feed </a>
                 </li>
                 <?php
-
-                if($_SESSION['FRAP_ROLE'] > 1 || $_SESSION['EDMS_ROLE'] > 1 || $_SESSION['CMS_ROLE'] > 1) {
-
-                    echo '
-    
-                            <li class="dropdown sideicons">
-    
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Admin Tools <b class="caret"></b></a>
-    
-                                <ul class="dropdown-menu alert-dropdown">';
-
-                    if($_SESSION['FRAP_ROLE'] > 1) {
-
-                        echo '
-                                <li>
-                                    <a href="ADMIN%20dashboard.php"> <i class="fa fa-money" aria-hidden="true"></i> Loans </a>
-                                </li>
-                                ';
-                    }
-
-                    if($_SESSION['CMS_ROLE'] > 1) {
-
-                        echo '
-                                <li>
-                                    <a href="CMS_PostsDashboard.php"> <i class="fa fa-newspaper-o" aria-hidden="true"></i> Santinig Content </a>
-                                </li>
-                                ';
-                    }
-
-                    if($_SESSION['EDMS_ROLE'] > 1){
-
-                        echo ' 
-                                 <li>
-                                    <a href="EDMS_Dashboard.php"> <i class="fa fa-file-text" aria-hidden="true"></i> Documents</a>
-                                 </li>';
-
-                    }
-
-                    echo '
-                                </ul>
-                    
-                            </li> ';
-                }?>
+                    if($_SESSION['FRAP_ROLE'] > 1 || $_SESSION['EDMS_ROLE'] > 1 || $_SESSION['CMS_ROLE'] > 1) {
+                        echo '<li class="dropdown sideicons"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> Admin Tools <b class="caret"></b></a><ul class="dropdown-menu alert-dropdown">';
+                        if($_SESSION['FRAP_ROLE'] > 1) {
+                            echo '<li><a href="ADMIN%20dashboard.php"> <i class="fa fa-money" aria-hidden="true"></i> Loans </a></li>';
+                        }
+                        if($_SESSION['CMS_ROLE'] > 1) {
+                            echo '<li><a href="CMS_PostsDashboard.php"> <i class="fa fa-newspaper-o" aria-hidden="true"></i> Santinig Content </a></li>';
+                        }
+                        if($_SESSION['EDMS_ROLE'] > 1){
+                            echo '<li><a href="EDMS_Dashboard.php"> <i class="fa fa-file-text" aria-hidden="true"></i> Documents</a></li>';
+                        }
+                        echo '</ul></li>';
+                    }?>
                 <li class="dropdown sideicons">
-
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i>
 
 
@@ -146,19 +116,12 @@
 
                     </ul>
                 </li>
-
                 <li class="dropdown sideicons">
                     <?php
-
-                    $query = "SELECT LASTNAME, FIRSTNAME FROM employee
-                                    
-                        WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
-
-                    $result = mysqli_query($dbc, $query);
-                    $row = mysqli_fetch_array($result);
-
-                    $displayName = $row['LASTNAME']." , ".$row['FIRSTNAME'][0].". ";
-
+                        $query = "SELECT LASTNAME, FIRSTNAME FROM employee WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
+                        $result = mysqli_query($dbc, $query);
+                        $row = mysqli_fetch_array($result);
+                        $displayName = $row['LASTNAME']." , ".$row['FIRSTNAME'][0].". ";
                     ?>
 
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $displayName; ?> <b class="caret"></b></a>
@@ -177,13 +140,11 @@
 
             </ul>
 
-
-
             <script>
                 $(document).ready(function(){
                     // updating the view with notifications using ajax
 
-                    let temp = "<?php echo $_SESSION['idnum'] ?>";
+                    let temp = "<?php echo $_SESSION['idnum'];?>";
 
                     function load_unseen_notification(idnum)
                     {
@@ -205,7 +166,7 @@
 
                     setInterval(function(){
                         load_unseen_notification(temp); // this will run after every 1 second
-                    }, 1000);
+                    }, 5000);
 
 
 // load new notifications
@@ -214,7 +175,7 @@
                         load_unseen_notification('yes');
                     });
                     setInterval(function(){
-                        load_unseen_notification();;
+                        load_unseen_notification();
                     }, 5000);
                 });
             </script>

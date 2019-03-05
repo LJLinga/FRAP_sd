@@ -1,19 +1,16 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Serus Caligo
+ * User: Christian Alderite
  * Date: 10/4/2018
  * Time: 3:48 PM
  */
-include_once('GLOBAL_CLASS_CRUD.php');
+include('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_EDMS_ADMIN_CHECKING.php');
-
-include 'GLOBAL_HEADER.php';
-include 'EDMS_Sidebar.php';
 
 if(isset($_GET['docId'])){
 
@@ -100,13 +97,37 @@ if(isset($_GET['docId'])){
         $filePath = $row['filePath'];
         $availability = $row['availabilityId'];
     }
+}else{
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Dashboard.php");
 }
-
 if(isset($_POST['btnUnlock'])){
     $documentId= $_POST['btnUnlock'];
     $crud->execute("UPDATE documents SET availabilityId='2', lockedById=NULL WHERE documentId='$documentId'");
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewDocument.php?docId=" . $documentId);
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
 }
+if(isset($_POST['btnLock'])){
+    $file = $_POST['filePath'];
+    $documentId = $_POST['btnLock'];
+    $userId = $_POST['userId'];
+    if (file_exists($file)) {
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($file));
+        readfile($file);
+        $crud->execute("UPDATE documents SET availabilityId='1', lockedById='$userId' WHERE documentId='$documentId'");
+    }
+    //header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId, true, 301);
+    $URL="http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId=".$documentId;
+    echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
+    echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
+}
+
+include 'GLOBAL_HEADER.php';
+include 'EDMS_Sidebar.php';
 ?>
 <div id="content-wrapper">
     <div class="container-fluid">
@@ -120,7 +141,7 @@ if(isset($_POST['btnUnlock'])){
                         <?php echo $processName;?>
                     </li>
                     <li class="active">
-                        <?php echo $title ?>
+                        <?php echo $title; ?>
                     </li>
                 </ol>
             </div>
@@ -141,12 +162,12 @@ if(isset($_POST['btnUnlock'])){
 
                 <div class="card">
                     <div class="card-header">
-                        Title: <b><?php echo $title?></b><br>
-                        Version No.: <b><?php echo $versionNo;?></b>
+                        Title: <b><?php echo $title; ?></b><br>
+                        Version No.: <b><?php echo $versionNo; ?></b>
                     </div>
                     <div class="card-body" >
-                        Process: <b><?php echo $processName?></b><br>
-                        Stage: <b><?php echo $stepName?></b><br>
+                        Process: <b><?php echo $processName; ?></b><br>
+                        Stage: <b><?php echo $stepName; ?></b><br>
                         Created by <b><?php echo $originalAuthor; ?></b><br>
                         <i>on <b><?php echo date("F j, Y g:i:s A ", strtotime($timeFirstPosted)); ?></b></i><br>
                         Updated by <b><?php echo $currentAuthor; ?></b><br>
@@ -173,10 +194,8 @@ if(isset($_POST['btnUnlock'])){
                                         }
                                     }
                                 }
-
-
                                 if(isset($write) && $write=='2' && $availability=='2'){
-                                    echo '<form method="POST" id="downloadForm">';
+                                    echo '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
                                     echo '<input type="hidden" name="filePath" value="'.$filePath.'" />';
                                     echo '<input type="hidden" name="userId" value="'.$userId.'" />';
                                     echo '<button class="btn btn-default" type="submit" name="btnLock" value="'.$documentId.'" style="text-align: left; width:100%;">Download and Edit</button>';
@@ -185,19 +204,16 @@ if(isset($_POST['btnUnlock'])){
                                     echo '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
                                     echo '<button class="btn btn-default" type="submit" name="btnUnlock" id="btnUnlock" value="'.$documentId.'" style="text-align: left; width: 100%;">Cancel Editing</button>';
                                     echo '</form>';
+                                    echo '<button class="btn btn-default" id="btnUpload" data-toggle="modal" data-target="#uploadModal" style="text-align: left">Upload New Version</button>';
                                 }else{
                                     echo '<a href="'.$filePath.'" class="btn btn-default" style="text-align: left" download>Download</a>';
                                 }
-
                                 ?>
-                            <?php if(isset($write) && $write=='2'){ echo '<button class="btn btn-default" style="text-align: left">Upload New Version</button>' ; }?>
                             <button class="btn btn-default" style="text-align: left">Archive</button>
                          </div>
                     </div>
                 </div>
-
                 <?php
-
                     $query = "SELECT v.versionId, v.timeCreated, v.versionNo, v.title, v.filePath, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
                               FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
                               WHERE v.documentId = '$documentId' AND v.versionId != '$versionId';";
@@ -243,7 +259,7 @@ if(isset($_POST['btnUnlock'])){
                 <div class="modal-footer">
                     <div class="form-group">
                         <input type="hidden" name="comment_id" id="comment_id" value="0" />
-                        <input type="hidden" name="documentId" id="documentId" value="<?php echo $documentId?>" />
+                        <input type="hidden" name="documentId" id="documentId" value="<?php echo $documentId; ?>" />
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit"/>
                     </div>
@@ -254,32 +270,74 @@ if(isset($_POST['btnUnlock'])){
 
     </div>
 </div>
+    <div id="uploadModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <form method="POST" id="documentUploadForm">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="documentTitle">Title</label>
+                            <input type="text" name="versionTitle" id="versionTitle" class="form-control" placeholder="Title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for=".radio"> Save New Version As </label>
+                            <div class="radio">
+                                <label><input type="radio" name="newVersionNo" value="<?php echo floatval($versionNo) + 0.1; ?>" checked><?php echo floatval($versionNo) + 0.1; ?> (Minor Update)</label>
+                            </div>
+                            <div class="radio">
+                                <label><input type="radio" name="newVersionNo" value="<?php echo ceil(floatval($versionNo)); ?>"><?php echo ceil(floatval($versionNo)); ?> (Major Update)</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="file">Upload</label>
+                            <input type="file" class="form-control-file" id="file" name="file" required>
+                        </div>
+                        <span id="err"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <input type="hidden" name="userId" value="<?php echo $userId; ?>">
+                            <input type="hidden" name="documentId" value="<?php echo $documentId; ?>">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <input type="submit" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
 
 <script>
 
     $(document).ready(function(){
 
-        let documentId = "<?php echo $documentId?>";
+        let documentId = "<?php echo $documentId; ?>";
 
-        $('#downloadForm').on('submit', function(event){ // REFRESH PAGE AFTER FORM SUBMIT
-            event.preventDefault();
-            var form_data = $(this).serialize();
-            alert(form_data);
+        $("#documentUploadForm").on('submit', function(e){
+            e.preventDefault();
             $.ajax({
-                url:"EDMS_AJAX_DownloadDocument.php",
-                method:"POST",
-                data:form_data,
-                dataType:"JSON",
-                success:function(data) {
-                    if(data !== 'error') {
-                        location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+data;
-                    } else {
-                        alert("download error");
-                    }
+                type: "POST",
+                url: "EDMS_AJAX_UploadVersion.php",
+                cache: false,
+                processData: false,
+                contentType: false,
+                data: new FormData(this),
+                success: function(response){
+                    $("#err").html(response);
+                    $("#contact-modal").modal('hide');
+                    if(response !== 'error') location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+response;
+                },
+                error: function(){
+                    alert("Error");
                 }
             });
+            return false;
         });
-
 
         $('#comment_form').on('submit', function(event){
             event.preventDefault();
@@ -326,9 +384,5 @@ if(isset($_POST['btnUnlock'])){
             })
         }
     });
-
-
-
 </script>
-
 <?php include 'GLOBAL_FOOTER.php';?>
