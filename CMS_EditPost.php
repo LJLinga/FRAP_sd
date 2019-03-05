@@ -164,7 +164,6 @@ if(isset($_POST['btnSubmit'])) {
         }else if($status=='5'){
             $crud->execute("UPDATE posts SET archivedById='$userId' WHERE id='$postId';");
         }
-
         $crud->execute("UPDATE posts SET availabilityId='2' WHERE id='$postId'");
     }
     header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_EditPost.php?postId=" . $postId);

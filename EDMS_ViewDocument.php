@@ -20,7 +20,9 @@ if(isset($_GET['docId'])){
     $documentId = $_GET['docId'];
 
     // Load Process and Steps assigned to current document
-    $query = "SELECT d.processId, d.currentStepId, p.processName, s.stepName FROM documents d 
+    $query = "SELECT d.processId, d.currentStepId, p.processName, s.stepName,
+              d.availabilityId, d.lockedById
+              FROM documents d 
               JOIN process p ON d.processId = p.id 
               JOIN steps s ON d.currentStepId = s.id WHERE d.documentId='$documentId';";
     $rows = $crud->getData($query);
@@ -29,6 +31,8 @@ if(isset($_GET['docId'])){
         $currentStepId= $row['currentStepId'];
         $processName = $row['processName'];
         $stepName = $row['stepName'];
+        $availability = $row['availabilityId'];
+        $lockedById = $row['lockedById'];
     }
 
     $userId = $_SESSION['idnum'];
@@ -69,6 +73,12 @@ if(isset($_GET['docId'])){
         }
     }
 
+    if($availability == '1'){
+        $route = '1';
+        if($lockedById == $userId) $write = '2';
+        else $write = '1';
+    }
+
     //Get the rest of the document.
     $query = "SELECT d.firstAuthorId, d.timeFirstPosted, d.availabilityId, v.timeCreated, v.versionId, v.versionNo, v.authorId, v.title, v.filePath, 
               CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS originalAuthor,
@@ -92,29 +102,12 @@ if(isset($_GET['docId'])){
     }
 }
 
-if(isset($_POST['btnLock'])){
-    $file = $_POST['btnLock'];
-
-    echo "<script>";
-    echo "alert('btNlock');";
-    echo "</script>";
-
-    if (file_exists($file)) {
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="'.basename($file).'"');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($file));
-        readfile($file);
-        exit;
-    }
-
-    //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewDocument.php?docId=" . $documentId);
+if(isset($_POST['btnUnlock'])){
+    $documentId= $_POST['btnUnlock'];
+    $crud->execute("UPDATE documents SET availabilityId='2', lockedById=NULL WHERE documentId='$documentId'");
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewDocument.php?docId=" . $documentId);
 }
 ?>
-
 <div id="content-wrapper">
     <div class="container-fluid">
         <div class="row">
@@ -165,7 +158,6 @@ if(isset($_POST['btnLock'])){
                         <b>Document Actions</b>
                     </div>
                     <div class="card-body" >
-                        <form id="form" name="form" method="POST" action="<?php $_SERVER["PHP_SELF"]?>">
                         <div class="btn-group btn-group-vertical" style="width: 100%;">
                             <?php
                                 if($processId == '1' || $currentStepId == '1'){
@@ -183,17 +175,24 @@ if(isset($_POST['btnLock'])){
                                 }
 
 
-                                if(isset($write) && $write=='2' && $availability='2'){
-                                    echo '<button class="btn btn-default" type="submit" name="btnLock" id="btnLock" value="'.$filePath.'" style="text-align: left">Download and Edit</button>';
+                                if(isset($write) && $write=='2' && $availability=='2'){
+                                    echo '<form method="POST" id="downloadForm">';
+                                    echo '<input type="hidden" name="filePath" value="'.$filePath.'" />';
+                                    echo '<input type="hidden" name="userId" value="'.$userId.'" />';
+                                    echo '<button class="btn btn-default" type="submit" name="btnLock" value="'.$documentId.'" style="text-align: left; width:100%;">Download and Edit</button>';
+                                    echo '</form>';
+                                }else if(isset($write) && $write=='2' && $availability=='1'){
+                                    echo '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
+                                    echo '<button class="btn btn-default" type="submit" name="btnUnlock" id="btnUnlock" value="'.$documentId.'" style="text-align: left; width: 100%;">Cancel Editing</button>';
+                                    echo '</form>';
                                 }else{
-                                    echo '<button href="'.$filePath.'" class="btn btn-default" style="text-align: left">Download</button>';
+                                    echo '<a href="'.$filePath.'" class="btn btn-default" style="text-align: left" download>Download</a>';
                                 }
 
                                 ?>
                             <?php if(isset($write) && $write=='2'){ echo '<button class="btn btn-default" style="text-align: left">Upload New Version</button>' ; }?>
                             <button class="btn btn-default" style="text-align: left">Archive</button>
                          </div>
-                        </form>
                     </div>
                 </div>
 
@@ -260,8 +259,27 @@ if(isset($_POST['btnLock'])){
 
     $(document).ready(function(){
 
-
         let documentId = "<?php echo $documentId?>";
+
+        $('#downloadForm').on('submit', function(event){ // REFRESH PAGE AFTER FORM SUBMIT
+            event.preventDefault();
+            var form_data = $(this).serialize();
+            alert(form_data);
+            $.ajax({
+                url:"EDMS_AJAX_DownloadDocument.php",
+                method:"POST",
+                data:form_data,
+                dataType:"JSON",
+                success:function(data) {
+                    if(data !== 'error') {
+                        location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+data;
+                    } else {
+                        alert("download error");
+                    }
+                }
+            });
+        });
+
 
         $('#comment_form').on('submit', function(event){
             event.preventDefault();
@@ -282,7 +300,7 @@ if(isset($_POST['btnLock'])){
                         load_comment(documentId);
                     }
                 }
-            })
+            });
         });
 
         $(document).on('click', '.reply', function(){

@@ -81,7 +81,6 @@
                 <li>
                     <a href="feed.php"> News Feed </a>
                 </li>
-
                 <?php
 
                 if($_SESSION['FRAP_ROLE'] > 1 || $_SESSION['EDMS_ROLE'] > 1 || $_SESSION['CMS_ROLE'] > 1) {
@@ -125,11 +124,7 @@
                                 </ul>
                     
                             </li> ';
-
-                }
-                ?>
-
-
+                }?>
                 <li class="dropdown sideicons">
 
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i>
