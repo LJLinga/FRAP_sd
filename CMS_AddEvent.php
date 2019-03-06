@@ -189,7 +189,8 @@ include 'CMS_SIDEBAR_Admin.php';
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
-                                    <input id="post_emails" name="post_emails" type="text" placeholder="Provide emails" class="form-control input-md"  required>
+                                    <input id="post_emails" name="post_emails" type="text" placeholder="Provide emails" class="form-control input-md" data-toggle="modal" data-target="#myModal" required>
+                                    <?php include("SYS_MODAL_ChoosePersonnel.php")?>
                                 </div>
                             </div>
                         </div>
