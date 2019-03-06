@@ -214,17 +214,14 @@ include 'CMS_SIDEBAR_Admin.php';
                     <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem; ">
 
                         <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-body" >
-                                <div class="form-group">
-                                    <label for="reference">References</label>
-                                    <div id="reference">
-                                        <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
-                                        <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
-                                    </div>
-                                </div>
+                            <div class="card-body">
+                                No references
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-default"><i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-file"></i> Add New Document</button>
+                                <button class="btn btn-default"><i class="fa fa-fw fa-link"></i><i class="fa fa-fw fa-file"></i> Link Existing Document</button>
                             </div>
                         </div>
-
                         <div class="card" style="margin-bottom: 1rem;">
                             <div class="card-body" >
                                 Author: <b><?php echo $author; ?></b><br>

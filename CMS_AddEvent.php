@@ -197,6 +197,16 @@ include 'CMS_SIDEBAR_Admin.php';
 
                         <div class="card" style="margin-bottom: 1rem;">
                             <div class="card-body">
+                                No references
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-default"><i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-file"></i> Add New Document</button>
+                                <button class="btn btn-default"><i class="fa fa-fw fa-link"></i><i class="fa fa-fw fa-file"></i> Link Existing Document</button>
+                            </div>
+                        </div>
+
+                        <div class="card" style="margin-bottom: 1rem;">
+                            <div class="card-body">
                                 <div class="form-group">
                                     <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">
                                     <button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit">Submit</button>
