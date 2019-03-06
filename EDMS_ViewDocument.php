@@ -34,7 +34,13 @@ if(isset($_GET['docId'])){
 
     $userId = $_SESSION['idnum'];
 
-    // Load User Permissions
+//    $query = "SELECT sa.read, sa.write, sa.route, sa.comment FROM step_authors sa
+//                JOIN employee e ON sa.userId = e.EMP_ID
+//                WHERE su.stepId='$currentStepId' AND e.EMP_ID = '$userId' LIMIT 1;";
+//    $rows = $crud->getData($query);
+
+
+    // Load Current User Permissions
     $query = "SELECT su.read, su.write, su.route, su.comment FROM step_users su
                 JOIN employee e ON su.userId = e.EMP_ID
                 WHERE su.stepId='$currentStepId' AND e.EMP_ID = '$userId' LIMIT 1;";
@@ -70,6 +76,13 @@ if(isset($_GET['docId'])){
         }
     }
 
+//    if($firstAuthorId == $userId){
+//        $read = '2';
+//        $write = '2';
+//        $route = '2';
+//        $comment = '2';
+//    }
+
     if($availability == '1'){
         $route = '1';
         if($lockedById == $userId) $write = '2';
@@ -100,11 +113,13 @@ if(isset($_GET['docId'])){
 }else{
     header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Dashboard.php");
 }
+
 if(isset($_POST['btnUnlock'])){
     $documentId= $_POST['btnUnlock'];
     $crud->execute("UPDATE documents SET availabilityId='2', lockedById=NULL WHERE documentId='$documentId'");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
 }
+
 if(isset($_POST['btnLock'])){
     $file = $_POST['filePath'];
     $documentId = $_POST['btnLock'];
@@ -120,10 +135,10 @@ if(isset($_POST['btnLock'])){
         readfile($file);
         $crud->execute("UPDATE documents SET availabilityId='1', lockedById='$userId' WHERE documentId='$documentId'");
     }
-    //header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId, true, 301);
-    $URL="http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId=".$documentId;
-    echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
-    echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
+//    $URL="http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId=".$documentId;
+//    echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
+//    echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
 }
 
 include 'GLOBAL_HEADER.php';
@@ -170,7 +185,7 @@ include 'EDMS_Sidebar.php';
                         Stage: <b><?php echo $stepName; ?></b><br>
                         Created by <b><?php echo $originalAuthor; ?></b><br>
                         <i>on <b><?php echo date("F j, Y g:i:s A ", strtotime($timeFirstPosted)); ?></b></i><br>
-                        Updated by <b><?php echo $currentAuthor; ?></b><br>
+                        Modified by <b><?php echo $currentAuthor; ?></b><br>
                         <i>on <b><?php echo date("F j, Y g:i:s A ", strtotime($timeUpdated)); ?></b></i>
                     </div>
                 </div>
@@ -190,7 +205,7 @@ include 'EDMS_Sidebar.php';
                                         foreach ((array)$rows as $key => $row) {
                                             $nextStepId = $row['nextStepId'];
                                             $nextProcessId = $row['nextStepId'];
-                                            echo '<button class="btn btn-info" style="text-align: left" type="submit">' . $row['routeName'] . '</button>';
+                                            echo '<button class="btn btn-primary" style="text-align: left" type="submit">' . $row['routeName'] . '</button>';
                                         }
                                     }
                                 }
@@ -216,19 +231,19 @@ include 'EDMS_Sidebar.php';
                 <?php
                     $query = "SELECT v.versionId, v.timeCreated, v.versionNo, v.title, v.filePath, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
                               FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
-                              WHERE v.documentId = '$documentId' AND v.versionId != '$versionId';";
+                              WHERE v.documentId = '$documentId' AND v.versionId != '$versionId' ORDER BY v.versionId DESC;";
                     $rows = $crud->getData($query);
                     if (!empty($rows)) {
 
                         echo '<div class="card" style="margin-top: 1rem;"><div class="card-header"><b>Version History</b></div>
-                                <div class="card-body" style="max-height: 20rem; overflow: auto;" >';
+                                <div class="card-body" style="max-height: 100rem; overflow: auto;" >';
                         foreach ((array)$rows as $key => $row) {
                             echo '<div class="card-body" style="position: relative;">
-                                        <span class="label label-default">Version '.$row['versionNo'].'</span><br>
+                                        <span class="label label-default">Version '.$row['versionNo'].'</span>
                                         <b>'.$row['title'].'</b><br>
-                                        '.$row['timeCreated'].'<br>
+                                        '.date("F j, Y g:i:s A ", strtotime($row['timeCreated'])).'<br>
                                         <div class="btn-group-sm" style="position: absolute;right: 10px;top: 10px;">
-                                            <a class="btn btn-sm" href="'.$row['filePath'].'" download>Download</a>
+                                            <a class="btn fa fa-download" href="'.$row['filePath'].'" download></a>
                                             <button type="button" class="btn btn-sm">Revert</button>
                                         </div>
                                     </div>';
@@ -288,7 +303,7 @@ include 'EDMS_Sidebar.php';
                                 <label><input type="radio" name="newVersionNo" value="<?php echo floatval($versionNo) + 0.1; ?>" checked><?php echo floatval($versionNo) + 0.1; ?> (Minor Update)</label>
                             </div>
                             <div class="radio">
-                                <label><input type="radio" name="newVersionNo" value="<?php echo ceil(floatval($versionNo)); ?>"><?php echo ceil(floatval($versionNo)); ?> (Major Update)</label>
+                                <label><input type="radio" name="newVersionNo" value="<?php echo ceil(floatval($versionNo) + 0.1); ?>"><?php echo ceil(floatval($versionNo) + 0.1); ?> (Major Update)</label>
                             </div>
                         </div>
                         <div class="form-group">

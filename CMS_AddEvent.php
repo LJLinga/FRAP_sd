@@ -103,16 +103,7 @@ include 'CMS_SIDEBAR_Admin.php';
     </style>
     <script>
         $(document).ready( function(){
-            $('textarea').froalaEditor({
-                // Disables video upload
-                videoUpload: false,
-                //
-                imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
-                // Set the file upload URL.
-                fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
 
-                width: 750
-            });
 
             $('#datetimepicker1').datetimepicker( {
                 minDate: moment(),
@@ -183,26 +174,22 @@ include 'CMS_SIDEBAR_Admin.php';
 
                         <!-- Textarea -->
                         <div class="form-group">
-                            <label for="post_content">Description</label>
-                            <textarea name="post_content" id="post_content"></textarea>
+                            <label for="post_content">Description </label>
+                            <textarea class="form-control" name="post_content" rows="5" id="post_content"></textarea>
                         </div>
 
-                        <div class="form-group">
-                            <label for="post_emails">Invite through email (separate by comma) </label>
-                            <input id="post_emails" name="post_emails" type="text" placeholder="Provide emails" class="form-control input-md"  required>
-                        </div>
+
 
                     </div>
                     <div id="publishColumn" class="column col-lg-4" style="margin-bottom: 1rem;">
 
                         <div class="card" style="margin-bottom: 1rem;">
+                            <div class="card-header">
+                                <label for="post_emails">Invite through email</label>
+                            </div>
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="reference">References</label>
-                                    <div id="reference">
-                                        <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
-                                        <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
-                                    </div>
+                                    <input id="post_emails" name="post_emails" type="text" placeholder="Provide emails" class="form-control input-md"  required>
                                 </div>
                             </div>
                         </div>
@@ -210,18 +197,9 @@ include 'CMS_SIDEBAR_Admin.php';
                         <div class="card" style="margin-bottom: 1rem;">
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="submitStatus">Submit Action</label>
-                                    <select class="form-control" id="submitStatus" name="submitStatus">
-                                        <option value="1">Save as Draft</option>
-                                        <?php if($cmsRole!=3 && $status!=3){ echo "<option value=\"2\">Submit for Approval</option>";}?>
-                                        <?php if($cmsRole==3){ echo "<option value=\"3\">Approve</option>";}?>
-                                        <?php if($cmsRole==3 && $status==4){ echo "<option value=\"5\">Finish Event</option>";}?>
-                                        <?php if($cmsRole==3 && $status==3){ echo "<option value=\"6\">Cancel Event</option>";}?>
-                                    </select>
+                                    <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">
+                                    <button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit">Submit</button>
                                 </div>
-                                <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;};?>">
-                                <button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit">Submit</button>
-
                             </div>
                         </div>
 

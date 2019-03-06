@@ -42,7 +42,7 @@ $userId = $_SESSION['idnum'];
         <div class="row">
             <div class="col-lg-8">
                 <div class="card">
-                    <div class="card-header btn-group" data-toggle="buttons">
+                    <div class="card-header btn-group">
                         <a type="button" class="btn btn-default" id="btnAll">All</a>
                         <a type="button" class="btn btn-default" id="btnMine">Mine</a>
                         <a type="button" class="btn btn-success" id="btnPublished">Published</a>
@@ -54,12 +54,9 @@ $userId = $_SESSION['idnum'];
                         <table id="myTable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Author</th>
-                                <th>Updated By</th>
-                                <th>Process</th>
-                                <th>Last Updated</th>
-                                <th>Action</th>
+                                <th width="600px;">Title</th>
+                                <th width="200px;">Process</th>
+                                <th width="100px;">Action</th>
                             </tr>
                             </thead>
                         </table>
@@ -86,7 +83,6 @@ $userId = $_SESSION['idnum'];
                     </div>
                     <div class="card-body">
                         <div class="col-lg-2">
-
                             Documents I modified <b class="caret"></b>
                         </div>
                         <div class="col-lg-7"></div>
@@ -108,7 +104,7 @@ $userId = $_SESSION['idnum'];
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="documentTitle">Title</label>
+                        <label for="documentTitle">Document</label>
                         <input type="text" name="documentTitle" id="documentTitle" class="form-control" placeholder="Document Title" required>
                     </div>
                     <label for="documentTitle">Assigned Task</label>
@@ -156,10 +152,7 @@ $userId = $_SESSION['idnum'];
             },
             columns: [
                 { data: "title_version" },
-                { data: "originalAuthor" },
-                { data: "currentAuthor" },
                 { data: "currentProcess" },
-                { data: "lastUpdated" },
                 { data: "actions"}
                 ]
         } );
