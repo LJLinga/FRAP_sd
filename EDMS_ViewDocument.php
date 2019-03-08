@@ -12,7 +12,7 @@ session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
-if(isset($_GET['docId'])){
+if(isset($_GET['docId']) && isset($_GET['versionId'])){
 
     $documentId = $_GET['docId'];
 

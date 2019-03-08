@@ -102,12 +102,12 @@
 
 
                 $queryMem = "SELECT * FROM employee WHERE MEMBER_ID = '{$idnum}' AND PASS_WORD = PASSWORD('{$password}')";
-                $resultMem = mysqli_query($dbc, $queryMem);
-                if (!$resultMem) {
-                    printf("Error: %s\n", mysqli_error($dbc));
-                    exit();
-                }
-                $rowMem = mysqli_fetch_array($resultMem);
+            $resultMem = mysqli_query($dbc, $queryMem);
+            if (!$resultMem) {
+                printf("Error: %s\n", mysqli_error($dbc));
+                exit();
+            }
+            $rowMem = mysqli_fetch_array($resultMem);
 
 
 
@@ -126,7 +126,12 @@
                     $_SESSION['EDMS_ROLE'] =  $result['EDMS_ROLE'];
                     //$_SESSION['SYS_ROLE'] =  $result['SYS_ROLE'];
 
+
+
+
                     //insert code here/
+
+
 
                 }else{ //sends it to the most appropriate account. and adds the
 

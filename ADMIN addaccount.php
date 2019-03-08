@@ -3,7 +3,7 @@
 require_once ("mysql_connect_FA.php");
 session_start();
 include 'GLOBAL_USER_TYPE_CHECKING.php';
-include  'GLOBAL_FRAP_ADMIN_CHECKING.php';
+include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
 
 $success = null;
