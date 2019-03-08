@@ -193,8 +193,19 @@ include 'CMS_SIDEBAR_Admin.php';
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
-                                    <input id="post_emails" name="post_emails" type="text" placeholder="Provide emails" class="form-control input-md"  required>
+                                    <input id="post_emails" name="post_emails" type="text" placeholder="Provide emails" class="form-control input-md" data-toggle="modal" data-target="#myModal" required>
+                                    <?php include("SYS_MODAL_ChoosePersonnel.php")?>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="card" style="margin-bottom: 1rem;">
+                            <div class="card-body">
+                                No references
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-default"><i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-file"></i> Add New Document</button>
+                                <button class="btn btn-default"><i class="fa fa-fw fa-link"></i><i class="fa fa-fw fa-file"></i> Link Existing Document</button>
                             </div>
                         </div>
 
