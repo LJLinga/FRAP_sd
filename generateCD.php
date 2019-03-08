@@ -50,9 +50,9 @@ function Footer()
 }
 if(isset($_SESSION['date'])){
      $date = $_SESSION['date'];
-        $day = substr($date,0,strpos($date," "));
-        $month = substr($date,strpos($date," ")+1,strpos($date,"-")-strpos($date," ")-1);
-        $year = substr($date,strpos($date,"-")+1);
+        $year = substr($date,0,strpos($date,"-"));
+        
+        $month = substr($date,strpos($date,"-")+1);
 
             if($month=="1"){
                 $month = "January";
@@ -119,15 +119,15 @@ require_once('mysql_connect_FA.php');
 $flag=0;
 if($_SESSION['date'] != "0"){
         $date = $_SESSION['date'];
-        $day = substr($date,0,strpos($date," "));
-        $month = substr($date,(strpos($date," ")+1),strpos($date,"-")-strpos($date," ")-1);
-        $year = substr($date,strpos($date,"-")+1);
+        $year = substr($date,0,strpos($date,"-"));
+        
+        $month = substr($date,strpos($date,"-")+1);
         $query="SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_DETAIL_ID as 'Ref',l.LOAN_ID
 from loans l  
 
 join member m
 on l.member_id = m.member_id
-where l.LOAN_STATUS = 3 AND $day = day(l.Date_Matured) AND $month = month(l.Date_Matured) AND $year = Year(l.Date_Matured)
+where l.LOAN_STATUS = 3 AND $month = month(l.Date_Matured) AND $year = Year(l.Date_Matured)
 group by l.loan_id";
     }
     else{

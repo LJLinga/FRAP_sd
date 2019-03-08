@@ -9,7 +9,7 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
 $flag=0;
 if(isset($_POST['print'])){
-    $_SESSION['date']=$_POST['date'];
+    $_SESSION['date']=$_POST['event_start'];
     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/generateCD.php");
 }
 
@@ -21,32 +21,26 @@ from loans l
 join member m
 on l.member_id = m.member_id
 join (SELECT max(date_matured) as 'Date' from loans) latest 
-where l.LOAN_STATUS = 3 and latest.Date = l.Date_Matured";
-
+where l.LOAN_STATUS = 3 and month(latest.Date) = month(date(now))";
+    $year = date("Y");
+    $month = date();
 }
 else {
-    if($_POST['date'] != "0"){
-        $date = $_POST['date'];
-        $day = substr($date,0,strpos($date," "));
-        $month = substr($date,(strpos($date," ")+1),strpos($date,"-")-strpos($date," ")-1);
-        $year = substr($date,strpos($date,"-")+1);
+       
+            $date = $_POST['event_start'];
+            
+            $year = substr($date,0,strpos($date,"-"));
+            $month = substr($date,strpos($date,"-")+1);
+           
         $query="SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_DETAIL_ID as 'Ref',l.LOAN_ID
 from loans l  
 
 join member m
 on l.member_id = m.member_id
-where l.LOAN_STATUS = 3 AND $day = day(l.Date_Matured) AND $month = month(l.Date_Matured) AND $year = Year(l.Date_Matured)
+where l.LOAN_STATUS = 3 AND $month = month(l.Date_Matured) AND $year = Year(l.Date_Matured)
 group by l.loan_id";
-    }
-    else{
-        $query="SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_DETAIL_ID as 'Ref',l.LOAN_ID
-from loans l 
- 
-join member m
-on l.member_id = m.member_id
-join (SELECT max(date_matured) as 'Date' from loans) latest 
-where l.LOAN_STATUS = 3 and latest.Date = l.Date_Matured";
-    }
+    
+   
 }
 $result2 = mysqli_query($dbc,$query);
 
@@ -64,7 +58,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
-                            Completed Deductions 
+                            Completed Deductions for <?php echo date('F', mktime(0, 0, 0, $month, 10)).' '.$year;?>
                             
                         </h1>
                     
@@ -81,7 +75,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                             <div class="panel-heading">
 
-                                <b>View Report for (Month & Year)</b>
+                                <b>View Report for (Year & Month)</b>
 
                             </div>
 
@@ -93,69 +87,17 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                        <form action="ADMIN PREPORT completed.php" method="POST">
 
-                                        <select class="form-control" name = "date">
-                                        
-                                            <option value = "0">This Current Date</option>  
-                                        <?php
-                                        $query="SELECT DISTINCT MONTH(Date_Matured) as 'Month',YEAR(Date_Matured) as 'Year', Day(Date_Matured) as 'Day' from loans 
-                                            where loan_status = 3
-                                            order by Date_Matured desc";
-                                        $result1 = mysqli_query($dbc,$query);
-
-                                        while($ans = mysqli_fetch_assoc($result1)){?>
-                                            <option value = "<?php echo $ans['Day']." ".$ans['Month']."-".$ans['Year'];
-                                                                
-                                                                ?>" <?php if(isset($_POST['date'])){
-                                                                    if($_POST['date']== $ans['Day']." ".$ans['Month']."-".$ans['Year']){
-                                                                        echo " selected";
-                                                                    }
-                                                                }?> >
-                                                <?php 
-                                                $month = "January";
-                                                if($ans['Month']=="1"){
-                                                    $month = "January";
-                                                }
-                                                else if($ans['Month']=="2"){
-                                                    $month = "February";
-                                                }
-                                                else if($ans['Month']=="3"){
-                                                    $month = "March";
-                                                }
-                                                else if($ans['Month']=="4"){
-                                                    $month = "April";
-                                                }
-                                                else if($ans['Month']=="5"){
-                                                    $month = "May";
-                                                }
-                                                else if($ans['Month']=="6"){
-                                                    $month = "June";
-                                                }
-                                                else if($ans['Month']=="7"){
-                                                    $month = "July";
-                                                }
-                                                else if($ans['Month']=="8"){
-                                                    $month = "August";
-                                                }
-                                                else if($ans['Month']=="9"){
-                                                    $month = "September";
-                                                }
-                                                else if($ans['Month']=="10"){
-                                                    $month = "October";
-                                                }
-                                                else if($ans['Month']=="11"){
-                                                    $month = "November";
-                                                }
-                                                else if($ans['Month']=="12"){
-                                                    $month = "December";
-                                                }
-
-
-
-                                                echo $ans['Day']." ".$month." ".$ans['Year']?></option>
-                                        <?php }?>
-
-
-                                        </select>
+                                        <div class="col-lg-12lg-4">
+                            <div class="form-group">
+                                <label for="event_start">Start Date</label>
+                                <div class="input-group date" id="datetimepicker1">
+                                    <input id="event_start" name="event_start" type="text" class="form-control">
+                                    <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
 
                                     
 
@@ -259,7 +201,24 @@ include 'FRAP_ADMIN_SIDEBAR.php';
     
             $('#table').DataTable();
 
+                
+            $('#datetimepicker1').datetimepicker( {
+                locale: moment().local('ph'),
+                maxDate: moment(),
+                
+                format: 'YYYY-MM'
+            });
+            $('#datetimepicker2').datetimepicker( {
+                locale: moment().local('ph'),
+                
+                
+                format: 'YYYY-MM'
+            });
+
+        
         });
+
+       
 
     </script>
 
