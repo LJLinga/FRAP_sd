@@ -62,7 +62,7 @@ include 'CMS_SIDEBAR_Admin.php';
                             <div class="card-body" style="overflow: hidden; max-height: 50rem;">
                                 <h4 class="card-title"><b><?php echo $row['title'];?></b></h4>
                                 <h5 class="card-subtitle">by <?php echo $row['name'];?> | <?php echo date("F j, Y g:i A ", strtotime($row['lastUpdated'])) ;?></h5>
-                                <p class="card-text"><?php echo $row['body'] ?></>
+                                <br><p class="card-text"><?php echo $row['body'] ?></>
                             </div>
                             <div class="card-body">
                                 <a class="card-link" href="<?php echo "http://localhost/FRAP_sd/read.php?pl=".$row['permalink']?>" >Read More</a>
@@ -91,33 +91,20 @@ include 'CMS_SIDEBAR_Admin.php';
             <div id="calendarColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 2rem;">
                 <div class="card" style="margin-top: 1rem;">
                     <div class="card-header">
-                        <b> Events (You only see 'public' or specified to you) </b>
+                        <b> Events </b>
                     </div>
-                    <div class="card-body" style="max-height: 20rem; overflow: auto;" >
-                        <div class="card-body" style="position: relative;">
-                            Crisis Meeting
-                            <div class="btn-group-sm" style="position: absolute;right: 10px;top: 5px;">
-                                <button type="button" class="btn btn-sm">Jan 20 2019</button>
-                                <button type="button" class="btn btn-sm">Revert</button>
-                            </div>
-                        </div>
-                        <div class="card-body" style="position: relative;">
-                            Bernie Sanders Town Hall #Bernie2020
-                            <div class="btn-group-sm" style="position: absolute;right: 10px;top: 5px;">
-                                <button type="button" class="btn btn-sm">Jan 20 2019</button>
-                                <button type="button" class="btn btn-sm">Revert</button>
-                            </div>
-                        </div>
-                        <div class="card-body" style="position: relative;">
-                            War of the Lions
-                            <div class="btn-group-sm" style="position: absolute;right: 10px;top: 5px;">
-                                <button type="button" class="btn btn-sm">Jan 20 2019</button>
-                                <button type="button" class="btn btn-sm">Revert</button>
-                            </div>
-                        </div>
+                    <div class="card-body" >
+                        <iframe src="https://calendar.google.com/calendar/b/3/embed?showTitle=0&amp;showCalendars=0&amp;mode=AGENDA&amp;height=800&amp;wkst=2&amp;bgcolor=%23ffffff&amp;src=noreply.lapdoc%40gmail.com&amp;color=%231B887A&amp;src=en.philippines%23holiday%40group.v.calendar.google.com&amp;color=%23125A12&amp;ctz=Asia%2FManila" style="border-width:0" width="480" height="360" frameborder="0" scrolling="no"></iframe>
                     </div>
                 </div>
-        </div>
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-header">
+                        <b> Polls </b>
+                    </div>
+                    <div class="card-body" >
+                    </div>
+                </div>
+            </div>
 
 
 

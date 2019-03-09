@@ -411,7 +411,7 @@ $success = null;
 
                                                 <label>
                                                 <span class="labelspan">Middle Name</span>
-                                                <input type="text" class="form-control memname" placeholder="Last Name" name="lName" <?php if(isset($_POST['mName'])){
+                                                <input type="text" class="form-control memname" placeholder="Middle Name" name="mName" <?php if(isset($_POST['mName'])){
                                                   echo "value = '{$_POST['mName']}'";
                                                 } ?>>
                                                 </label>

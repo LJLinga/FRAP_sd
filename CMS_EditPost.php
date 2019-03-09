@@ -216,6 +216,10 @@ include 'CMS_SIDEBAR_Admin.php';
             $('#btnUpdate').show();
         });
 
+        $('#post_title').on('keyup', function(){
+            $('#btnUpdate').show();
+        });
+
         $('#post_content').froalaEditor('html.set', '<?php echo $body?>');
 
         $('#comment_form').on('submit', function(event){
@@ -347,7 +351,7 @@ include 'CMS_SIDEBAR_Admin.php';
                                         }else if ($status == '3') {
                                             echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
                                             echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
-                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Back to Author</button> ';
+                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
                                             echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
                                         } else if ($status == '4') {
                                             echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="3">Unpublish</button> ';

@@ -73,7 +73,8 @@ include 'CMS_SIDEBAR_Admin.php';
                 imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
                 // Set the file upload URL.
                 fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
-                width: 750
+                width: 750,
+                pastePlain: false
             });
         });
     </script>

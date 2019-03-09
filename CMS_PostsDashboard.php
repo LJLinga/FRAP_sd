@@ -246,11 +246,6 @@ $userId = $_SESSION['idnum'];
             <div class="row">
 
             <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                        <b>In Process by Me</b>
-                    </div>
-                    <div class="card-body" style="max-height: 20rem; overflow: auto;">
                         <?php
                             $query = "SELECT p.id,p.title, p.authorId,CONCAT(a.firstName,' ', a.lastName) AS name,
                                       s.description AS status,p.lastUpdated FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
@@ -258,17 +253,22 @@ $userId = $_SESSION['idnum'];
                                       WHERE p.availabilityId = '1' AND p.lockedById = '$userId'
                                       ORDER BY p.firstCreated DESC LIMIT 10;";
 
-                        $rows = $crud->getData($query);
-                        foreach ((array) $rows as $key => $row){
-                            echo '<div class="card-body" style="position: relative;">';
-                            echo ''.$row['title'];
-                            echo '<a href="CMS_EditPost.php?postId='.$row['id'].'" class="btn btn-sm" style="position: absolute;right: 10px;top: 5px;">Continue</a>';
-                            echo '</div>';
-                        }
-
+                            $rows = $crud->getData($query);
+                            if(!empty($rows)){
+                                echo '<div class="card"><div class="card-header">
+                                            <b>In Process by Me</b>
+                                      </div>
+                                      <div class="card-body" style="max-height: 20rem; overflow: auto;">';
+                                foreach ((array) $rows as $key => $row){
+                                    echo '<div class="card-body" style="position: relative;">';
+                                    echo ''.$row['title'];
+                                    echo '<a href="CMS_EditPost.php?postId='.$row['id'].'" class="btn btn-sm" style="position: absolute;right: 10px;top: 5px;">Continue</a>';
+                                    echo '</div>';
+                                }
+                                echo '</div>';
+                                echo '</div>';
+                            }
                         ?>
-                    </div>
-                </div>
                 <div class="card" style="margin-top: 1rem;">
                     <div class="card-header">
                         <b> Editing Activity (Comments, Status Changes)</b>

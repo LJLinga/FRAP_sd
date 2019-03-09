@@ -97,23 +97,25 @@
                         echo '</ul></li>';
                     }?>
                 <li class="dropdown sideicons">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i>
-
-
-
-
-                        <b class="caret"></b></a>
-
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-money"><span class="badge count"></span></i></a>
                     <ul class="dropdown-menu alert-dropdown">
-
                         <div class="notifications"></div>
-
                         <li class="divider"></li>
-
                         <li>
                             <a href="GLOBAL_ALL_NOTIFS.php">View All</a>
                         </li>
-
+                    </ul>
+                </li>
+                <li class="dropdown sideicons">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-newspaper-o"><span class="badge count"></span></i></a>
+                    <ul class="dropdown-menu alert-dropdown">
+                        <div class="cms_notifications"></div>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="GLOBAL_ALL_NOTIFS.php">View All</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="dropdown sideicons">
