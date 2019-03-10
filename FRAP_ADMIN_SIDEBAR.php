@@ -27,6 +27,9 @@
                     <li>
                         <a href="javascript:" data-toggle="collapse" data-target="#applications"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;Applications<i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="applications" class="collapse">
+                             <li>
+                                <a href="ADMIN MEMBERSHIP applications.php"><i class="fa fa-dollar" aria-hidden="true"></i>   Member Applications</a>
+                            </li>
                             <li>
                                 <a href="ADMIN%20FALP%20applications.php"><i class="fa fa-dollar" aria-hidden="true"></i>   FALP Applications</a>
                             </li>
