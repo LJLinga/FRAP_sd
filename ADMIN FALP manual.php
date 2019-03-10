@@ -218,68 +218,35 @@ $success = null;
                $ldateappl = $laYear . "-" . $laMonth . "-" . $laDay;
                if(!empty($_POST['bunum']) && !empty($_POST['baddress'])){ //if the business number is not empty
                      $bunum = $_POST['bunum'];
-                     $baddress = $_POST['baddress'];
-
-
-                     $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME,CIV_STATUS, MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, BUSINESS_NUM, HOME_ADDRESS, BUSINESS_ADDRESS, DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,CAMPUS) 
-                                          VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat},'{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}','{$baddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','99999999','De La Salle University - Manila')";
-
-                      $result = mysqli_query($dbc,$query1);
-
-                      $pw = "password";
-
-                      $query2 = "INSERT INTO MEMBER_ACCOUNT (MEMBER_ID, PASSWORD, FIRST_CHANGE_PW) VALUES ('{$idNum}', PASSWORD('{$pw}'), '0');";
-                $result2 = mysqli_query($dbc, $query2); 
+                     $baddress = $_POST['baddress'];         
 
                }
 
                else if(!empty($_POST['bunum']) ){ //if the bnum isnt empty
                     $bunum = $_POST['bunum'];
 
-                    $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME,MIDDLENAME,CIV_STATUS,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, BUSINESS_NUM, HOME_ADDRESS, 
-                          DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,CAMPUS) VALUES ('{$idNum}','{$fName}','{$lName}','{$mName}',{$civStat},{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','99999999','De La Salle University - Manila')"; 
-
-
-                      $result = mysqli_query($dbc,$query1); 
-
-                      $pw = "password";
-
-                      $query2 = "INSERT INTO MEMBER_ACCOUNT (MEMBER_ID, PASSWORD, FIRST_CHANGE_PW) VALUES ('{$idNum}', PASSWORD('{$pw}'), '0');";
-                $result2 = mysqli_query($dbc, $query2);
+                  
 
                }
 
                else if(!empty($_POST['baddress'])){ // if the Business address isnt empty
                     $baddress = $_POST['baddress'];
 
-                    $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS, MIDDLENAME, SEX, BIRTHDATE, DATE_HIRED, HOME_NUM, HOME_ADDRESS, BUSINESS_ADDRESS, 
-                          DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,CAMPUS) VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},'{$haddress}','{$baddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','99999999','De La Salle University - Manila')"; 
-
-
-                     $result = mysqli_query($dbc,$query1); 
-
-                     $pw = "password";
-
-                     $query2 = "INSERT INTO MEMBER_ACCOUNT (MEMBER_ID, PASSWORD, FIRST_CHANGE_PW) VALUES ('{$idNum}', PASSWORD('{$pw}'), '0');";
-                $result2 = mysqli_query($dbc, $query2);
+          
 
 
 
                }
 
-               else { //when Business address and Business Number is empty
+              $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME,CIV_STATUS, MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, BUSINESS_NUM, HOME_ADDRESS, BUSINESS_ADDRESS, DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,CAMPUS) 
+                          VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat},'{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}','{$baddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','99999999','De La Salle University - Manila')";
 
-                    $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS,  MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, HOME_ADDRESS, DEPT_ID, USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,CAMPUS) 
-                        VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}','{$sex}','{$birthdate}','{$datehired}','{$honum}','{$haddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','99999999','De La Salle University - Manila')"; 
+              $result = mysqli_query($dbc,$query1);
 
-                    $result = mysqli_query($dbc,$query1); 
+              $pw = "password";
 
-                    $pw = "password";
-
-                    $query2 = "INSERT INTO MEMBER_ACCOUNT (MEMBER_ID, PASSWORD, FIRST_CHANGE_PW) VALUES ('{$idNum}', PASSWORD('{$pw}'), '0');";
-                    $result2 = mysqli_query($dbc, $query2);
-
-                }
+              $query2 = "INSERT INTO MEMBER_ACCOUNT (MEMBER_ID, PASSWORD, FIRST_CHANGE_PW) VALUES ('{$idNum}', PASSWORD('{$pw}'), '0');";
+               $result2 = mysqli_query($dbc, $query2);
                 if(isset($_POST['hasFALP'])){
                 	$falpPaid = '0';
                 	
@@ -287,12 +254,12 @@ $success = null;
                 	
                 		if(!empty($_POST['fAmountPaid'])){
                 			$falpPaid = $_POST['fAmountPaid'];
-		            	}
+		            }
 
-		                $query = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,DATE_APPROVED,PICKUP_STATUS,AMOUNT_PAID,EMP_ID)
+                $query = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,DATE_APPROVED,PICKUP_STATUS,AMOUNT_PAID,EMP_ID)
 		                          values({$_POST['idNum']},1,{$_POST['amount']},5,{$_POST['terms']},{$_POST['amount']}+{$_POST['amount']}*5/100,({$_POST['amount']}+{$_POST['amount']}*5/100)/{$_POST['terms']}/2,2,2,'{$fdateappl}','{$fdateapp}',{$_POST['pickupStatus']},{$falpPaid},99999999);";
 
-		               mysqli_query($dbc,$query);
+                mysqli_query($dbc,$query);
 		               
            			
 
@@ -402,7 +369,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                                 <label>
                                                 <span class="labelspan">Middle Name</span>
-                                                <input type="text" class="form-control memname" placeholder="Last Name" name="lName" <?php if(isset($_POST['mName'])){
+                                                <input type="text" class="form-control memname" placeholder="Middle Name" name="mName" <?php if(isset($_POST['mName'])){
                                                   echo "value = '{$_POST['mName']}'";
                                                 } ?>>
                                                 </label>
