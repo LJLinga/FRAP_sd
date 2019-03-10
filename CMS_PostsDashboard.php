@@ -28,7 +28,11 @@ $userId = $_SESSION['idnum'];
             rowReorder: true
         });
 
+        let idnum = <?php echo $_SESSION['idnum']?>;
 
+        setInterval(function(){
+            load_cms_notifications(idnum);
+        },1000);
 
         let cmsRole = "<?php echo $cmsRole; ?>";
         let s = 2;
@@ -49,8 +53,6 @@ $userId = $_SESSION['idnum'];
         displayTable(table,'');
         $('.card-footer').html('Updated on '+table.cell(0,d).data());
         displayTable(table,forMe,s, d);
-
-
 
 
         $('#tbody').on('click','.archive', function(){
@@ -106,6 +108,20 @@ $userId = $_SESSION['idnum'];
 
     function displayTable(table, searchText, statusColumn, dateColumn){
         table.column(statusColumn).search(searchText).column(dateColumn).order('desc').draw();
+    }
+
+    function load_cms_notifications(idnum)
+    {
+        $.ajax({
+            url:"CMS_AJAX_Notifications.php",
+            method:"POST",
+            data:{userId:idnum, limit: 50},
+            dataType:"json",
+            success:function(data)
+            {
+                $('#activityStream').html(data.notification);
+            }
+        });
     }
 </script>
 
@@ -189,8 +205,6 @@ $userId = $_SESSION['idnum'];
                                                                   FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
                                                                   JOIN post_status s ON s.id = p.statusId
                                                                   WHERE s.id = 2 
-                                                                  OR s.id = 3 AND p.reviewedById = '$userId'
-                                                                  OR s.id = 4 AND p.reviewedById = '$userId'
                                                                   OR p.authorId = '$userId'
                                                                   OR p.archivedById = '$userId'
                                                                   ORDER BY p.lastUpdated DESC;";
@@ -246,50 +260,37 @@ $userId = $_SESSION['idnum'];
             <div class="row">
 
             <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <b>In Process by Me</b>
+                    </div>
+                    <div class="card-body" style="max-height: 20rem; overflow: auto;">
                         <?php
                             $query = "SELECT p.id,p.title, p.authorId,CONCAT(a.firstName,' ', a.lastName) AS name,
                                       s.description AS status,p.lastUpdated FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
                                       JOIN post_status s ON s.id = p.statusId
                                       WHERE p.availabilityId = '1' AND p.lockedById = '$userId'
                                       ORDER BY p.firstCreated DESC LIMIT 10;";
-
                             $rows = $crud->getData($query);
                             if(!empty($rows)){
-                                echo '<div class="card"><div class="card-header">
-                                            <b>In Process by Me</b>
-                                      </div>
-                                      <div class="card-body" style="max-height: 20rem; overflow: auto;">';
                                 foreach ((array) $rows as $key => $row){
                                     echo '<div class="card-body" style="position: relative;">';
                                     echo ''.$row['title'];
                                     echo '<a href="CMS_EditPost.php?postId='.$row['id'].'" class="btn btn-sm" style="position: absolute;right: 10px;top: 5px;">Continue</a>';
                                     echo '</div>';
                                 }
-                                echo '</div>';
-                                echo '</div>';
+                            }else{
+                                echo 'Nothing to show';
                             }
                         ?>
+                    </div>
+                </div>
                 <div class="card" style="margin-top: 1rem;">
                     <div class="card-header">
-                        <b> Editing Activity (Comments, Status Changes)</b>
+                        <b> Activity Stream </b>
                     </div>
                     <div class="card-body" style="max-height: 20rem; overflow: auto;">
-                        <?php
-                        $query = "SELECT p.id,p.title, p.authorId,CONCAT(a.firstName,' ', a.lastName) AS name,
-                                      s.description AS status,p.lastUpdated FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
-                                      JOIN post_status s ON s.id = p.statusId
-                                      WHERE p.availabilityId = '1' AND p.lockedById = '$userId'
-                                      ORDER BY p.firstCreated DESC LIMIT 10;";
-
-                        $rows = $crud->getData($query);
-                        foreach ((array) $rows as $key => $row){
-                            echo '<div class="card-body" style="position: relative;">';
-                            echo ''.$row['title'];
-                            echo '<a href="CMS_EditPost.php?postId='.$row['id'].'" class="btn btn-sm" style="position: absolute;right: 10px;top: 5px;">Continue</a>';
-                            echo '</div>';
-                        }
-
-                        ?>
+                        <div id="activityStream"></div>
                     </div>
                 </div>
 
