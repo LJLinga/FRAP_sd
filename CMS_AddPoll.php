@@ -18,11 +18,25 @@ $cmsRole = $_SESSION['CMS_ROLE'];
 
 if(isset($_POST['btnSubmit'])){
 
+    $responseType = $_POST['responseType'];
+    $options = $_POST['option'];
+    $question = $_POST['question'];
+
+    echo $responseType.', '.$question;
+
+    $query = "INSERT INTO polls (question, authorId, approvedById, responseType) VALUES ('$question','$userId','$userId','$responseType');";
+    $pollKey = $crud->executeGetKey($query);
+
+    foreach($options AS $key => $value){
+        echo $options[$key];
+        $query = "INSERT INTO poll_options (option, pollId) VALUES ('$options[$key]','$pollKey');";
+    }
+
 }
 
 $page_title = 'Santinig - Add Poll';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR_Admin.php';
+include 'CMS_SIDEBAR.php';
 ?>
     <div id="content-wrapper">
         <div class="container-fluid">
@@ -40,23 +54,24 @@ include 'CMS_SIDEBAR_Admin.php';
                     <div class="column col-lg-8">
                         <!-- Text input-->
                         <div class="card">
+                            <form>
                             <div class="card-body">
                                 <div class="form-group">
                                     <label>Response Type</label>
-                                    <select class="form-control">
-                                        <option>Single Response</option>
-                                        <option>Multiple Response</option>
+                                    <select name="responseType" class="form-control">
+                                        <option value="1" selected>Single Response</option>
+                                        <option value="2">Multiple Response</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label>Question</label>
-                                    <input type="text" class="form-control input-md" placeholder="Ask a question">
+                                    <input name="question" type="text" class="form-control input-md" placeholder="Ask a question">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group fieldGroup">
                                     <label>Responses</label>
                                     <div class="row fieldRow">
                                         <div class="col-lg-10">
-                                            <input type="text" class="form-control input-md option-input" placeholder="Add an answer">
+                                            <input name="option[]" type="text" class="form-control input-md option-input" placeholder="Add an answer">
                                         </div>
                                         <div class="col-lg-2">
                                             <button type="button" class="btn btn-danger removeField"><i class="fa fa-trash"></i></button>
@@ -65,6 +80,10 @@ include 'CMS_SIDEBAR_Admin.php';
                                     <br><button type="button" class="btn btn-default addField">Add Option</button>
                                 </div>
                             </div>
+                                <div class="card-footer">
+                                    <button type="submit" name="btnSubmit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
@@ -78,27 +97,6 @@ include 'CMS_SIDEBAR_Admin.php';
                                 <button class="btn btn-default"><i class="fa fa-fw fa-link"></i><i class="fa fa-fw fa-file"></i> Link Existing Document</button>
                             </div>
                         </div>
-
-                        <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-body">
-                                Unsaved
-                            </div>
-                            <div class="card-footer">
-                                <?php
-                                if($cmsRole == '3') {
-                                    echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
-                                    echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="3">Submit for Publication</button> ';
-                                }else if($cmsRole == '2'){
-                                    echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
-                                    echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
-                                }else if($cmsRole == '4'){
-                                    echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
-                                    echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
-                                }
-                                ?>
-                            </div>
-                        </div>
-
                         <!-- Button -->
 
                     </div>
@@ -111,17 +109,25 @@ include 'CMS_SIDEBAR_Admin.php';
     <script>
         $(document).ready( function(){
             $('.addField').attr('disabled',true);
-            $('.addField').closest('.form-group').find('input').keyup(function(){
+            $('.addField').closest('.form-group').find('input').last().keyup(function(){
                 if($(this).val().length !=0)
                     $('.addField').attr('disabled', false);
                 else
-                    $('.addField').attr('disabled',true);
+                    $('.addField').attr('disabled', true);
             });
+
+            // $('.option-input').on('keyup', function(){
+            //     $('.addField').attr('disabled', function(){
+            //         $('.option-input').each(function(){
+            //             return($(this).val().length === 0);
+            //         });
+            //     });
+            // });
 
             $('.addField').on('click', function(){
                 $('.fieldRow').last().after('<br><div class="row fieldRow">\n' +
                     '                                        <div class="col-lg-10">\n' +
-                    '                                            <input type="text" class="form-control input-md option-input" placeholder="Add an answer">\n' +
+                    '                                            <input name="option[]" type="text" class="form-control input-md option-input" placeholder="Add an answer">\n' +
                     '                                        </div>\n' +
                     '                                        <div class="col-lg-2">\n' +
                     '                                            <button type="button" class="btn btn-danger removeField"><i class="fa fa-trash"></i></button>\n' +
@@ -130,6 +136,20 @@ include 'CMS_SIDEBAR_Admin.php';
                 $('.removeField').on('click', function(){
                     $(this).closest('.fieldRow').remove();
                 });
+                $('.addField').attr('disabled',true);
+                $('.addField').closest('.form-group').find('input').last().keyup(function(){
+                    if($(this).val().length !=0)
+                        $('.addField').attr('disabled', false);
+                    else
+                        $('.addField').attr('disabled',true);
+                });
+                // $('.option-input').on('keyup', function(){
+                //     $('.addField').attr('disabled', function(){
+                //         $('.option-input').each(function(){
+                //             return($(this).val().length === 0);
+                //         });
+                //     });
+                // });
             });
 
         });

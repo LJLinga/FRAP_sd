@@ -15,7 +15,7 @@ include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 $page_title = 'Santinig - Posts Dashboard';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR_Admin.php';
+include 'CMS_SIDEBAR.php';
 
 $userId = $_SESSION['idnum'];
 

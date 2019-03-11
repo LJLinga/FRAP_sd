@@ -16,7 +16,7 @@ $userId = $_SESSION['idnum'];
 
 $page_title = 'Santinig - Add Post';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR_Admin.php';
+include 'CMS_SIDEBAR.php';
 ?>
 <br/>
 

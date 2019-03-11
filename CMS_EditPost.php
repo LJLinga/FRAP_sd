@@ -183,7 +183,7 @@ if(isset($_POST['btnRestore'])){
 
 $page_title = 'Santinig - Edit Post';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR_Admin.php';
+include 'CMS_SIDEBAR.php';
 ?>
 <style>
     @media screen and (min-width: 1200px) {

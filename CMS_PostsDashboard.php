@@ -15,7 +15,7 @@ include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 $page_title = 'Santinig - Posts Dashboard';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR_Admin.php';
+include 'CMS_SIDEBAR.php';
 
 $userId = $_SESSION['idnum'];
 $cmsRole = $_SESSION['CMS_ROLE'];
@@ -27,8 +27,10 @@ $cmsRole = $_SESSION['CMS_ROLE'];
 
         let userId = '<?php echo $userId; ?>';
         let cmsRole = '<?php echo $cmsRole; ?>';
-
         let columns = [];
+        let s = 2;
+        let d = 3;
+        let forMe = '';
 
         if(cmsRole === '3' || cmsRole === '4'){
             columns = [
@@ -38,6 +40,11 @@ $cmsRole = $_SESSION['CMS_ROLE'];
                 { data: "lastUpdated" },
                 { data: "actions" }
             ];
+            if(cmsRole === '4'){
+                forMe = 'Pending Publication';
+            }else if(cmsRole === '3'){
+                forMe = 'Pending Review';
+            }
         }else{
             columns = [
                 { data: "title" },
@@ -45,6 +52,8 @@ $cmsRole = $_SESSION['CMS_ROLE'];
                 { data: "lastUpdated" },
                 { data: "actions" }
             ];
+            s = 1;
+            d = 2;
         }
 
         let table = $('table.table').DataTable( {
@@ -61,42 +70,11 @@ $cmsRole = $_SESSION['CMS_ROLE'];
         setInterval(function(){
             load_cms_notifications(userId);
             table.ajax.reload(null, false);
+            $('.card-footer').html('Updated on '+table.cell(0,d).data());
         },1000);
 
-        let s = 2;
-        let d = 3;
-        let forMe = '';
-
-        if(cmsRole==='3' || cmsRole==='4'){
-            if(cmsRole === '4'){
-                forMe = 'Pending Publication';
-            }else if(cmsRole === '3'){
-                forMe = 'Pending Review';
-            }
-        }else{
-            s = 1;
-            d = 2;
-        }
-
         displayTable(table,'');
-        $('.card-footer').html('Updated on '+table.cell(0,d).data());
         displayTable(table,forMe,s, d);
-
-
-        $('#tbody').on('click','.archive', function(){
-            $.ajax({
-                type: 'POST',
-                url: 'ajax/CMS_POST_ARCHIVE.php',
-                data: {
-                    'id': $('.archive').val(),
-                },
-                success: function(msg){
-                    alert("Post archived!");
-                    //$('.status').html("Trashed");
-                }
-            });
-
-        });
 
         $('#btnAll').on('click', function(){
             displayTable(table, '',s-1, d);
