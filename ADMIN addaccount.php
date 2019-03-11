@@ -27,7 +27,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
-                            Add Admin Account
+                            Create an Account
                         </h1>
                     
                     </div>

@@ -3,6 +3,7 @@
 <?php
 require_once ("mysql_connect_FA.php");
 session_start();
+error_reporting(0);
 include 'GLOBAL_USER_TYPE_CHECKING.php';
 include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
@@ -15,7 +16,7 @@ if(isset($_POST['print'])){
 
 if(!isset($_POST['select_date'])){
    
-        $query="SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_DETAIL_ID as 'Ref',l.LOAN_ID
+        $query="SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID
 from loans l 
  
 join member m
@@ -32,7 +33,7 @@ else {
             $year = substr($date,0,strpos($date,"-"));
             $month = substr($date,strpos($date,"-")+1);
            
-        $query="SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_DETAIL_ID as 'Ref',l.LOAN_ID
+        $query="SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID
 from loans l  
 
 join member m
@@ -160,13 +161,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                         <td align="center"><?php echo $ans['ID'];?></td>
                                         <td align="center"><?php echo $ans['First']." ".$ans['Middle']." ".$ans['Last'];?></td>
-                                        <td align="center">
-                                        <?php if($ans['Ref']=="1"){
-                                            echo "FALP Loan";
-
-                                        }
-                                        else
-                                            echo "BANK Loan";?></td>
+                                        <td align="center">FALP Loan</td>
                                         
 
                                         </tr>

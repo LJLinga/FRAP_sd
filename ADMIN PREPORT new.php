@@ -21,8 +21,8 @@ if(!isset($_POST['date'])){
         from member m
         join loans l
         on l.member_id = m.member_id
-        join (SELECT max(date_applied) as 'Date' from loans where loan_detail_id = 1) latest
-        where loan_detail_id =1 and date(latest.Date) = date(l.DATE_APPLIED)
+        join (SELECT max(date_applied) as 'Date' from loans) latest
+        where  date(latest.Date) = date(l.DATE_APPLIED)
         group by m.member_ID";
 
 }
@@ -37,7 +37,7 @@ else {
         from member m  
         join loans l
         on l.member_id = m.member_id
-        where loan_detail_id =1 and $month = Month(l.date_applied) AND $year = Year(l.date_applied) AND DAY(l.date_applied) between {$daystart} and {$dayend}
+        where  $month = Month(l.date_applied) AND $year = Year(l.date_applied) AND DAY(l.date_applied) between {$daystart} and {$dayend}
         group by m.member_ID";
     }
     else{
@@ -47,8 +47,8 @@ else {
         
         join loans l
         on l.member_id = m.member_id
-        join (SELECT max(date_applied) as 'Date' from loans where loan_detail_id = 1) latest
-        where loan_detail_id =1 and date(latest.Date) = date(l.DATE_APPLIED)
+        join (SELECT max(date_applied) as 'Date' from loans ) latest
+        where date(latest.Date) = date(l.DATE_APPLIED)
         group by m.member_ID";
     }
 }

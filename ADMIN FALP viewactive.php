@@ -68,7 +68,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 													on l.member_id = m.member_id 
 													join ref_department r
 													on r.dept_id = m.dept_id
-													WHERE LOAN_STATUS = 2 AND LOAN_DETAIL_ID = 1";
+													WHERE LOAN_STATUS = 2";
 										$result = mysqli_query($dbc,$query);
 										while($ans = mysqli_fetch_assoc($result)){
 											

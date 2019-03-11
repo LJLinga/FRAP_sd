@@ -57,13 +57,31 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
                     $payable = $_POST['amount'] +500;
                     $perPayment = (($_POST['amount']+500) / $payments);
 
-                    $query3 = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,PICKUP_STATUS)
-                                      values({$idNum},1,{$_POST['amount']},500,{$_POST['terms']},{$payable},{$perPayment},2,2,DATE(now()),1);";
-
+                    $query3 = "INSERT INTO loans(MEMBER_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED)
+                                      values({$idNum},{$_POST['amount']},500,{$_POST['terms']},{$payable},{$perPayment},2,2,DATE(now()));";
                     if (!mysqli_query($dbc,$query3))
                     {
                         echo("Error description: " . mysqli_error($dbc));
                     }
+
+
+                    //get the loan id of the goddamn shit
+                     $loanIDQuery = "SELECT LOAN_ID from loans where MEMBER_ID = {$idNum} ORDER BY LOAN_ID DESC  LIMIT 1";
+                     $loanIDresult = mysqli_query($dbc, $loanIDQuery);
+                     $loanIDref = mysqli_fetch_assoc($loanIDresult);
+
+                    //Inserts into the transaction table
+
+                    $desc = "Loan has been Accepted!";
+                    $query2 = "INSERT INTO txn_reference(MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, LOAN_REF, EMP_ID, SERVICE_ID)
+                             values ({$idNum}, 1, {$desc}, {$_POST['amount']}, DATE(now()),{$loanIDref['LOAN_ID']} ,{$_SESSION['idnum']}, 4)";
+                    // SERVICE ID : 1 - Membership, 2 - Health Aid, 3 - FALP
+                    // TXN_TYPE : 1 - Application 2 - Deduction
+                    mysqli_query($dbc,$query2);
+
+
+
+
 
                     if($row['USER_STATUS'] == 2){
                         $query = "UPDATE member SET  PART_TIME_LOANED = 'Y' WHERE {$idNum} = MEMBER_ID";
@@ -140,14 +158,13 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 <thead>
 
                                                 <tr>
-                                                    <td align="center"></td>
                                                     <td align="center"><b>ID Number</b></td>
                                                     <td align="center" width="300px"><b>Name</b></td>
                                                     <td align="center"><b>Department</b></td>
                                                     <td align="center"><b>Full-Time/Part-Time?</b></td>
                                                     <td align="center"><b>Part Time FALP Eligible?</b></td>
                                                     <td align="center"><b>Member Since</b></td>
-
+                                                    <td align="center"><b>Action</b></td>
 
                                                 </tr>
 
@@ -170,13 +187,13 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                     ?>
                                                     <tr>
 
-                                                        <td align="center"><?php echo "<input type='radio' name='idNum' value='".$row2['MEMBER_ID']."'>" ; ?></td>
                                                         <td align="center"><?php echo $row2['MEMBER_ID'];?></td>
-                                                        <td align="center"><?php echo $row2['FIRSTNAME']." ".$row2['LASTNAME'];?> </td>
+                                                        <td align="center" id="nameTD"><?php echo $row2['FIRSTNAME']." ".$row2['LASTNAME'];?> </td>
                                                         <td align="center"><?php echo $row2['DEPT_NAME'];?></td>
-                                                        <td align="center"><?php echo $row2['STATUS'];?></td>
+                                                        <td align="center" id="statusTD"><?php echo $row2['STATUS'];?></td>
                                                         <td align="center"><?php echo $row2['PART_TIME_LOANED'];?></td>
                                                         <td align="center"><?php echo $row2['DATE_APPROVED'];?></td>
+                                                        <td align="center"><button type="button" id="btnAdd" class="btn btn-default" data-toggle="modal" data-target="#myModal" value="<?php echo $row2['MEMBER_ID']; ?>">Add</button></td>
 
                                                     </tr>
                                                 <?php }?>
@@ -190,55 +207,11 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                     </div>
 
-                            <div class="panel panel-green">
 
-                                <div class="panel-heading">
-
-                                    <b>FALP  Information</b>
-                                </div>
-
-                                <div class="panel-body">
-
-                                    <div class="row">
-
-                                        <div class="col-lg-4">
-
-                                            <input type="checkbox" name="ifPartTime" value="partTime" id="partTime"> Is the member a part time? <br>
-                                            <label class="memfieldlabel">Amount</label><big class="req"> *</big>
-                                            <input type="number" class="form-control" placeholder="Enter Amount (Peso)" name="amount" id="amount" min="5000" max="15000" maxlength="5" required>
-
-                                        </div>
-
-                                    </div>
-
-                                    <p>
-
-                                    <div class="row">
-
-                                        <div class="col-lg-4">
-                                            
-                                            <label class="memfieldlabel">Payment Terms</label><big class="req"> *</big>
-                                            <input type="number" class="form-control" placeholder="Payment Terms" name="terms"  id="terms" min="1">
-                                            <p>
-                                            <div id = "totalI">   </div> <p>
-                                            <p>
-                                            <div id = "totalP"> </div><p>
-                                            <p>
-                                            <div id = "PerP"></div><p>
-                                            <p>
-                                            <div id = "Monthly"></div>
-
-                                            <input type="button" name="compute" class="btn btn-success" value="Compute" id="falpcompute">
-                                        </div>
-
-                                    </div>
 
                                 </div>
 
                             </div>
-
-                            <input class="btn btn-success" type="submit" name="submit" value="Submit"></p>
-
                        </form>
 
                     </div>
@@ -254,6 +227,53 @@ include 'FRAP_ADMIN_SIDEBAR.php';
     <!-- /#wrapper -->
     
     <!-- jQuery -->
+    <!-- Bootstrap Core JavaScript -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <form method="POST" id="addToFALPForm">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Add <span id="modalFullName"></span> to FALP
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="memfieldlabel">Amount</label><big class="req"> *</big>
+                            <input type="number" class="form-control" placeholder="Enter Amount (Peso)" name="amount" id="amount" min="5000" max="15000" maxlength="5" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="memfieldlabel">Payment Terms</label><big class="req"> *</big>
+                            <input type="number" class="form-control" placeholder="Payment Terms" name="terms"  id="terms" min="1">
+                        </div>
+                        <div class="form-group">
+                            <p>
+                            <div id = "totalI">   </div> <p>
+                            <p>
+                            <div id = "totalP"> </div><p>
+                            <p>
+                            <div id = "PerP"></div><p>
+                            <p>
+                            <div id = "Monthly"></div>
+                            <input type="button" name="compute" class="btn btn-success" value="Compute" id="falpcompute">
+                        </div>
+                        <span id="err"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <input type="hidden" name="userId" value="<?php echo $userId; ?>">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <input class="btn btn-success" type="submit" name="submit" value="Submit"></p>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
    
     <?php if (!empty($success)) {
         
@@ -262,42 +282,46 @@ include 'FRAP_ADMIN_SIDEBAR.php';
     }
 
     ?>
-    <!-- Bootstrap Core JavaScript -->
 
     <script type="text/javascript" src="DataTables/datatables.min.js"></script>
+    <script>
+        $(document).ready(function(){
 
-    <script src="js/bootstrap.min.js"></script>
-<script>
-         $(document).ready(function(){
-             $("#falpcompute").attr("disabled", "disabled");
-
-             $('#table').DataTable();
-
-             $('#amount').on("change", function(){
-                 let a = $('#amount'.val();
-                 if((a > 4999 && a < 15001)){
-                     $("#falpcompute").removeAttr("disabled");
-                 }else{
-                     $("#falpcompute").attr("disabled", "disabled");
-                 }
-             });
-
-         });
+            $('#table').DataTable();
+            $('#btnAdd').on('click',function(){
+                let name = $(this).closest("tr.td#nameTD").html();
+                $("#modalFullName").html(name);
+                alert(name);
+            });
+            $("#falpcompute").attr("disabled", "disabled");
+            $('#amount').on("change", function(){
+                let a = $('#amount').val();
+                if((a > 4999 && a < 15001)){
+                    $("#falpcompute").removeAttr("disabled");
+                }else{
+                    $("#falpcompute").attr("disabled", "disabled");
+                }
+            });
+        });
+    </script>
+    <script>
 
         document.getElementById("falpcompute").onclick = function() {
             checkform();
         };
+
+         let type = <?php echo $userStatus['STATUS']; ?>;
         
         function calculate(){
             
-            var amount = parseFloat(document.getElementById("amount").value);
-            var terms = parseFloat(document.getElementById("terms").value);
-            var interest = 0;
+            let amount = parseFloat(document.getElementById("amount").value);
+            let terms = parseFloat(document.getElementById("terms").value);
+            let interest = 0;
 
-            if(document.getElementById("partTime").checked){
-                interest = 300;
+            if(type == 1){
+                interest = 500
             }else{
-                interest = 500;
+                interest = 300;
             }
             
             document.getElementById("totalI").innerHTML ="<b>Total Interest Payable: </b>₱"+ parseFloat((interest)).toFixed(2);
@@ -310,21 +334,21 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
         function checkform(){
 
-            var elemAmount = document.getElementById("amount");
-            var elemTerms = document.getElementById("terms");
+            let elemAmount = document.getElementById("amount");
+            let elemTerms = document.getElementById("terms");
 
-            var amount = parseFloat(elemAmount.value);
-            var terms = parseFloat(elemTerms.value);
+            let amount = parseFloat(elemAmount.value);
+            let terms = parseFloat(elemTerms.value);
 
-            var amountLimit;
-            var termMax;
+            let amountLimit;
+            let termMax;
 
-            if(document.getElementById("partTime").checked){
-                amountLimit = 15000;
-                termMax = 3;
-            }else{
+            if(type == 1){
                 amountLimit = 25000;
                 termMax = 5;
+            }else{
+                amountLimit = 15000;
+                termMax = 3;
             }
 
             elemAmount.setAttribute("max",amountLimit+"");
