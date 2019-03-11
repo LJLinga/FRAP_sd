@@ -9,14 +9,14 @@
 ?>
 
     <!-- Panel -->
-    <div class="card card-default">
+    <div class="card">
         <div class="card-header"><i class="fa fa-fw fa-tasks"></i> Create Polls</div>
         <div class="card-body">
             <div class="form-group">
                 <label>Type of Poll</label>
                 <select class="form-control">
-                    <option>Choose One</option>
-                    <option>Choose Multiple</option>
+                    <option>Single Response</option>
+                    <option>Multiple Response</option>
                 </select>
             </div>
             <label>Question</label>
@@ -31,7 +31,6 @@
                         <input type="text" class="form-control input-md option-input" placeholder="Add an answer">
                     </div>
                 </div>
-
         </div>
     </div>
 

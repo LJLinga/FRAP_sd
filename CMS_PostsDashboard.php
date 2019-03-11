@@ -54,7 +54,8 @@ $cmsRole = $_SESSION['CMS_ROLE'];
                 "data":{ userId: userId, cmsRole:cmsRole },
                 "dataSrc": ''
             },
-            columns: columns
+            columns: columns,
+            rowReorder: false
         });
 
         setInterval(function(){
@@ -187,22 +188,22 @@ $cmsRole = $_SESSION['CMS_ROLE'];
                                 <thead>
                                 <tr>
 
-                                    <th align="left" width="200px"><b>Title</b></th>
-                                    <?php if($cmsRole == '3' || $cmsRole == '4') echo '<th align="left" width="200px"><b>Author</b></th>'?>
+                                    <th align="left" width="250px"><b>Title</b></th>
+                                    <?php if($cmsRole == '3' || $cmsRole == '4') echo '<th align="left" width="250px"><b>Author</b></th>'?>
                                     <th align="left" width="100px"><b>Status</b></th>
                                     <th align="left" width="200px"><b>Last Updated</b></th>
-                                    <th align="right" width="200px"><b>Actions</b></th>
+                                    <th align="right" width="100px"><b>Action</b></th>
 
                                 </tr>
                                 </thead>
                                 <tfoot>
                                 <tr>
 
-                                    <th align="left" width="200px"><b>Title</b></th>
-                                    <?php if($cmsRole == '3' || $cmsRole == '4') echo '<th align="left" width="200px"><b>Author</b></th>'?>
+                                    <th align="left" width="250px"><b>Title</b></th>
+                                    <?php if($cmsRole == '3' || $cmsRole == '4') echo '<th align="left" width="250px"><b>Author</b></th>'?>
                                     <th align="left" width="100px"><b>Status</b></th>
                                     <th align="left" width="200px"><b>Last Updated</b></th>
-                                    <th align="right" width="200px"><b>Actions</b></th>
+                                    <th align="right" width="100px"><b>Action</b></th>
 
                                 </tr>
                                 </tfoot>
