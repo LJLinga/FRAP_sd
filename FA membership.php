@@ -60,6 +60,7 @@ $success = null;
     if (isset($_POST['submit'])) {
 
             $idNum = $_POST['idNum']; 
+           
             $failedLife = null;
             $failedFalp = null;
             //first and last names
@@ -162,6 +163,13 @@ $success = null;
                     echo '</script>';
 
             }
+            }else if(empty($_POST['email'])){ // checks if any of the adresses are empty 
+
+                    echo '<script language="javascript">';
+                    echo 'alert("Please put your  DLSU email address! ")';
+                    echo '</script>';
+
+            }
             else if(isset($_POST['hasFALP'])&&(empty($_POST['amount']) || empty($_POST['terms']))){
                     
                     
@@ -238,8 +246,8 @@ $success = null;
                }
 
                
-                 $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS,  MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, HOME_ADDRESS, DEPT_ID, USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,CAMPUS) 
-                        VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}','{$sex}','{$birthdate}','{$datehired}','{$honum}','{$haddress}',{$dept},1,1,'{$dateappl}','{$dateapp}','99999999','De La Salle University - Manila')"; 
+                 $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS,  MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, HOME_ADDRESS, DEPT_ID, USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,EMAIL) 
+                        VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}','{$sex}','{$birthdate}','{$datehired}','{$honum}','{$haddress}',{$dept},1,1,'{$dateappl}','{$dateapp}','99999999',{$_POST['email']})"; 
 
                     $result = mysqli_query($dbc,$query1); 
 

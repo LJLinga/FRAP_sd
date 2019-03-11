@@ -139,7 +139,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
     <!-- /#wrapper -->
 
     <!-- jQuery -->
-    
+        
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>

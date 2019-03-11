@@ -145,7 +145,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                     left join txn_reference t
                                                     on t.SERVICE_ID = s.SERVICE_ID
                                                     join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
-                                                    where (txn_date between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-01 23:59:59')  AND t.TXN_TYPE = 2 AND s.SERVICE_ID = 1 
+                                                    where (txn_date between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-31 23:59:59')  AND t.TXN_TYPE = 2 AND s.SERVICE_ID = 1 
                                                     group by t.SERVICE_ID ";
                                     }
 
@@ -201,7 +201,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 left join txn_reference t
                                                 on t.SERVICE_ID = s.SERVICE_ID
                                                 
-                                                where (txn_date between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-01 23:59:59')  AND t.TXN_TYPE = 2 AND s.SERVICE_ID = 2 
+                                                where (txn_date between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-31 23:59:59')  AND t.TXN_TYPE = 2 AND s.SERVICE_ID = 2 
                                                 group by t.SERVICE_ID ";
                                     }
                                     $result1 = mysqli_query($dbc,$query1);
@@ -258,7 +258,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 left join txn_reference t
                                                 on t.SERVICE_ID = s.SERVICE_ID
                                                
-                                                where (txn_date between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-01 23:59:59')  AND t.TXN_TYPE = 2 AND s.SERVICE_ID = 4 
+                                                where (txn_date between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-31 23:59:59')  AND t.TXN_TYPE = 2 AND s.SERVICE_ID = 4 
                                                 group by t.SERVICE_ID ";
                                     }
                                     $result1 = mysqli_query($dbc,$query1);

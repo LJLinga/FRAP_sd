@@ -48,49 +48,74 @@ function Footer()
 
 
 }
-if(isset($_SESSION['date'])){
-     $date = $_SESSION['date'];
-        $day = substr($date,0,strpos($date," "));
-        $month = substr($date,strpos($date," ")+1,strpos($date,"-")-strpos($date," ")-1);
-        $year = substr($date,strpos($date,"-")+1);
+if(!isset($_SESSION['event_start'])){
+   
+        $query2="SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee'
+from member m
+join ref_department d
+on m.dept_id = d.dept_id
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 1 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) mf
+on m.MEMBER_ID = mf.member_id
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 2 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) ha
+on m.MEMBER_ID = ha.member_id
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 3 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) f
+on m.MEMBER_ID = f.member_id
+join txn_reference t
+on t.member_id = m.member_id
+join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
+where DATE(latest.Date) = date(TXN_DATE) group by m.member_ID";
 
-            if($month=="1"){
-                $month = "January";
+}
+else {
+         $date = $_SESSION['event_start'];
+        $dayStart = substr($date,0,strpos($date,"-"));
+        $monthStart = substr($date,(strpos($date,"-")+1),strpos($date,"- ")-3);
+        $yearStart = substr($date,strpos($date,"- ")+1);
+            if(!empty($_SESSION['event_end'])){
+                $date = $_SESSION['event_end'];
+
+                $dayEnd = substr($date,0,strpos($date,"-"));
+                $monthEnd = substr($date,(strpos($date,"-")+1),strpos($date,"- ")-3);
+                $yearEnd = substr($date,strpos($date,"- ")+1);
             }
-            else if($month=="2"){
-                $month = "February";
-            }
-            else if($month=="3"){
-                $month = "March";
-            }
-            else if($month=="4"){
-                $month = "April";
-            }
-            else if($month=="5"){
-                $month = "May";
-            }
-            else if($month=="6"){
-                $month = "June";
-            }
-            else if($month=="7"){
-                $month = "July";
-            }
-            else if($month=="8"){
-                $month = "August";
-            }
-            else if($month=="9"){
-                $month = "September";
-            }
-            else if($month=="10"){
-                $month = "October";
-            }
-            else if($month=="11"){
-                $month = "November";
-            }
-            else if($month=="12"){
-                $month = "December";
-            }
+        if(!isset($yearEnd)){
+        $query2 = "SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee'
+from member m
+join ref_department d
+on m.dept_id = d.dept_id
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 1 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) mf
+on m.MEMBER_ID = mf.member_id
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 2 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) ha
+on m.MEMBER_ID = ha.member_id
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 3 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) f
+on m.MEMBER_ID = f.member_id
+
+join txn_reference t
+        on t.MEMBER_ID = m.MEMBER_ID
+        where TXN_TYPE =2 and $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date)
+group by m.member_ID";
         }
+        else{
+             $query2 = "SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee'
+from member m
+join ref_department d
+on m.dept_id = d.dept_id
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 1 AND (txn_date between '$yearStart-$monthStart-$dayStart 00:00:00' AND '$yearEnd-$monthEnd-$dayEnd 23:59:59') AND TXN_TYPE =2 group by member_id) mf
+on m.MEMBER_ID = mf.member_id
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 2 AND (txn_date between '$yearStart-$monthStart-$dayStart 00:00:00' AND '$yearEnd-$monthEnd-$dayEnd 23:59:59') AND TXN_TYPE =2 group by member_id) ha
+on m.MEMBER_ID = ha.member_id
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 3 AND(txn_date between '$yearStart-$monthStart-$dayStart 00:00:00' AND '$yearEnd-$monthEnd-$dayEnd 23:59:59') AND TXN_TYPE =2 group by member_id)  f
+on m.MEMBER_ID = f.member_id
+
+join txn_reference t
+        on t.MEMBER_ID = m.MEMBER_ID
+        where TXN_TYPE =2 and (txn_date between '$yearStart-$monthStart-$dayStart 00:00:00' AND '$yearEnd-$monthEnd-$dayEnd 23:59:59')
+group by m.member_ID";
+        }
+    
+}
+
+
 // Instanciation of inherited class
 $pdf = new PDF('L');
 $pdf->AliasNbPages();
@@ -99,8 +124,11 @@ $pdf->SetFont('Times','B',10);
 $pdf->Cell(0	,5,"Detailed Overall Deductions"	,0,1,'C');
 date_default_timezone_set('Singapore');
 $pdf->SetFont('Times','',10);
-if($_SESSION['date']!="0")
-    $pdf->Cell(0    ,5,"For ".$day." ".$month." ".$year ,0,1,'C');
+$range = "For ".date('F Y', mktime(0, 0, 0, $monthStart+1, 0,$yearStart));
+if(isset($yearEnd)){
+    $range.="-".date('F Y', mktime(0, 0, 0, $monthEnd+1, 0,$yearEnd));
+}
+$pdf->Cell(0    ,5,$range,0,1,'C');
 $pdf->Cell(0	,5,"Generated by Melton at ".date("m/d/Y")." ".date("h:i:sa")	,0,1,'C');
 $pdf->ln();
 $pdf->SetFont('Times','B',10);
@@ -124,46 +152,8 @@ $pdf->Cell(25	,5,'Health Aid'	,'L,B,R',0,'R');
 $pdf->Cell(30	,5,'Deduction'	,'L,B,R',0,'R');
 $pdf->ln();
 $pdf->SetFont('Times','',10);
-require_once('mysql_connect_FA.php');
-$flag=0;
-if($_SESSION['date'] != "0"){
-        $date = $_SESSION['date'];
-        $day = substr($date,0,strpos($date," "));
-        $month = substr($date,(strpos($date," ")+1),strpos($date,"-")-strpos($date," ")-1);
-        $year = substr($date,strpos($date,"-")+1);
-        $query="SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee'
-from member m
-join ref_department d
-on m.dept_id = d.dept_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 1 AND $month = Month(txn_date) AND $year = Year(txn_date) AND $day = DAY(txn_date) group by member_id) mf
-on m.MEMBER_ID = mf.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 2 AND $month = Month(txn_date) AND $year = Year(txn_date) AND $day = DAY(txn_date) group by member_id) ha
-on m.MEMBER_ID = ha.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 3 AND $month = Month(txn_date) AND $year = Year(txn_date) AND $day = DAY(txn_date) group by member_id) f
-on m.MEMBER_ID = f.member_id
-join txn_reference t
-        on t.MEMBER_ID = m.MEMBER_ID
-        where TXN_TYPE =2 and $month = Month(txn_date) AND $year = Year(txn_date) AND $day = DAY(txn_date)
-group by m.member_ID";
-    }
-    else{
-        $query="SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee'
-from member m
-join ref_department d
-on m.dept_id = d.dept_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 1 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) mf
-on m.MEMBER_ID = mf.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 2 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) ha
-on m.MEMBER_ID = ha.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 3 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) f
-on m.MEMBER_ID = f.member_id
-join txn_reference t
-on t.member_id = m.member_id
-join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
-where DATE(latest.Date) = date(TXN_DATE) group by m.member_ID";
-    }
-	
-$result=mysqli_query($dbc,$query);
+
+$result=mysqli_query($dbc,$query2);
 
 
 while($row=mysqli_fetch_assoc($result)){
