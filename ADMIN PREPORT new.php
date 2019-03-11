@@ -111,7 +111,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                    <form action="ADMIN PREPORT new.php" method="POST" >
 
-                                        
+                                        <div class="col-lg-12lg-4">
                             <div class="form-group">
                                 <label for="event_start">Start Date</label>
                                 <div class="input-group date" id="datetimepicker1">
@@ -122,7 +122,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                 </div>
                             </div>
                         </div>
-                        
+                        <div class="col-lg-12lg-4">
                             <div class="form-group">
                                 <label for="event_start">End Date</label>
                                 <div class="input-group date" id="datetimepicker2">
