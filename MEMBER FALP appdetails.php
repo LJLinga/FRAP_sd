@@ -4,7 +4,6 @@
 require_once('mysql_connect_FA.php');
 session_start();
 include 'GLOBAL_USER_TYPE_CHECKING.php';
-include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
 
 
@@ -14,6 +13,8 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
         $result = mysqli_query($dbc, $query);
         $row = mysqli_fetch_array($result);
 
+        //add some code to make the accept applications only clickable when every detail has been
+
         if($_POST['action'] == "Accept Application"){
 
             //Change the status into Approved (APP_STATUS =2)
@@ -22,96 +23,12 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
            //Insert into transaction table
             $queryTnx = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, LOAN_REF, EMP_ID, SERVICE_ID) 
-            VALUES({$row['MEMBER_ID']}, '1', 'FALP Approved', 0, NOW(), {$_SESSION['showFID']}, {$_SESSION['idnum']}, '4'); ";
+            VALUES({$row['MEMBER_ID']}, '1', 'FALP Approved', 0, NOW(), {$_SESSION['showFID']}, {$_SESSION['idnum']}, '2'); ";
             $resultTnx = mysqli_query($dbc, $queryTnx);
 
             $message = "Accepted" ;
 
-
-            // put the insert code for the To_Deduct table here.
-
-            //get the current month
-            $loanDetails = "SELECT * FROM LOANS WHERE LOAN_ID = {$_SESSION['showFID']}";
-            $loanDetailsResult = mysqli_query($dbc,$query);
-            $loanDetailsRow = mysqli_fetch_assoc($loanDetailsResult);
-
-            $currMonth = date('m');
-            $currDay = date('D');
-            $currYear = date('Y');
-
-            //remember that $ans['ID'] is the one that keeps track of the loan id!
-
-            $i = 0; //this will keep track on how many payments has been inserted.
-            $payments =  $loanDetailsRow['PAYMENT_TERMS']*2;
-
-            while($i < $payments){  //get the payment terms, and have the counter keep track on how many has been  inserted already.
-
-                //check if it is February first so we can adjust the end date by February 28.
-
-                if($currMonth == 2){
-                    if($currDay < 15){
-
-                        $i++;
-                        $i++;
-                    }else if($currDay < 28){
-
-                        $i++;
-                    }else{
-
-
-                    }
-
-                }else { //this means its just any day of the month
-
-                    if($currDay < 15){
-
-
-                        $i++;
-                    }else if($currDay < 30){
-
-                        $i++;
-                    }else{
-
-                        $i++;
-                    }
-                    //make sure that the curr day resets to 1 - cause all we are after is the first insert in order for us to do thi s\
-                }
-
-
-
-
-
-                //account for the 15th and 30th of the month. This only affects the first date, no worries.
-
-                //check if the current day falls within the 15th and 30th of the month. If the day is over 30, which means 31, then move CurrMoth to the nxt.
-
-                //after pin pointing the month that the shit will fall onto is
-
-                //okay okay
-
-                if($currMoth == 2){ //put an if, february, then feb 28 will be the date to pay the shit.
-
-                    //$dateToInsert = ;
-
-                    $query2 = "INSERT INTO to_deduct(LOAN_REF, DEDUCTION_DATE)
-                             values ( )";
-
-                }else{
-
-
-                }
-
-                //find a way to insert into the To_Deduct table
-
-
-
-                //get the number of payments/payment terms.
-
-
-                //merge the shits into one entire date time
-
-
-            }
+            //then add the code to insert into the to_deductions table.
 
 
         }
@@ -127,6 +44,8 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
             $resultTnx = mysqli_query($dbc, $queryTnx);
 
             $message = "Rejected";
+
+
         }
 
     }
@@ -134,34 +53,38 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
      //prepare the code in order for us to link the stuff from the database to the View Document Screen.
 
+    //
 
 
-
- if(isset($_POST['download'])){
-
-        $query = "SELECT * FROM falp_requirements WHERE LOAN_ID = ". $_SESSION['showFID'] .";";
-       $result = mysqli_query($dbc, $query);
-      $row = mysqli_fetch_array($result);
-
-       if($_POST['download'] == "Download ICR"){
-
-          header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadFile.php?loanID=".urlencode(''.$row['ICR_DIR']) );
-
-        }else if($_POST['download'] == "Download Payslip"){
-
-           header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadFile.php?loanID=".urlencode(''.$row['PAYSLIP_DIR']) );
-
-      }else if($_POST['download'] == "Download Employee ID"){
-
-          header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadFile.php?loanID=".urlencode(''.$row['EMP_ID_DIR']) );
-
-      }else if($_POST['download'] == "Download Government ID"){
-
-           header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadFile.php?loanID=".urlencode(''.$row['GOV_ID_DIR']) );
-
-      }
-
-    }
+//    if(isset($_POST['download'])){
+//
+////        $query = "SELECT * FROM falp_requirements WHERE LOAN_ID = ". $_SESSION['showFID'] .";";
+////        $result = mysqli_query($dbc, $query);
+////        $row = mysqli_fetch_array($result);
+////
+////        if($_POST['download'] == "Download ICR"){
+////
+////            header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadFile.php?loanID=".urlencode(''.$row['ICR_DIR']) );
+////
+////        }else if($_POST['download'] == "Download Payslip"){
+////
+////            header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadFile.php?loanID=".urlencode(''.$row['PAYSLIP_DIR']) );
+////
+////        }else if($_POST['download'] == "Download Employee ID"){
+////
+////            header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadFile.php?loanID=".urlencode(''.$row['EMP_ID_DIR']) );
+////
+////        }else if($_POST['download'] == "Download Government ID"){
+////
+////            header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadFile.php?loanID=".urlencode(''.$row['GOV_ID_DIR']) );
+////
+////        }
+//
+//
+//
+//
+//
+//    }
 
 $page_title = 'Loans - Membership Application Details';
 include 'GLOBAL_HEADER.php';
@@ -284,7 +207,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                 $result = mysqli_query($dbc, $query);
                                 $row = mysqli_fetch_array($result);
 
-                                if($row['APP_STATUS'] == 1){
+                                if($row['APP_STATUS'] = 1){
                                 ?>
 
                                 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST"> <!-- SERVER SELF -->

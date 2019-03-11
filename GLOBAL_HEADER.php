@@ -69,8 +69,12 @@
 <div id="wrapper">
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="navbar-header"> <!-- Logo -->
+
             <img src="images/I-FA Logo Edited.png" id="ifalogo">
+
+
             <ul class="nav navbar-right top-nav"> <!-- Top Menu Items / Notifications area -->
+
                 <li>
                     <a href="MEMBER%20dashboard.php"> Home </a>
                 </li>
@@ -94,23 +98,23 @@
                     }?>
                 <li class="dropdown sideicons">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-money"><span id="count" class="badge"></span></i></a>
+                        <i class="fa fa-money"><span class="badge count"></span></i></a>
                     <ul class="dropdown-menu alert-dropdown">
-                        <div id="notifications"></div>
+                        <div class="notifications"></div>
                         <li class="divider"></li>
                         <li>
-                            <a href="GLOBAL_ALL_NOTIFS.php">View All</a>
+                            <a href="FRAP_ALL_NOTIFS.php">View All</a>
                         </li>
                     </ul>
                 </li>
                 <li class="dropdown sideicons">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-newspaper-o"><span id="cmsCount" class="badge"></span></i></a>
+                        <i class="fa fa-newspaper-o"><span class="badge count"></span></i></a>
                     <ul class="dropdown-menu alert-dropdown">
-                        <div id="cms_notifications" style="font-size: 12px;"></div>
+                        <div class="cms_notifications"></div>
                         <li class="divider"></li>
                         <li>
-                            <a href="GLOBAL_ALL_NOTIFS.php">View All</a>
+                            <a href="FRAP_ALL_NOTIFS.php">View All</a>
                         </li>
                     </ul>
                 </li>
@@ -121,13 +125,21 @@
                         $row = mysqli_fetch_array($result);
                         $displayName = $row['LASTNAME']." , ".$row['FIRSTNAME'][0].". ";
                     ?>
+
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $displayName; ?> <b class="caret"></b></a>
+
                     <ul class="dropdown-menu">
+
                         <li>
+
                             <a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+
                         </li>
+
                     </ul>
+
                 </li>
+
             </ul>
 
             <script>
@@ -145,28 +157,10 @@
                             dataType:"json",
                             success:function(data)
                             {
-                                $('#notifications').html(data.notification);
+                                $('.notifications').html(data.notification);
                                 if(data.unseen_notification > 0)
                                 {
-                                    $('#counts').html(data.unseen_notification);
-                                }
-                            }
-                        });
-                    }
-
-                    function load_cms_notifications(idnum)
-                    {
-                        $.ajax({
-                            url:"CMS_AJAX_Notifications.php",
-                            method:"POST",
-                            data:{userId:idnum, limit: 5},
-                            dataType:"json",
-                            success:function(data)
-                            {
-                                $('#cms_notifications').html(data.notification);
-                                if(data.count > 0)
-                                {
-                                    $('#cmsCount').html(data.count);
+                                    $('.counts').html(data.unseen_notification);
                                 }
                             }
                         });
@@ -174,7 +168,16 @@
 
                     setInterval(function(){
                         load_unseen_notification(temp); // this will run after every 1 second
-                        load_cms_notifications(temp);
-                    }, 1000);
+                    }, 5000);
+
+
+// load new notifications
+                    $(document).on('click', '.dropdown-toggle', function(){
+                        $('.counts').html('');
+                        load_unseen_notification('yes');
+                    });
+                    setInterval(function(){
+                        load_unseen_notification();
+                    }, 5000);
                 });
             </script>

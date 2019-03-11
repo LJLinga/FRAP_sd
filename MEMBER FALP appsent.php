@@ -27,8 +27,8 @@
 
 //MENTAL NOTE TO SELF..... DAPAT AYUSIN WHEN THELOAN STARTS! Loans should start when it is APPROVED! just keep this code here for now as placeholder.
 
-    $query = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,PICKUP_STATUS)
-    values({$_SESSION['idnum']},1,{$_POST['amount']},{$_POST['interest']},{$_POST['payT']},{$_POST['amountP']},{$_POST['monD']}/2,1,1,DATE(now()),1);";
+    $query = "INSERT INTO loans(MEMBER_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED)
+    values({$_SESSION['idnum']},{$_POST['amount']},{$_POST['interest']},{$_POST['payT']},{$_POST['amountP']},{$_POST['monD']}/2,1,1,DATE(now()));";
 
     mysqli_query($dbc,$query);
 
@@ -45,10 +45,11 @@
     $amount = $_POST['amount'];
 
     $query2 = "INSERT INTO txn_reference(MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, LOAN_REF, SERVICE_ID)
-                             values ({$_SESSION['idnum']}, 1, {$desc}, {$amount}, DATE(now()), {$ans['ID']}, 3  )";
-    // SERVICE ID : 1 - Membership, 2 - Health Aid, 3 - FALP
+                             values ({$_SESSION['idnum']}, 1, {$desc}, {$amount}, DATE(now()), {$ans['ID']}, 4)";
+    // SERVICE ID : 1 - Membership, 2 - Health Aid, 4 - FALP
     // TXN_TYPE : 1 - Application 2 - Deduction
     mysqli_query($dbc,$query2);
+
 
 
 //function for making the pathways

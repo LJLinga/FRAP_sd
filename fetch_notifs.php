@@ -69,7 +69,7 @@ if(isset($_POST['idnum'])){
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <a id="refresh" href="http://localhost/Thesis/FRAP_sd/FRAP_sd/GLOBAL_ALL_NOTIFS.php">No More Notifcations. Refresh.</a>
+                        <a id="refresh" href="http://localhost/Thesis/FRAP_sd/FRAP_sd/FRAP_ALL_NOTIFS.php">No More Notifcations. Refresh.</a>
                     </div>
                 </div>
             </div>';

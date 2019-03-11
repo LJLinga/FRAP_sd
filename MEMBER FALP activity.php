@@ -15,7 +15,7 @@
     }
     
     $query = "SELECT * FROM LOANS where MEMBER_ID = {$_SESSION['idnum']} 
-              AND loan_detail_id = 1 AND 	loan_status != 3 ";
+               AND 	loan_status != 3 ";
     $result = mysqli_query($dbc,$query);
     $ans = mysqli_fetch_assoc($result);
 
