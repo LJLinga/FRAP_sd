@@ -163,7 +163,7 @@ $success = null;
                     echo '</script>';
 
             }
-            }else if(empty($_POST['email'])){ // checks if any of the adresses are empty 
+            else if(empty($_POST['email'])){ // checks if any of the adresses are empty 
 
                     echo '<script language="javascript">';
                     echo 'alert("Please put your  DLSU email address! ")';

@@ -8,7 +8,8 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
 $flag=0;
 if(isset($_POST['print'])){
-    $ $_SESSION['event_start']=$_POST['event_start'];
+    $_SESSION['event_start'] = null;
+    $_SESSION['event_start']=$_POST['event_start'];
     $_SESSION['event_end'] = null;
     if(!empty($_POST['event_end']))
     $_SESSION['event_end'] = $_POST['event_end'];

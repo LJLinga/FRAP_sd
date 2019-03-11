@@ -165,7 +165,7 @@ $success = null;
                     echo '</script>';
 
             }
-             }else if(empty($_POST['email'])){ // checks if any of the adresses are empty 
+             else if(empty($_POST['email'])){ // checks if any of the adresses are empty 
 
                     echo '<script language="javascript">';
                     echo 'alert("Please fill up the email address! ")';
@@ -382,11 +382,13 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                   echo "value = '{$_POST['mName']}'";
                                                 } ?>>
                                                 </label>
+                                                <div>
                                                  <span class="labelspan">DLSU Email<big class="req"> *</big>
                                                 <input type="text" class="form-control memname" placeholder="Email" name="email" <?php if(isset($_POST['email'])){
                                                   echo "value = '{$_POST['email']}'";
                                                 } ?>>
-                                                </label>
+                                                </span>
+                                              </div>
                                                
 
                                         </div>

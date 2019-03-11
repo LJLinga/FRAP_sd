@@ -11,7 +11,7 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 $flag=0;
 if(isset($_POST['print'])){
    
-   
+   $_SESSION['event_start']=null;
     $_SESSION['event_start']=$_POST['event_start'];
     $_SESSION['event_end'] = null;
     if(!empty($_POST['event_end']))
@@ -94,10 +94,10 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                             <div class="panel-heading">
 
-                                <b>View Report for <?php echo date('F', mktime(0, 0, 0, $monthStart, 10)).' '.$yearStart;
+                                <b>View Report for <?php echo date('d F', mktime(0, 0, 0, $monthStart, $dayStart)).' '.$yearStart;
                                 if(isset($yearEnd)){
 
-                                    echo ' - '.date('F', mktime(0, 0, 0, $monthEnd, 10)).' '.$yearEnd;
+                                    echo ' - '.date('d F', mktime(0, 0, 0, $monthEnd, $dayEnd)).' '.$yearEnd;
 
                                 }?></b>
 
