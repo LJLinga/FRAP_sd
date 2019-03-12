@@ -7,12 +7,12 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
 
 $query = "SELECT * FROM LOANS where LOAN_ID = {$_SESSION['details']} 
-                                                  AND loan_detail_id = 1 AND    loan_status != 3";
+                                                AND    loan_status != 3";
 $result = mysqli_query($dbc,$query);
 $ans = mysqli_fetch_assoc($result);
 
 $query1 = "SELECT l2.STATUS as 'Status' FROM LOANS l1 JOIN LOAN_STATUS l2 ON l1.LOAN_STATUS = l2.STATUS_ID where l1.LOAN_ID = {$_SESSION['details']} 
-                                                  AND l1.loan_detail_id = 1 AND     l1.loan_status != 3";
+                                                 AND     l1.loan_status != 3";
 $result1 = mysqli_query($dbc,$query1);
 $ans1 = mysqli_fetch_assoc($result1);
 

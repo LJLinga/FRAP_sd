@@ -4,9 +4,6 @@
     include 'GLOBAL_USER_TYPE_CHECKING.php';
     include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
-
-
-
     If(isset($_POST['Fdetails'])){
 
         $_SESSION['showFID'] = NULL;    //Loan ID
@@ -73,8 +70,7 @@
                                                       JOIN REF_DEPARTMENT RD 
                                                       ON M.DEPT_ID = RD.DEPT_ID 
                                                       WHERE L.APP_STATUS='1' 
-                                                      AND L.LOAN_STATUS='1' 
-                                                      AND L.LOAN_DETAIL_ID ='1';";
+                                                      AND L.LOAN_STATUS='1' ;";
                                             $result = mysqli_query($dbc, $query);
                                             
                                             foreach ($result as $resultRow) {

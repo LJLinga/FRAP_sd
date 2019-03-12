@@ -15,58 +15,66 @@ include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 $page_title = 'Santinig - Posts Dashboard';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR_Admin.php';
+include 'CMS_SIDEBAR.php';
 
 $userId = $_SESSION['idnum'];
+$cmsRole = $_SESSION['CMS_ROLE'];
 
 ?>
 
 <script>
     $(document).ready(function() {
 
-        table = $('#dataTable').DataTable({
-            rowReorder: true
-        });
-
-
-
-        let cmsRole = "<?php echo $cmsRole; ?>";
+        let userId = '<?php echo $userId; ?>';
+        let cmsRole = '<?php echo $cmsRole; ?>';
+        let columns = [];
         let s = 2;
         let d = 3;
         let forMe = '';
 
-        if(cmsRole==='3' || cmsRole==='4'){
+        if(cmsRole === '3' || cmsRole === '4'){
+            columns = [
+                { data: "title" },
+                { data: "name" },
+                { data: "status" },
+                { data: "lastUpdated" },
+                { data: "actions" }
+            ];
             if(cmsRole === '4'){
                 forMe = 'Pending Publication';
             }else if(cmsRole === '3'){
                 forMe = 'Pending Review';
             }
         }else{
+            columns = [
+                { data: "title" },
+                { data: "status" },
+                { data: "lastUpdated" },
+                { data: "actions" }
+            ];
             s = 1;
             d = 2;
         }
 
-        displayTable(table,'');
-        $('.card-footer').html('Updated on '+table.cell(0,d).data());
-        displayTable(table,forMe,s, d);
-
-
-
-
-        $('#tbody').on('click','.archive', function(){
-            $.ajax({
-                type: 'POST',
-                url: 'ajax/CMS_POST_ARCHIVE.php',
-                data: {
-                    'id': $('.archive').val(),
-                },
-                success: function(msg){
-                    alert("Post archived!");
-                    //$('.status').html("Trashed");
-                }
-            });
-
+        let table = $('table.table').DataTable( {
+            "ajax": {
+                "url":"CMS_AJAX_FetchPosts.php",
+                "type":"POST",
+                "data":{ userId: userId, cmsRole:cmsRole },
+                "dataSrc": ''
+            },
+            columns: columns,
+            rowReorder: false
         });
+
+        setInterval(function(){
+            load_cms_notifications(userId);
+            table.ajax.reload(null, false);
+            $('.card-footer').html('Updated on '+table.cell(0,d).data());
+        },1000);
+
+        displayTable(table,'');
+        displayTable(table,forMe,s, d);
 
         $('#btnAll').on('click', function(){
             displayTable(table, '',s-1, d);
@@ -107,6 +115,20 @@ $userId = $_SESSION['idnum'];
     function displayTable(table, searchText, statusColumn, dateColumn){
         table.column(statusColumn).search(searchText).column(dateColumn).order('desc').draw();
     }
+
+    function load_cms_notifications(userId)
+    {
+        $.ajax({
+            url:"CMS_AJAX_Notifications.php",
+            method:"POST",
+            data:{userId:userId, limit: 50},
+            dataType:"json",
+            success:function(data)
+            {
+                $('#activityStream').html(data.notification);
+            }
+        });
+    }
 </script>
 
 <div id="content-wrapper">
@@ -129,7 +151,7 @@ $userId = $_SESSION['idnum'];
                 <div class="card mb-3">
                     <div class="card-header btn-group" data-toggle="buttons">
 
-                        <?php if($cmsRole == '3' || $cmsRole == '4') echo '<a type="button" class="btn btn-primary" id="btnForMe">For Me</a>'?>
+                        <?php if($cmsRole == '3' || $cmsRole == '4') echo '<a type="button" class="btn btn-primary" id="btnForMe">Needs My Attention</a>'?>
                         <a type="button" class="btn btn-default" id="btnAll">All</a>
                         <?php if($cmsRole == '3' || $cmsRole == '4') echo '<a type="button" class="btn btn-default" id="btnMine">Mine</a>'?>
                         <a type="button" class="btn btn-success" id="btnDraft">My Drafts</a>
@@ -144,98 +166,25 @@ $userId = $_SESSION['idnum'];
                                 <thead>
                                 <tr>
 
-                                    <th align="left" width="200px"><b>Title</b></th>
-                                    <?php if($cmsRole == '3' || $cmsRole == '4') echo '<th align="left" width="200px"><b>Author</b></th>'?>
+                                    <th align="left" width="250px"><b>Title</b></th>
+                                    <?php if($cmsRole == '3' || $cmsRole == '4') echo '<th align="left" width="250px"><b>Author</b></th>'?>
                                     <th align="left" width="100px"><b>Status</b></th>
                                     <th align="left" width="200px"><b>Last Updated</b></th>
-                                    <th align="right" width="200px"><b>Actions</b></th>
+                                    <th align="right" width="100px"><b>Action</b></th>
 
                                 </tr>
                                 </thead>
                                 <tfoot>
                                 <tr>
 
-                                    <th align="left" width="200px"><b>Title</b></th>
-                                    <?php if($cmsRole == '3' || $cmsRole == '4') echo '<th align="left" width="200px"><b>Author</b></th>'?>
+                                    <th align="left" width="250px"><b>Title</b></th>
+                                    <?php if($cmsRole == '3' || $cmsRole == '4') echo '<th align="left" width="250px"><b>Author</b></th>'?>
                                     <th align="left" width="100px"><b>Status</b></th>
                                     <th align="left" width="200px"><b>Last Updated</b></th>
-                                    <th align="right" width="200px"><b>Actions</b></th>
+                                    <th align="right" width="100px"><b>Action</b></th>
 
                                 </tr>
                                 </tfoot>
-                                <tbody id="tbody">
-                                <?php
-
-                                if($cmsRole == '4'){
-                                    // Editor can see all his posts and drafts, and all "pending","published",and "archived" posts that are not his but not other's drafts
-                                    $query = "SELECT p.id,
-                                                                  p.title, p.authorId,
-                                                                  CONCAT(a.firstName,' ', a.lastName) AS name,
-                                                                  s.description AS status,
-                                                                  p.lastUpdated
-                                                                  FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
-                                                                  JOIN post_status s ON s.id = p.statusId
-                                                                  WHERE s.id = 3 OR s.id = 4
-                                                                  OR p.authorId = '$userId'
-                                                                  OR p.archivedById = '$userId'
-                                                                  ORDER BY p.lastUpdated DESC;";
-                                }else if($cmsRole == '3'){
-                                    // Non-editors can only view their posts, can also see their "published" and "archived" but would not be able to modify them.
-                                    $query = "SELECT p.id,
-                                            p.title, p.authorId,
-                                            CONCAT(a.firstName,' ', a.lastName) AS name,
-                                            s.description AS status,
-                                                                  p.lastUpdated
-                                                                  FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
-                                                                  JOIN post_status s ON s.id = p.statusId
-                                                                  WHERE s.id = 2 
-                                                                  OR s.id = 3 AND p.reviewedById = '$userId'
-                                                                  OR s.id = 4 AND p.reviewedById = '$userId'
-                                                                  OR p.authorId = '$userId'
-                                                                  OR p.archivedById = '$userId'
-                                                                  ORDER BY p.lastUpdated DESC;";
-                                }else if($cmsRole == '2'){
-                                    $query = "SELECT p.id,
-                                            p.title, p.authorId,
-                                            CONCAT(a.firstName,' ', a.lastName) AS name,
-                                            s.description AS status,
-                                                                  p.lastUpdated
-                                                                  FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
-                                                                  JOIN post_status s ON s.id = p.statusId
-                                                                  WHERE p.authorId = '$userId'
-                                                                  OR p.archivedById = '$userId'
-                                                                  ORDER BY p.lastUpdated DESC;";
-                                }
-
-                                $rows = $crud->getData($query);
-                                foreach ((array) $rows as $key => $row){
-                                    ?>
-                                    <tr>
-
-                                        <td align="left"><?php echo $row['title'];?></td>
-                                        <?php
-                                        if(($cmsRole == '3' || $cmsRole == '4') && $userId == $row['authorId']){
-                                            echo '<td align="left">' . $row['name'] . ' <b>(Me)</b></td>';
-                                        }else if(($cmsRole == '3' || $cmsRole == '4') && $userId != $row['authorId']) {
-                                            echo '<td align="left">' . $row['name'] . '</td>';
-                                        }
-                                        ?>
-                                        <td align="left" class="status"><?php echo $row['status'] ;?></td>
-                                        <td align="left"><?php echo $row['lastUpdated'] ;?></td>
-                                        <td align="right" class="nowrap">
-                                            <form method="GET" action="CMS_EditPost.php">
-                                                <button type="submit" name="postId" class="btn btn-default" value=<?php echo $row['id'];?>>Edit</button>
-                                                <?php if($row['status']!='4') { ?>
-                                                    <button type="button" name="archive" class="archive btn btn-danger" value="<?php echo $row['id']?>">Archive</button>
-                                                <?php } elseif($row['status']=='4') { ?>
-                                                    <button type="button" name="restore" class="restore btn btn-success" value="<?php echo $row['id']?>">Restore</button>
-                                                <?php } ?>
-                                            </form>
-                                        </td>
-
-                                    </tr>
-                                <?php }?>
-                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -257,39 +206,26 @@ $userId = $_SESSION['idnum'];
                                       JOIN post_status s ON s.id = p.statusId
                                       WHERE p.availabilityId = '1' AND p.lockedById = '$userId'
                                       ORDER BY p.firstCreated DESC LIMIT 10;";
-
-                        $rows = $crud->getData($query);
-                        foreach ((array) $rows as $key => $row){
-                            echo '<div class="card-body" style="position: relative;">';
-                            echo ''.$row['title'];
-                            echo '<a href="CMS_EditPost.php?postId='.$row['id'].'" class="btn btn-sm" style="position: absolute;right: 10px;top: 5px;">Continue</a>';
-                            echo '</div>';
-                        }
-
+                            $rows = $crud->getData($query);
+                            if(!empty($rows)){
+                                foreach ((array) $rows as $key => $row){
+                                    echo '<div class="card-body" style="position: relative;">';
+                                    echo ''.$row['title'];
+                                    echo '<a href="CMS_EditPost.php?postId='.$row['id'].'" class="btn btn-sm" style="position: absolute;right: 10px;top: 5px;">Continue</a>';
+                                    echo '</div>';
+                                }
+                            }else{
+                                echo 'Nothing to show';
+                            }
                         ?>
                     </div>
                 </div>
                 <div class="card" style="margin-top: 1rem;">
                     <div class="card-header">
-                        <b> Editing Activity (Comments, Status Changes)</b>
+                        <b> Activity Stream </b>
                     </div>
                     <div class="card-body" style="max-height: 20rem; overflow: auto;">
-                        <?php
-                        $query = "SELECT p.id,p.title, p.authorId,CONCAT(a.firstName,' ', a.lastName) AS name,
-                                      s.description AS status,p.lastUpdated FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
-                                      JOIN post_status s ON s.id = p.statusId
-                                      WHERE p.availabilityId = '1' AND p.lockedById = '$userId'
-                                      ORDER BY p.firstCreated DESC LIMIT 10;";
-
-                        $rows = $crud->getData($query);
-                        foreach ((array) $rows as $key => $row){
-                            echo '<div class="card-body" style="position: relative;">';
-                            echo ''.$row['title'];
-                            echo '<a href="CMS_EditPost.php?postId='.$row['id'].'" class="btn btn-sm" style="position: absolute;right: 10px;top: 5px;">Continue</a>';
-                            echo '</div>';
-                        }
-
-                        ?>
+                        <div id="activityStream"></div>
                     </div>
                 </div>
 
@@ -298,22 +234,7 @@ $userId = $_SESSION['idnum'];
                         <b> Post Activity (Comments, Status Changes)</b>
                     </div>
                     <div class="card-body" style="max-height: 20rem; overflow: auto;">
-                        <?php
-                        $query = "SELECT p.id,p.title, p.authorId,CONCAT(a.firstName,' ', a.lastName) AS name,
-                                      s.description AS status,p.lastUpdated FROM posts p JOIN employee a ON p.authorId = a.EMP_ID
-                                      JOIN post_status s ON s.id = p.statusId
-                                      WHERE p.availabilityId = '1' AND p.lockedById = '$userId'
-                                      ORDER BY p.firstCreated DESC LIMIT 10;";
 
-                        $rows = $crud->getData($query);
-                        foreach ((array) $rows as $key => $row){
-                            echo '<div class="card-body" style="position: relative;">';
-                            echo ''.$row['title'];
-                            echo '<a href="CMS_EditPost.php?postId='.$row['id'].'" class="btn btn-sm" style="position: absolute;right: 10px;top: 5px;">Continue</a>';
-                            echo '</div>';
-                        }
-
-                        ?>
                     </div>
                 </div>
             </div>

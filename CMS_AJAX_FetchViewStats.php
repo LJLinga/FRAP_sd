@@ -81,13 +81,24 @@ if(isset($_POST['mode']) && isset($_POST['option'])){
 
     $rows = $crud->getData($query);
     $temp=[];
-    foreach ((array) $rows as $key => $row) {
+    if(!empty($rows)){
+        foreach ((array) $rows as $key => $row) {
+            $temp[] =  array(
+                'xmin' => $row['xmin'],
+                'count' => $row['view_count'],
+                'unique_count' => $row['unique_count']
+            );
+        }
+    }else{
+        $rows = $crud->getData("SELECT NOW() AS currentTime;");
+        $xmin = $rows[0]['currentTime'];
         $temp[] =  array(
-            'xmin' => $row['xmin'],
-            'count' => $row['view_count'],
-            'unique_count' => $row['unique_count']
+            'xmin' => $xmin,
+            'count' => 0,
+            'unique_count' => 0
         );
     }
+
     echo json_encode($temp);
     // DO NOT FORGET TO ECHO
     exit;

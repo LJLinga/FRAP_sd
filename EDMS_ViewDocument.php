@@ -10,63 +10,38 @@ $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
-include('GLOBAL_EDMS_ADMIN_CHECKING.php');
+//include('GLOBAL_EDMS_ADMIN_CHECKING.php');
+
+//$edmsRole = $_SESSION['EDMS_ROLE'];
+$edmsRole = 2;
+$userId = $_SESSION['idnum'];
 
 if(isset($_GET['docId'])){
 
     $documentId = $_GET['docId'];
 
     // Load Process and Steps assigned to current document
-    $query = "SELECT d.processId, d.currentStepId, p.processName, s.stepName,
+    $query = "SELECT d.processId, d.stepId, p.processName, s.stepName,
               d.availabilityId, d.lockedById
               FROM documents d 
               JOIN process p ON d.processId = p.id 
-              JOIN steps s ON d.currentStepId = s.id WHERE d.documentId='$documentId';";
+              JOIN steps s ON d.stepId = s.id WHERE d.documentId='$documentId';";
     $rows = $crud->getData($query);
     foreach((array) $rows as $key => $row){
         $processId = $row['processId'];
-        $currentStepId= $row['currentStepId'];
+        $currentStepId= $row['stepId'];
         $processName = $row['processName'];
         $stepName = $row['stepName'];
         $availability = $row['availabilityId'];
         $lockedById = $row['lockedById'];
     }
 
-    $userId = $_SESSION['idnum'];
-
-//    $query = "SELECT sa.read, sa.write, sa.route, sa.comment FROM step_authors sa
-//                JOIN employee e ON sa.userId = e.EMP_ID
-//                WHERE su.stepId='$currentStepId' AND e.EMP_ID = '$userId' LIMIT 1;";
-//    $rows = $crud->getData($query);
-
-
     // Load Current User Permissions
-    $query = "SELECT su.read, su.write, su.route, su.comment FROM step_users su
-                JOIN employee e ON su.userId = e.EMP_ID
-                WHERE su.stepId='$currentStepId' AND e.EMP_ID = '$userId' LIMIT 1;";
+    $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su
+                WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' AND su.processId = $processId LIMIT 1;";
     $rows = $crud->getData($query);
     if(empty($rows)){
-        // If user does not have individual permissions, check group permissions of user.
-        // Individual rights supersede collective rights.
-        // If user belongs to multiple groups in the same step, query only the 1st one.
-        $query= "SELECT sg.read, sg.write, sg.route, sg.comment FROM step_groups sg 
-                JOIN user_groups ug ON sg.groupId = ug.groupId
-                JOIN employee e ON ug.employeeId = e.EMP_ID
-                WHERE sg.stepId='$currentStepId' AND e.EMP_ID='$userId' LIMIT 1;";
-        $rows = $crud->getData($query);
-        if(empty($rows)){
-            // If user also does not have group rights, redirect out of page.
-            echo '<script language="javascript">';
-            echo 'alert("empty rows, redirect out")';
-            echo '</script>';
-        }else{
-            foreach((array) $rows as $key => $row){
-                $read= $row['read'];
-                $write= $row['write'];
-                $route= $row['route'];
-                $comment = $row['comment'];
-            }
-        }
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Dashboard.php");
     }else{
         foreach((array) $rows as $key => $row){
             $read= $row['read'];
@@ -111,7 +86,7 @@ if(isset($_GET['docId'])){
         $availability = $row['availabilityId'];
     }
 }else{
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Dashboard.php");
+   header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Dashboard.php");
 }
 
 if(isset($_POST['btnUnlock'])){
@@ -133,12 +108,23 @@ if(isset($_POST['btnLock'])){
         header('Pragma: public');
         header('Content-Length: ' . filesize($file));
         readfile($file);
-        $crud->execute("UPDATE documents SET availabilityId='1', lockedById='$userId' WHERE documentId='$documentId'");
+        //$crud->execute("UPDATE documents SET availabilityId='1', lockedById='$userId' WHERE documentId='$documentId'");
     }
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
+    //header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
 //    $URL="http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId=".$documentId;
 //    echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
 //    echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
+}
+
+if(isset($_POST['btnRoute'])){
+    $nextStepId = $_POST['nextStepId'];
+    $nextProcessId = $_POST['nextProcessId'];
+    echo '<script text="javascript">';
+    echo 'alert('.$nextProcessId.$nextStepId.');';
+    echo '</script>';
+    $documentId= $_POST['btnRoute'];
+    $crud->execute("UPDATE documents SET availabilityId='2', stepId='$nextStepId', processId = '$nextProcessId', lockedById=NULL WHERE documentId='$documentId'");
+    //header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId.'&versId='.$versionId);
 }
 
 include 'GLOBAL_HEADER.php';
@@ -196,23 +182,25 @@ include 'EDMS_Sidebar.php';
                     <div class="card-body" >
                         <div class="btn-group btn-group-vertical" style="width: 100%;">
                             <?php
-                                if($processId == '1' || $currentStepId == '1'){
+                                if($processId == '99' || $currentStepId == '1'){
                                     echo '<button class="btn btn-info" style="text-align: left" type="button" id="btnAssignTask">';
                                 }else if(isset($route) && $route=='2') {
-                                    $query = "SELECT routeName, nextProcessId, nextStepId FROM routes WHERE stepId ='$currentStepId' AND processId = '$processId';";
+                                    $query = "SELECT routeName, nextProcessId, nextStepId FROM step_routes WHERE stepId ='$currentStepId' AND processId = '$processId';";
                                     $rows = $crud->getData($query);
                                     if (!empty($rows)) {
                                         foreach ((array)$rows as $key => $row) {
-                                            $nextStepId = $row['nextStepId'];
-                                            $nextProcessId = $row['nextStepId'];
-                                            echo '<button class="btn btn-primary" style="text-align: left" type="submit">' . $row['routeName'] . '</button>';
+                                            echo '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
+                                            echo '<input type="text" name="nextStepId" value="'.$row['nextStepId'].'">';
+                                            echo '<input type="text" name="nextProcessId" value="'.$row['nextProcessId'].'">';
+                                            echo '<button class="btn btn-primary" style="text-align: left" type="submit" name="btnRoute">' . $row['routeName'] . '</button>';
+                                            echo '</form>';
                                         }
                                     }
                                 }
                                 if(isset($write) && $write=='2' && $availability=='2'){
                                     echo '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
-                                    echo '<input type="hidden" name="filePath" value="'.$filePath.'" />';
-                                    echo '<input type="hidden" name="userId" value="'.$userId.'" />';
+                                    echo '<input type="hidden" name="filePath" value="'.$filePath.'">';
+                                    echo '<input type="hidden" name="userId" value="'.$userId.'">';
                                     echo '<button class="btn btn-default" type="submit" name="btnLock" value="'.$documentId.'" style="text-align: left; width:100%;">Download and Edit</button>';
                                     echo '</form>';
                                 }else if(isset($write) && $write=='2' && $availability=='1'){
@@ -345,7 +333,7 @@ include 'EDMS_Sidebar.php';
                 success: function(response){
                     $("#err").html(response);
                     $("#contact-modal").modal('hide');
-                    if(response !== 'error') location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+response;
+                    if(response !== 'error') location.href = response;
                 },
                 error: function(){
                     alert("Error");

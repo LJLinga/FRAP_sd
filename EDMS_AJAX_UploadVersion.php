@@ -54,9 +54,9 @@ if(!empty($_POST['documentId']) && !empty($_POST['newVersionNo']) && !empty($_PO
 
         if ($didUpload) {
 
-            $crud->execute("INSERT into doc_versions (documentId, authorId, versionNo, title, filePath) VALUES ('$documentId','$userId','$versionNo','$title','$uploadPath')");
-            echo $documentId;
-
+            $crud->executeGetKey("INSERT into doc_versions (documentId, authorId, versionNo, title, filePath) VALUES ('$documentId','$userId','$versionNo','$title','$uploadPath')");
+            //echo $documentId;
+            echo 'http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId='.$documentId;
         } else {
             echo "An error occurred somewhere. Try again or contact the admin";
         }

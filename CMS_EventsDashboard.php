@@ -17,7 +17,7 @@ $userId = $_SESSION['idnum'];
 
 $page_title = 'Santinig - Events Dashboard';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR_Admin.php';
+include 'CMS_SIDEBAR.php';
 ?>
 
 <script>
@@ -31,112 +31,19 @@ include 'CMS_SIDEBAR_Admin.php';
     <div class="container-fluid">
 
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-8">
                 <h3 class="page-header">
-                    Upcoming Events
-                    <a class="btn btn-primary" href="CMS_AddEvent.php"> Add New Event </a>
+                    Events
+                    <a class="btn btn-primary" href="CMS_AddEvent.php"> Add Event </a>
                 </h3>
-            </div>
-        </div>
-
-        <div class="card mb-3">
-            <div class="card-header btn-group" data-toggle="buttons">
-                <a type="button" class="btn btn-default" id="btnAll">All</a>
-                <a type="button" class="btn btn-success" id="btnPublished">Ongoing</a>
-                <a type="button" class="btn btn-warning" id="btnPending">Upcoming</a>
-                <a tye="button" class="btn btn-primary" id="btnDraft">Finished</a>
-                <a type="button" class="btn btn-danger" id="btnArchived">Cancelled</a>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
-                        <thead>
-                        <tr>
-
-                            <th align="left" width="200px"><b>Title</b></th>
-                            <?php if($cmsRole == 3) echo '<th align="left" width="200px"><b>Poster</b></th>' ?>
-                            <th aligh="left" width="100px"><b>Status</b></th>
-                            <th align="left" width="200px"><b>Time</b></th>
-                            <th align="left" width="50px"><b>Attendees</b></th>
-                            <th align="left" width="200px"><b>Actions</b></th>
-
-                        </tr>
-                        </thead>
-                        <tfoot>
-                        <tr>
-
-                            <th align="left" width="200px"><b>Title</b></th>
-                            <?php if($cmsRole == 3) echo '<th align="left" width="200px"><b>Poster</b></th>' ?>
-                            <th aligh="left" width="100px"><b>Status</b></th>
-                            <th align="left" width="200px"><b>Time</b></th>
-                            <th align="left" width="50px"><b>Attendees</b></th>
-                            <th align="left" width="200px"><b>Actions</b></th>
-
-                        </tr>
-                        </tfoot>
-                        <tbody>
-
-                        <?php
-
-                        if($cmsRole == 3){
-                            // Editor can see all his posts and drafts, and all "pending","published",and "archived" posts that are not his but not other's drafts
-                            $query = "SELECT e.id,
-                                                                  e.title,
-                                                                  CONCAT(a.firstName,' ', a.lastName) AS name,
-                                                                  e.startTime, e.endTime,
-                                                                  s.description AS status,
-                                                                  e.lastUpdated
-                                                                  FROM events e JOIN employee a ON e.posterId = a.EMP_ID
-                                                                  JOIN event_status s ON s.id = e.statusId
-                                                                  WHERE s.id = 2 || s.id=3 || s.id=4
-                                                                  OR s.id = 1 AND e.posterId = '$userId'
-                                                                  ORDER BY e.lastUpdated DESC;";
-                        }else{
-                            // Non-editors can only view their posts, can also see their "published" and "archived" but would not be able to modify them.
-                            $query = "SELECT e.id,
-                                                                  e.title,
-                                                                  CONCAT(a.firstName,' ', a.lastName) AS name,
-                                                                  e.startTime, e.endTime,
-                                                                  s.description AS status,
-                                                                  e.lastUpdated
-                                                                  FROM events e JOIN employee a ON e.posterId = a.EMP_ID
-                                                                  JOIN event_status s ON s.id = e.statusId
-                                                                  WHERE e.posterId = '$userId'
-                                                                  ORDER BY e.lastUpdated DESC;";
-                        }
-
-                        $rows = $crud->getData($query);
-                        foreach ((array) $rows as $key => $row){
-                            ?>
-                            <tr>
-
-                                <td align="left"><?php echo $row['title'];?></td>
-                                <?php if($cmsRole == 3) echo '<td align="left">'.$row['name'].'</td>' ?>
-                                <td align="left"><?php echo $row['status'] ;?></td>
-                                <td align="left"><?php
-                                    $text1 = trim($row['startTime'], 'T');
-                                    $text2 =  trim($row['endTime'], 'T');
-                                    //$date = date_create('2000-01-01');
-                                    //echo date_format($date, 'Y-m-d H:i:s');
-                                    echo $text1." to ".$text2;
-                                    ?></td>
-                                <td align="left"><?php echo "-" ;?></td>
-                                <td align="right" class="nowrap">
-                                    <form method="GET" action="CMS_EditPost.php">
-                                        <button type="submit" name="postId" class="btn btn-default" value=<?php echo $row['id'];?>>Edit</button>&nbsp;&nbsp;
-                                        <button type="button" name="archive" class="archive btn btn-danger" value="<?php echo $row['id']?>">Archive</button>
-                                    </form>
-                                </td>
-
-                            </tr>
-                        <?php }?>
-
-                        </tbody>
-                    </table>
+                <div class="card">
+                    <div class="card-body">
+                        <iframe src="https://calendar.google.com/calendar/b/3/embed?showTitle=0&amp;showCalendars=0&amp;height=600&amp;wkst=2&amp;bgcolor=%23ffffff&amp;src=noreply.lapdoc%40gmail.com&amp;color=%231B887A&amp;src=en.philippines%23holiday%40group.v.calendar.google.com&amp;color=%23125A12&amp;ctz=Asia%2FManila" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+                    </div>
                 </div>
             </div>
-            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
         </div>
+
 
     </div>
     <!-- /.container-fluid -->

@@ -61,7 +61,9 @@ $success = null;
     if (isset($_POST['submit'])) {
 
             $idNum = $_POST['idNum']; 
+            $email = $_POST['email'];
             $failedLife = null;
+
             $failedFalp = null;
             //first and last names
             $fName = NULL;
@@ -163,6 +165,13 @@ $success = null;
                     echo '</script>';
 
             }
+             else if(empty($_POST['email'])){ // checks if any of the adresses are empty 
+
+                    echo '<script language="javascript">';
+                    echo 'alert("Please fill up the email address! ")';
+                    echo '</script>';
+
+            }
             else if(isset($_POST['hasFALP'])&&(empty($_POST['amount']) || empty($_POST['terms']))){
                 	
                 	
@@ -218,68 +227,35 @@ $success = null;
                $ldateappl = $laYear . "-" . $laMonth . "-" . $laDay;
                if(!empty($_POST['bunum']) && !empty($_POST['baddress'])){ //if the business number is not empty
                      $bunum = $_POST['bunum'];
-                     $baddress = $_POST['baddress'];
-
-
-                     $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME,CIV_STATUS, MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, BUSINESS_NUM, HOME_ADDRESS, BUSINESS_ADDRESS, DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,CAMPUS) 
-                                          VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat},'{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}','{$baddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','99999999','De La Salle University - Manila')";
-
-                      $result = mysqli_query($dbc,$query1);
-
-                      $pw = "password";
-
-                      $query2 = "INSERT INTO MEMBER_ACCOUNT (MEMBER_ID, PASSWORD, FIRST_CHANGE_PW) VALUES ('{$idNum}', PASSWORD('{$pw}'), '0');";
-                $result2 = mysqli_query($dbc, $query2); 
+                     $baddress = $_POST['baddress'];         
 
                }
 
                else if(!empty($_POST['bunum']) ){ //if the bnum isnt empty
                     $bunum = $_POST['bunum'];
 
-                    $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME,MIDDLENAME,CIV_STATUS,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, BUSINESS_NUM, HOME_ADDRESS, 
-                          DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,CAMPUS) VALUES ('{$idNum}','{$fName}','{$lName}','{$mName}',{$civStat},{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','99999999','De La Salle University - Manila')"; 
-
-
-                      $result = mysqli_query($dbc,$query1); 
-
-                      $pw = "password";
-
-                      $query2 = "INSERT INTO MEMBER_ACCOUNT (MEMBER_ID, PASSWORD, FIRST_CHANGE_PW) VALUES ('{$idNum}', PASSWORD('{$pw}'), '0');";
-                $result2 = mysqli_query($dbc, $query2);
+                  
 
                }
 
                else if(!empty($_POST['baddress'])){ // if the Business address isnt empty
                     $baddress = $_POST['baddress'];
 
-                    $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS, MIDDLENAME, SEX, BIRTHDATE, DATE_HIRED, HOME_NUM, HOME_ADDRESS, BUSINESS_ADDRESS, 
-                          DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,CAMPUS) VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},'{$haddress}','{$baddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','99999999','De La Salle University - Manila')"; 
-
-
-                     $result = mysqli_query($dbc,$query1); 
-
-                     $pw = "password";
-
-                     $query2 = "INSERT INTO MEMBER_ACCOUNT (MEMBER_ID, PASSWORD, FIRST_CHANGE_PW) VALUES ('{$idNum}', PASSWORD('{$pw}'), '0');";
-                $result2 = mysqli_query($dbc, $query2);
+          
 
 
 
                }
 
-               else { //when Business address and Business Number is empty
+              $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME,CIV_STATUS, MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, BUSINESS_NUM, HOME_ADDRESS, BUSINESS_ADDRESS, DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,EMAIL) 
+                          VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat},'{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}','{$baddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','99999999',{$_POST['email']})";
 
-                    $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS,  MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, HOME_ADDRESS, DEPT_ID, USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,CAMPUS) 
-                        VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}','{$sex}','{$birthdate}','{$datehired}','{$honum}','{$haddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','99999999','De La Salle University - Manila')"; 
+              $result = mysqli_query($dbc,$query1);
 
-                    $result = mysqli_query($dbc,$query1); 
+              $pw = "password";
 
-                    $pw = "password";
-
-                    $query2 = "INSERT INTO MEMBER_ACCOUNT (MEMBER_ID, PASSWORD, FIRST_CHANGE_PW) VALUES ('{$idNum}', PASSWORD('{$pw}'), '0');";
-                    $result2 = mysqli_query($dbc, $query2);
-
-                }
+              $query2 = "INSERT INTO MEMBER_ACCOUNT (MEMBER_ID, PASSWORD, FIRST_CHANGE_PW) VALUES ('{$idNum}', PASSWORD('{$pw}'), '0');";
+               $result2 = mysqli_query($dbc, $query2);
                 if(isset($_POST['hasFALP'])){
                 	$falpPaid = '0';
                 	
@@ -287,12 +263,12 @@ $success = null;
                 	
                 		if(!empty($_POST['fAmountPaid'])){
                 			$falpPaid = $_POST['fAmountPaid'];
-		            	}
+		            }
 
-		                $query = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,DATE_APPROVED,PICKUP_STATUS,AMOUNT_PAID,EMP_ID)
+                $query = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,DATE_APPROVED,PICKUP_STATUS,AMOUNT_PAID,EMP_ID)
 		                          values({$_POST['idNum']},1,{$_POST['amount']},5,{$_POST['terms']},{$_POST['amount']}+{$_POST['amount']}*5/100,({$_POST['amount']}+{$_POST['amount']}*5/100)/{$_POST['terms']}/2,2,2,'{$fdateappl}','{$fdateapp}',{$_POST['pickupStatus']},{$falpPaid},99999999);";
 
-		               mysqli_query($dbc,$query);
+                mysqli_query($dbc,$query);
 		               
            			
 
@@ -402,11 +378,17 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                                 <label>
                                                 <span class="labelspan">Middle Name</span>
-                                                <input type="text" class="form-control memname" placeholder="Last Name" name="lName" <?php if(isset($_POST['mName'])){
+                                                <input type="text" class="form-control memname" placeholder="Middle Name" name="mName" <?php if(isset($_POST['mName'])){
                                                   echo "value = '{$_POST['mName']}'";
                                                 } ?>>
                                                 </label>
-
+                                                <div>
+                                                 <span class="labelspan">DLSU Email<big class="req"> *</big>
+                                                <input type="text" class="form-control memname" placeholder="Email" name="email" <?php if(isset($_POST['email'])){
+                                                  echo "value = '{$_POST['email']}'";
+                                                } ?>>
+                                                </span>
+                                              </div>
                                                
 
                                         </div>
@@ -804,226 +786,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                             </div>
 
-                            <div class="panel panel-green" >
-
-                                <div class="panel-heading">
-
-                                    <b>FALP Account Information</b>
-                                </div>
-
-                                <div class="panel-body">
-                                	<div class="row">
-
-                                        <div class="col-lg-4">
-
-                                           
-                                             <input type="checkbox" name="hasFALP" value="1" <?php if(isset($_POST['hasFALP'])){
-                                                	echo "checked";
-                                                } ?>>Check box if member has FALP<p>
-
-                                        </div>
-
-                                    </div>
-
-                                    <div class="row">
-
-                                        <div class="col-lg-4">
-
-                                            <label class="memfieldlabel">Amount</label><big class="req">*</big>
-                                            <input type="number" class="form-control" placeholder="Enter Amount (Peso)" name="amount" id="amount" <?php if(isset($_POST['amount'])){
-                                                	echo "value = '{$_POST['amount']}'";
-                                                }?>>
-
-                                        </div>
-
-                                    </div>
-
-                                    <p>
-
-                                    <div class="row">
-
-                                        <div class="col-lg-4">
-                                            
-                                            <label class="memfieldlabel">Payment Terms</label><big class="req">*</big>
-                                            <input type="number" class="form-control" placeholder="Payment Terms" name="terms"  id="terms" <?php if(isset($_POST['terms'])){
-                                                	echo "value = '{$_POST['terms']}'";
-                                                } ?>>
-                                            <p>
-                                            <div id = "totalI">   </div> <p>
-                                            <p>
-                                            <div id = "totalP"> </div><p>
-                                            <p>
-                                            <div id = "PerP"></div><p>
-                                            <p>
-                                            <div id = "Monthly"></div>
-
-                                            <input type="button" name="compute" class="btn btn-success" value="Compute" id="falpcompute">
-                                        </div>
-
-                                    </div>
-                                    <p>
-                                    <div class="row">
-
-                                        <div class="col-lg-4">
-
-                                           
-                                            <label class="memfieldlabel">Status of Pickup</label>
-                                                <select class="form-control dropdown" name =  "pickupStatus">
-
-                                                    <option value = "1" selected>Pending for Evaluation</option>
-                                                    <option value = "2">Processing Check</option>
-                                                    <option value = "3">Ready for pickup</option>
-                                                    <option value = "4">Picked Up</option>
-                                                    
-
-                                                </select>
-
-
-                                        </div>
-
-                                    </div>
-                                    <p>
-                                    <div class="row">
-
-                                        <div class="col-lg-4">
-
-                                            <label class="memfieldlabel">Amount Already Paid</label>
-                                            <input type="number" class="form-control" placeholder="Enter Amount (Peso)" name="fAmountPaid" id="fAmountPaid" <?php if(isset($_POST['fAmountPaid'])){
-                                                	echo "value = '{$_POST['fAmountPaid']}'"
-                                                	;
-                                                } else echo '0';?>>
-
-                                        </div>
-
-                                    </div>
-                                    <p>
-                                    	<div class="row">
-
-                                        <div class="col-lg-12">
-
-                                                <p id="dbirthlabel"><b>Date Applied</b></p>
-
-
-                                                <label class="memfieldlabel">Year</label>
-                                                <select class="form-control datedropdown" name = "faYear">
-
-                                                    <?php for($y = date("Y"); $y >= 1900; $y--) { ?>
-
-                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
-
-                                                    <?php } ?>
-
-                                                </select>
-
-
-
-
-
-                                                <label class="memfieldlabel">Month</label>
-                                                <select class="form-control datedropdown" name = "faMonth">
-
-                                                
-                                                   <option value = 1>January</option>
-                                                    <option value = 2>February</option>
-                                                    <option value = 3>March</option>
-                                                    <option value = 4>April</option>
-                                                    <option value = 5>May</option>
-                                                    <option value = 6>June</option>
-                                                    <option value = 7>July</option>
-                                                    <option value = 8>August</option>
-                                                    <option value = 9>September</option>
-                                                    <option value = 10>October</option>
-                                                    <option value = 11>November</option>
-                                                    <option value = 12>December</option>
-
-                                                </select>
-
-                                                <label class="memfieldlabel">Day</label>
-                                                <select class="form-control datedropdown" name = "faDay">
-
-                                                    <?php for($x = 1; $x <= 31; $x++) { ?>
-
-                                                        <option value="<?php echo $x; ?>"><?php echo $x; ?></option>
-
-                                                    <?php } ?>
-
-                                                </select>
-
-                                                
-
-                                        </div>
-                                    </div>
-                                    <div class="row">
-
-                                        <div class="col-lg-12">
-
-                                                <p id="dbirthlabel"><b>Date Approved</b></p>
-
-
-                                                <label class="memfieldlabel">Year</label>
-                                                <select class="form-control datedropdown" name = "fYear">
-
-                                                    <?php for($y = date("Y"); $y >= 1900; $y--) { ?>
-
-                                                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
-
-                                                    <?php } ?>
-                                                   
-                                                </select>
-
-
-
-
-
-                                                <label class="memfieldlabel">Month </label>
-                                                <select class="form-control datedropdown" name = "fMonth">
-
-                                                
-                                                   <option value = 1>January</option>
-                                                    <option value = 2>February</option>
-                                                    <option value = 3>March</option>
-                                                    <option value = 4>April</option>
-                                                    <option value = 5>May</option>
-                                                    <option value = 6>June</option>
-                                                    <option value = 7>July</option>
-                                                    <option value = 8>August</option>
-                                                    <option value = 9>September</option>
-                                                    <option value = 10>October</option>
-                                                    <option value = 11>November</option>
-                                                    <option value = 12>December</option>
-
-                                                </select>
-
-                                                <label class="memfieldlabel">Day</label>
-                                                <select class="form-control datedropdown" name = "fDay">
-
-                                                    <?php for($x = 1; $x <= 31; $x++) { ?>
-
-                                                        <option value="<?php echo $x; ?>"><?php echo $x; ?></option>
-
-                                                    <?php } ?>
-
-                                                </select>
-
-                                                
-
-                                        </div>
-                                    </div>
-                                    <div class="row" id = "falpInfo">
-	                                    <div class="col-lg-4">
-												 <!--<span class="labelspan"><b>ID of Employee Approved</b></span><big class="req">*</big>
-	                                                <input type="text" minlength = "8" maxlength="8" class="form-control memname" placeholder="e.g. 09000000" name="fEmp_ID" <?php if(isset($_POST['fEmp_ID'])){
-                                                	echo "value = '{$_POST['fEmp_ID']}'";
-                                                } ?>>
-	                                                </label>-->
-
-
-	                                    </div>
-                                     </div>
-
-                                </div>
-
-                            </div>
+                            
                             <div class="panel panel-green" id = "lifetimeInfo">
 
                                 <div class="panel-heading">

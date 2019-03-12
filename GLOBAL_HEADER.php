@@ -97,23 +97,25 @@
                         echo '</ul></li>';
                     }?>
                 <li class="dropdown sideicons">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i>
-
-
-
-
-                        <b class="caret"></b></a>
-
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-money"><span class="badge count"></span></i></a>
                     <ul class="dropdown-menu alert-dropdown">
-
                         <div class="notifications"></div>
-
                         <li class="divider"></li>
-
                         <li>
-                            <a href="GLOBAL_ALL_NOTIFS.php">View All</a>
+                            <a href="FRAP_ALL_NOTIFS.php">View All</a>
                         </li>
-
+                    </ul>
+                </li>
+                <li class="dropdown sideicons">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-newspaper-o"><span id="cmsCount" class="badge"></span></i></a>
+                    <ul class="dropdown-menu alert-dropdown">
+                        <div id="cms_notifications" style="font-size: 12px;"></div>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="CMS_PostsDashboard.php">View All</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="dropdown sideicons">
@@ -164,18 +166,26 @@
                         });
                     }
 
+                    function load_cms_notifications(idnum) {
+                        $.ajax({
+                            url: "CMS_AJAX_Notifications.php",
+                            method: "POST",
+                            data: {userId: idnum, limit: 5},
+                            dataType: "json",
+                            success: function (data) {
+                                $('#cms_notifications').html(data.notification);
+                                if (data.count > 0) {
+                                    $('#cmsCount').html(data.count);
+                                }
+                            }
+                        });
+                    }
+
                     setInterval(function(){
+                        load_cms_notifications(temp)
                         load_unseen_notification(temp); // this will run after every 1 second
-                    }, 5000);
+                    }, 1000);
 
 
-// load new notifications
-                    $(document).on('click', '.dropdown-toggle', function(){
-                        $('.counts').html('');
-                        load_unseen_notification('yes');
-                    });
-                    setInterval(function(){
-                        load_unseen_notification();
-                    }, 5000);
                 });
             </script>

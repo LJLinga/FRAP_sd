@@ -68,10 +68,21 @@ if(!empty($_GET['pl'])){
 
 $page_title = $title;
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR_Admin.php';
+include 'CMS_SIDEBAR.php';
 
 ?>
 <style>
+    @media screen and (min-width: 1200px) {
+        #calendarColumn{
+            position: fixed;
+            right:1rem;
+        }
+    }
+    @media screen and (max-width: 1199px) {
+        #calendarColumn{
+            position: relative;
+        }
+    }
     .card {
         font-family: "Verdana", Georgia, Serif;
         font-size: 12px;
@@ -80,15 +91,14 @@ include 'CMS_SIDEBAR_Admin.php';
 <script>
 
 </script>
-<div id="container">
     <div class="container-fluid">
-        <div class="row h-100 justify-content-center align-items-center">
-            <div class="column col-lg-7" style="top: 1rem; margin-bottom: 1rem; ">
+        <div class="row">
+            <div class="column col-lg-7" style="margin-top: 2rem; margin-bottom: 2rem;"">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title"><b><?php echo $page_title;?></b></h4>
                         <h5 class="card-subtitle">by <?php echo $author;?> | <?php echo date("F j, Y g:i A ", strtotime($lastUpdated)) ;?></h5>
-                        <p class="card-text"><?php echo $body ?></p>
+                        <br><p class="card-text"><?php echo $body ?></p>
                     </div>
                 </div>
                 <div class="card" style="margin-top: 1rem;">
@@ -99,9 +109,25 @@ include 'CMS_SIDEBAR_Admin.php';
                     </div>
                 </div>
             </div>
+            <div id="calendarColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 2rem;">
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-header">
+                        <b> Events </b>
+                    </div>
+                    <div class="card-body" >
+                        <iframe src="https://calendar.google.com/calendar/b/3/embed?showTitle=0&amp;showCalendars=0&amp;mode=AGENDA&amp;height=800&amp;wkst=2&amp;bgcolor=%23ffffff&amp;src=noreply.lapdoc%40gmail.com&amp;color=%231B887A&amp;src=en.philippines%23holiday%40group.v.calendar.google.com&amp;color=%23125A12&amp;ctz=Asia%2FManila" style="border-width:0" width="480" height="360" frameborder="0" scrolling="no"></iframe>
+                    </div>
+                </div>
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-header">
+                        <b> Polls </b>
+                    </div>
+                    <div class="card-body" >
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">

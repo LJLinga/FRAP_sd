@@ -16,12 +16,12 @@
     }
 
     $query = "SELECT * FROM LOANS where MEMBER_ID = {$_SESSION['idnum']} 
-              AND loan_detail_id = 1 AND 	loan_status != 3";
+              AND 	loan_status != 3 ORDER BY loan_id DESC LIMIT 1";
     $result = mysqli_query($dbc,$query);
     $ans = mysqli_fetch_assoc($result);
 
     $query = "SELECT l2.STATUS as 'Status' FROM LOANS l1 JOIN LOAN_STATUS l2 ON l1.LOAN_STATUS = l2.STATUS_ID where l1.MEMBER_ID = {$_SESSION['idnum']} 
-              AND l1.loan_detail_id = 1 AND 	l1.loan_status != 3";
+              AND 	l1.loan_status != 3  ORDER BY loan_id DESC LIMIT 1";
     $result = mysqli_query($dbc,$query);
     $ans1 = mysqli_fetch_assoc($result);
 

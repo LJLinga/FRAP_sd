@@ -110,12 +110,9 @@ $userId = $_SESSION['idnum'];
                     <label for="documentTitle">Assigned Task</label>
                     <div class="form-group">
                         <select class="form-control" id="selectedTask" name="selectedTask">
-                            <?php
-                                $rows = $crud->getData("SELECT id, processName FROM process WHERE processForId='2' OR processForId='99';");
-                                foreach((array) $rows as $key => $row) {
-                                    echo '<option value="'.$row['id'].'">'.$row['processName'].'</option>';
-                                }
-                            ?>
+                            <option value="1" selected>FALP Application</option>
+                            <option value="2">Post Attachment</option>
+                            <option value="99">No Process</option>
                         </select>
                     </div>
                     <div class="form-group">

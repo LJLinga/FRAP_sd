@@ -20,7 +20,7 @@ $userId = $_SESSION['idnum'];
 if(isset($_POST['btnSubmit'])){
     $title = $crud->escape_string($_POST['post_title']);
     $body = $crud->escape_string($_POST['post_content']);
-    $status = $_POST['submitStatus'];
+    $status = 3;
     $startTime =  $_POST['event_start'];
     $endTime =  $_POST['event_end'];
 
@@ -61,8 +61,10 @@ if(isset($_POST['btnSubmit'])){
             'reminders' => array(
                 'useDefault' => FALSE,
                 'overrides' => array(
+                    array('method' => 'email', 'minutes' => 72 * 60),
                     array('method' => 'email', 'minutes' => 24 * 60),
-                    array('method' => 'popup', 'minutes' => 10),
+                    array('method' => 'email', 'minutes' => 180),
+                    array('method' => 'popup', 'minutes' => 180),
                 ),
             )
         ));
@@ -72,21 +74,23 @@ if(isset($_POST['btnSubmit'])){
         $eventId = $event->getId();
         $eventLink = $event->htmlLink;
 
+        $id = $crud->executeGetKey("INSERT INTO events (title, description, posterId, startTime, endTime, GOOGLE_EVENTID, GOOGLE_EVENTLINK) values ('$title', '$body','$userId','$status','$startTime','$endTime','$eventId','$eventLink')");
+        if(!empty ($id)) {
+            header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditEvent.php?postId=" . $id);
+        }else{
+            echo '<script language="javascript">';
+            echo 'alert('.$eventLink.')';
+            echo '</script>';
+        }
+
     }
 
-    $id = $crud->executeGetKey("INSERT INTO events (title, description, posterId, statusId, startTime, endTime, GOOGLE_EVENTID, GOOGLE_EVENTLINK) values ('$title', '$body','$userId','$status','$startTime','$endTime','$eventId','$eventLink')");
-    if(!empty ($id)) {
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditEvent.php?postId=" . $id);
-    }else{
-        echo '<script language="javascript">';
-        echo 'alert('.$eventLink.')';
-        echo '</script>';
-    }
+
 }
 
 $page_title = 'Santinig - Add Event';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR_Admin.php';
+include 'CMS_SIDEBAR.php';
 ?>
     <style>
         @media screen and (min-width: 1200px) {
@@ -103,6 +107,7 @@ include 'CMS_SIDEBAR_Admin.php';
     </style>
     <script>
         $(document).ready( function(){
+
 
 
             $('#datetimepicker1').datetimepicker( {
@@ -213,9 +218,7 @@ include 'CMS_SIDEBAR_Admin.php';
                                 </div>
                             </div>
                         </div>
-
                         <!-- Button -->
-
                     </div>
                 </div>
             </form>

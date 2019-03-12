@@ -44,7 +44,7 @@ if(isset($_POST['btnSubmit'])){
 
 $page_title = 'Santinig - Add Post';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR_Admin.php';
+include 'CMS_SIDEBAR.php';
 ?>
     <style>
         @media screen and (min-width: 1200px) {
@@ -73,7 +73,8 @@ include 'CMS_SIDEBAR_Admin.php';
                 imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
                 // Set the file upload URL.
                 fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
-                width: 750
+                width: 750,
+                pastePlain: false
             });
         });
     </script>

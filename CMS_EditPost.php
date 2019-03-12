@@ -151,7 +151,8 @@ if(isset($_POST['btnSubmit'])) {
     if(empty($status)){
         $crud->execute("UPDATE posts SET title='$title', body='$body' WHERE id='$postId';");
     }else if($crud->execute("UPDATE posts SET title='$title', body='$body', statusId='$status' WHERE id='$postId';")) {
-        if($status=='3' && $cmsRole=='3'){
+        if($status=='3'){
+            // we can add an UNPUBLISHERID in the future;
             $crud->execute("UPDATE posts SET reviewedById='$userId' WHERE id='$postId';");
         }else if($status=='4' && $cmsRole=='4'){
             $crud->execute("UPDATE posts SET publisherId='$userId' WHERE id='$postId';");
@@ -170,9 +171,19 @@ if(isset($_POST['btnSubmit'])) {
 }
 
 
+if(isset($_POST['btnRestore'])){
+    $status = $_POST['btnRestore'];
+    $crud->execute("UPDATE posts SET statusId = '$status' WHERE id='$postId';");
+}
+
+// ACTION BUTTONS
+// SAVE BUTTON
+//
+
+
 $page_title = 'Santinig - Edit Post';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR_Admin.php';
+include 'CMS_SIDEBAR.php';
 ?>
 <style>
     @media screen and (min-width: 1200px) {
@@ -213,6 +224,10 @@ include 'CMS_SIDEBAR_Admin.php';
         }
 
         $('#post_content').on('froalaEditor.contentChanged', function (e, editor) {
+            $('#btnUpdate').show();
+        });
+
+        $('#post_title').on('keyup', function(){
             $('#btnUpdate').show();
         });
 
@@ -347,7 +362,7 @@ include 'CMS_SIDEBAR_Admin.php';
                                         }else if ($status == '3') {
                                             echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
                                             echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
-                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Back to Author</button> ';
+                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
                                             echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
                                         } else if ($status == '4') {
                                             echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="3">Unpublish</button> ';
@@ -373,7 +388,7 @@ include 'CMS_SIDEBAR_Admin.php';
                                 }else if($availability == '2'){
                                     if($mode == 'view_with_button'){
                                         if($status == '5'){
-                                            echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="' . $prevStatus . '">Restore</button> ';
+                                            echo '<button type="submit" class="btn btn-success" name="btnRestore" id="btnSubmit" value="' . $prevStatus . '">Restore</button> ';
                                         }else{
                                             echo '<button type="submit" class="btn btn-primary" name="btnEdit" id="btnEdit"> Lock and Edit </button> ';
                                         }

@@ -8,10 +8,14 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
 $flag=0;
 if(isset($_POST['print'])){
-    $_SESSION['date']=$_POST['date'];
+    $_SESSION['event_start'] = null;
+    $_SESSION['event_start']=$_POST['event_start'];
+    $_SESSION['event_end'] = null;
+    if(!empty($_POST['event_end']))
+    $_SESSION['event_end'] = $_POST['event_end'];
     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/generateDOD.php");
 }
-if(!isset($_POST['select_date'])){
+if(!isset($_POST['event_start'])){
    
         $query2="SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee'
 from member m
@@ -30,44 +34,52 @@ where DATE(latest.Date) = date(TXN_DATE) group by m.member_ID";
 
 }
 else {
-    if($_POST['date'] != "0"){
-        $date = $_POST['date'];
-        $day = substr($date,0,strpos($date," "));
-        $month = substr($date,(strpos($date," ")+1),strpos($date,"-")-strpos($date," ")-1);
-        $year = substr($date,strpos($date,"-")+1);
-        $query2="SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee'
+         $date = $_POST['event_start'];
+        $dayStart = substr($date,0,strpos($date,"-"));
+        $monthStart = substr($date,(strpos($date,"-")+1),strpos($date,"- ")-3);
+        $yearStart = substr($date,strpos($date,"- ")+1);
+            if(!empty($_POST['event_end'])){
+                $date = $_POST['event_end'];
+
+                $dayEnd = substr($date,0,strpos($date,"-"));
+                $monthEnd = substr($date,(strpos($date,"-")+1),strpos($date,"- ")-3);
+                $yearEnd = substr($date,strpos($date,"- ")+1);
+            }
+        if(!isset($yearEnd)){
+        $query2 = "SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee'
 from member m
 join ref_department d
 on m.dept_id = d.dept_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 1 AND $month = Month(txn_date) AND $year = Year(txn_date) AND $day = DAY(txn_date) group by member_id) mf
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 1 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) mf
 on m.MEMBER_ID = mf.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 2 AND $month = Month(txn_date) AND $year = Year(txn_date) AND $day = DAY(txn_date) group by member_id) ha
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 2 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) ha
 on m.MEMBER_ID = ha.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 3 AND $month = Month(txn_date) AND $year = Year(txn_date) AND $day = DAY(txn_date) group by member_id) f
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 3 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) f
 on m.MEMBER_ID = f.member_id
 
 join txn_reference t
         on t.MEMBER_ID = m.MEMBER_ID
-        where TXN_TYPE =2 and $month = Month(txn_date) AND $year = Year(txn_date) AND $day = DAY(txn_date)
+        where TXN_TYPE =2 and $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date)
 group by m.member_ID";
-    }
-    else{
-        $query2="SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee'
+        }
+        else{
+             $query2 = "SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee'
 from member m
 join ref_department d
 on m.dept_id = d.dept_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 1 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) mf
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 1 AND (txn_date between '$yearStart-$monthStart-$dayStart 00:00:00' AND '$yearEnd-$monthEnd-$dayEnd 23:59:59') AND TXN_TYPE =2 group by member_id) mf
 on m.MEMBER_ID = mf.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 2 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) ha
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 2 AND (txn_date between '$yearStart-$monthStart-$dayStart 00:00:00' AND '$yearEnd-$monthEnd-$dayEnd 23:59:59') AND TXN_TYPE =2 group by member_id) ha
 on m.MEMBER_ID = ha.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 3 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) f
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 3 AND(txn_date between '$yearStart-$monthStart-$dayStart 00:00:00' AND '$yearEnd-$monthEnd-$dayEnd 23:59:59') AND TXN_TYPE =2 group by member_id)  f
 on m.MEMBER_ID = f.member_id
 
 join txn_reference t
-on t.member_id = m.member_id
-join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
-where DATE(latest.Date) = date(TXN_DATE) group by m.member_ID";
-    }
+        on t.MEMBER_ID = m.MEMBER_ID
+        where TXN_TYPE =2 and (txn_date between '$yearStart-$monthStart-$dayStart 00:00:00' AND '$yearEnd-$monthEnd-$dayEnd 23:59:59')
+group by m.member_ID";
+        }
+    
 }
 $result2=mysqli_query($dbc,$query2);
 
@@ -95,13 +107,18 @@ $result2=mysqli_query($dbc,$query2);
                 <!-- alert -->
                 <div class="row">
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-12">
 
                         <div class="panel panel-green">
 
                             <div class="panel-heading">
 
-                                <b>View Report for (Month, Day, Year)</b>
+                                <b>View Report for <?php echo date('d F', mktime(0, 0, 0, $monthStart, $dayStart)).' '.$yearStart;
+                                if(isset($yearEnd)){
+
+                                    echo ' - '.date('d F', mktime(0, 0, 0, $monthEnd, $dayEnd)).' '.$yearEnd;
+
+                                }?></b>
 
                             </div>
 
@@ -113,72 +130,28 @@ $result2=mysqli_query($dbc,$query2);
 
                                     <form action="ADMIN DREPORT detailed.php" method="POST">
 
-                                        <select class="form-control" name = "date">
-                                        
-                                            <option value = "0">This Current Date</option>  
-                                        <?php
-                                        $query="SELECT DISTINCT MONTH(txn_date) as 'Month',YEAR(txn_date) as 'Year', DAY(txn_date) as 'Day' from txn_reference
-                                            where txn_type = 2";
-                                        $result1 = mysqli_query($dbc,$query);
-
-                                        while($ans = mysqli_fetch_assoc($result1)){?>
-                                            <option value = "<?php echo $ans['Day']." ".$ans['Month']."-".$ans['Year'];
-                                                                
-                                                                ?>" <?php if(isset($_POST['date'])){
-                                                                    if($_POST['date']== $ans['Day']." ".$ans['Month']."-".$ans['Year']){
-                                                                        echo " selected";
-                                                                    }
-                                                                }?> >
-                                                <?php 
-                                                $month = "January";
-                                                if($ans['Month']=="1"){
-                                                    $month = "January";
-                                                }
-                                                else if($ans['Month']=="2"){
-                                                    $month = "February";
-                                                }
-                                                else if($ans['Month']=="3"){
-                                                    $month = "March";
-                                                }
-                                                else if($ans['Month']=="4"){
-                                                    $month = "April";
-                                                }
-                                                else if($ans['Month']=="5"){
-                                                    $month = "May";
-                                                }
-                                                else if($ans['Month']=="6"){
-                                                    $month = "June";
-                                                }
-                                                else if($ans['Month']=="7"){
-                                                    $month = "July";
-                                                }
-                                                else if($ans['Month']=="8"){
-                                                    $month = "August";
-                                                }
-                                                else if($ans['Month']=="9"){
-                                                    $month = "September";
-                                                }
-                                                else if($ans['Month']=="10"){
-                                                    $month = "October";
-                                                }
-                                                else if($ans['Month']=="11"){
-                                                    $month = "November";
-                                                }
-                                                else if($ans['Month']=="12"){
-                                                    $month = "December";
-                                                }
-
-
-
-                                                echo $ans['Day']." ".$month." ".$ans['Year']?></option>
-                                        <?php }?>
-
-                                        </select>
-
-                                    
-
-                                    </div>
-
+                                         <div class="col-lg-12lg-4">
+                            <div class="form-group">
+                                <label for="event_start">Start Date</label>
+                                <div class="input-group date" id="datetimepicker1">
+                                    <input id="event_start" name="event_start" type="text" class="form-control">
+                                    <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12lg-4">
+                            <div class="form-group">
+                                <label for="event_start">End Date</label>
+                                <div class="input-group date" id="datetimepicker2">
+                                    <input id="event_end" name="event_end" type="text" class="form-control">
+                                    <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
                                     <div class="col-lg-3" align="left">
 
                                         <input type="submit" class="btn btn-success" name="select_date" value="Generate Report">
@@ -279,6 +252,22 @@ $result2=mysqli_query($dbc,$query2);
     
             $('#table').DataTable();
 
+        });
+        $(function () {
+                
+            $('#datetimepicker1').datetimepicker( {
+                locale: moment().local('ph'),
+                maxDate: moment(),
+                format: 'DD-MM- YYYY'
+            });
+            $('#datetimepicker2').datetimepicker( {
+                locale: moment().local('ph'),
+                
+                
+                format: 'DD-MM- YYYY'
+            });
+
+        
         });
 
     </script>
