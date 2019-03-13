@@ -15,8 +15,9 @@
 
 $page_title = 'System Admin - Edit Workflow';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR_Admin.php';
+include 'CMS_SIDEBAR.php';
 
+//include 'SYS_MODAL_ChooseDocument.php';
 //$userId = $_SESSION['idnum'];
 
 ?>

@@ -15,7 +15,9 @@
 
 $page_title = 'System Admin - Edit Workflow';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR_Admin.php';
+include 'CMS_SIDEBAR.php';
+
+//include 'SYS_MODAL_ChooseDocument.php';
 
 //$userId = $_SESSION['idnum'];
 
@@ -54,7 +56,7 @@ include 'CMS_SIDEBAR_Admin.php';
                         <div class="row" style="margin-top: 1rem;">
                             <div class="col-lg-9" style="margin-left: 2rem;">
                                 <label>Step 1</label>
-                                <input type="text" class="form-control input-md option-input" value=" Step 1 Name">
+                                <input type="text" class="form-control input-md option-input" value=" Step 1 Name" onclick="ClickTextbox()">
                             </div>
                             <div class="col-lg-1">
                                 <a href="SYS_EditWorkflow_RoutePersonel.php" class="btn btn-default" style="margin-top: 2.5rem;"><i class="fa fa-fw fa-gear"></i></a>

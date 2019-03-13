@@ -6,12 +6,12 @@
  * Time: 3:48 PM
  */
 
-include_once('GLOBAL_CLASS_CRUD.php');
-$crud = new GLOBAL_CLASS_CRUD();
-require_once('mysql_connect_FA.php');
+//include_once('GLOBAL_CLASS_CRUD.php');
+//$crud = new GLOBAL_CLASS_CRUD();
+//require_once('mysql_connect_FA.php');
 session_start();
-include('GLOBAL_USER_TYPE_CHECKING.php');
-include('GLOBAL_CMS_ADMIN_CHECKING.php');
+//include('GLOBAL_USER_TYPE_CHECKING.php');
+//include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 //hardcoded value for userType, will add MYSQL verification
 $userId = $_SESSION['idnum'];
@@ -27,7 +27,7 @@ if(!empty($_GET['postId'])){
     }
 
     if($cmsRole != '3' && $authorId != $userId){
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_PostsDashboard.php");
+        //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_PostsDashboard.php");
     }
 
     $rows = $crud->getData("SELECT 
@@ -218,8 +218,8 @@ include 'CMS_SIDEBAR.php';
                                 No references
                             </div>
                             <div class="card-footer">
-                                <button class="btn btn-default"><i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-file"></i> Add New Document</button>
-                                <button class="btn btn-default"><i class="fa fa-fw fa-link"></i><i class="fa fa-fw fa-file"></i> Link Existing Document</button>
+                                <button class="btn btn-default" data-toggle="modal" data-target="#myModal"><i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-file"></i> Add New Document</button>
+                                <button class="btn btn-default" data-toggle="modal" data-target="#myModal"><i class="fa fa-fw fa-link"></i><i class="fa fa-fw fa-file"></i> Link Existing Document</button>
                             </div>
                         </div>
                         <div class="card" style="margin-bottom: 1rem;">
