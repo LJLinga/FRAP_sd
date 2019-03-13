@@ -14,7 +14,7 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 include 'GLOBAL_HEADER.php';
-include 'EDMS_Sidebar.php';
+include 'EDMS_SIDEBAR.php';
 ?>
 
 <script>

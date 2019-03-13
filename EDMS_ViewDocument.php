@@ -20,6 +20,10 @@ if(isset($_GET['docId'])){
 
     $documentId = $_GET['docId'];
 
+    if(isset($_GET['versId'])){
+        $versionId = $_GET['versId'];
+    }
+
     // Load Process and Steps assigned to current document
     $query = "SELECT d.processId, d.stepId, p.processName, s.stepName,
               d.availabilityId, d.lockedById
@@ -92,7 +96,7 @@ if(isset($_GET['docId'])){
 if(isset($_POST['btnUnlock'])){
     $documentId= $_POST['btnUnlock'];
     $crud->execute("UPDATE documents SET availabilityId='2', lockedById=NULL WHERE documentId='$documentId'");
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
 }
 
 if(isset($_POST['btnLock'])){
@@ -108,12 +112,15 @@ if(isset($_POST['btnLock'])){
         header('Pragma: public');
         header('Content-Length: ' . filesize($file));
         readfile($file);
-        //$crud->execute("UPDATE documents SET availabilityId='1', lockedById='$userId' WHERE documentId='$documentId'");
+        $crud->execute("UPDATE documents SET availabilityId='1', lockedById='$userId' WHERE documentId='$documentId'");
     }
-    //header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
 //    $URL="http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId=".$documentId;
 //    echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
 //    echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
+    echo '<script text="javascript">';
+    echo 'alert('.$documentId.')';
+    echo '</script>';
 }
 
 if(isset($_POST['btnRoute'])){
@@ -124,11 +131,11 @@ if(isset($_POST['btnRoute'])){
     echo '</script>';
     $documentId= $_POST['btnRoute'];
     $crud->execute("UPDATE documents SET availabilityId='2', stepId='$nextStepId', processId = '$nextProcessId', lockedById=NULL WHERE documentId='$documentId'");
-    //header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId.'&versId='.$versionId);
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
 }
 
 include 'GLOBAL_HEADER.php';
-include 'EDMS_Sidebar.php';
+include 'EDMS_SIDEBAR.php';
 ?>
 <div id="content-wrapper">
     <div class="container-fluid">
@@ -192,7 +199,7 @@ include 'EDMS_Sidebar.php';
                                             echo '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
                                             echo '<input type="text" name="nextStepId" value="'.$row['nextStepId'].'">';
                                             echo '<input type="text" name="nextProcessId" value="'.$row['nextProcessId'].'">';
-                                            echo '<button class="btn btn-primary" style="text-align: left" type="submit" name="btnRoute">' . $row['routeName'] . '</button>';
+                                            echo '<button class="btn btn-primary" style="text-align: left" type="submit" name="btnRoute">'.$row['routeName'].'</button>';
                                             echo '</form>';
                                         }
                                     }

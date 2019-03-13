@@ -14,10 +14,22 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 include 'GLOBAL_HEADER.php';
-include 'EDMS_Sidebar.php';
+include 'EDMS_SIDEBAR.php';
 
 
 $userId = $_SESSION['idnum'];
+$revisions = 'closed';
+
+$query = "SELECT m.year, m.title, m.revisionsStarted FROM faculty_manual m WHERE statusId = 1 ORDER BY year DESC LIMIT 1;";
+$rows = $crud->getData($query);
+if(!empty($rows)){
+    $revisions = 'open';
+    foreach ((array) $rows as $key => $row){
+        $year = $row['year'];
+        $title = $row['title'];
+        $revisionsStarted = $row['revisionsStarted'];
+    }
+}
 ?>
 
 <script>
@@ -34,14 +46,35 @@ $userId = $_SESSION['idnum'];
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <h3 class="page-header"> My Documents
-                    <button name="btnAddDocument" id="btnAddDocument" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Add Document</button>
+                <h3 class="page-header"> Manual Revisions
+                    <button name="btnAddDocument" id="btnAddDocument" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Add Section</button>
                 </h3>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-8">
                 <div class="card">
+                    <div class="card-body">
+                        <?php if($revisions == 'open') {
+                            echo 'Revisions for <b>Faculty Manual '.$year.'</b> started last '.$revisionsStarted;
+                            //$edmsRole = '4';
+                            if($edmsRole == '4'){
+                                echo '<br>Revisions Actions: ';
+                                echo '<button class="btn btn-warning"> Hold Revisions </button> ';
+                                // All editing is halted. Everyone can still view and comment.
+                                echo '<button class="btn btn-danger"> End Revisions </button> ';
+                                // Prompts whether PRESIDENT is sure to END revisions.
+                                // Shows which sections are currently not yet finalized/edits ongoing.
+                                // All recent saved progress are retained if PRESIDENT chooses to save still.
+                            }
+                        }else{
+                            echo 'Faculty Manual Revisions are still closed.';
+                        }
+                        ?>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 1rem;">
                     <div class="card-header btn-group">
                         <a type="button" class="btn btn-default" id="btnAll">All</a>
                         <a type="button" class="btn btn-default" id="btnMine">Mine</a>

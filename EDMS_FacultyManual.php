@@ -14,7 +14,9 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 include 'GLOBAL_HEADER.php';
-include 'EDMS_Sidebar.php';
+include 'EDMS_SIDEBAR.php';
+
+$edmsRole = $_SESSION['EDMS_ROLE'];
 ?>
 
 <script>
@@ -29,7 +31,15 @@ include 'EDMS_Sidebar.php';
             <div class="col-lg-12">
                 <h3 class="page-header">
                     Faculty Manual
-                    <a type="button" class="btn btn-primary"> Initiate Revisions </a>
+                    <?php
+                        if ($edmsRole == '4'){
+                            echo '<form id="form" name="form" method="POST" action="'.$_SERVER["PHP_SELF"].'">';
+                            echo '<button type="submit" class="btn btn-primary"> Initiate Revisions </button>';
+                            echo '</form>';
+                        }
+
+                        if($revisions)
+                        ?>
                 </h3>
             </div>
         </div>

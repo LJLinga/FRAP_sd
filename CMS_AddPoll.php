@@ -65,13 +65,13 @@ include 'CMS_SIDEBAR.php';
                                 </div>
                                 <div class="form-group">
                                     <label>Question</label>
-                                    <input name="question" type="text" class="form-control input-md" placeholder="Ask a question">
+                                    <input name="question" type="text" class="form-control input-md" placeholder="Ask a question" required>
                                 </div>
                                 <div class="form-group fieldGroup">
                                     <label>Responses</label>
                                     <div class="row fieldRow">
                                         <div class="col-lg-10">
-                                            <input name="option[]" type="text" class="form-control input-md option-input" placeholder="Add an answer">
+                                            <input name="option[]" type="text" class="form-control input-md option-input" placeholder="Add an answer" required>
                                         </div>
                                         <div class="col-lg-2">
                                             <button type="button" class="btn btn-danger removeField"><i class="fa fa-trash"></i></button>
@@ -85,20 +85,6 @@ include 'CMS_SIDEBAR.php';
                                 </div>
                             </form>
                         </div>
-                    </div>
-                    <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
-
-                        <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-body">
-                                No references
-                            </div>
-                            <div class="card-footer">
-                                <button class="btn btn-default"><i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-file"></i> Add New Document</button>
-                                <button class="btn btn-default"><i class="fa fa-fw fa-link"></i><i class="fa fa-fw fa-file"></i> Link Existing Document</button>
-                            </div>
-                        </div>
-                        <!-- Button -->
-
                     </div>
                 </div>
             </form>

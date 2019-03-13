@@ -29,6 +29,9 @@
                 <a href="EDMS_FacultyManual.php"><i class="fa fa-fw fa-folder"></i> Faculty Manual</a>
             </li>
             <li>
+                <a href="EDMS_ManualRevisions.php"><i class="fa fa-fw fa-folder"></i> Manual Revisions</a>
+            </li>
+            <li>
                 <a href="javascript:;" data-toggle="collapse" data-target="#minutes"><i class="fa fa-fw fa-folder"></i> Minutes <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="minutes" class="collapse">
                     <li style="">
