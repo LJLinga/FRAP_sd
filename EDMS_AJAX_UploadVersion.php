@@ -55,6 +55,7 @@ if(!empty($_POST['documentId']) && !empty($_POST['newVersionNo']) && !empty($_PO
         if ($didUpload) {
 
             $crud->executeGetKey("INSERT into doc_versions (documentId, authorId, versionNo, title, filePath) VALUES ('$documentId','$userId','$versionNo','$title','$uploadPath')");
+            $crud->execute("UPDATE documents SET availabilityId='2', lockedById=NULL WHERE documentId='$documentId'");
             //echo $documentId;
             echo 'http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId='.$documentId;
         } else {

@@ -77,7 +77,8 @@ include 'CMS_SIDEBAR.php';
                                             <button type="button" class="btn btn-danger removeField"><i class="fa fa-trash"></i></button>
                                         </div>
                                     </div>
-                                    <br><button type="button" class="btn btn-default addField">Add Option</button>
+                                    <br>
+                                    <button type="button" class="btn btn-default addField">Add Option</button>
                                 </div>
                             </div>
                                 <div class="card-footer">
@@ -111,7 +112,7 @@ include 'CMS_SIDEBAR.php';
             // });
 
             $('.addField').on('click', function(){
-                $('.fieldRow').last().after('<br><div class="row fieldRow">\n' +
+                $('.fieldRow').last().after('<div class="row fieldRow"><br>\n' +
                     '                                        <div class="col-lg-10">\n' +
                     '                                            <input name="option[]" type="text" class="form-control input-md option-input" placeholder="Add an answer">\n' +
                     '                                        </div>\n' +

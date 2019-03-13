@@ -16,19 +16,9 @@ include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
 
-
+$edmsRole = $_SESSION['EDMS_ROLE'];
 $userId = $_SESSION['idnum'];
 ?>
-
-<script>
-    $(document).ready(function() {
-        $('#dataTable').DataTable();
-
-        $('#btnAddDocument').on('click', function(){
-
-        });
-    });
-</script>
 
 <div id="content-wrapper">
     <div class="container-fluid">
@@ -139,12 +129,19 @@ $userId = $_SESSION['idnum'];
 <script>
     $(document).ready(function() {
 
+        $('#dataTable').DataTable();
+
+        $('#btnAddDocument').on('click', function(){
+
+        });
+
+        let mode = '<?php echo $edmsRole; ?>';
 
         $('table.table').DataTable( {
             "ajax": {
                 "url":"EDMS_AJAX_FetchDocuments.php",
                 "type":"POST",
-                "data":{ mode: '1'},
+                "data":{ role: mode },
                 "dataSrc": ''
             },
             columns: [

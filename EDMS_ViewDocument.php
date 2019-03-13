@@ -12,8 +12,8 @@ session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 //include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
-//$edmsRole = $_SESSION['EDMS_ROLE'];
-$edmsRole = 2;
+$edmsRole = $_SESSION['EDMS_ROLE'];
+//$edmsRole = 2;
 $userId = $_SESSION['idnum'];
 
 if(isset($_GET['docId'])){
@@ -55,13 +55,6 @@ if(isset($_GET['docId'])){
         }
     }
 
-//    if($firstAuthorId == $userId){
-//        $read = '2';
-//        $write = '2';
-//        $route = '2';
-//        $comment = '2';
-//    }
-
     if($availability == '1'){
         $route = '1';
         if($lockedById == $userId) $write = '2';
@@ -84,11 +77,17 @@ if(isset($_GET['docId'])){
         $versionId = $row['versionId'];
         $versionNo = $row['versionNo'];
         $currentAuthorId = $row['authorId'];
-        $currentAuthor = $row['originalAuthor'];
+        $currentAuthor = $row['currentAuthor'];
         $title = $row['title'];
         $filePath = $row['filePath'];
         $availability = $row['availabilityId'];
     }
+
+    if($firstAuthorId == $userId || $currentAuthorId == $userId){
+        $read = '2';
+        $comment = '2';
+    }
+
 }else{
    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Dashboard.php");
 }
@@ -100,36 +99,36 @@ if(isset($_POST['btnUnlock'])){
 }
 
 if(isset($_POST['btnLock'])){
-    $file = $_POST['filePath'];
     $documentId = $_POST['btnLock'];
     $userId = $_POST['userId'];
-    if (file_exists($file)) {
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="' . basename($file) . '"');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($file));
-        readfile($file);
-        $crud->execute("UPDATE documents SET availabilityId='1', lockedById='$userId' WHERE documentId='$documentId'");
-    }
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
-//    $URL="http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId=".$documentId;
-//    echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
-//    echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
-    echo '<script text="javascript">';
-    echo 'alert('.$documentId.')';
-    echo '</script>';
+    $crud->execute("UPDATE documents SET availabilityId='1', lockedById='$userId' WHERE documentId='$documentId'");
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewDocument.php?docId=".$documentId);
+}
+
+if(isset($_POST['btnDownload'])){
+    $filePath = $_POST['btnDownload'];
+    $name = str_replace('\'', '/', $filePath);
+    header('Content-Description: File Transfer');
+    header('Content-Type: application/force-download');
+    header("Content-Disposition: attachment; filename=\"" . basename($name) . "\";");
+    header('Content-Transfer-Encoding: binary');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate');
+    header('Pragma: public');
+    header('Content-Length: ' . filesize($name));
+    ob_clean();
+    flush();
+    readfile($name); //showing the path to the server where the file is to be download
 }
 
 if(isset($_POST['btnRoute'])){
-    $nextStepId = $_POST['nextStepId'];
-    $nextProcessId = $_POST['nextProcessId'];
-    echo '<script text="javascript">';
-    echo 'alert('.$nextProcessId.$nextStepId.');';
-    echo '</script>';
-    $documentId= $_POST['btnRoute'];
+    $documentId = $_POST['documentId'];
+    $routeId=$_POST['btnRoute'];
+    $rows = $crud->getData("SELECT nextStepId, nextProcessId FROM step_routes WHERE id='$routeId' LIMIT 1");
+    foreach ((array)$rows as $key => $row) {
+        $nextStepId = $row['nextStepId'];
+        $nextProcessId = $row['nextProcessId'];
+    }
     $crud->execute("UPDATE documents SET availabilityId='2', stepId='$nextStepId', processId = '$nextProcessId', lockedById=NULL WHERE documentId='$documentId'");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
 }
@@ -137,7 +136,7 @@ if(isset($_POST['btnRoute'])){
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
 ?>
-<div id="content-wrapper">
+<div id="content-wrapper" xmlns="http://www.w3.org/1999/html">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12" style="margin-top: 2rem;">
@@ -186,41 +185,37 @@ include 'EDMS_SIDEBAR.php';
                     <div class="card-header">
                         <b>Document Actions</b>
                     </div>
-                    <div class="card-body" >
+                    <div class="card-body">
                         <div class="btn-group btn-group-vertical" style="width: 100%;">
+                            <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
                             <?php
+
                                 if($processId == '99' || $currentStepId == '1'){
                                     echo '<button class="btn btn-info" style="text-align: left" type="button" id="btnAssignTask">';
                                 }else if(isset($route) && $route=='2') {
-                                    $query = "SELECT routeName, nextProcessId, nextStepId FROM step_routes WHERE stepId ='$currentStepId' AND processId = '$processId';";
+                                    $query = "SELECT id, routeName FROM step_routes WHERE stepId ='$currentStepId' AND processId = '$processId';";
                                     $rows = $crud->getData($query);
                                     if (!empty($rows)) {
+                                        echo '<input type="hidden" name="documentId" value="'.$documentId.'">';
                                         foreach ((array)$rows as $key => $row) {
-                                            echo '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
-                                            echo '<input type="text" name="nextStepId" value="'.$row['nextStepId'].'">';
-                                            echo '<input type="text" name="nextProcessId" value="'.$row['nextProcessId'].'">';
-                                            echo '<button class="btn btn-primary" style="text-align: left" type="submit" name="btnRoute">'.$row['routeName'].'</button>';
-                                            echo '</form>';
+                                            echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnRoute" value="'.$row['id'].'">'.$row['routeName'].'</button>';
                                         }
                                     }
                                 }
                                 if(isset($write) && $write=='2' && $availability=='2'){
-                                    echo '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
                                     echo '<input type="hidden" name="filePath" value="'.$filePath.'">';
                                     echo '<input type="hidden" name="userId" value="'.$userId.'">';
-                                    echo '<button class="btn btn-default" type="submit" name="btnLock" value="'.$documentId.'" style="text-align: left; width:100%;">Download and Edit</button>';
-                                    echo '</form>';
+                                    echo '<button class="btn btn-default" type="submit" name="btnLock" value="'.$documentId.'" style="text-align: left; width:100%;">Lock and Edit</button>';
                                 }else if(isset($write) && $write=='2' && $availability=='1'){
-                                    echo '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
                                     echo '<button class="btn btn-default" type="submit" name="btnUnlock" id="btnUnlock" value="'.$documentId.'" style="text-align: left; width: 100%;">Cancel Editing</button>';
-                                    echo '</form>';
-                                    echo '<button class="btn btn-default" id="btnUpload" data-toggle="modal" data-target="#uploadModal" style="text-align: left">Upload New Version</button>';
-                                }else{
-                                    echo '<a href="'.$filePath.'" class="btn btn-default" style="text-align: left" download>Download</a>';
+                                    echo '<button type="button" class="btn btn-default" id="btnUpload" data-toggle="modal" data-target="#uploadModal" style="text-align: left; width: 100%;">Upload New Version</button>';
                                 }
                                 ?>
-                            <button class="btn btn-default" style="text-align: left">Archive</button>
-                         </div>
+                                <a href="<?php echo $filePath?>" download><button type="button" class="btn btn-default" style="text-align: left; width: 100%;">Download</button></a>
+                                <button type="button" name="btnArchive" class="btn btn-default" style="text-align: left; width: 100%;">Archive</button>
+                            </form>
+
+                        </div>
                     </div>
                 </div>
                 <?php

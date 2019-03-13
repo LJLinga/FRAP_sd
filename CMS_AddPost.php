@@ -76,6 +76,12 @@ include 'CMS_SIDEBAR.php';
                 width: 750,
                 pastePlain: false
             });
+
+            $('table').dataTable(function(){});
+
+            $('#btnAddDocument').on('click', function(){
+
+            });
         });
     </script>
 
@@ -109,11 +115,23 @@ include 'CMS_SIDEBAR.php';
 
                         <div class="card" style="margin-bottom: 1rem;">
                             <div class="card-body">
-                                No references
+                                No Referenced Documents
+                                <span id="refDocuments">
+
+                                </span>
                             </div>
                             <div class="card-footer">
-                                <button class="btn btn-default"><i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-file"></i> Add New Document</button>
-                                <button class="btn btn-default"><i class="fa fa-fw fa-link"></i><i class="fa fa-fw fa-file"></i> Link Existing Document</button>
+                                <button type="button" class="btn btn-default"><i class="fa fa-fw fa-plus"></i> Ref. New Document </button>
+                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i> Ref. Existing Document </button>
+                            </div>
+                        </div>
+
+                        <div class="card" style="margin-bottom: 1rem;">
+                            <div class="card-body">
+                                No Faculty Manual References
+                            </div>
+                            <div class="card-footer">
+                                <button type="button" class="btn btn-default"><i class="fa fa-fw fa-link"></i> Ref. Existing Section </button>
                             </div>
                         </div>
 
@@ -145,4 +163,64 @@ include 'CMS_SIDEBAR.php';
         </div>
     </div>
     <!-- /#page-wrapper -->
+
+    <!-- Modal -->
+    <div id="modalRED" class="modal fade" role="dialog" data-backdrop="false">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                    <h5 class="modal-title">Reference Document</h5>
+                </div>
+                <div class="modal-body">
+
+                    <form id="formRED" name="formRED" method="POST"">
+                        <table class="table table-bordered" align="center" id="dataTable">
+                            <thead>
+                            <tr>
+                                <th> Document </th>
+                                <th> Assigned Process </th>
+                                <th width="20px"> Add </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+
+                                $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor,
+                                                            v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.id AS processId, pr.processName, s.stepNo, s.stepName,
+                                                            (SELECT CONCAT(e.lastName,', ',e.firstName) FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
+                                                            WHERE v.versionId = vid) AS currentAuthor
+                                                            FROM documents d JOIN doc_versions v ON d.documentId = v.documentId
+                                                            JOIN employee e ON e.EMP_ID = d.firstAuthorId 
+                                                            JOIN steps s ON s.id = d.stepId
+                                                            JOIN process pr ON pr.id = d.processId 
+                                                            WHERE s.processId = pr.id AND v.versionId = 
+                                                            (SELECT MAX(v1.versionId) FROM doc_versions v1 WHERE v1.documentId = d.documentId)");
+                                if(!empty($rows)){
+                                    foreach ((array) $rows as $key => $row){
+                                        echo '<tr>';
+                                        echo '<td><b>'.$row['title'].'</b> 
+                                                <span class="badge">'.$row['versionNo'].'</span><br>
+                                                Author: '.$row['originalAuthor'].'<br>
+                                                Modified by: '.$row['originalAuthor'].'<br>
+                                                on : <i>'.date("F j, Y g:i:s A ", strtotime($row['timeCreated'])).'</i><br></td>';
+                                        echo '<td>'.$row['processName'].'</td>';
+                                        echo '<td><button type="button" id="btnAddDocument" class="btn btn-default" value="'.$row['vid'].'">Add</button></td>';
+                                        echo '</tr>';
+                                    }
+                                }
+                            ?>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
 <?php include 'GLOBAL_FOOTER.php' ?>

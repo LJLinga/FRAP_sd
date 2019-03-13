@@ -124,8 +124,13 @@ include 'CMS_SIDEBAR.php';
                 format: 'YYYY-MM-DD HH:mm:ss'
             });
 
+            $('#toAddUsers').dataTable(function(){
+                // Load to Add Users here
+            });
 
-
+            $('#addedUsers').dataTable(function(){
+                // Load to added users
+            });
         });
     </script>
 
@@ -195,7 +200,6 @@ include 'CMS_SIDEBAR.php';
                             <div class="card-body">
                                 <div class="form-group">
                                     <input id="post_emails" name="post_emails" type="text" placeholder="Provide emails" class="form-control input-md" data-toggle="modal" data-target="#myModal" required>
-                                    <?php include("SYS_MODAL_ChoosePersonnel.php")?>
                                 </div>
                             </div>
                         </div>
@@ -213,4 +217,51 @@ include 'CMS_SIDEBAR.php';
         </div>
     </div>
     <!-- /#page-wrapper -->
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog" data-backdrop="false">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                    <h5 class="modal-title">Invite People</h5>
+                </div>
+                <div class="modal-body">
+
+                    <form id="form" name="form" method="POST" action="<?php $_SERVER["PHP_SELF"]?>">
+                        <table class="table table-bordered" align="center" id="toAddUsers">
+                            <thead>
+                            <tr>
+                                <th>
+                                    User
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    Alderite, Christian <br>
+                                    <span id="user_email">nicolealderite@gmail.com</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary"> Add </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <input type="submit" class="btn btn-primary" value="Add">
+                </div>
+            </div>
+
+        </div>
+    </div>
 <?php include 'GLOBAL_FOOTER.php' ?>
