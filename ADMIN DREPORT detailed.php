@@ -113,12 +113,12 @@ $result2=mysqli_query($dbc,$query2);
 
                             <div class="panel-heading">
 
-                                <b>View Report for <?php echo date('d F', mktime(0, 0, 0, $monthStart, $dayStart)).' '.$yearStart;
+                                <b>View Report for <?php if(isset($yearStart)){echo date('d F', mktime(0, 0, 0, $monthStart, $dayStart)).' '.$yearStart;
                                 if(isset($yearEnd)){
 
                                     echo ' - '.date('d F', mktime(0, 0, 0, $monthEnd, $dayEnd)).' '.$yearEnd;
 
-                                }?></b>
+                                }} else{ echo $date;}?></b>
 
                             </div>
 

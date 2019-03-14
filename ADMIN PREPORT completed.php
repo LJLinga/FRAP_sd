@@ -77,12 +77,16 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
-                            Completed Deductions for <?php echo date('F', mktime(0, 0, 0, $monthStart, 10)).' '.$yearStart;
+                            Completed Deductions for <?php if(isset($yearStart)){echo date('F', mktime(0, 0, 0, $monthStart, 10)).' '.$yearStart;
                                 if(isset($yearEnd)){
 
                                     echo ' - '.date('F', mktime(0, 0, 0, $monthEnd, 10)).' '.$yearEnd;
 
+                                }}
+                                else{
+                                    echo $date;
                                 }?>
+
                             
                         </h1>
                     
