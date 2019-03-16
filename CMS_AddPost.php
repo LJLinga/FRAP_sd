@@ -20,9 +20,17 @@ if(isset($_POST['btnSubmit'])){
     $title = $crud->escape_string($_POST['post_title']);
     $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['btnSubmit'];
+    $references = $_POST['references'];
+
+
 
     $postId = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body','$userId','$status')");
     if(!empty ($postId)) {
+        foreach($references AS $key => $value){
+            echo $references[$key];
+            $query = "INSERT INTO post_ref_versions(postId,versionId) VALUES ('$postId','$references[$key]');";
+            $crud->execute($query);
+        }
         if($status=='3' && $cmsRole=='3'){
             $crud->execute("UPDATE posts SET reviewedById='$userId' WHERE id='$postId';");
         }
@@ -65,6 +73,9 @@ include 'CMS_SIDEBAR.php';
         }
     </style>
     <script>
+
+        let table = $('table').dataTable();
+
         $(document).ready( function(){
             $('textarea').froalaEditor({
                 // Disables video upload
@@ -77,13 +88,36 @@ include 'CMS_SIDEBAR.php';
                 pastePlain: false
             });
 
-            $('table').dataTable(function(){});
-
-            $('#btnAddDocument').on('click', function(){
-
+            table.dataTable({
+                "pageLength": 5
             });
         });
+
+        function addRef(element, verId, oA, cA, vN, uO, t, pN){
+            $('#noRefsYet').remove();
+            $('#refDocuments').append('<div class="card">'+
+                    '<div class="row"><div class="col-sm-8">'+
+                    '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse'+verId+'" aria-expanded="true" aria-controls="collapse'+verId+'"><b>'+t+'</b> <span class="badge">'+vN+'</span></a>'+
+                    '</div>'+
+                    '<div class="col-sm-4">'+
+                    '</div></div>'+
+                    '<div id="collapse'+verId+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
+                    '<div class="card-body">'+
+                        'Process: '+pN+'<br>'+
+                    'Created by: '+oA+'<br>'+
+                    'Modified by: '+cA+
+                    ' on: <i>'+uO+'</i><br>'+
+                    '</div></div></div>'+'<input type="hidden" name="documentReferences[]" value="'+verId+'">');
+            reloadToAddTable(verId);
+        }
+
+        function reloadToAddTable(){
+
+        }
+
     </script>
+
+
 
     <div id="content-wrapper">
         <div class="container-fluid">
@@ -115,9 +149,8 @@ include 'CMS_SIDEBAR.php';
 
                         <div class="card" style="margin-bottom: 1rem;">
                             <div class="card-body">
-                                No Referenced Documents
-                                <span id="refDocuments">
-
+                                <span id="noRefsYet">No References</span>
+                                <span id="refDocuments" style="font-size: 12px;">
                                 </span>
                             </div>
                             <div class="card-footer">
@@ -177,7 +210,7 @@ include 'CMS_SIDEBAR.php';
                 <div class="modal-body">
 
                     <form id="formRED" name="formRED" method="POST"">
-                        <table class="table table-bordered" align="center" id="dataTable">
+                        <table class="table table-bordered" align="center" id="dataTable" style="font-size: 12px;">
                             <thead>
                             <tr>
                                 <th> Document </th>
@@ -200,14 +233,20 @@ include 'CMS_SIDEBAR.php';
                                                             (SELECT MAX(v1.versionId) FROM doc_versions v1 WHERE v1.documentId = d.documentId)");
                                 if(!empty($rows)){
                                     foreach ((array) $rows as $key => $row){
+                                        $title=$row['title'];
+                                        $versionNo = $row['versionNo'];
+                                        $originalAuthor = $row['originalAuthor'];
+                                        $currentAuthor = $row['currentAuthor'];
+                                        $processName=$row['processName'];
+                                        $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
                                         echo '<tr>';
-                                        echo '<td><b>'.$row['title'].'</b> 
-                                                <span class="badge">'.$row['versionNo'].'</span><br>
-                                                Author: '.$row['originalAuthor'].'<br>
-                                                Modified by: '.$row['originalAuthor'].'<br>
-                                                on : <i>'.date("F j, Y g:i:s A ", strtotime($row['timeCreated'])).'</i><br></td>';
-                                        echo '<td>'.$row['processName'].'</td>';
-                                        echo '<td><button type="button" id="btnAddDocument" class="btn btn-default" value="'.$row['vid'].'">Add</button></td>';
+                                        echo '<td><b>'.$title.'</b> 
+                                                <span class="badge">'.$versionNo.'</span><br>
+                                                Author: '.$originalAuthor.'<br>
+                                                Modified by: '.$currentAuthor.'<br>
+                                                on : <i>'.$updatedOn.'</i><br></td>';
+                                        echo '<td>'.$processName.'</td>';
+                                        echo '<td><button type="button" id="btnAddDocument" class="btn btn-default" onclick="addRef(this,&quot;'.$row['vid'].'&quot;,&quot;'.$originalAuthor.'&quot;,&quot;'.$currentAuthor.'&quot;,&quot;'.$versionNo.'&quot;,&quot;'.$updatedOn.'&quot;,&quot;'.$title.'&quot;,&quot;'.$processName.'&quot;);" value="'.$row['vid'].'">Add</button></td>';
                                         echo '</tr>';
                                     }
                                 }

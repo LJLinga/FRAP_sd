@@ -20,16 +20,12 @@ if(isset($_GET['docId'])){
 
     $documentId = $_GET['docId'];
 
-    if(isset($_GET['versId'])){
-        $versionId = $_GET['versId'];
-    }
-
     // Load Process and Steps assigned to current document
     $query = "SELECT d.processId, d.stepId, p.processName, s.stepName,
-              d.availabilityId, d.lockedById
+              d.availabilityId, d.lockedById, d.statusId, st.statusName
               FROM documents d 
               JOIN process p ON d.processId = p.id 
-              JOIN steps s ON d.stepId = s.id WHERE d.documentId='$documentId';";
+              JOIN steps s ON d.stepId = s.id JOIN status_dictionary st ON st.id = d.statusId WHERE d.documentId='$documentId';";
     $rows = $crud->getData($query);
     foreach((array) $rows as $key => $row){
         $processId = $row['processId'];
@@ -38,6 +34,8 @@ if(isset($_GET['docId'])){
         $stepName = $row['stepName'];
         $availability = $row['availabilityId'];
         $lockedById = $row['lockedById'];
+        $statusId = $row['statusId'];
+        $statusName = $row['statusName'];
     }
 
     // Load Current User Permissions
@@ -45,7 +43,7 @@ if(isset($_GET['docId'])){
                 WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' AND su.processId = $processId LIMIT 1;";
     $rows = $crud->getData($query);
     if(empty($rows)){
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Dashboard.php");
+        //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Dashboard.php");
     }else{
         foreach((array) $rows as $key => $row){
             $read= $row['read'];
@@ -98,6 +96,18 @@ if(isset($_POST['btnUnlock'])){
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
 }
 
+if(isset($_POST['btnAccept'])){
+    $documentId = $_POST['btnAccept'];
+    $crud->execute("UPDATE documents SET statusId='2', availabilityId='2', lockedById=NULL WHERE documentId='$documentId'");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
+}
+
+if(isset($_POST['btnReject'])){
+    $documentId= $_POST['btnReject'];
+    $crud->execute("UPDATE documents SET statusId='3', availabilityId='2', lockedById=NULL WHERE documentId='$documentId'");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
+}
+
 if(isset($_POST['btnLock'])){
     $documentId = $_POST['btnLock'];
     $userId = $_POST['userId'];
@@ -129,7 +139,8 @@ if(isset($_POST['btnRoute'])){
         $nextStepId = $row['nextStepId'];
         $nextProcessId = $row['nextProcessId'];
     }
-    $crud->execute("UPDATE documents SET availabilityId='2', stepId='$nextStepId', processId = '$nextProcessId', lockedById=NULL WHERE documentId='$documentId'");
+    //$crud->execute("UPDATE documents SET availabilityId='2', stepId='$nextStepId', processId = '$nextProcessId', lockedById=NULL WHERE documentId='$documentId'");
+    $crud->execute("UPDATE documents SET statusId = '1', availabilityId='2', stepId='$nextStepId', processId = '$nextProcessId', lockedById=NULL WHERE documentId='$documentId'");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
 }
 
@@ -175,6 +186,7 @@ include 'EDMS_SIDEBAR.php';
                     <div class="card-body" >
                         Process: <b><?php echo $processName; ?></b><br>
                         Stage: <b><?php echo $stepName; ?></b><br>
+                        Status: <b><?php echo $statusName; ?></b><br>
                         Created by <b><?php echo $originalAuthor; ?></b><br>
                         <i>on <b><?php echo date("F j, Y g:i:s A ", strtotime($timeFirstPosted)); ?></b></i><br>
                         Modified by <b><?php echo $currentAuthor; ?></b><br>
@@ -190,12 +202,23 @@ include 'EDMS_SIDEBAR.php';
                             <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
                             <?php
 
+
                                 if($processId == '99' || $currentStepId == '1'){
                                     echo '<button class="btn btn-info" style="text-align: left" type="button" id="btnAssignTask">';
                                 }else if(isset($route) && $route=='2') {
                                     $query = "SELECT id, routeName FROM step_routes WHERE stepId ='$currentStepId' AND processId = '$processId';";
                                     $rows = $crud->getData($query);
                                     if (!empty($rows)) {
+                                        if(($edmsRole == 4 || $edmsRole == 3)) {
+                                            if($statusId == 1){
+                                                echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
+                                                echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$documentId.'">Reject</button>';
+                                            }else if($statusId == 2){
+                                                echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$documentId.'">Reject</button>';
+                                            }else if($statusId == 3){
+                                                echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
+                                            }
+                                        }
                                         echo '<input type="hidden" name="documentId" value="'.$documentId.'">';
                                         foreach ((array)$rows as $key => $row) {
                                             echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnRoute" value="'.$row['id'].'">'.$row['routeName'].'</button>';

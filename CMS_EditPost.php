@@ -110,7 +110,7 @@ if(!empty($_GET['postId'])){
                     JOIN
                 employee pub ON pub.EMP_ID = p.publisherId
             WHERE
-                p.id = '$postId' ;
+                p.id = '$postId';
         ");
         foreach((array) $pubQuery as $key => $row){
             $publisher = $row['publisher'];
@@ -208,10 +208,11 @@ include 'CMS_SIDEBAR.php';
 
         let mode = '<?php echo $mode; ?>';
         let postId = "<?php echo $postId?>";
+        let content = $('#post_content');
 
         $('#btnUpdate').hide();
 
-        $('#post_content').froalaEditor({
+        content.froalaEditor({
             videoUpload: false,
             imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
             fileUpload: false,
@@ -220,10 +221,10 @@ include 'CMS_SIDEBAR.php';
         });
 
         if(mode==='view' || mode==='view_with_button'){
-            $('#post_content').froalaEditor("edit.off");
+            content.froalaEditor("edit.off");
         }
 
-        $('#post_content').on('froalaEditor.contentChanged', function (e, editor) {
+        content.on('froalaEditor.contentChanged', function (e, editor) {
             $('#btnUpdate').show();
         });
 
@@ -231,7 +232,7 @@ include 'CMS_SIDEBAR.php';
             $('#btnUpdate').show();
         });
 
-        $('#post_content').froalaEditor('html.set', '<?php echo $body?>');
+        content.froalaEditor('html.set', '<?php echo $body?>');
 
         $('#comment_form').on('submit', function(event){
             event.preventDefault();
@@ -278,21 +279,6 @@ include 'CMS_SIDEBAR.php';
             $('#comment_name').focus();
         });
 
-//        $('#modalTriggerSubmit').click(function() {
-//            $('#changeText').text($('.btn').val());
-//            $('#submit').click(function() {
-//                document.getElementById("addToPay").click();
-//            });
-//        });
-//        $('#modalTriggerUpdate').click(function() {
-//            $('#changeText').text('50 % immediately');
-//            $('#submit').click(function() {
-//                document.getElementById("addFifty").click();
-//            });
-//        });
-
-
-
     });
 
 </script>
@@ -327,7 +313,46 @@ include 'CMS_SIDEBAR.php';
 
                     <div class="card" style="margin-bottom: 1rem;">
                         <div class="card-body">
-                            No references
+                            <span id="refDocuments">
+                                <?php $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor,
+                                            v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.id AS processId, pr.processName, s.stepNo, s.stepName,
+                                            (SELECT CONCAT(e.lastName,', ',e.firstName) FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
+                                            WHERE v.versionId = vid) AS currentAuthor
+                                            FROM documents d JOIN doc_versions v ON d.documentId = v.documentId
+                                            JOIN employee e ON e.EMP_ID = d.firstAuthorId 
+                                            JOIN steps s ON s.id = d.stepId
+                                            JOIN process pr ON pr.id = d.processId 
+                                            ");
+                        if(!empty($rows)) {
+                            foreach ((array)$rows as $key => $row) {
+                                $title = $row['title'];
+                                $versionNo = $row['versionNo'];
+                                $originalAuthor = $row['originalAuthor'];
+                                $currentAuthor = $row['currentAuthor'];
+                                $processName = $row['processName'];
+                                $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
+                                echo '<div class="card">';
+                                echo '<div class="row">';
+                                echo '<div class="col-sm-8">';
+                                echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
+                                echo '</div>';
+                                echo '<div class="col-sm-4">';
+                                echo '<a type="button" class="btn btn-sm">View </a>';
+                                echo '</div></div>';
+                                echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
+                                echo '<div class="card-body">';
+                                echo 'Process: ' . $processName . '<br>';
+                                echo 'Created by: ' . $originalAuthor . '<br>';
+                                echo 'Modified by: ' . $currentAuthor . '<br>';
+                                echo ' on: <i>' . $updatedOn . '</i><br>';
+                                echo '</div></div></div>';
+                            }
+                        }
+                        else{
+                                echo 'No References';
+                            }
+                        ?>
+                            </span>
                         </div>
                         <div class="card-footer">
                             <button class="btn btn-default"><i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-file"></i> Add New Document</button>
