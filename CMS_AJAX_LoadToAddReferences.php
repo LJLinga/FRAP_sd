@@ -19,7 +19,7 @@ $crud = new GLOBAL_CLASS_CRUD();
         }
     }
 
-    $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor,
+    $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor, v.filePath,
                                          v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.id AS processId, pr.processName, s.stepNo, s.stepName,
                                          (SELECT CONCAT(e.lastName,', ',e.firstName) FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
                                          WHERE v.versionId = vid) AS currentAuthor
@@ -34,19 +34,21 @@ $crud = new GLOBAL_CLASS_CRUD();
     $data = [];
     if(!empty($rows)) {
         foreach ((array)$rows as $key => $row) {
+            $vid = $row['vid'];
             $title = $row['title'];
             $versionNo = $row['versionNo'];
             $originalAuthor = $row['originalAuthor'];
             $currentAuthor = $row['currentAuthor'];
             $processName = $row['processName'];
             $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
+            $filePath = $row['filePath'];
+            $fileName = $title.'_ver'.$versionNo.'_'.basename($filePath);
             $htmlA = '<b>'.$title.'</b><span class="badge">'.$versionNo.'</span><br>
                       Author:'.$originalAuthor.'<br>
                       Modified by: '.$currentAuthor .'<br>
                       on : <i>'.$updatedOn.'</i><br>';
             $htmlB = $processName;
-            $htmlC = '<button type="button" class="btn btn-default" onclick="addRef(this, &quot;' . $row['vid'] . '&quot;,&quot;' . $originalAuthor . '&quot;,&quot;' . $currentAuthor . '&quot;,&quot;' . $versionNo . '&quot;,&quot;' . $updatedOn . '&quot;,&quot;' . $title . '&quot;,&quot;' . $processName . '&quot;);" value="' . $row['vid'] . '">Add</button>';
-
+            $htmlC = '<button type="button" class="btn btn-default" onclick="addRef(this, &quot;' . $vid . '&quot;,&quot;' . $originalAuthor . '&quot;,&quot;' . $currentAuthor . '&quot;,&quot;' . $versionNo . '&quot;,&quot;' . $updatedOn . '&quot;,&quot;' . $title . '&quot;,&quot;' . $processName . '&quot;,&quot;' . $filePath. '&quot;,&quot;' . $fileName . '&quot;);" value="' . $row['vid'] . '">Add</button>';
             $data[] = array(
                 'Document' => $htmlA,
                 'Status' => $htmlB,

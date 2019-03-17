@@ -103,7 +103,7 @@ include 'CMS_SIDEBAR.php';
             });
             $('table').dataTable({
                 destroy: true,
-                "pageLength": 5,
+                "pageLength": 3,
                 "ajax": {
                     "url":"CMS_AJAX_LoadToAddReferences.php",
                     "type":"POST",

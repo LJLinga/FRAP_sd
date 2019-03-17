@@ -148,6 +148,22 @@ if(isset($_POST['btnSubmit'])) {
     $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['btnSubmit'];
 
+    if(isset($_POST['toRemoveDocRefs'])) {
+        $toRemoveDocRefs = $_POST['toRemoveDocRefs'];
+        foreach((array) $toRemoveDocRefs AS $key => $ref){
+            $query = "DELETE FROM post_ref_versions WHERE postId = $postId AND versionId = $ref";
+            $crud->execute($query);
+        }
+    }
+
+    if(isset($_POST['toAddDocRefs'])) {
+        $toAddDocRefs = $_POST['toAddDocRefs'];
+        foreach((array) $toAddDocRefs AS $key => $ref){
+            $query = "INSERT INTO post_ref_versions(postId,versionId) VALUES ('$postId','$ref');";
+            $crud->execute($query);
+        }
+    }
+
     if(empty($status)){
         $crud->execute("UPDATE posts SET title='$title', body='$body' WHERE id='$postId';");
     }else if($crud->execute("UPDATE posts SET title='$title', body='$body', statusId='$status' WHERE id='$postId';")) {
@@ -279,14 +295,62 @@ include 'CMS_SIDEBAR.php';
             $('#comment_name').focus();
         });
 
-        // var map = {};
-        // $(".refDocument").each(function() {
-        //     map[$(this).attr("name")] = $(this).val();
-        // });
-        //
-        // alert(map.key1); // "red"
+        $('#btnRefModal').on('click', function(){
+            reloadDataTable();
+        });
 
     });
+
+    function reloadDataTable(){
+        let loadedRefs = [];
+        $(".refDocuments").each(function() {
+            loadedRefs.push($(this).val());
+        });
+        $('table').dataTable({
+            destroy: true,
+            "pageLength": 3,
+            "ajax": {
+                "url":"CMS_AJAX_LoadToAddReferences.php",
+                "type":"POST",
+                "data":{ loadedReferences: loadedRefs },
+                "dataSrc": ''
+            },
+            columns: [
+                { data: "Document" },
+                { data: "Status" },
+                { data: "Action" }
+            ]
+        });
+    }
+
+    function removeRef(element, verId){
+        $(element).closest('div.card').remove();
+        $('#toRemoveDocRefs').append('<input type="hidden" name="toRemoveDocRefs[]" value="'+verId+'">');
+        $('#btnUpdate').show();
+    }
+
+    function addRef(element, verId, oA, cA, vN, uO, t, pN, fP, fN){
+        $('#noRefsYet').remove();
+        $('#btnUpdate').show();
+        $('#refDocuments').append('<div class="card">'+
+            '<input type="hidden" name="toAddDocRefs[]" class="refDocuments" value="'+verId+'">'+
+            '<div class="row"><div class="col-lg-7">'+
+            '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse'+verId+'" aria-expanded="true" aria-controls="collapse'+verId+'"><b>'+t+'</b> <span class="badge">'+vN+'</span></a>'+
+            '</div>'+
+            '<div class="col-md-4" style="position: relative;">'+
+            '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >'+
+            '<a class="btn fa fa-download"  href="'+fP+'" download="'+fN+'"></a>'+
+            '<a class="btn fa fa-remove" onclick="removeRef(this)" ></a>'+
+            '</div></div></div>'+
+            '<div id="collapse'+verId+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
+            '<div class="card-body">'+
+            'Process: '+pN+'<br>'+
+            'Created by: '+oA+'<br>'+
+            'Modified by: '+cA+
+            ' on: <i>'+uO+'</i><br>'+
+            '</div></div></div>');
+        reloadDataTable();
+    }
 
 </script>
 
@@ -319,9 +383,14 @@ include 'CMS_SIDEBAR.php';
                 <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem; ">
 
                     <div class="card" style="margin-bottom: 1rem; ">
+                        <div class="card-header">
+                            <b>References</b>
+                        </div>
                         <div class="card-body" style="max-height: 20rem; overflow-y: scroll;">
                             <span id="refDocuments">
-                                <?php $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor,
+                                <?php
+
+                                $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor, v.filePath,
                                             v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.id AS processId, pr.processName, s.stepNo, s.stepName,
                                             (SELECT CONCAT(e.lastName,', ',e.firstName) FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
                                             WHERE v.versionId = vid) AS currentAuthor
@@ -339,14 +408,19 @@ include 'CMS_SIDEBAR.php';
                                     $currentAuthor = $row['currentAuthor'];
                                     $processName = $row['processName'];
                                     $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
+                                    $filePath = $row['filePath'];
+                                    $fileName = $title.'_ver'.$versionNo.'_'.basename($filePath);
                                     echo '<div class="card">';
+                                    echo '<input type="hidden" class="refDocuments" value="'.$row['vid'].'">';
                                     echo '<div class="row">';
-                                    echo '<div class="col-sm-8">';
+                                    echo '<div class="col-md-7">';
                                     echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
                                     echo '</div>';
-                                    echo '<div class="col-sm-4">';
-                                    echo '<a type="button" class="btn btn-sm">View </a>';
-                                    echo '</div></div>';
+                                    echo '<div class="col-md-4" style="position: relative;">';
+                                    echo '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >';
+                                    echo '<a class="btn fa fa-download"  href="'.$filePath.'" download="'.$fileName.'"></a>';
+                                    if($mode == 'edit') echo '<a class="btn fa fa-remove" onclick="removeRef(this, &quot;'.$row['vid'].'&quot;)" ></a>';
+                                    echo '</div></div></div>';
                                     echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
                                     echo '<div class="card-body">';
                                     echo 'Process: ' . $processName . '<br>';
@@ -361,17 +435,20 @@ include 'CMS_SIDEBAR.php';
                                 }
                             ?>
                             </span>
+                            <span id="toRemoveDocRefs"></span>
                         </div>
 
                         <?php
 
                             if($mode == 'edit'){
                                 echo '<div class="card-footer">
-                                         <button class="btn btn-default"><i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-file"></i> Add New Document</button>
-                                         <button class="btn btn-default"><i class="fa fa-fw fa-link"></i><i class="fa fa-fw fa-file"></i> Link Existing Document</button>
-                                      </div>';
+                                <button type="button" class="btn btn-default"><i class="fa fa-fw fa-plus"></i> Ref. New Document </button>
+                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i> Ref. Existing Document </button>
+                            </div>';
                             }
                         ?>
+
+
                     </div>
 
                     <div class="card" style="margin-bottom: 1rem;">
@@ -422,6 +499,21 @@ include 'CMS_SIDEBAR.php';
                                             echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
                                             echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
                                         }
+                                    }else if($cmsRole == '5'){
+                                        if($status == '1'){
+                                            echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
+                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                        }else if ($status == '3') {
+                                            echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
+                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
+                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
+                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                        } else if ($status == '4') {
+                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="3">Unpublish</button> ';
+                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
+                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
+                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                        }
                                     }
                                     echo '<button type="submit" class="btn btn-primary" name="btnUnlock" id="btnUnlock"> Exit </button> ';
                                 }else if($availability == '2'){
@@ -442,11 +534,6 @@ include 'CMS_SIDEBAR.php';
                         </div>
                     </div>
                 </div>
-
-            </div>
-
-
-            <div class="row">
 
             </div>
         </form>
@@ -478,6 +565,33 @@ include 'CMS_SIDEBAR.php';
                 </div>
 
             </form>
+
+        </div>
+    </div>
+    <div id="modalRED" class="modal fade" role="dialog" data-backdrop="false">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                    <h5 class="modal-title">Reference Document</h5>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered" align="center" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th> Document </th>
+                            <th> Assigned Process </th>
+                            <th width="20px"> Add </th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
 
         </div>
     </div>
