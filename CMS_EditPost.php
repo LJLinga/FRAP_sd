@@ -279,6 +279,13 @@ include 'CMS_SIDEBAR.php';
             $('#comment_name').focus();
         });
 
+        // var map = {};
+        // $(".refDocument").each(function() {
+        //     map[$(this).attr("name")] = $(this).val();
+        // });
+        //
+        // alert(map.key1); // "red"
+
     });
 
 </script>
@@ -311,8 +318,8 @@ include 'CMS_SIDEBAR.php';
                 </div>
                 <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem; ">
 
-                    <div class="card" style="margin-bottom: 1rem;">
-                        <div class="card-body">
+                    <div class="card" style="margin-bottom: 1rem; ">
+                        <div class="card-body" style="max-height: 20rem; overflow-y: scroll;">
                             <span id="refDocuments">
                                 <?php $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor,
                                             v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.id AS processId, pr.processName, s.stepNo, s.stepName,
@@ -322,42 +329,49 @@ include 'CMS_SIDEBAR.php';
                                             JOIN employee e ON e.EMP_ID = d.firstAuthorId 
                                             JOIN steps s ON s.id = d.stepId
                                             JOIN process pr ON pr.id = d.processId 
-                                            ");
-                        if(!empty($rows)) {
-                            foreach ((array)$rows as $key => $row) {
-                                $title = $row['title'];
-                                $versionNo = $row['versionNo'];
-                                $originalAuthor = $row['originalAuthor'];
-                                $currentAuthor = $row['currentAuthor'];
-                                $processName = $row['processName'];
-                                $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
-                                echo '<div class="card">';
-                                echo '<div class="row">';
-                                echo '<div class="col-sm-8">';
-                                echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
-                                echo '</div>';
-                                echo '<div class="col-sm-4">';
-                                echo '<a type="button" class="btn btn-sm">View </a>';
-                                echo '</div></div>';
-                                echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
-                                echo '<div class="card-body">';
-                                echo 'Process: ' . $processName . '<br>';
-                                echo 'Created by: ' . $originalAuthor . '<br>';
-                                echo 'Modified by: ' . $currentAuthor . '<br>';
-                                echo ' on: <i>' . $updatedOn . '</i><br>';
-                                echo '</div></div></div>';
+                                            JOIN post_ref_versions ref ON ref.versionId = v.versionId
+                                            WHERE ref.postId = $postId;");
+                            if(!empty($rows)) {
+                                foreach ((array)$rows as $key => $row) {
+                                    $title = $row['title'];
+                                    $versionNo = $row['versionNo'];
+                                    $originalAuthor = $row['originalAuthor'];
+                                    $currentAuthor = $row['currentAuthor'];
+                                    $processName = $row['processName'];
+                                    $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
+                                    echo '<div class="card">';
+                                    echo '<div class="row">';
+                                    echo '<div class="col-sm-8">';
+                                    echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
+                                    echo '</div>';
+                                    echo '<div class="col-sm-4">';
+                                    echo '<a type="button" class="btn btn-sm">View </a>';
+                                    echo '</div></div>';
+                                    echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
+                                    echo '<div class="card-body">';
+                                    echo 'Process: ' . $processName . '<br>';
+                                    echo 'Created by: ' . $originalAuthor . '<br>';
+                                    echo 'Modified by: ' . $currentAuthor . '<br>';
+                                    echo ' on: <i>' . $updatedOn . '</i><br>';
+                                    echo '</div></div></div>';
+                                }
                             }
-                        }
-                        else{
-                                echo 'No References';
-                            }
-                        ?>
+                            else{
+                                    echo 'No References';
+                                }
+                            ?>
                             </span>
                         </div>
-                        <div class="card-footer">
-                            <button class="btn btn-default"><i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-file"></i> Add New Document</button>
-                            <button class="btn btn-default"><i class="fa fa-fw fa-link"></i><i class="fa fa-fw fa-file"></i> Link Existing Document</button>
-                        </div>
+
+                        <?php
+
+                            if($mode == 'edit'){
+                                echo '<div class="card-footer">
+                                         <button class="btn btn-default"><i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-file"></i> Add New Document</button>
+                                         <button class="btn btn-default"><i class="fa fa-fw fa-link"></i><i class="fa fa-fw fa-file"></i> Link Existing Document</button>
+                                      </div>';
+                            }
+                        ?>
                     </div>
 
                     <div class="card" style="margin-bottom: 1rem;">
@@ -370,7 +384,7 @@ include 'CMS_SIDEBAR.php';
                                     (<a href="<?php echo "http://localhost/FRAP_sd/read.php?pl=".$permalink?>" >Preview</a>)
                                 <?php } ?>
                             <br>
-                            <?php if($status == '3' && !empty($reviewer)){ echo "Reviewed by: <b>".$reviewer."</b><br>"; }?>
+                            <?php if(!empty($reviewer)){ echo "Reviewed by: <b>".$reviewer."</b><br>"; }?>
                             <?php if($status == '4'  && !empty($publisher)){ echo "Publisher: <b>".$publisher."</b><br>"; }?>
                             <i>Last updated: <b><?php  echo date("F j, Y g:i:s A ", strtotime($lastUpdated));?></b></i>
                             <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;}; ?>">

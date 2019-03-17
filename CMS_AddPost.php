@@ -20,17 +20,19 @@ if(isset($_POST['btnSubmit'])){
     $title = $crud->escape_string($_POST['post_title']);
     $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['btnSubmit'];
-    $references = $_POST['references'];
-
-
 
     $postId = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body','$userId','$status')");
     if(!empty ($postId)) {
-        foreach($references AS $key => $value){
-            echo $references[$key];
-            $query = "INSERT INTO post_ref_versions(postId,versionId) VALUES ('$postId','$references[$key]');";
-            $crud->execute($query);
+
+        if(isset($_POST['toAddRefs'])) {
+            $toAddRefs = $_POST['toAddRefs'];
+            foreach((array) $toAddRefs AS $key => $ref){
+                echo $toAddRefs[$key];
+                $query = "INSERT INTO post_ref_versions(postId,versionId) VALUES ('$postId','$ref');";
+                $crud->execute($query);
+            }
         }
+
         if($status=='3' && $cmsRole=='3'){
             $crud->execute("UPDATE posts SET reviewedById='$userId' WHERE id='$postId';");
         }
@@ -74,7 +76,7 @@ include 'CMS_SIDEBAR.php';
     </style>
     <script>
 
-        let table = $('table').dataTable();
+        //let table = $('table').dataTable();
 
         $(document).ready( function(){
             $('textarea').froalaEditor({
@@ -88,10 +90,33 @@ include 'CMS_SIDEBAR.php';
                 pastePlain: false
             });
 
-            table.dataTable({
-                "pageLength": 5
+            $('#btnRefModal').on('click', function(){
+                reloadDataTable();
             });
         });
+
+
+        function reloadDataTable(){
+            let loadedRefs = [];
+            $(".refDocuments").each(function() {
+                loadedRefs.push($(this).val());
+            });
+            $('table').dataTable({
+                destroy: true,
+                "pageLength": 5,
+                "ajax": {
+                    "url":"CMS_AJAX_LoadToAddReferences.php",
+                    "type":"POST",
+                    "data":{ loadedReferences: loadedRefs },
+                    "dataSrc": ''
+                },
+                columns: [
+                    { data: "Document" },
+                    { data: "Status" },
+                    { data: "Action" }
+                ]
+            });
+        }
 
         function addRef(element, verId, oA, cA, vN, uO, t, pN){
             $('#noRefsYet').remove();
@@ -107,12 +132,8 @@ include 'CMS_SIDEBAR.php';
                     'Created by: '+oA+'<br>'+
                     'Modified by: '+cA+
                     ' on: <i>'+uO+'</i><br>'+
-                    '</div></div></div>'+'<input type="hidden" name="documentReferences[]" value="'+verId+'">');
-            reloadToAddTable(verId);
-        }
-
-        function reloadToAddTable(){
-
+                    '</div></div></div>'+'<input type="hidden" name="toAddRefs[]" class="refDocuments" value="'+verId+'">');
+            reloadDataTable();
         }
 
     </script>
@@ -155,7 +176,7 @@ include 'CMS_SIDEBAR.php';
                             </div>
                             <div class="card-footer">
                                 <button type="button" class="btn btn-default"><i class="fa fa-fw fa-plus"></i> Ref. New Document </button>
-                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i> Ref. Existing Document </button>
+                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i> Ref. Existing Document </button>
                             </div>
                         </div>
 
@@ -208,52 +229,15 @@ include 'CMS_SIDEBAR.php';
                     <h5 class="modal-title">Reference Document</h5>
                 </div>
                 <div class="modal-body">
-
-                    <form id="formRED" name="formRED" method="POST"">
-                        <table class="table table-bordered" align="center" id="dataTable" style="font-size: 12px;">
-                            <thead>
-                            <tr>
-                                <th> Document </th>
-                                <th> Assigned Process </th>
-                                <th width="20px"> Add </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php
-
-                                $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor,
-                                                            v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.id AS processId, pr.processName, s.stepNo, s.stepName,
-                                                            (SELECT CONCAT(e.lastName,', ',e.firstName) FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
-                                                            WHERE v.versionId = vid) AS currentAuthor
-                                                            FROM documents d JOIN doc_versions v ON d.documentId = v.documentId
-                                                            JOIN employee e ON e.EMP_ID = d.firstAuthorId 
-                                                            JOIN steps s ON s.id = d.stepId
-                                                            JOIN process pr ON pr.id = d.processId 
-                                                            WHERE s.processId = pr.id AND v.versionId = 
-                                                            (SELECT MAX(v1.versionId) FROM doc_versions v1 WHERE v1.documentId = d.documentId)");
-                                if(!empty($rows)){
-                                    foreach ((array) $rows as $key => $row){
-                                        $title=$row['title'];
-                                        $versionNo = $row['versionNo'];
-                                        $originalAuthor = $row['originalAuthor'];
-                                        $currentAuthor = $row['currentAuthor'];
-                                        $processName=$row['processName'];
-                                        $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
-                                        echo '<tr>';
-                                        echo '<td><b>'.$title.'</b> 
-                                                <span class="badge">'.$versionNo.'</span><br>
-                                                Author: '.$originalAuthor.'<br>
-                                                Modified by: '.$currentAuthor.'<br>
-                                                on : <i>'.$updatedOn.'</i><br></td>';
-                                        echo '<td>'.$processName.'</td>';
-                                        echo '<td><button type="button" id="btnAddDocument" class="btn btn-default" onclick="addRef(this,&quot;'.$row['vid'].'&quot;,&quot;'.$originalAuthor.'&quot;,&quot;'.$currentAuthor.'&quot;,&quot;'.$versionNo.'&quot;,&quot;'.$updatedOn.'&quot;,&quot;'.$title.'&quot;,&quot;'.$processName.'&quot;);" value="'.$row['vid'].'">Add</button></td>';
-                                        echo '</tr>';
-                                    }
-                                }
-                            ?>
-                            </tbody>
-                        </table>
-                    </form>
+                    <table class="table table-bordered" align="center" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th> Document </th>
+                            <th> Assigned Process </th>
+                            <th width="20px"> Add </th>
+                        </tr>
+                        </thead>
+                    </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
