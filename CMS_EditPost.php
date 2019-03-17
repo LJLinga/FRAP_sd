@@ -332,7 +332,7 @@ include 'CMS_SIDEBAR.php';
     function addRef(element, verId, oA, cA, vN, uO, t, pN, fP, fN){
         $('#noRefsYet').remove();
         $('#btnUpdate').show();
-        $('#refDocuments').append('<div class="card">'+
+        $('#refDocuments').append('<div class="card" style="background-color: #e2fee2;">'+
             '<input type="hidden" name="toAddDocRefs[]" class="refDocuments" value="'+verId+'">'+
             '<div class="row"><div class="col-lg-7">'+
             '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse'+verId+'" aria-expanded="true" aria-controls="collapse'+verId+'"><b>'+t+'</b> <span class="badge">'+vN+'</span></a>'+
@@ -346,8 +346,8 @@ include 'CMS_SIDEBAR.php';
             '<div class="card-body">'+
             'Process: '+pN+'<br>'+
             'Created by: '+oA+'<br>'+
-            'Modified by: '+cA+
-            ' on: <i>'+uO+'</i><br>'+
+            'Modified by: '+cA+'<br>'+
+            'on: <i>'+uO+'</i><br>'+
             '</div></div></div>');
         reloadDataTable();
     }
@@ -387,7 +387,7 @@ include 'CMS_SIDEBAR.php';
                             <b>References</b>
                         </div>
                         <div class="card-body" style="max-height: 20rem; overflow-y: scroll;">
-                            <span id="refDocuments">
+                            <span id="refDocuments" style="font-size: 12px;">
                                 <?php
 
                                 $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor, v.filePath,
@@ -426,7 +426,7 @@ include 'CMS_SIDEBAR.php';
                                     echo 'Process: ' . $processName . '<br>';
                                     echo 'Created by: ' . $originalAuthor . '<br>';
                                     echo 'Modified by: ' . $currentAuthor . '<br>';
-                                    echo ' on: <i>' . $updatedOn . '</i><br>';
+                                    echo 'on: <i>' . $updatedOn . '</i><br>';
                                     echo '</div></div></div>';
                                 }
                             }

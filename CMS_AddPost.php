@@ -24,10 +24,9 @@ if(isset($_POST['btnSubmit'])){
     $postId = $crud->executeGetKey("INSERT INTO posts (title, body, authorId, statusId) values ('$title', '$body','$userId','$status')");
     if(!empty ($postId)) {
 
-        if(isset($_POST['toAddRefs'])) {
-            $toAddRefs = $_POST['toAddRefs'];
-            foreach((array) $toAddRefs AS $key => $ref){
-                echo $toAddRefs[$key];
+        if(isset($_POST['toAddDocRefs'])) {
+            $toAddDocRefs = $_POST['toAddDocRefs'];
+            foreach((array) $toAddDocRefs AS $key => $ref){
                 $query = "INSERT INTO post_ref_versions(postId,versionId) VALUES ('$postId','$ref');";
                 $crud->execute($query);
             }
@@ -118,22 +117,31 @@ include 'CMS_SIDEBAR.php';
             });
         }
 
-        function addRef(element, verId, oA, cA, vN, uO, t, pN){
+        function addRef(element, verId, oA, cA, vN, uO, t, pN, fP, fN){
             $('#noRefsYet').remove();
-            $('#refDocuments').append('<div class="card">'+
-                    '<div class="row"><div class="col-sm-8">'+
-                    '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse'+verId+'" aria-expanded="true" aria-controls="collapse'+verId+'"><b>'+t+'</b> <span class="badge">'+vN+'</span></a>'+
-                    '</div>'+
-                    '<div class="col-sm-4">'+
-                    '</div></div>'+
-                    '<div id="collapse'+verId+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
-                    '<div class="card-body">'+
-                        'Process: '+pN+'<br>'+
-                    'Created by: '+oA+'<br>'+
-                    'Modified by: '+cA+
-                    ' on: <i>'+uO+'</i><br>'+
-                    '</div></div></div>'+'<input type="hidden" name="toAddRefs[]" class="refDocuments" value="'+verId+'">');
+            $('#btnUpdate').show();
+            $('#refDocuments').append('<div class="card" style="background-color: #e2fee2;">'+
+                '<input type="hidden" name="toAddDocRefs[]" class="refDocuments" value="'+verId+'">'+
+                '<div class="row"><div class="col-lg-7">'+
+                '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse'+verId+'" aria-expanded="true" aria-controls="collapse'+verId+'"><b>'+t+'</b> <span class="badge">'+vN+'</span></a>'+
+                '</div>'+
+                '<div class="col-md-4" style="position: relative;">'+
+                '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >'+
+                '<a class="btn fa fa-download"  href="'+fP+'" download="'+fN+'"></a>'+
+                '<a class="btn fa fa-remove" onclick="removeRef(this)" ></a>'+
+                '</div></div></div>'+
+                '<div id="collapse'+verId+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
+                '<div class="card-body">'+
+                'Process: '+pN+'<br>'+
+                'Created by: '+oA+'<br>'+
+                'Modified by: '+cA+
+                'on: <i>'+uO+'</i><br>'+
+                '</div></div></div>');
             reloadDataTable();
+        }
+
+        function removeRef(element){
+            $(element).closest('div.card').remove();
         }
 
     </script>

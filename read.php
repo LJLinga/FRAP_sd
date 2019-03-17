@@ -99,6 +99,51 @@ include 'CMS_SIDEBAR.php';
                         <h4 class="card-title"><b><?php echo $page_title;?></b></h4>
                         <h5 class="card-subtitle">by <?php echo $author;?> | <?php echo date("F j, Y g:i A ", strtotime($lastUpdated)) ;?></h5>
                         <br><p class="card-text"><?php echo $body ?></p>
+                        <?php
+
+                        $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor, v.filePath,
+                                            v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.id AS processId, pr.processName, s.stepNo, s.stepName,
+                                            (SELECT CONCAT(e.lastName,', ',e.firstName) FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
+                                            WHERE v.versionId = vid) AS currentAuthor
+                                            FROM documents d JOIN doc_versions v ON d.documentId = v.documentId
+                                            JOIN employee e ON e.EMP_ID = d.firstAuthorId 
+                                            JOIN steps s ON s.id = d.stepId
+                                            JOIN process pr ON pr.id = d.processId 
+                                            JOIN post_ref_versions ref ON ref.versionId = v.versionId
+                                            WHERE ref.postId = $postId;");
+                        if(!empty($rows)) {
+                            foreach ((array)$rows as $key => $row) {
+                                $title = $row['title'];
+                                $versionNo = $row['versionNo'];
+                                $originalAuthor = $row['originalAuthor'];
+                                $currentAuthor = $row['currentAuthor'];
+                                $processName = $row['processName'];
+                                $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
+                                $filePath = $row['filePath'];
+                                $fileName = $title.'_ver'.$versionNo.'_'.basename($filePath);
+                                echo '<div class="card">';
+                                echo '<input type="hidden" class="refDocuments" value="'.$row['vid'].'">';
+                                echo '<div class="row">';
+                                echo '<div class="col-md-7">';
+                                echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
+                                echo '</div>';
+                                echo '<div class="col-md-4" style="position: relative;">';
+                                echo '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >';
+                                echo '<a class="btn fa fa-download"  href="'.$filePath.'" download="'.$fileName.'"></a>';
+                                echo '</div></div></div>';
+                                echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
+                                echo '<div class="card-body">';
+                                echo 'Process: ' . $processName . '<br>';
+                                echo 'Created by: ' . $originalAuthor . '<br>';
+                                echo 'Modified by: ' . $currentAuthor . '<br>';
+                                echo 'on: <i>' . $updatedOn . '</i><br>';
+                                echo '</div></div></div>';
+                            }
+                        }
+                        else{
+                            echo 'No References';
+                        }
+                        ?>
                     </div>
                 </div>
                 <div class="card" style="margin-top: 1rem;">
