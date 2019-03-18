@@ -115,7 +115,7 @@
 
                     $message .= "This account is not recognized by the Faculty Association. Please contact the administrator.";
 
-                }else if($rowMem['FIRST_CHANGE_PW'] != 1){ // if the account has not changed its password yet.
+                }else if($rowMem['FIRST_CHANGE_PW'] == 1){ // if the account has not changed its password yet.
 
                     $query = "SELECT FRAP_ROLE, EDMS_ROLE, CMS_ROLE FROM employee WHERE MEMBER_ID = '{$_SESSION['idnum']}' ";
                     $row = mysqli_query($dbc, $query);
@@ -126,7 +126,7 @@
                     $_SESSION['EDMS_ROLE'] =  $result['EDMS_ROLE'];
                     //$_SESSION['SYS_ROLE'] =  $result['SYS_ROLE'];
 
-
+                 header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/FA_Change_PW.php");
 
 
                     //insert code here/
@@ -144,7 +144,7 @@
                     $_SESSION['EDMS_ROLE'] =  $result['EDMS_ROLE'];
                     //$_SESSION['SYS_ROLE'] =  $result['SYS_ROLE'];
 
-                    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER dashboard.php");
+                        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER dashboard.php");
 
                 }
 
