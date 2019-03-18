@@ -92,7 +92,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                             <td align="center"><?php echo $rows['DEPT_NAME'];?></td>
                                             <td align="center"><?php echo $rows['DATE_APPROVED'];?></td>
                                             <td align="center"><?php echo $rows['STATUS'];?></td>
-                                            <td align="center">&nbsp;&nbsp;&nbsp;<button type="submit" name="details" class="btn btn-success" value=<?php echo $rows['MEMBER_ID'];?>>Details</button>&nbsp;&nbsp;&nbsp;</td>
+                                            <td align="center"><button type="submit" name="details" class="btn btn-success" value=<?php echo $rows['MEMBER_ID'];?>>Details</button>&nbsp;&nbsp;&nbsp;</td>
 
                                         </tr>
                                         <?php }?>

@@ -44,6 +44,7 @@ if(isset($_POST['addToPay'])){
 
         //update query for matured stuff
         if($matured['PAYMENTS_MADE'] >= $totalPayments){ //checks if the loan will mature
+
             $update = "UPDATE loans SET DATE_MATURED = NOW(), LOAN_STATUS = 3 where LOAN_ID  = {$_SESSION['details']}";
             mysqli_query($dbc,$update);
 
@@ -524,6 +525,5 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 <script src="js/jquery.js"></script>
 
 <!-- Bootstrap Core JavaScript -->
-<script src="js/bootstrap.min.js"></script>
 
 <?php include "GLOBAL_FOOTER.php"; ?>

@@ -44,16 +44,19 @@
                             <div>
 
                                 <?php
-                                    $query = "SELECT M.DATE_APPROVED, M.CAMPUS, D.DEPT_NAME 
+                                    $query3 = "SELECT M.DATE_APPROVED, D.DEPT_NAME, US.STATUS
                                     FROM MEMBER M
                                     JOIN ref_department D
                                     ON M.DEPT_ID = D.DEPT_ID
-                                    WHERE m.MEMBER_ID =" . $_SESSION['idnum'].";";
+                                    JOIN user_status US
+                                    ON M.USER_STATUS = US.STATUS_ID
+                                    WHERE M.MEMBER_ID = {$_SESSION['idnum']}";
 
-                                    $result = mysqli_query($dbc, $query);
-                                    $row = mysqli_fetch_array($result);
+                                    $result3 = mysqli_query($dbc, $query3);
+                                    $row3 = mysqli_fetch_array($result3);
+
                                     echo "Faculty - ";
-                                    echo $row["DEPT_NAME"];
+                                    echo $row3["DEPT_NAME"];
 
                                 ?>
 
@@ -79,7 +82,7 @@
                             <div>
 
                                 <?php
-                                    $date = date_create($row['DATE_APPROVED']);
+                                    $date = date_create($row3['DATE_APPROVED']);
                                     echo date_format($date, 'F  j,  Y');
 
                                 ?>
@@ -94,7 +97,7 @@
 
                         <div class="well" align="center" style="background-color: white">
 
-                            <b>Campus</b>
+                            <b>Member Type:</b>
                             
                             <div>
 
@@ -105,7 +108,8 @@
                             <div>
 
                                 <?php
-                                    echo $row["CAMPUS"]
+                                echo $row3['STATUS'];
+
                                 ?>
 
                             </div>

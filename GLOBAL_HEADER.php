@@ -76,11 +76,11 @@
             <ul class="nav navbar-right top-nav"> <!-- Top Menu Items / Notifications area -->
 
                 <li>
-                    <a href="MEMBER%20dashboard.php"> Home </a>
+                    <a href="MEMBER%20feed.php"> Home </a>
                 </li>
 
                 <li>
-                    <a href="feed.php"> News Feed </a>
+                    <a href="MEMBER%20dashboard.php"> FRAP Dashboard </a>
                 </li>
                 <?php
                     if($_SESSION['FRAP_ROLE'] > 1 || $_SESSION['EDMS_ROLE'] > 1 || $_SESSION['CMS_ROLE'] > 1) {
@@ -189,7 +189,7 @@
                     setInterval(function(){
                         load_cms_notifications(temp)
                         load_unseen_notification(temp); // this will run after every 1 second
-                    }, 1000);
+                    }, 5000);
 
 
                 });

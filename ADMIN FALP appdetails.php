@@ -35,29 +35,58 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
             $loanDetailsResult = mysqli_query($dbc,$query);
             $loanDetailsRow = mysqli_fetch_assoc($loanDetailsResult);
 
-            $currMonth = date('m');
-            $currDay = date('D');
-            $currYear = date('Y');
+            $currYear = date("Y");
+            $currDay = date('d');
+            $currMonth = date("m");
 
-            //remember that $ans['ID'] is the one that keeps track of the loan id!
+            $dateToInsert = date("Y-m-d", strtotime($currYear."-".$currMonth."-".$currDay));
+
 
             $i = 0; //this will keep track on how many payments has been inserted.
-            $payments =  $loanDetailsRow['PAYMENT_TERMS']*2;
 
-            while($i < $payments){  //get the payment terms, and have the counter keep track on how many has been  inserted already.
+            while($i < (($loanDetailsRow['PAYMENT_TERMS']*2) - $loanDetailsRow['PAYMENTS_MADE'])){  //get the payment terms, and have the counter keep track on how many has been  inserted already.
 
                 //check if it is February first so we can adjust the end date by February 28.
 
-                if($currMonth == 2){
+                if($currMonth == 2){ //assumes that the current month is February
+
                     if($currDay < 15){
 
+                        $currDay = 15;
+
+                        $dateToInsert = date("Y-m-d", strtotime($currYear."-".$currMonth."-".$currDay));
+
+                        $query5 = "INSERT INTO to_deduct(LOAN_REF, DEDUCTION_DATE)
+                             values ({$loanDetailsRow['LOAN_ID']},'{$dateToInsert}')";
+
+                        if (!mysqli_query($dbc,$query5))
+                        {
+                            echo("Error description: " . mysqli_error($dbc));
+                        }
+
                         $i++;
-                        $i++;
+
                     }else if($currDay < 28){
 
+                        $currDay = 28;
+
+                        $dateToInsert = date("Y-m-d", strtotime($currYear."-".$currMonth."-".$currDay));
+
+                        $query5 = "INSERT INTO to_deduct(LOAN_REF, DEDUCTION_DATE)
+                             values ({$loanDetailsRow['LOAN_ID']},'{$dateToInsert}')";
+
+                        if (!mysqli_query($dbc,$query5))
+                        {
+                            echo("Error description: " . mysqli_error($dbc));
+                        }
+
                         $i++;
+
                     }else{
 
+                        $currMonth++;
+
+                        $currDay = 1;
 
                     }
 
@@ -65,51 +94,50 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
                     if($currDay < 15){
 
+                        $currDay = 15;
+
+                        $dateToInsert = date("Y-m-d", strtotime($currYear."-".$currMonth."-".$currDay));
+
+                        $query5 = "INSERT INTO to_deduct(LOAN_REF, DEDUCTION_DATE)
+                             values ({$loanDetailsRow['LOAN_ID']},'{$dateToInsert}')";
+
+                        if (!mysqli_query($dbc,$query5))
+                        {
+                            echo("Error description: " . mysqli_error($dbc));
+                        }
 
                         $i++;
+
                     }else if($currDay < 30){
 
-                        $i++;
-                    }else{
+                        $currDay = 30;
+
+                        $dateToInsert = date("Y-m-d", strtotime($currYear."-".$currMonth."-".$currDay));
+
+                        $query5 = "INSERT INTO to_deduct(LOAN_REF, DEDUCTION_DATE)
+                             values ({$loanDetailsRow['LOAN_ID']},'{$dateToInsert}')";
+
+                        if (!mysqli_query($dbc,$query5))
+                        {
+                            echo("Error description: " . mysqli_error($dbc));
+                        }
 
                         $i++;
+
+                    }else {
+
+                        $currMonth++;
+
+                        if ($currMonth == 13) {
+                            $currMonth = 1;
+
+                            $currYear++;
+                        }
+
+                        $currDay = 1;
                     }
-                    //make sure that the curr day resets to 1 - cause all we are after is the first insert in order for us to do thi s\
-                }
-
-
-
-
-
-                //account for the 15th and 30th of the month. This only affects the first date, no worries.
-
-                //check if the current day falls within the 15th and 30th of the month. If the day is over 30, which means 31, then move CurrMoth to the nxt.
-
-                //after pin pointing the month that the shit will fall onto is
-
-                //okay okay
-
-                if($currMoth == 2){ //put an if, february, then feb 28 will be the date to pay the shit.
-
-                    //$dateToInsert = ;
-
-                    $query2 = "INSERT INTO to_deduct(LOAN_REF, DEDUCTION_DATE)
-                             values ( )";
-
-                }else{
-
 
                 }
-
-                //find a way to insert into the To_Deduct table
-
-
-
-                //get the number of payments/payment terms.
-
-
-                //merge the shits into one entire date time
-
 
             }
 
@@ -130,20 +158,14 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
         }
 
     }
-
-
      //prepare the code in order for us to link the stuff from the database to the View Document Screen.
 
-
-
-
- if(isset($_POST['download'])){
-
+    if(isset($_POST['download'])){
         $query = "SELECT * FROM falp_requirements WHERE LOAN_ID = ". $_SESSION['showFID'] .";";
-       $result = mysqli_query($dbc, $query);
-      $row = mysqli_fetch_array($result);
+        $result = mysqli_query($dbc, $query);
+        $row = mysqli_fetch_array($result);
 
-       if($_POST['download'] == "Download ICR"){
+        if($_POST['download'] == "Download ICR"){
 
           header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadFile.php?loanID=".urlencode(''.$row['ICR_DIR']) );
 
@@ -151,17 +173,18 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
            header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadFile.php?loanID=".urlencode(''.$row['PAYSLIP_DIR']) );
 
-      }else if($_POST['download'] == "Download Employee ID"){
+        }else if($_POST['download'] == "Download Employee ID"){
 
           header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadFile.php?loanID=".urlencode(''.$row['EMP_ID_DIR']) );
 
-      }else if($_POST['download'] == "Download Government ID"){
+        }else if($_POST['download'] == "Download Government ID"){
 
            header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadFile.php?loanID=".urlencode(''.$row['GOV_ID_DIR']) );
 
-      }
+        }
 
     }
+
 
 $page_title = 'Loans - Membership Application Details';
 include 'GLOBAL_HEADER.php';
