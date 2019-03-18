@@ -248,7 +248,7 @@ $success = null;
                }
 
               $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME,CIV_STATUS, MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, BUSINESS_NUM, HOME_ADDRESS, BUSINESS_ADDRESS, DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,EMAIL) 
-                          VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat},'{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}','{$baddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','99999999',{$_POST['email']})";
+                          VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat},'{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}','{$baddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','99999999','{$_POST['email']}')";
 
               $result = mysqli_query($dbc,$query1);
 
@@ -335,7 +335,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                     <div class="col-lg-12">
 
                         <p><i>Fields with <big class="req">*</big> are required to be filled out and those without are optional.</i></p>
-                        <a href="ADMIN FALP manual.php#falpInfo">Jump to FALP</a> <p>
+                        
 						<a href="ADMIN FALP manual.php#lifetimeInfo">Jump to Lifetime</a>
                         <!--Insert success page--> 
                         

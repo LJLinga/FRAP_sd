@@ -1432,7 +1432,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                     <div class="col-lg-12">
 
-                        <a href="#" class="btn btn-default addchild" role="button">Add Field</a>
+                        <a href="#" class="btn btn-default addchild" role="button" >Add Field</a>
                         <a class="btn btn-default removechild" role="button">Remove Previously Added Fields</a>
 
                     </div>

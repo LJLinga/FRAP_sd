@@ -132,6 +132,11 @@
 
                         <li>
 
+                            <a href="FA_Profile.php"><i class="fa fa-fw fa-profile"></i> Profile</a>
+
+                        </li>
+                        <li>
+
                             <a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
 
                         </li>
