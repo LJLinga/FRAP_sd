@@ -5,7 +5,7 @@
 
             <li>
 
-                <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+                <a href="FA_Profile.php"><i class="fa fa-fw fa-user"></i> Profile</a>
 
             </li>
 

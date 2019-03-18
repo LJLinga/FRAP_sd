@@ -52,7 +52,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                 }
                             }
                             else{
-                               echo $date; 
+                               echo "Latest date"; 
                             }?>
                         </h1>
                     

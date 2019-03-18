@@ -115,7 +115,7 @@
 
                     $message .= "This account is not recognized by the Faculty Association. Please contact the administrator.";
 
-                }else if($rowMem['FIRST_CHANGE_PW'] == 1){ // if the account has not changed its password yet.
+                }else if($rowMem['FIRST_CHANGE_PW'] == 1 && $rowMem['ACC_STATUS']==2){ // if the account has not changed its password yet.
 
                     $query = "SELECT FRAP_ROLE, EDMS_ROLE, CMS_ROLE FROM employee WHERE MEMBER_ID = '{$_SESSION['idnum']}' ";
                     $row = mysqli_query($dbc, $query);

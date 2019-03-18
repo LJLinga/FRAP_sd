@@ -100,7 +100,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     echo ' - '.date('d F', mktime(0, 0, 0, $monthEnd, $dayEnd)).' '.$yearEnd;
 
                                 }}else{
-                                    echo $date;
+                                    echo "Latest Date";
                                 }?></b>
 
                             </div>
