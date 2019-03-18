@@ -202,22 +202,7 @@ include 'GLOBAL_HEADER.php';
 include 'CMS_SIDEBAR.php';
 ?>
 <style>
-    @media screen and (min-width: 1200px) {
-        #publishColumn{
-            position: fixed;
-            right:1rem;
-        }
-    }
-    @media screen and (max-width: 1199px) {
-        #publishColumn{
-            position: relative;
-        }
-    }
-    .fr-view {
-        font-family: "Verdana", Georgia, Serif;
-        font-size: 14px;
-        color: #444444;
-    }
+
 </style>
     <script>
     $(document).ready( function(){
@@ -332,16 +317,13 @@ include 'CMS_SIDEBAR.php';
     function addRef(element, verId, oA, cA, vN, uO, t, pN, fP, fN){
         $('#noRefsYet').remove();
         $('#btnUpdate').show();
-        $('#refDocuments').append('<div class="card" style="background-color: #e2fee2;">'+
+        $('#refDocuments').append('<div class="card" style="background-color: #e2fee2; position: relative;">'+
             '<input type="hidden" name="toAddDocRefs[]" class="refDocuments" value="'+verId+'">'+
-            '<div class="row"><div class="col-lg-7">'+
             '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse'+verId+'" aria-expanded="true" aria-controls="collapse'+verId+'"><b>'+t+'</b> <span class="badge">'+vN+'</span></a>'+
-            '</div>'+
-            '<div class="col-md-4" style="position: relative;">'+
             '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >'+
             '<a class="btn fa fa-download"  href="'+fP+'" download="'+fN+'"></a>'+
             '<a class="btn fa fa-remove" onclick="removeRef(this)" ></a>'+
-            '</div></div></div>'+
+            '</div>'+
             '<div id="collapse'+verId+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
             '<div class="card-body">'+
             'Process: '+pN+'<br>'+
@@ -380,17 +362,15 @@ include 'CMS_SIDEBAR.php';
                         </div>
                     </div>
                 </div>
-                <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem; ">
+                <div id="publishColumn" class="col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem; ">
 
                     <div class="card" style="margin-bottom: 1rem; ">
-                        <div class="card-header">
-                            <b>References</b>
-                        </div>
+                        <div class="card-header"><b>Document References</b></div>
                         <div class="card-body" style="max-height: 20rem; overflow-y: scroll;">
-                            <span id="refDocuments" style="font-size: 12px;">
-                                <?php
+                        <span id="refDocuments" style="font-size: 12px;">
+                        <?php
 
-                                $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor, v.filePath,
+                            $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor, v.filePath,
                                             v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.id AS processId, pr.processName, s.stepNo, s.stepName,
                                             (SELECT CONCAT(e.lastName,', ',e.firstName) FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
                                             WHERE v.versionId = vid) AS currentAuthor
@@ -410,17 +390,13 @@ include 'CMS_SIDEBAR.php';
                                     $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
                                     $filePath = $row['filePath'];
                                     $fileName = $title.'_ver'.$versionNo.'_'.basename($filePath);
-                                    echo '<div class="card">';
+                                    echo '<div class="card" style="position: relative;">';
                                     echo '<input type="hidden" class="refDocuments" value="'.$row['vid'].'">';
-                                    echo '<div class="row">';
-                                    echo '<div class="col-md-7">';
                                     echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
-                                    echo '</div>';
-                                    echo '<div class="col-md-4" style="position: relative;">';
                                     echo '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >';
                                     echo '<a class="btn fa fa-download"  href="'.$filePath.'" download="'.$fileName.'"></a>';
                                     if($mode == 'edit') echo '<a class="btn fa fa-remove" onclick="removeRef(this, &quot;'.$row['vid'].'&quot;)" ></a>';
-                                    echo '</div></div></div>';
+                                    echo '</div>';
                                     echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
                                     echo '<div class="card-body">';
                                     echo 'Process: ' . $processName . '<br>';
@@ -437,18 +413,15 @@ include 'CMS_SIDEBAR.php';
                             </span>
                             <span id="toRemoveDocRefs"></span>
                         </div>
-
                         <?php
 
                             if($mode == 'edit'){
                                 echo '<div class="card-footer">
-                                <button type="button" class="btn btn-default"><i class="fa fa-fw fa-plus"></i> Ref. New Document </button>
-                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i> Ref. Existing Document </button>
+                                <button type="button" class="btn btn-default"><i class="fa fa-fw fa-plus"></i>New</button>
+                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Existing</button>
                             </div>';
                             }
                         ?>
-
-
                     </div>
 
                     <div class="card" style="margin-bottom: 1rem;">
@@ -457,9 +430,9 @@ include 'CMS_SIDEBAR.php';
                             <i>Created on: <b><?php echo date("F j, Y g:i:s A ", strtotime($firstPosted)); ?></b></i><br><br>
 
                             Current Status: <b><?php echo $statusDesc?></b>
-                                <?php if(!empty($permalink)){ ?>
-                                    (<a href="<?php echo "http://localhost/FRAP_sd/read.php?pl=".$permalink?>" >Preview</a>)
-                                <?php } ?>
+                            <?php if(!empty($permalink)){ ?>
+                                (<a href="<?php echo "http://localhost/FRAP_sd/read.php?pl=".$permalink?>" >Preview</a>)
+                            <?php } ?>
                             <br>
                             <?php if(!empty($reviewer)){ echo "Reviewed by: <b>".$reviewer."</b><br>"; }?>
                             <?php if($status == '4'  && !empty($publisher)){ echo "Publisher: <b>".$publisher."</b><br>"; }?>
@@ -468,72 +441,72 @@ include 'CMS_SIDEBAR.php';
                         </div>
 
                         <div class="card-footer">
-                                <?php
-                                if($mode == 'edit'){
-                                    echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnUpdate" hidden>Save</button> ';
-                                    if($cmsRole == '4') {
-                                        if($status == '1'){
-                                            echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
-                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
-                                        }else if ($status == '3') {
-                                            echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
-                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
-                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
-                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
-                                        } else if ($status == '4') {
-                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="3">Unpublish</button> ';
-                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
-                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
-                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
-                                        }
-                                    }else if($cmsRole == '3') {
-                                        if($status == '1'){
-                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
-                                        } else if ($status == '2') {
-                                            echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="3">Submit for Publication</button> ';
-                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
-                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
-                                        }
-                                    }else if($cmsRole == '2'){
-                                        if ($status == '1') {
-                                            echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
-                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
-                                        }
-                                    }else if($cmsRole == '5'){
-                                        if($status == '1'){
-                                            echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
-                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
-                                        }else if ($status == '3') {
-                                            echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
-                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
-                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
-                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
-                                        } else if ($status == '4') {
-                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="3">Unpublish</button> ';
-                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
-                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
-                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
-                                        }
+                            <?php
+                            if($mode == 'edit'){
+                                echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnUpdate" hidden>Save</button> ';
+                                if($cmsRole == '4') {
+                                    if($status == '1'){
+                                        echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
+                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                    }else if ($status == '3') {
+                                        echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
+                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
+                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
+                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                    } else if ($status == '4') {
+                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="3">Unpublish</button> ';
+                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
+                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
+                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
                                     }
-                                    echo '<button type="submit" class="btn btn-primary" name="btnUnlock" id="btnUnlock"> Exit </button> ';
-                                }else if($availability == '2'){
-                                    if($mode == 'view_with_button'){
-                                        if($status == '5'){
-                                            echo '<button type="submit" class="btn btn-success" name="btnRestore" id="btnSubmit" value="' . $prevStatus . '">Restore</button> ';
-                                        }else{
-                                            echo '<button type="submit" class="btn btn-primary" name="btnEdit" id="btnEdit"> Lock and Edit </button> ';
-                                        }
-                                    }else{
-                                        echo 'Post is currently '.$statusDesc;
+                                }else if($cmsRole == '3') {
+                                    if($status == '1'){
+                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                    } else if ($status == '2') {
+                                        echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="3">Submit for Publication</button> ';
+                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
+                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
                                     }
-                                }else if($availability == '1'){
-                                    echo 'Post is currently locked by ' . $lockedByName . '.';
+                                }else if($cmsRole == '2'){
+                                    if ($status == '1') {
+                                        echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
+                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                    }
+                                }else if($cmsRole == '5'){
+                                    if($status == '1'){
+                                        echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
+                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                    }else if ($status == '3') {
+                                        echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
+                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
+                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
+                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                    } else if ($status == '4') {
+                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="3">Unpublish</button> ';
+                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
+                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
+                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                    }
                                 }
+                                echo '<button type="submit" class="btn btn-primary" name="btnUnlock" id="btnUnlock"> Exit </button> ';
+                            }else if($availability == '2'){
+                                if($mode == 'view_with_button'){
+                                    if($status == '5'){
+                                        echo '<button type="submit" class="btn btn-success" name="btnRestore" id="btnSubmit" value="' . $prevStatus . '">Restore</button> ';
+                                    }else{
+                                        echo '<button type="submit" class="btn btn-primary" name="btnEdit" id="btnEdit"> Lock and Edit </button> ';
+                                    }
+                                }else{
+                                    echo 'Post is currently '.$statusDesc;
+                                }
+                            }else if($availability == '1'){
+                                echo 'Post is currently locked by ' . $lockedByName . '.';
+                            }
 
-                                ?>
+                            ?>
                         </div>
                     </div>
-                </div>
+                    </div>
 
             </div>
         </form>

@@ -242,27 +242,33 @@ include 'EDMS_SIDEBAR.php';
                     </div>
                 </div>
                 <?php
-                    $query = "SELECT v.versionId, v.timeCreated, v.versionNo, v.title, v.filePath, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
+                    $query = "SELECT v.versionId as vid, v.timeCreated, v.versionNo, v.title, v.filePath, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
                               FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
                               WHERE v.documentId = '$documentId' AND v.versionId != '$versionId' ORDER BY v.versionId DESC;";
                     $rows = $crud->getData($query);
                     if (!empty($rows)) {
 
-                        echo '<div class="card" style="margin-top: 1rem;"><div class="card-header"><b>Version History</b></div>
-                                <div class="card-body" style="max-height: 100rem; overflow: auto;" >';
-                        foreach ((array)$rows as $key => $row) {
-                            echo '<div class="card-body" style="position: relative;">
-                                        <span class="label label-default">Version '.$row['versionNo'].'</span>
-                                        <b>'.$row['title'].'</b><br>
-                                        '.date("F j, Y g:i:s A ", strtotime($row['timeCreated'])).'<br>
-                                        <div class="btn-group-sm" style="position: absolute;right: 10px;top: 10px;">
-                                            <a class="btn fa fa-download" href="'.$row['filePath'].'" download></a>
-                                            <button type="button" class="btn btn-sm">Revert</button>
-                                        </div>
-                                    </div>';
+                        echo '<div class="card" style="margin-top: 1rem;">';
+                        echo '<div class="card-header"><b>Version History</b></div>';
+                        echo '<div class="card-body">';
+                        if(!empty($rows)) {
+                            foreach ((array)$rows as $key => $row) {
+                                echo '<div class="card" style="position: relative;">';
+                                echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><span class="badge">Version ' . $row['versionNo'] . '</span> <b>' . $row['title'] . ' </b></a>';
+                                echo '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >';
+                                echo '<a class="btn fa fa-download"  href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"></a>';
+                                echo '</div>';
+                                echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
+                                echo '<div class="card-body">';
+                                echo 'Created by: ' . $row['versionAuthor'] . '<br>';
+                                echo 'on: <i>' . date("F j, Y g:i:s A ", strtotime($row['timeCreated'])) . '</i><br>';
+                                echo '</div></div></div>';
+                            }
                         }
                         echo '</div></div>';
                     }
+
+
                 ?>
             </div>
         </div>
