@@ -55,24 +55,6 @@ $page_title = 'Santinig - Add Post';
 include 'GLOBAL_HEADER.php';
 include 'CMS_SIDEBAR.php';
 ?>
-    <style>
-        @media screen and (min-width: 1200px) {
-            #publishColumn{
-                position: fixed;
-                right:1rem;
-            }
-        }
-        @media screen and (max-width: 1199px) {
-            #publishColumn{
-                position: relative;
-            }
-        }
-        .fr-view {
-            font-family: "Verdana", Georgia, Serif;
-            font-size: 14px;
-            color: #444444;
-        }
-    </style>
     <script>
 
         //let table = $('table').dataTable();
@@ -120,21 +102,18 @@ include 'CMS_SIDEBAR.php';
         function addRef(element, verId, oA, cA, vN, uO, t, pN, fP, fN){
             $('#noRefsYet').remove();
             $('#btnUpdate').show();
-            $('#refDocuments').append('<div class="card" style="background-color: #e2fee2;">'+
+            $('#refDocuments').append('<div class="card" style="background-color: #e2fee2; position: relative;">'+
                 '<input type="hidden" name="toAddDocRefs[]" class="refDocuments" value="'+verId+'">'+
-                '<div class="row"><div class="col-lg-7">'+
                 '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse'+verId+'" aria-expanded="true" aria-controls="collapse'+verId+'"><b>'+t+'</b> <span class="badge">'+vN+'</span></a>'+
-                '</div>'+
-                '<div class="col-md-4" style="position: relative;">'+
                 '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >'+
                 '<a class="btn fa fa-download"  href="'+fP+'" download="'+fN+'"></a>'+
                 '<a class="btn fa fa-remove" onclick="removeRef(this)" ></a>'+
-                '</div></div></div>'+
+                '</div>'+
                 '<div id="collapse'+verId+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
                 '<div class="card-body">'+
                 'Process: '+pN+'<br>'+
                 'Created by: '+oA+'<br>'+
-                'Modified by: '+cA+
+                'Modified by: '+cA+'<br>'+
                 'on: <i>'+uO+'</i><br>'+
                 '</div></div></div>');
             reloadDataTable();
@@ -177,14 +156,15 @@ include 'CMS_SIDEBAR.php';
                     <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
 
                         <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-body">
+                            <div class="card-header"><b>Document References</b></div>
+                            <div class="card-body" style="max-height: 20rem; overflow-y: scroll;">
                                 <span id="noRefsYet">No References</span>
                                 <span id="refDocuments" style="font-size: 12px;">
                                 </span>
                             </div>
                             <div class="card-footer">
-                                <button type="button" class="btn btn-default"><i class="fa fa-fw fa-plus"></i> Ref. New Document </button>
-                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i> Ref. Existing Document </button>
+                                <button type="button" class="btn btn-default"><i class="fa fa-fw fa-plus"></i>New</button>
+                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Existing</button>
                             </div>
                         </div>
 
