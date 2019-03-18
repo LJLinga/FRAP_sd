@@ -41,19 +41,6 @@ $page_title = 'Faculty Manual - Add Section';
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
 ?>
-    <style>
-        @media screen and (min-width: 1200px) {
-            #publishColumn{
-                position: fixed;
-                right:1rem;
-            }
-        }
-        @media screen and (max-width: 1199px) {
-            #publishColumn{
-                position: relative;
-            }
-        }
-    </style>
     <script>
         $(document).ready( function(){
             $('textarea').froalaEditor({

@@ -37,7 +37,7 @@ if(!empty($rows)){
         <div class="row">
             <div class="col-lg-12">
                 <h3 class="page-header"> Manual Revisions
-                    <button name="btnAddSection" id="btnAddSection" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Add Section</button>
+                    <a class="btn btn-primary" href="EDMS_AddSection.php">Add Section</a>
                 </h3>
             </div>
         </div>

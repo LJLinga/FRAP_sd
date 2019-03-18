@@ -18,19 +18,6 @@ $userId = $_SESSION['idnum'];
 
 
 ?>
-    <style>
-        @media screen and (min-width: 1200px) {
-            #publishColumn{
-                position: fixed;
-                right:1rem;
-            }
-        }
-        @media screen and (max-width: 1199px) {
-            #publishColumn{
-                position: relative;
-            }
-        }
-    </style>
     <script>
         $(document).ready( function(){
 
@@ -94,7 +81,6 @@ $userId = $_SESSION['idnum'];
                     <h3 class="page-header">
                         <?php echo $head;?>
                     </h3>
-
                 </div>
             </div>
             <!--Insert success page-->

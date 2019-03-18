@@ -26,6 +26,7 @@ if(isset($_POST['btnSubmit'])){
 
     $delimitedInput = preg_replace('/\s+/', '', $_POST['post_emails']);
     $email_array = explode (",", $delimitedInput);
+    $email_array = json_encode($email_array);
 
     $startTime = preg_replace('/\s+/', 'T', $startTime);
     $endTime = preg_replace('/\s+/', 'T', $endTime);
@@ -54,10 +55,7 @@ if(isset($_POST['btnSubmit'])){
             //'recurrence' => array(
             //    'RRULE:FREQ=DAILY;COUNT=2'
             //),
-            'attendees' => array(
-                array('email' => 'nicolealderite@gmail.com'),
-                array('email' => 'sbrin@example.com'),
-            ),
+            'attendees' => $email_array,
             'reminders' => array(
                 'useDefault' => FALSE,
                 'overrides' => array(
@@ -74,9 +72,9 @@ if(isset($_POST['btnSubmit'])){
         $eventId = $event->getId();
         $eventLink = $event->htmlLink;
 
-        $id = $crud->executeGetKey("INSERT INTO events (title, description, posterId, startTime, endTime, GOOGLE_EVENTID, GOOGLE_EVENTLINK) values ('$title', '$body','$userId','$status','$startTime','$endTime','$eventId','$eventLink')");
+        $id = $crud->executeGetKey("INSERT INTO events (title, description, posterId, startTime, endTime, GOOGLE_EVENTID, GOOGLE_EVENTLINK) values ('$title', '$body','$userId','$startTime','$endTime','$eventId','$eventLink')");
         if(!empty ($id)) {
-            header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditEvent.php?postId=" . $id);
+            header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_EventsDashboard.php");
         }else{
             echo '<script language="javascript">';
             echo 'alert('.$eventLink.')';
