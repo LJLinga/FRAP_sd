@@ -711,8 +711,8 @@ include 'FRAP_USER_SIDEBAR.php';
             <div class="row"> <!-- Title & Breadcrumb -->
 
                 <div class="col-lg-12">
-                    <h1 class="page-header">Health Aid Application Form</h1>
-
+                    <h1 class="page-header">Health Aid Application Form </h1>
+                    <div font color = "red"><?php echo $message;?></div>
                 </div>
 
             </div>

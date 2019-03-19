@@ -120,11 +120,11 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
 
                                         <div class="col-lg-12">
                                                 <span class="labelspan"><b>New Password </b><big class="req"> *</big></span>
-                                                <input type="password"  class="form-control memname" placeholder="new password" name="pass" id = "pass" >
+                                                <input type="password"  class="form-control memname" placeholder="new password" name="pass" id = "pass" font size = 9>
                                                 </label>
 
                                                 <span class="labelspan"><b>Confirm Password </b><big class="req"> *</big></span>
-                                                <input type="password"  class="form-control memname" placeholder="new password" name="cpass" id = "cpass" >
+                                                <input type="password"  class="form-control memname" placeholder="new password" name="cpass" id = "cpass" font size = 9>
                                                 </label>
                                                 <div id = "chk"></div>
 
@@ -231,10 +231,30 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
 </script>
 <script>
     $(document.getElementById("pass")).keyup(function(){
-         
+         var pass = document.getElementById("pass").value;
+         var format = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+         var format2 = /[0-9]+/;
          document.getElementById("cpass").value = "";
          document.getElementById("chk").innerHTML = "";
+         if(pass.length <8){
+            document.getElementById("chk").innerHTML = '<font  color = "red">Password is less than 8 characters</font>';
+            
+         }
+         else{
+            if(!format2.test(pass)){
+                document.getElementById("chk").innerHTML = '<font  color = "red">Password should be alphanumeric</font>';
+                
+            }
+            else if(!format.test(pass)){
+                document.getElementById("chk").innerHTML = '<font  color = "red">Password should contain at least 1 special character</font>';
+                
+            }
+            
 
+            
+            
+         }
+        document.getElementById("submit").disabled = true;
               
            
          

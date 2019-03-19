@@ -133,7 +133,7 @@
 
 
 
-                }else{ //sends it to the most appropriate account. and adds the
+                }else if($rowMem['ACC_STATUS']==2){ //sends it to the most appropriate account. and adds the
 
                     $query = "SELECT FRAP_ROLE, EDMS_ROLE, CMS_ROLE FROM employee WHERE MEMBER_ID = '{$_SESSION['idnum']}' ";
                     $row = mysqli_query($dbc, $query);
@@ -147,7 +147,11 @@
                         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER dashboard.php");
 
                 }
-
+                else if ($rowMem['ACC_STATUS']==1){
+                     $message .= "This account is not yet approved by the Faculty Association. Please contact the administrator for the status of your account.";
+                }
+                else
+                    $message .= "An error has occured. Plese contact the Administrator if error persists.";
                 /*
                 if ($rowMem['MEMBER_ID'] == $_SESSION['idnum']) {
 
@@ -289,7 +293,7 @@
 
                             <div>
                                 <label id="passlabel">Password</label>
-                                <input type="password" id="passlogin" class="form-control" placeholder="Password" name="password" required>
+                                <input type="password" id="passlogin" class="form-control" placeholder="Password" name="password" font size = "9" required>
                             </div>
 
                             <div id="loginsubmitbutton">
