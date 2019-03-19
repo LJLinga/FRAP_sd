@@ -151,7 +151,7 @@
                      $message .= "This account is not yet approved by the Faculty Association. Please contact the administrator for the status of your account.";
                 }
                 else
-                    $message .= "An error has occured. Plese contact the Administrator if error persists.";
+                    $message .= "An error has occured. Plese contact the administrator if error persists.";
                 /*
                 if ($rowMem['MEMBER_ID'] == $_SESSION['idnum']) {
 

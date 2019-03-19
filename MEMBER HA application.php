@@ -592,11 +592,13 @@ if (isset($_POST['submit'])) {
 
                 $_SESSION['CI_Child']++;
             }
-
+            $queryForm = "SELECT RECORD_ID FROM HEALTH_AID H JOIN MEMBER M ON H.MEMBER_ID = M.MEMBER_ID WHERE M.MEMBER_ID = '{$idnum}' order by RECORD_ID desc";
+$resultForm = mysqli_query($dbc, $queryForm);
+$rowForm = mysqli_fetch_array($resultForm);
         
 
-        $queryTransaction = "INSERT INTO TRANSACTIONS (MEMBER_ID, AMOUNT, TXN_DATE, TXN_TYPE, TXN_STATUS) 
-                             VALUES ({$_SESSION['idnum']}, 0, NOW(), 1, 'Health Aid Application Submitted')";
+        $queryTransaction = "INSERT INTO TRANSACTIONS (MEMBER_ID, AMOUNT, TXN_DATE, TXN_TYPE, TXN_STATUS,HA_REF) 
+                             VALUES ({$_SESSION['idnum']}, 0, NOW(), 1, 'Health Aid Application Submitted',{$_SESSION['HA_RecordID']})";
 
         $resultTransaction = mysqli_query($dbc, $queryTransaction);
 
@@ -604,7 +606,7 @@ if (isset($_POST['submit'])) {
     
 
 }
-$queryForm = "SELECT H.APP_STATUS as 'STATUS' FROM HEALTH_AID H JOIN MEMBER M ON H.MEMBER_ID = M.MEMBER_ID WHERE M.MEMBER_ID = '{$idnum}'";
+$queryForm = "SELECT H.APP_STATUS as 'STATUS' FROM HEALTH_AID H JOIN MEMBER M ON H.MEMBER_ID = M.MEMBER_ID WHERE H.RECORD_ID = {$_SESSION['HA_RecordID']} order by RECORD_ID desc" ;
 $resultForm = mysqli_query($dbc, $queryForm);
 $rowForm = mysqli_fetch_array($resultForm);
 if ($rowForm['STATUS'] == 1 && empty($message)) { /* PENDING */
@@ -712,7 +714,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                 <div class="col-lg-12">
                     <h1 class="page-header">Health Aid Application Form </h1>
-                    <div font color = "red"><?php echo $message;?></div>
+                    <div><font color = "red"><?php echo $message;?></font></div>
                 </div>
 
             </div>
@@ -849,7 +851,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                                 <?php for($y = date("Y"); $y >= 1900; $y--) {
 
-                                    if(isset($_POST['fatheryear']) && $x == $_POST['fatheryear']){
+                                    if(isset($_POST['fatheryear']) && $y == $_POST['fatheryear']){
                                         echo "<option value='". $y ."' selected>". $y ."</option>";
                                     }
                                     else echo "<option value='". $y ."'>". $y ."</option>";
@@ -1019,7 +1021,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                                 <?php for($y = date("Y"); $y >= 1900; $y--) {
 
-                                    if(isset($_POST['motheryear']) && $x == $_POST['motheryear']){
+                                    if(isset($_POST['motheryear']) && $y == $_POST['motheryear']){
                                         echo "<option value='". $y ."' selected>". $y ."</option>";
                                     }
                                     else echo "<option value='". $y ."'>". $y ."</option>";

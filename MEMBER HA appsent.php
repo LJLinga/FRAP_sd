@@ -239,7 +239,7 @@ include 'FRAP_USER_SIDEBAR.php';
                         $query = "SELECT * FROM SIBLINGS WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
                         $result = mysqli_query($dbc, $query);
 
-                        if(!empty($result)) {
+                        if(mysql_num_rows($result)!=0) {
                             echo '<p class="healthlabel" align="center">Siblings Details</p>
                             <table class="table table-bordered">
                             
@@ -305,7 +305,7 @@ include 'FRAP_USER_SIDEBAR.php';
                         $query = "SELECT * FROM CHILDREN WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
                         $result = mysqli_query($dbc, $query);
 
-                        if(!empty($result)) {
+                        if(mysql_num_rows($result)!=0) {
                             echo '<p class="healthlabel" align="center">Children Details</p>
                              <table class="table table-bordered table-stripped">
 
