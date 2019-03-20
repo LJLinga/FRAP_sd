@@ -80,6 +80,9 @@ include 'CMS_SIDEBAR.php';
                                         echo "No steps yet.";
                                     }
                                     echo '</td>';
+                                    echo '<td>';
+                                    echo '<button name="btnEdit" id="btnEdit" class="btn btn-default" value="'.$processId.'">Edit</button>';
+                                    echo '</td>';
                                     echo '</tr>';
                                 }
                             }
@@ -96,11 +99,7 @@ include 'CMS_SIDEBAR.php';
                         <label>Process Name</label>
                         <input type="text" class="form-control input-md option-input" placeholder="Enter Process Name">
                         <br>
-                        <label>Step 1 Name</label>
-                        <input type="text" class="form-control input-md option-input" placeholder="Enter Step 1 Name">
-                        <br>
-                        <a href="SYS_EditWorkflow_Steps.php" class="btn btn-default">Submit</a>
-
+                        <button name="btnAdd" id="btnAdd" class="btn btn-primary">Submit</button>
                     </div>
                 </div>
             </div>
