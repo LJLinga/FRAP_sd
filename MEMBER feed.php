@@ -28,23 +28,6 @@ include 'GLOBAL_HEADER.php';
 </div>
 
 
-<style>
-    @media screen and (min-width: 1200px) {
-        #calendarColumn{
-            position: fixed;
-            right:1rem;
-        }
-    }
-    @media screen and (max-width: 1199px) {
-        #calendarColumn{
-            position: relative;
-        }
-    }
-    .card {
-        font-family: "Verdana", Georgia, Serif;
-        font-size: 12px;
-    }
-</style>
 
 <div id="content-wrapper">
 
@@ -54,7 +37,7 @@ include 'GLOBAL_HEADER.php';
 
 
             <div class="row">
-                <div class="column col-lg-2" style="margin-top: 2rem; margin-bottom: 2rem;">
+                <div class="column col-lg-2" style="margin-top: 1rem;">
 
                     <div class="card" style="margin-top: 1rem;">
                         <div class="card-header">

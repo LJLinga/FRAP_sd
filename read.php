@@ -99,18 +99,22 @@ include 'CMS_SIDEBAR.php';
                         <h4 class="card-title"><b><?php echo $page_title;?></b></h4>
                         <h5 class="card-subtitle">by <?php echo $author;?> | <?php echo date("F j, Y g:i A ", strtotime($lastUpdated)) ;?></h5>
                         <br><p class="card-text"><?php echo $body ?></p>
+                        <div class="card" style=" ">
+                            <div class="card-header"><b>Document References</b></div>
+                            <div class="card-body">
+                        <span id="refDocuments">
                         <?php
 
                         $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor, v.filePath,
-                                            v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.id AS processId, pr.processName, s.stepNo, s.stepName,
-                                            (SELECT CONCAT(e.lastName,', ',e.firstName) FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
-                                            WHERE v.versionId = vid) AS currentAuthor
-                                            FROM documents d JOIN doc_versions v ON d.documentId = v.documentId
-                                            JOIN employee e ON e.EMP_ID = d.firstAuthorId 
-                                            JOIN steps s ON s.id = d.stepId
-                                            JOIN process pr ON pr.id = d.processId 
-                                            JOIN post_ref_versions ref ON ref.versionId = v.versionId
-                                            WHERE ref.postId = $postId;");
+                                                v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.id AS processId, pr.processName, s.stepNo, s.stepName,
+                                                (SELECT CONCAT(e.lastName,', ',e.firstName) FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
+                                                WHERE v.versionId = vid) AS currentAuthor
+                                                FROM documents d JOIN doc_versions v ON d.documentId = v.documentId
+                                                JOIN employee e ON e.EMP_ID = d.firstAuthorId 
+                                                JOIN steps s ON s.id = d.stepId
+                                                JOIN process pr ON pr.id = d.processId 
+                                                JOIN post_ref_versions ref ON ref.versionId = v.versionId
+                                                WHERE ref.postId = $postId;");
                         if(!empty($rows)) {
                             foreach ((array)$rows as $key => $row) {
                                 $title = $row['title'];
@@ -121,16 +125,13 @@ include 'CMS_SIDEBAR.php';
                                 $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
                                 $filePath = $row['filePath'];
                                 $fileName = $title.'_ver'.$versionNo.'_'.basename($filePath);
-                                echo '<div class="card">';
+                                echo '<div class="card" style="position: relative;">';
                                 echo '<input type="hidden" class="refDocuments" value="'.$row['vid'].'">';
-                                echo '<div class="row">';
-                                echo '<div class="col-md-7">';
                                 echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
-                                echo '</div>';
-                                echo '<div class="col-md-4" style="position: relative;">';
                                 echo '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >';
                                 echo '<a class="btn fa fa-download"  href="'.$filePath.'" download="'.$fileName.'"></a>';
-                                echo '</div></div></div>';
+                                //if($mode == 'edit') echo '<a class="btn fa fa-remove" onclick="removeRef(this, &quot;'.$row['vid'].'&quot;)" ></a>';
+                                echo '</div>';
                                 echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
                                 echo '<div class="card-body">';
                                 echo 'Process: ' . $processName . '<br>';
@@ -144,9 +145,15 @@ include 'CMS_SIDEBAR.php';
                             echo 'No References';
                         }
                         ?>
+                        </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card" style="margin-top: 1rem;">
+                    <div class="card-body">
+                        <div id="display_view"></div>
+                    </div>
                     <div class="card-body">
                         <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
                         <span id="comment_message"></span>
@@ -236,6 +243,7 @@ include 'CMS_SIDEBAR.php';
 
         setInterval(function() {
             load_comment(postId);
+            load_views(postId);
         }, 1000); //5
 
         function load_comment(postId)
@@ -250,6 +258,20 @@ include 'CMS_SIDEBAR.php';
                 }
             })
         }
+
+        function load_views(postId)
+        {
+            $.ajax({
+                url:"CMS_AJAX_FetchViewers.php",
+                method:"POST",
+                data:{postId: postId},
+                success:function(data)
+                {
+                    $('#display_view').html(data);
+                }
+            })
+        }
+
 
         $(document).on('click', '.reply', function(){
             var comment_id = $(this).attr("id");

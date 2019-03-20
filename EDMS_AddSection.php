@@ -15,7 +15,7 @@ include('GLOBAL_CMS_ADMIN_CHECKING.php');
 $userId = $_SESSION['idnum'];
 
 if(isset($_POST['btnSubmit'])){
-    $title = $_POST['post_title'];
+    $title = $crud->escape_string($_POST['post_title']);
     $body = $crud->escape_string($_POST['post_content']);
     $status = $_POST['btnSubmit'];
 
@@ -83,7 +83,6 @@ include 'EDMS_SIDEBAR.php';
                     </div>
 
                     <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
-
                         <div class="card" style="margin-bottom: 1rem;">
                             <div class="card-body">
                                 No parent section

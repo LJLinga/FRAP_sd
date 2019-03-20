@@ -13,20 +13,25 @@ session_start();
 
 if(isset($_POST['role'])){
 
+    $append = '';
+
     $role = $_POST['role'];
+    if(isset($_POST['authorId'])){
+        $append = " OR v1.authorId = ".$_POST['authorId'];
+    }
 
     $query = "SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor, d.stepId,
-                v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.id AS processId, pr.processName, s.stepNo, s.stepName,
+                v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.processName, s.stepNo, s.stepName,
                 (SELECT CONCAT(e.lastName,', ',e.firstName) FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
                 WHERE v.versionId = vid) AS currentAuthor
                 FROM documents d JOIN doc_versions v ON d.documentId = v.documentId
                 JOIN employee e ON e.EMP_ID = d.firstAuthorId 
                 JOIN steps s ON s.id = d.stepId
                 JOIN step_roles sr ON sr.stepId = s.id
-                JOIN process pr ON pr.id = d.processId 
+                JOIN process pr ON pr.id = s.processId
                 WHERE s.processId = pr.id AND v.versionId = 
-                (SELECT MAX(v1.versionId) FROM doc_versions v1 WHERE v1.documentId = d.documentId OR v1.authorId = 99999999)
-                AND sr.roleId = $role AND sr.read = 2;";
+                (SELECT MAX(v1.versionId) FROM doc_versions v1 WHERE v1.documentId = d.documentId OR v1.authorId = '$append')
+                AND sr.roleId = '$role' AND sr.read = 2;";
 
 
     $rows = $crud->getData($query);

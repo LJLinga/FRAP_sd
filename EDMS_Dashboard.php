@@ -97,12 +97,17 @@ $userId = $_SESSION['idnum'];
                         <label for="documentTitle">Document</label>
                         <input type="text" name="documentTitle" id="documentTitle" class="form-control" placeholder="Document Title" required>
                     </div>
-                    <label for="documentTitle">Assigned Task</label>
+                    <label for="documentTitle">Document Type</label>
                     <div class="form-group">
-                        <select class="form-control" id="selectedTask" name="selectedTask">
-                            <option value="1" selected>FALP Application</option>
-                            <option value="2">Post Attachment</option>
-                            <option value="99">No Process</option>
+                        <select class="form-control" id="selectedType" name="selectedType">
+                            <?php
+                            $rows = $crud->getData("SELECT id, type FROM doc_type");
+                            if(!empty($rows)){
+                                foreach ((array) $rows as $key => $row) {
+                                    echo '<option value="'.$row['id'].'">'.$row['type'].'</option>';
+                                }
+                            }
+                            ?>
                         </select>
                     </div>
                     <div class="form-group">

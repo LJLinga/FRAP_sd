@@ -21,14 +21,15 @@ if(isset($_GET['docId'])){
     $documentId = $_GET['docId'];
 
     // Load Process and Steps assigned to current document
-    $query = "SELECT d.processId, d.stepId, p.processName, s.stepName,
+    $query = "SELECT d.stepId, p.processName, s.stepName,
               d.availabilityId, d.lockedById, d.statusId, st.statusName
               FROM documents d 
-              JOIN process p ON d.processId = p.id 
-              JOIN steps s ON d.stepId = s.id JOIN status_dictionary st ON st.id = d.statusId WHERE d.documentId='$documentId';";
+              JOIN steps s ON d.stepId = s.id 
+              JOIN doc_status st ON st.id = d.statusId 
+              JOIN process p ON s.processId = p.id 
+              WHERE d.documentId='$documentId';";
     $rows = $crud->getData($query);
     foreach((array) $rows as $key => $row){
-        $processId = $row['processId'];
         $currentStepId= $row['stepId'];
         $processName = $row['processName'];
         $stepName = $row['stepName'];
@@ -40,7 +41,7 @@ if(isset($_GET['docId'])){
 
     // Load Current User Permissions
     $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su
-                WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' AND su.processId = $processId LIMIT 1;";
+                WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
     $rows = $crud->getData($query);
     if(empty($rows)){
         //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Dashboard.php");
@@ -97,6 +98,7 @@ if(isset($_POST['btnUnlock'])){
 }
 
 if(isset($_POST['btnAccept'])){
+    //Clickable only when unlocked. Thesis 2.
     $documentId = $_POST['btnAccept'];
     $crud->execute("UPDATE documents SET statusId='2', availabilityId='2', lockedById=NULL WHERE documentId='$documentId'");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
@@ -110,8 +112,14 @@ if(isset($_POST['btnReject'])){
 
 if(isset($_POST['btnLock'])){
     $documentId = $_POST['btnLock'];
-    $userId = $_POST['userId'];
-    $crud->execute("UPDATE documents SET availabilityId='1', lockedById='$userId' WHERE documentId='$documentId'");
+    $rows = $crud->getData("SELECT availabilityId FROM documents WHERE documentId = '$documentId'");
+    foreach((array) $rows as $key => $row){
+        $availability = $row['availabilityId'];
+    }
+    if($availability == '2'){
+        $userId = $_POST['userId'];
+        $crud->execute("UPDATE documents SET availabilityId='1', lockedById='$userId' WHERE documentId='$documentId'");
+    }
     header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewDocument.php?docId=".$documentId);
 }
 
@@ -225,23 +233,20 @@ include 'EDMS_SIDEBAR.php';
                         <div class="btn-group btn-group-vertical" style="width: 100%;">
                             <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
                             <?php
-
-
-                                if($processId == '99' || $currentStepId == '1'){
-                                    echo '<button class="btn btn-info" style="text-align: left" type="button" id="btnAssignTask">';
+                                if($currentStepId == '999'){
+                                    //Later
+                                    //echo '<button class="btn btn-info" style="text-align: left; width: 100%;" type="button" id="btnAssignTask">Change Type</button>';
                                 }else if(isset($route) && $route=='2') {
-                                    $query = "SELECT id, routeName FROM step_routes WHERE stepId ='$currentStepId' AND processId = '$processId';";
+                                    $query = "SELECT id, routeName FROM step_routes WHERE stepId ='$currentStepId';";
                                     $rows = $crud->getData($query);
                                     if (!empty($rows)) {
-                                        if(($edmsRole == 4 || $edmsRole == 3)) {
-                                            if($statusId == 1){
-                                                echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
-                                                echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$documentId.'">Reject</button>';
-                                            }else if($statusId == 2){
-                                                echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$documentId.'">Reject</button>';
-                                            }else if($statusId == 3){
-                                                echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
-                                            }
+                                        if($statusId == 1){
+                                            echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
+                                            echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$documentId.'">Reject</button>';
+                                        }else if($statusId == 2){
+                                            echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$documentId.'">Reject</button>';
+                                        }else if($statusId == 3){
+                                            echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
                                         }
                                         echo '<input type="hidden" name="documentId" value="'.$documentId.'">';
                                         foreach ((array)$rows as $key => $row) {
@@ -339,7 +344,7 @@ include 'EDMS_SIDEBAR.php';
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="documentTitle">Title</label>
-                            <input type="text" name="versionTitle" id="versionTitle" class="form-control" placeholder="Title" required>
+                            <input type="text" name="versionTitle" id="versionTitle" class="form-control" placeholder="Title" required value="<?php echo $title; ?>">
                         </div>
                         <div class="form-group">
                             <label for=".radio"> Save New Version As </label>

@@ -30,6 +30,8 @@ if(!empty($rows)){
         $revisionsStarted = $row['revisionsStarted'];
     }
 }
+
+//$edmsRole = '4';
 ?>
 
 <div id="content-wrapper">
@@ -37,33 +39,43 @@ if(!empty($rows)){
         <div class="row">
             <div class="col-lg-12">
                 <h3 class="page-header"> Manual Revisions
-                    <a class="btn btn-primary" href="EDMS_AddSection.php">Add Section</a>
+                    <?php
+                        if($revisions == 'open') echo '<a class="btn btn-primary" href="EDMS_AddSection.php">Add Section</a>';
+                        else if ($revisions == 'closed') echo '';
+                        ?>
                 </h3>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-8">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body" style="position: relative;">
                         <?php if($revisions == 'open') {
                             echo 'Revisions for <b>Faculty Manual '.$year.'</b> started last '.$revisionsStarted;
                             //$edmsRole = '4';
                             if($edmsRole == '4'){
-                                echo '<br>Revisions Actions: ';
-                                echo '<button class="btn btn-warning"> Hold Revisions </button> ';
+                                echo '<span style="position: absolute; top:4px; right:4px;">';
+                                echo 'Revisions Actions: ';
+                                echo '<button class="btn btn-warning" name="btnRevisions" value="5"> Hold Revisions </button> ';
                                 // All editing is halted. Everyone can still view and comment.
-                                echo '<button class="btn btn-danger"> End Revisions </button> ';
+                                echo '<button class="btn btn-danger" name="btnRevisions" value="2"> End Revisions </button> ';
+                                echo '<button class="btn btn-danger" name="btnRevisions" value="6"> Cancel Revisions </button> ';
                                 // Prompts whether PRESIDENT is sure to END revisions.
                                 // Shows which sections are currently not yet finalized/edits ongoing.
                                 // All recent saved progress are retained if PRESIDENT chooses to save still.
+                                echo '</span>';
                             }
                         }else{
                             echo 'Faculty Manual Revisions are still closed.';
+                            echo '<span style="position: absolute; top:4px; right:4px;">';
+                            echo '<button class="btn btn-danger" name="btnRevisions"> Open Revisions </button>';
+                            echo '</span>';
+
                         }
                         ?>
                     </div>
                 </div>
-
+                <?php if ($revisions == 'open') { ?>
                 <div class="card" style="margin-top: 1rem;">
                     <div class="card-header btn-group">
                         <a type="button" class="btn btn-default" id="btnAll">All</a>
@@ -88,6 +100,7 @@ if(!empty($rows)){
                         <span>Last Updated on....</span>
                     </div>
                 </div>
+                <?php } ?>
             </div>
             <div class="col-lg-4">
                 <div class="card">

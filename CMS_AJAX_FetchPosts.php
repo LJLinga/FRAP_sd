@@ -66,12 +66,10 @@ if(isset($_POST['userId']) && isset($_POST['cmsRole'])){
                 );
             }
         }
-
-        echo json_encode($data);
-        exit;
-    }else{
-        echo 'empty';
     }
+
+    echo json_encode($data);
+    exit;
 
 
 }else{

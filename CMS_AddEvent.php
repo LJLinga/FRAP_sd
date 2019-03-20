@@ -26,7 +26,10 @@ if(isset($_POST['btnSubmit'])){
 
     $delimitedInput = preg_replace('/\s+/', '', $_POST['post_emails']);
     $email_array = explode (",", $delimitedInput);
-    $email_array = json_encode($email_array);
+    $data = [];
+    foreach((array) $email_array as $key=>$value) {
+        $data[] = array('email'=>$value);
+    }
 
     $startTime = preg_replace('/\s+/', 'T', $startTime);
     $endTime = preg_replace('/\s+/', 'T', $endTime);
@@ -55,7 +58,7 @@ if(isset($_POST['btnSubmit'])){
             //'recurrence' => array(
             //    'RRULE:FREQ=DAILY;COUNT=2'
             //),
-            'attendees' => $email_array,
+            'attendees' => $data,
             'reminders' => array(
                 'useDefault' => FALSE,
                 'overrides' => array(

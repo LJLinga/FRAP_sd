@@ -18,11 +18,11 @@ $errors = []; // Store all foreseen and unforseen errors here
 
 $fileExtensions = ['jpeg','jpg','png','ppt','doc','docx','pptx','pdf']; // Get all the file extensions
 
-if(!empty($_POST['documentTitle']) && !empty($_POST['selectedTask']) && !empty($_POST['userId']) ) {
+if(!empty($_POST['documentTitle']) && !empty($_POST['selectedType']) && !empty($_POST['userId']) ) {
 
     $userId = $_POST['userId'];
     $title = $_POST['documentTitle'];
-    $process = $_POST['selectedTask'];
+    $typeId = $_POST['selectedType'];
 
     $fileName = $_FILES['file']['name'];
     $fileSize = $_FILES['file']['size'];
@@ -52,14 +52,21 @@ if(!empty($_POST['documentTitle']) && !empty($_POST['selectedTask']) && !empty($
         $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
 
         if ($didUpload) {
-            $stepId = '1';
 
-            $rows = $crud->getData("SELECT id FROM steps WHERE steps.processId = '$process' AND steps.stepNo = 1 LIMIT 1;");
-            foreach((array) $rows as $key => $row){
-                $stepId= $row['id'];
+            $stepId = '999'; $statusId = '99';
+            $rows = $crud->getData("SELECT s.id FROM steps s 
+                                  JOIN process pr ON s.processId = pr.id JOIN doc_type t ON t.processId = pr.id 
+                                  WHERE t.id = '$typeId' AND s.stepNo = 1 LIMIT 1;");
+            if(!empty($rows)) {
+                foreach ((array)$rows as $key => $row) {
+                    $stepId = $row['id'];
+                }
+                if($stepId != '999'){
+                    $statusId = '1';
+                }
             }
 
-            $insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, processId, stepId, statusedById) VALUES ('$userId', '$process','$stepId','$userId')");
+            $insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, stepId, statusedById, typeId, statusId) VALUES ('$userId', '$stepId','$userId','$typeId','$statusId')");
             $crud->execute("INSERT into doc_versions (documentId, authorId, versionNo, title, filePath) VALUES ('$insertDocument','$userId','1.0','$title','$uploadPath')");
             echo $insertDocument;
 
@@ -74,5 +81,5 @@ if(!empty($_POST['documentTitle']) && !empty($_POST['selectedTask']) && !empty($
     }
 
 }else{
-    echo 'PHP Error.'.$_POST['userId'].' '.$_POST['documentTitle'].' '.$_POST['selectedTask'].' '.$_FILES['file'];
+    echo 'error';
 }

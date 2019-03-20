@@ -24,23 +24,7 @@ $page_title = "Santinig Feed";
 include 'GLOBAL_HEADER.php';
 include 'CMS_SIDEBAR.php';
 ?>
-<style>
-    @media screen and (min-width: 1200px) {
-        #calendarColumn{
-            position: fixed;
-            right:1rem;
-        }
-    }
-    @media screen and (max-width: 1199px) {
-        #calendarColumn{
-            position: relative;
-        }
-    }
-    .card {
-        font-family: "Verdana", Georgia, Serif;
-        font-size: 12px;
-    }
-</style>
+
     <div class="container-fluid">
         <div class="row">
             <div class="column col-lg-7" style="margin-top: 2rem; margin-bottom: 2rem;">

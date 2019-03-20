@@ -91,7 +91,7 @@
                         if($_SESSION['CMS_ROLE'] > 1) {
                             echo '<li><a href="CMS_PostsDashboard.php"> <i class="fa fa-newspaper-o" aria-hidden="true"></i> Santinig Content </a></li>';
                         }
-                        if($_SESSION['EDMS_ROLE'] > 1){
+                        if($_SESSION['EDMS_ROLE'] >= 1){
                             echo '<li><a href="EDMS_Dashboard.php"> <i class="fa fa-file-text" aria-hidden="true"></i> Documents</a></li>';
                         }
                         echo '</ul></li>';
