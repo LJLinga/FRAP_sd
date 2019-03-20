@@ -132,20 +132,32 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                             </thead>
                             <tr>
                                     <td align="center">
-                                        <p><button type = "submit" class="btn btn-action" name = "frap" value = 1>Members</button>
-                                       
-                                        <p><button type = "submit" class="btn btn-action" name = "frap" value = 3>Executive Board</button>
-                                        <p><button type = "submit" class="btn btn-action" name = "frap" value = 4>President</button></td>
-                                    <td align="center">
-                                        <p><button type = "submit" class="btn btn-action" name = "cms" value = 1>Reader</button>
-                                        <p><button type = "submit" class="btn btn-action" name = "cms" value = 2>Contributor</button>
-                                        <p><button type = "submit" class="btn btn-action" name = "cms" value = 3>Reviewer</button>
-                                        <p><button type = "submit" class="btn btn-action" name = "cms" value = 4>Publisher</button></td>
-                                    <td align="center">
-                                         <p><button type = "submit" class="btn btn-action" name = "edms" value = 1>Readers</button>
+                                        <?php 
+                                        $query = "SELECT * FROM FRAP_ROLES WHERE roleName != 'Secretary'";
+                                        $result = mysqli_query($dbc,$query);
                                         
-                                        <p><button type = "submit" class="btn btn-action" name = "edms" value = 3>Executive Board</button>
-                                        <p><button type = "submit" class="btn btn-action" name = "edms" value = 4>President</button></td>
+                                        while ($row = mysqli_fetch_assoc($result)){?>
+                                        <p><button type = "submit" class="btn btn-action" name = "frap" value = <?php echo $row['id'];?>><?php echo $row['roleName'];?></button>
+                                       
+                                        <?php }?>
+                                    <td align="center">
+                                        <?php 
+                                        $query = "SELECT * FROM CMS_ROLES WHERE roleName != 'Secretary'";
+                                        $result = mysqli_query($dbc,$query);
+                                        
+                                        while ($row = mysqli_fetch_assoc($result)){?>
+                                        <p><button type = "submit" class="btn btn-action" name = "cms" value = <?php echo $row['id'];?>><?php echo $row['roleName'];?></button>
+                                       
+                                        <?php }?>
+                                    <td align="center">
+                                         <?php 
+                                        $query = "SELECT * FROM EDMS_ROLES WHERE roleName != 'Secretary'";
+                                        $result = mysqli_query($dbc,$query);
+                                        
+                                        while ($row = mysqli_fetch_assoc($result)){?>
+                                        <p><button type = "submit" class="btn btn-action" name = "edms" value = <?php echo $row['id'];?>><?php echo $row['roleName'];?></button>
+                                       
+                                        <?php }?>
                                     </td>
                             </tr>
                         </table>
