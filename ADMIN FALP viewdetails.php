@@ -59,6 +59,15 @@ if(isset($_POST['addToPay'])){
                 echo("Error description: " . mysqli_error($dbc));
             }
 
+            //we reverse the fucking deductions code into something else.
+
+            $query = "UPDATE to_deduct SET HAS_PAID = 2 WHERE LOAN_REF = {$_SESSION['details']} AND HAS_PAID = 1 ORDER BY ID DESC LIMIT{$_POST['terms']} ";
+
+            if (!mysqli_query($dbc,$query))
+            {
+                echo("Error description: " . mysqli_error($dbc));
+            }
+
         }else{
 
             $description = 'Deduction from Loan';
@@ -66,6 +75,14 @@ if(isset($_POST['addToPay'])){
             $query = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE , LOAN_REF, EMP_ID, SERVICE_ID)
                                       values({$ans['MEMBER_ID']}, 2, '{$description}' ,{$payment}, NOW(), {$ans['LOAN_ID']}, {$_SESSION['idnum']}, 4);";
 
+
+            if (!mysqli_query($dbc,$query))
+            {
+                echo("Error description: " . mysqli_error($dbc));
+            }
+
+
+            $query = "UPDATE to_deduct SET HAS_PAID = 2 WHERE LOAN_REF = {$_SESSION['details']} AND HAS_PAID = 1 ORDER BY ID DESC LIMIT {$_POST['terms']} ";
 
             if (!mysqli_query($dbc,$query))
             {
@@ -126,6 +143,15 @@ if(isset($_POST['addToPay'])){
         {
             echo("Error description: " . mysqli_error($dbc));
         }
+
+
+        $query = "UPDATE to_deduct SET HAS_PAID = 2 WHERE LOAN_REF = {$_SESSION['details']} AND HAS_PAID = 1 ORDER BY ID DESC LIMIT {$termsLeftForFifty} ";
+
+        if (!mysqli_query($dbc,$query))
+        {
+            echo("Error description: " . mysqli_error($dbc));
+        }
+
 
 
 

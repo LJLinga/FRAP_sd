@@ -11,18 +11,14 @@
     }
 
 
-    $query = "SELECT ha.Record_ID as 'has_HA', f.Amount as 'FFee', b.Amount as 'BFee'
+    $query = "SELECT ha.Record_ID as 'has_HA', f.Amount as 'FFee'
               from member m
               left join (SELECT * from health_aid where app_status = 2) ha
               on m.member_id = ha.member_id
               left join (SELECT member_id,sum(PER_PAYMENT) as 'Amount' 
                          from Loans
-                         where member_id = {$_SESSION['idnum']} and loan_status = 2 and loan_detail_id = 1) f
+                         where member_id = {$_SESSION['idnum']} and loan_status = 2 ) f
               on f.member_id = m.member_id
-              left join (SELECT member_id,sum(PER_PAYMENT) as 'Amount' 
-                         from Loans
-                         where member_id = {$_SESSION['idnum']} and loan_status = 2 and loan_detail_id != 1) b
-              on b.member_id = m.member_id
               where m.member_id = {$_SESSION['idnum']}";
     $result = mysqli_query($dbc,$query);
     $ans = mysqli_fetch_assoc($result);
@@ -48,7 +44,7 @@
 
                 <div class="row">
 
-                    <div class="col-lg-3 col-1">
+                    <div class="col-lg-4 col-1">
 
                         <div class="panel panel-green" align="center">
 
@@ -70,7 +66,7 @@
 
                     </div>
 
-                    <div class="col-lg-3 col-2">
+                    <div class="col-lg-4 col-2">
 
                         <div class="panel panel-green" align="center">
 
@@ -95,7 +91,7 @@
 
                     </div>
 
-                    <div class="col-lg-3 col-3">
+                    <div class="col-lg-4 col-3">
 
                         <div class="panel panel-green" align="center">
 
@@ -120,29 +116,29 @@
 
                     </div>
 
-                    <div class="col-lg-3 col-4">
-
-                        <div class="panel panel-green" align="center">
-
-                            <div class="panel-heading">
-
-                                <b>Bank Loan</b>
-
-                            </div>
-
-                            <div class="panel-body">
-
-                                ₱ <?php 
-                                if($choice==2)
-                                echo sprintf("%.2f",(float)$ans['BFee']);
-                                 else
-                                    echo sprintf("%.2f",((float)$ans['BFee'])*2);?>
-
-                            </div>
-
-                        </div>
-
-                    </div>
+<!--                    <div class="col-lg-3 col-4">-->
+<!---->
+<!--                        <div class="panel panel-green" align="center">-->
+<!---->
+<!--                            <div class="panel-heading">-->
+<!---->
+<!--                                <b>Bank Loan</b>-->
+<!---->
+<!--                            </div>-->
+<!---->
+<!--                            <div class="panel-body">-->
+<!---->
+<!--                                ₱ --><?php //
+//                                if($choice==2)
+//                                echo sprintf("%.2f",(float)$ans['BFee']);
+//                                 else
+//                                    echo sprintf("%.2f",((float)$ans['BFee'])*2);?>
+<!---->
+<!--                            </div>-->
+<!---->
+<!--                        </div>-->
+<!---->
+<!--                    </div>-->
 
                 </div>
 
@@ -238,29 +234,29 @@
 
                             </tr>
 
-                            <tr>
-
-                            <td>Bank Loan</td>
-                            <td id = "Bank">₱ <?php 
-                                if ($choice==2){
-                                echo sprintf("%.2f",(float)$ans['BFee']);
-                                $bf = (float)$ans['BFee'];
-                            }
-                                 else{
-                                    echo sprintf("%.2f",((float)$ans['BFee'])*2);
-
-                                    $bf = (float)$ans['BFee']*2;
-                                }
-                                    ?></td>
-
-                                
-
-                            </tr>
+<!--                            <tr>-->
+<!---->
+<!--                            <td>Bank Loan</td>-->
+<!--                            <td id = "Bank">₱ --><?php //
+//                                if ($choice==2){
+//                                echo sprintf("%.2f",(float)$ans['BFee']);
+//                                $bf = (float)$ans['BFee'];
+//                            }
+//                                 else{
+//                                    echo sprintf("%.2f",((float)$ans['BFee'])*2);
+//
+//                                    $bf = (float)$ans['BFee']*2;
+//                                }
+//                                    ?><!--</td>-->
+<!---->
+<!--                                -->
+<!---->
+<!--                            </tr>-->
 
                             <tr>
 
                             <td><b>TOTAL</td>
-                            <td><b>₱ <?php echo sprintf("%.2f",$mf+$ha+$ff+$bf);?></td>
+                            <td><b>₱ <?php echo sprintf("%.2f",$mf+$ha+$ff);?></td>
 
                             </tr>
 

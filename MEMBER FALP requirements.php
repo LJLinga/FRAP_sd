@@ -7,7 +7,7 @@
     //check if the person has anongoing  loan first dammit then if he/she has, redirect to a pending. but if its accepted, redirect to activity
     //to check if the user has applied in FALP but this code can be edited to check other applications. e.g. Health aid and shi like th sort
 
-    $query = "SELECT MAX(LOAN_ID), LOAN_STATUS from loans where member_id = {$_SESSION['idnum']} ";
+    $query = "SELECT MAX(LOAN_ID), LOAN_STATUS from loans where member_id = {$_SESSION['idnum']} and app_status != 3 ";
     $result = mysqli_query($dbc,$query);
 
     $row = mysqli_fetch_assoc($result);
@@ -263,7 +263,7 @@
                                 <tr>
 
                                 <td><b>Amount Payable</td>
-                                <td>₱ <?php echo $_POST['amount']+(500*$_POST['terms']);?></td>
+                                <td>₱ <?php echo $_POST['amount']+500;?></td>
 
                                 </tr>
 
@@ -277,7 +277,7 @@
                                 <tr>
 
                                 <td><b>Monthly Deduction</td>
-                                <td>₱ <?php echo 500.00 ;?></td>
+                                <td>₱ <?php echo ($_POST['amount']+500)/$_POST['terms'] ;?></td>
 
                                 </tr>
 
@@ -291,7 +291,7 @@
                                 <tr>
 
                                 <td><b>Per Payment Deduction</td>
-                                <td>₱ <?php echo 250.00 ;?></td>
+                                <td>₱ <?php echo  ($_POST['amount']+500)/($_POST['terms']*2) ;?></td>
 
                                 </tr>
 
@@ -314,9 +314,9 @@
 							<input type = "text" name = "amount" value =<?php echo $_POST['amount']; ?> hidden>
 								<input type = "text" name = "interest" value =<?php echo $_POST['interest']; ?> hidden>
 								<input type = "text" name = "terms" value =<?php echo $_POST['terms']; ?> hidden>
-								<input type = "text" name = "amountP" value =<?php echo $_POST['amount']+$_POST['amount']*$_POST['interest']/100; ?>  hidden>
+								<input type = "text" name = "amountP" value =<?php echo $_POST['amount']+500; ?>  hidden>
 								<input type = "text" name = "payT" value = <?php echo $_POST['terms'];?> hidden>
-								<input type = "text" name = "monD" value = <?php echo ($_POST['amount']+$_POST['amount']*$_POST['interest']/100)/$_POST['terms'];?> hidden>
+								<input type = "text" name = "monD" value = <?php echo ($_POST['amount']+500)/$_POST['terms'];?> hidden>
 								<input type = "text" name = "numP" value = <?php echo $_POST['terms']*2;?> hidden>
                                 <?php
                                 //this is a hidden variable that you came from this page before the nest

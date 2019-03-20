@@ -2831,11 +2831,11 @@ processId</ColNames>
       <NotNull>1</NotNull>
     </column>
     <column id="658" parent="96" name="EMP_ID">
-      <Position>8</Position>
+      <Position>9</Position>
       <DataType>int(8)|0</DataType>
     </column>
     <column id="659" parent="96" name="SERVICE_ID">
-      <Position>9</Position>
+      <Position>10</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
     </column>
@@ -2843,97 +2843,110 @@ processId</ColNames>
       <Position>7</Position>
       <DataType>int(9)|0</DataType>
     </column>
-    <index id="661" parent="96" name="fk_txn_reference_employee1_idx">
+    <column id="661" parent="96" name="HA_REF">
+      <Position>8</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <index id="662" parent="96" name="fk_txn_reference_employee1_idx">
       <ColNames>EMP_ID</ColNames>
     </index>
-    <index id="662" parent="96" name="fk_txn_reference_member1_idx">
+    <index id="663" parent="96" name="fk_txn_reference_member1_idx">
       <ColNames>MEMBER_ID</ColNames>
     </index>
-    <index id="663" parent="96" name="fk_txn_reference_service_type1_idx">
+    <index id="664" parent="96" name="fk_txn_reference_service_type1_idx">
       <ColNames>SERVICE_ID</ColNames>
     </index>
-    <index id="664" parent="96" name="fk_txn_reference_txn_type1_idx">
+    <index id="665" parent="96" name="fk_txn_reference_txn_type1_idx">
       <ColNames>TXN_TYPE</ColNames>
     </index>
-    <index id="665" parent="96" name="fk_txn_reference_bank_loans1">
+    <index id="666" parent="96" name="fk_txn_reference_bank_loans1">
       <ColNames>LOAN_REF</ColNames>
     </index>
-    <key id="666" parent="96" name="PRIMARY">
+    <index id="667" parent="96" name="fk_txn_reference_health_aid_idx">
+      <ColNames>HA_REF</ColNames>
+    </index>
+    <key id="668" parent="96" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>TXN_ID
 MEMBER_ID</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="667" parent="96" name="fk_txn_reference_member1">
+    <foreign-key id="669" parent="96" name="fk_txn_reference_member1">
       <ColNames>MEMBER_ID</ColNames>
       <RefSchemaName>facultyassocnew</RefSchemaName>
       <RefTableName>member</RefTableName>
       <RefColNames>MEMBER_ID</RefColNames>
     </foreign-key>
-    <foreign-key id="668" parent="96" name="fk_txn_reference_txn_type1">
+    <foreign-key id="670" parent="96" name="fk_txn_reference_txn_type1">
       <ColNames>TXN_TYPE</ColNames>
       <RefSchemaName>facultyassocnew</RefSchemaName>
       <RefTableName>txn_type</RefTableName>
       <RefColNames>TYPE_ID</RefColNames>
     </foreign-key>
-    <foreign-key id="669" parent="96" name="fk_txn_reference_bank_loans1">
+    <foreign-key id="671" parent="96" name="fk_txn_reference_bank_loans1">
       <ColNames>LOAN_REF</ColNames>
       <RefSchemaName>facultyassocnew</RefSchemaName>
       <RefTableName>loans</RefTableName>
       <RefColNames>LOAN_ID</RefColNames>
     </foreign-key>
-    <foreign-key id="670" parent="96" name="fk_txn_reference_employee1">
+    <foreign-key id="672" parent="96" name="fk_txn_reference_health_aid">
+      <ColNames>HA_REF</ColNames>
+      <RefSchemaName>facultyassocnew</RefSchemaName>
+      <RefTableName>health_aid</RefTableName>
+      <RefColNames>RECORD_ID</RefColNames>
+    </foreign-key>
+    <foreign-key id="673" parent="96" name="fk_txn_reference_employee1">
       <ColNames>EMP_ID</ColNames>
       <RefSchemaName>facultyassocnew</RefSchemaName>
       <RefTableName>employee</RefTableName>
       <RefColNames>EMP_ID</RefColNames>
     </foreign-key>
-    <foreign-key id="671" parent="96" name="fk_txn_reference_service_type1">
+    <foreign-key id="674" parent="96" name="fk_txn_reference_service_type1">
       <ColNames>SERVICE_ID</ColNames>
       <RefSchemaName>facultyassocnew</RefSchemaName>
       <RefTableName>service_type</RefTableName>
       <RefColNames>SERVICE_ID</RefColNames>
     </foreign-key>
-    <column id="672" parent="97" name="TYPE_ID">
+    <column id="675" parent="97" name="TYPE_ID">
       <Position>1</Position>
       <DataType>int(1)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="673" parent="97" name="TYPE">
+    <column id="676" parent="97" name="TYPE">
       <Position>2</Position>
       <DataType>varchar(45)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="674" parent="97" name="PRIMARY">
+    <key id="677" parent="97" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>TYPE_ID</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="675" parent="98" name="STATUS_ID">
+    <column id="678" parent="98" name="STATUS_ID">
       <Position>1</Position>
       <DataType>int(1)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="676" parent="98" name="STATUS">
+    <column id="679" parent="98" name="STATUS">
       <Position>2</Position>
       <DataType>varchar(45)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="677" parent="98" name="PRIMARY">
+    <key id="680" parent="98" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>STATUS_ID</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="678" parent="99" name="id">
+    <column id="681" parent="99" name="id">
       <Position>1</Position>
       <DataType>int(2)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="679" parent="99" name="type">
+    <column id="682" parent="99" name="type">
       <Position>2</Position>
       <DataType>varchar(45)|0</DataType>
     </column>
-    <key id="680" parent="99" name="PRIMARY">
+    <key id="683" parent="99" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>

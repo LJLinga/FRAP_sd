@@ -7,13 +7,13 @@
     include 'GLOBAL_USER_TYPE_CHECKING.php';
 
 
-    $queryCHECK = "SELECT MAX(LOAN_ID), APP_STATUS from loans where member_id = {$_SESSION['idnum']} ";
+    $queryCHECK = "SELECT MAX(LOAN_ID), LOAN_STATUS , APP_STATUS from loans where member_id = {$_SESSION['idnum']} && app_status != 3 ";
     $resultCHECK = mysqli_query($dbc,$queryCHECK);
     $rowCHECK = mysqli_fetch_assoc($resultCHECK);
 
     if($rowCHECK['LOAN_STATUS'] == 1){ //checks if you have a pending loan
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
 
     }else if($rowCHECK['LOAN_STATUS'] == 2) { //checks if you have a loan that is ongoing.
 
@@ -184,7 +184,6 @@
 
             $incomeTaxDirectory = $realest;
 
-            echo $incomeTaxDirectory;
 
             $incomeTaxCheck = true;
 
@@ -223,7 +222,6 @@
 
             $payslipDirectory = $realest;
 
-            echo $payslipDirectory;
 
             $payslipCheck = true;
 
@@ -263,7 +261,6 @@
 
             $emp_IDDirectory = $realest;
 
-            echo $emp_IDDirectory;
 
             $emp_IDCheck = true;
 
@@ -302,7 +299,6 @@
 
             $gov_IDDirectory = $realest;
 
-            echo $gov_IDDirectory;
 
             $gov_IDCheck = true;
 
