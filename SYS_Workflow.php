@@ -6,16 +6,16 @@
  * Time: 3:48 PM
  */
 
-//include_once('GLOBAL_CLASS_CRUD.php');
-//$crud = new GLOBAL_CLASS_CRUD();
-//require_once('mysql_connect_FA.php');
-//session_start();
-//include('GLOBAL_USER_TYPE_CHECKING.php');
-//include('GLOBAL_CMS_ADMIN_CHECKING.php');
+include_once('GLOBAL_CLASS_CRUD.php');
+$crud = new GLOBAL_CLASS_CRUD();
+require_once('mysql_connect_FA.php');
+session_start();
+include('GLOBAL_USER_TYPE_CHECKING.php');
+include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 $page_title = 'Santinig - Posts Dashboard';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR_Admin.php';
+include 'CMS_SIDEBAR.php';
 
 //$userId = $_SESSION['idnum'];
 
@@ -44,63 +44,46 @@ include 'CMS_SIDEBAR_Admin.php';
                             <thead>
                             <tr>
                                 <th>Workflow</th>
-                                <th>Steps</th>
-                                <th>Personnel</th>
-                                <th>Route</th>
+                                <th>Steps and Personnel</th>
+                                <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>Applications</td>
-                                <td>
-                                    <span class="badge">2 Steps</span><br>
-                                    [1] Review<br>
-                                    [2] Approved<br>
-                                </td>
-                                <td>
-                                    <span class="badge">1 Personnel</span><br>
-                                    Melton Jo<br>
-                                </td>
-                                <td>
-                                    <span class="badge">2 Routes</span><br>
-                                    [1] Approve > [-][2]<br>
-                                    [2] Reject > [-][-]<br>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Applications</td>
-                                <td>
-                                    <span class="badge">2 Steps</span><br>
-                                    [1] Review<br>
-                                    [2] Approved<br>
-                                </td>
-                                <td>
-                                    <span class="badge">1 Personnel</span><br>
-                                    Melton Jo<br>
-                                </td>
-                                <td>
-                                    <span class="badge">2 Routes</span><br>
-                                    [1] Approve > [-][2]<br>
-                                    [2] Reject > [-][-]<br>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Applications</td>
-                                <td>
-                                    <span class="badge">2 Steps</span><br>
-                                    [1] Review<br>
-                                    [2] Approved<br>
-                                </td>
-                                <td>
-                                    <span class="badge">1 Personnel</span><br>
-                                    Melton Jo<br>
-                                </td>
-                                <td>
-                                    <span class="badge">2 Routes</span><br>
-                                    [1] Approve > [-][2]<br>
-                                    [2] Reject > [-][-]<br>
-                                </td>
-                            </tr>
+
+                            <?php
+
+                            $rows = $crud->getData("SELECT pr.id, pr.processName FROM facultyassocnew.process pr WHERE pr.id != 1;");
+                            if(!empty($rows)){
+                                foreach((array) $rows as $key => $row){
+                                    $processId = $row['id'];
+                                    echo '<tr>';
+                                    echo '<td>';
+                                    echo '<b>'.$row['processName'].'</b>';
+                                    echo '</td>';
+                                    echo '<td>';
+                                    $rows2 = $crud->getData("SELECT s.id, s.stepNo, s.stepName FROM steps s WHERE s.processId = '$processId';");
+                                    if(!empty($rows2)){
+                                        foreach((array) $rows2 as $key2 => $row2){
+                                            $stepId = $row2['id'];
+                                            echo '<span class="badge">Step '.$row2['stepNo'].': '.$row2['stepName'].'</span><br>';
+                                            $rows3 = $crud->getData("SELECT r.roleName FROM facultyassocnew.step_roles s JOIN edms_roles r ON s.roleId = r.id WHERE s.stepId = '$stepId'");
+                                            if(!empty($rows3)){
+                                                foreach((array) $rows3 as $key3 => $row3){
+                                                    echo '     <span class="badge">'.$row3['roleName'].'</span><br>';
+                                                }
+                                            }else{
+                                                echo "No personnel yet.";
+                                            }
+                                            echo '<br>';
+                                        }
+                                    }else{
+                                        echo "No steps yet.";
+                                    }
+                                    echo '</td>';
+                                    echo '</tr>';
+                                }
+                            }
+                            ?>
                             </tbody>
                         </table>
                     </div>

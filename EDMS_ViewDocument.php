@@ -40,11 +40,23 @@ if(isset($_GET['docId'])){
     }
 
     // Load Current User Permissions
-    $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su
-                WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
+    $query = "SELECT su.read, su.write, su.route, su.comment FROM step_author su
+                WHERE su.stepId='$currentStepId' LIMIT 1;";
     $rows = $crud->getData($query);
     if(empty($rows)){
-        //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Dashboard.php");
+        $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su
+                WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
+        $rows = $crud->getData($query);
+        if(empty($rows)){
+            //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Dashboard.php");
+        }else{
+            foreach((array) $rows as $key => $row){
+                $read= $row['read'];
+                $write= $row['write'];
+                $route= $row['route'];
+                $comment = $row['comment'];
+            }
+        }
     }else{
         foreach((array) $rows as $key => $row){
             $read= $row['read'];
