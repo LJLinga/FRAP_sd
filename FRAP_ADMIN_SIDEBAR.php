@@ -4,16 +4,19 @@
                     <li id="top">
                         <a href="ADMIN%20dashboard.php"> <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard </a>
                     </li>
-                    
                     <li>
                         <a href="ADMIN FALP manual.php"><i class="fa fa-gears" aria-hidden="true"></i> Manually Add Member </a>
                     </li>
+                   
 
                     <li>
                         <a href="ADMIN%20FALP%20addtomember.php"><i class="fa fa-dollar" aria-hidden="true"></i> Add FALP to Member </a>
                     </li>
                     <li>
                         <a href="ADMIN MEMBERS viewmembers.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;&nbsp;View All Members</a>
+                    </li>
+                     <li>
+                        <a href="ADMIN MEMBER roles.php"><i class="fa fa-group" aria-hidden="true"></i> Member Roles </a>
                     </li>
                     <li>
                         <a href="ADMIN%20Deductions.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;View All Deductions</a>
