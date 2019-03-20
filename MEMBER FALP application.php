@@ -6,39 +6,43 @@
 
     //to check if the user has applied in FALP but this code can be edited to check other applications. e.g. Health aid and shi like th sort
 
-    $query = "SELECT LOAN_ID, LOAN_STATUS, APP_STATUS from loans where member_id = {$_SESSION['idnum']} && app_status != 3 ORDER BY LOAN_ID DESC LIMIT 1";
+    $query = "SELECT * from loans where member_id = {$_SESSION['idnum']} && loan_status != 3 && app_status != 3 ORDER BY LOAN_ID DESC LIMIT 1";
     $result = mysqli_query($dbc,$query);
     $row = mysqli_fetch_assoc($result);
 
+    $queryIfPartTimeLoaned = "SELECT PART_TIME_LOANED from member  where member_id = {$_SESSION['idnum']} ";
+    $resultIfPartTimeLoaned  = mysqli_query($dbc,$queryIfPartTimeLoaned );
+    $ifPartTimeLoaned= mysqli_fetch_assoc($resultIfPartTimeLoaned);
+
+
+
+
+
     if(!empty($row)){
 
-        if($row['LOAN_STATUS'] == 1){ //checks if you have a pending loan
+            if($row['LOAN_STATUS'] == 1){ //checks if you have a pending loan
 
-            header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
+                header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
 
-        }else if($row['LOAN_STATUS'] == 2) { //checks if you have a loan that is ongoing.
+            } else if($row['LOAN_STATUS'] == 2 ) { //checks if you have a loan that is ongoing.
 
-            header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
+                if ($row['PAYMENT_TERMS'] > $row['PAYMENTS_MADE']){ //checks if the loan is
 
-        }
+                    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
+
+
+                }
+
+            }
+
+    }
+
+    if($ifPartTimeLoaned['PART_TIME_LOANED'] == "YES"){
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
 
     }
 
-
-    if(isset($ans)){
-
-        $query2 = "SELECT MAX(LOAN_ID), member_id,amount, amount_paid,date_matured from loans where member_id = {$_SESSION['idnum']} AND date_matured is null AND app_status = 2;";
-        $result2 = mysqli_query($dbc,$query2);
-        $ans = mysqli_fetch_assoc($result2);
-        //this means it checks if you have an on going loan and you have not paid 50% of it.
-					
-		if(!isset($ans['amount_paid'])){
-
-			header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
-			
-		}
-
-    }
 
 
 

@@ -54,7 +54,7 @@ left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SER
 on m.MEMBER_ID = mf.member_id
 left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 2 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) ha
 on m.MEMBER_ID = ha.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 3 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) f
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 4 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) f
 on m.MEMBER_ID = f.member_id
 
 join txn_reference t
@@ -71,7 +71,7 @@ left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SER
 on m.MEMBER_ID = mf.member_id
 left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 2 AND (txn_date between '$yearStart-$monthStart-$dayStart 00:00:00' AND '$yearEnd-$monthEnd-$dayEnd 23:59:59') AND TXN_TYPE =2 group by member_id) ha
 on m.MEMBER_ID = ha.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 3 AND(txn_date between '$yearStart-$monthStart-$dayStart 00:00:00' AND '$yearEnd-$monthEnd-$dayEnd 23:59:59') AND TXN_TYPE =2 group by member_id)  f
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 4 AND(txn_date between '$yearStart-$monthStart-$dayStart 00:00:00' AND '$yearEnd-$monthEnd-$dayEnd 23:59:59') AND TXN_TYPE =2 group by member_id)  f
 on m.MEMBER_ID = f.member_id
 
 join txn_reference t
@@ -206,14 +206,14 @@ $result2=mysqli_query($dbc,$query2);
 
                                         <?php 
                                         while($ans = mysqli_fetch_assoc($result2)){
-                                            $total  =(float)$ans['MFee']+(float)$ans['HAFee']+(float)$ans['FFee'];
+                                            $total  =(float)100+(float)$ans['HAFee']+(float)$ans['FFee'];
 
                                         ?>
                                         <tr>
 
                                         <td align="center"><b><?php echo $ans['ID'];?></b></td>
                                         <td align="center" width="250px"><b><?php echo $ans['FIRST']." ".$ans['MIDDLE']." ".$ans['LAST'];?></b></td>
-                                        <td align="center"><b><?php echo sprintf("%.2f",(float)$ans['MFee']);?></b></td>
+                                        <td align="center"><b><?php echo sprintf("%.2f",(100));?></b></td>
                                         <td align="center"><b><?php echo sprintf("%.2f",(float)$ans['HAFee']);?></b></td>
                                         <td align="center"><b><?php echo sprintf("%.2f",(float)$ans['FFee']);?></b></td>
                                         <td align="center"><b><?php echo sprintf("%.2f",(float)$total);?></b></td>

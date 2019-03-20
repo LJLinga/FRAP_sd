@@ -127,7 +127,7 @@
                                             on  l.LOAN_ID = td.LOAN_REF
                                             join member m
                                             on l.MEMBER_ID = m.MEMBER_ID
-                                            where td.DEDUCTION_DATE >= DATE (NOW())
+                                            where td.DEDUCTION_DATE <= DATE (NOW())
                                             AND td.HAS_PAID = 1
                                             ";
                                             $result = mysqli_query($dbc, $query);

@@ -44,6 +44,8 @@
                             <div>
 
                                 <?php
+
+
                                     $query3 = "SELECT M.DATE_APPROVED, D.DEPT_NAME, US.STATUS
                                     FROM MEMBER M
                                     JOIN ref_department D
@@ -107,10 +109,10 @@
 
                             <div>
 
-                                <?php
-                                echo $row3['STATUS'];
+                                <?php echo $row3['STATUS'];?>
 
-                                ?>
+
+
 
                             </div>
 

@@ -37,10 +37,7 @@
 
     $page_title = 'Loans - Health Applications';
     include 'GLOBAL_HEADER.php';
-    if($_SESSION['FRAP_ROLE']!=5)
-            include 'FRAP_ADMIN_SIDEBAR.php';
-    else
-        include 'FRAP_USER_SIDEBAR.php';
+    include 'FRAP_ADMIN_SIDEBAR.php';
 ?>
 
 <script>

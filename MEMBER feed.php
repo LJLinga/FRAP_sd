@@ -19,8 +19,59 @@ if(empty($_GET['lastTimeStamp'])){
 }
 
 
-$page_title = 'Loans - Dashboard';
+$page_title = 'FRAP Newsfeed';
 include 'GLOBAL_HEADER.php';
+
+
+
+
+//these are the queries used for later for the shit for the left side of the stuffs.
+
+$query3 = "SELECT M.DATE_APPROVED, D.DEPT_NAME, US.STATUS
+                                    FROM MEMBER M
+                                    JOIN ref_department D
+                                    ON M.DEPT_ID = D.DEPT_ID
+                                    JOIN user_status US
+                                    ON M.USER_STATUS = US.STATUS_ID
+                                    WHERE M.MEMBER_ID = {$_SESSION['idnum']}";
+
+$result3 = mysqli_query($dbc, $query3);
+$row3 = mysqli_fetch_array($result3);
+
+
+$dateOfAcceptance = date_create($row3['DATE_APPROVED']);
+
+// queries for the falp
+
+$queryCurrentLoanStatus = "SELECT ls.STATUS 
+                    from loans l
+                    join loan_status ls
+                    on l.LOAN_STATUS = ls.STATUS_ID
+                    WHERE l.MEMBER_ID = {$_SESSION['idnum']}
+                    ORDER BY LOAN_ID DESC 
+                    LIMIT 1";
+
+$queryCurrentLoanResult = mysqli_query($dbc, $queryCurrentLoanStatus);
+$currentLoanStatus = mysqli_fetch_array($queryCurrentLoanResult);
+
+
+
+// health aid
+$queryHealthAidStatus = "SELECT a.STATUS
+                          from health_aid h 
+                          JOIN app_status a 
+                          on a.STATUS_ID = h.APP_STATUS
+                          WHERE h.MEMBER_ID = {$_SESSION['idnum']}
+                          ORDER BY RECORD_ID DESC 
+                          LIMIT 1
+                          ";
+
+$queryCurrentHAResult= mysqli_query($dbc, $queryHealthAidStatus);
+$currentHAStatus = mysqli_fetch_array($queryCurrentHAResult);
+
+// lifetime statuses.
+
+
 
 ?>
 </div>
@@ -28,6 +79,12 @@ include 'GLOBAL_HEADER.php';
 </div>
 
 
+<style>
+    .card {
+        font-family: "Verdana", Georgia, Serif;
+        font-size: 12px;
+    }
+</style>
 
 <div id="content-wrapper">
 
@@ -37,21 +94,20 @@ include 'GLOBAL_HEADER.php';
 
 
             <div class="row">
-                <div class="column col-lg-2" style="margin-top: 1rem;">
+
+                <div class="column col-lg-2" style="margin-top: 2rem; margin-bottom: 2rem;">
 
                     <div class="card" style="margin-top: 1rem;">
                         <div class="card-header">
                             <b> Account Information  </b>
                         </div>
                         <div class="card-body" >
-                            <b>Account Type: </b> Pending/Ongoing/Matured/Declined <br>
-                            <b>Date Accepted.  </b>Pending/Accepted/Declined <br>
-                            <b>Lifetime: </b> Ineligible/ Eligible <br>
+                            <b>Department: </b> <?php echo "Faculty - ";
+                                echo $row3["DEPT_NAME"]; ?> <br>
+                            <b>Member Since: </b><?php echo date_format($dateOfAcceptance, 'F  j,  Y'); ?><br>
+                            <b>User Type: </b>   <?php echo $row3['STATUS'];?> <br>
                         </div>
-                        <div class="card-footer" >
-                            <a href = "ADMIN%20Deductions.php">View All Deductions</a>
-                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                        </div>
+
                     </div>
 
                     <div class="card" style="margin-top: 1rem;">
@@ -59,10 +115,18 @@ include 'GLOBAL_HEADER.php';
                             <b> Faculty Assistance Loan Program </b>
                         </div>
                         <div class="card-body" >
-                            <b> Status: </b> Your Mother Gay
+
+                            <?php if(empty($currentLoanStatus['STATUS'])) {
+                                echo "No Applications yet. Apply using the link below. ";
+                            }else{
+                                echo '<b> Status: </b>';
+                                echo $currentLoanStatus['STATUS'];
+                            }
+                                ?>
+
                         </div>
                         <div class="card-footer" >
-                            <a href = "ADMIN%20Deductions.php">View FALP</a>
+                            <a href = "MEMBER%20FALP%20application.php">View FALP</a>
                             <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                         </div>
                     </div>
@@ -72,7 +136,14 @@ include 'GLOBAL_HEADER.php';
                             <b> Health-Aid Assistance  </b>
                         </div>
                         <div class="card-body" >
-                            <b> Status: </b> Your Mother Gay
+                            <?php if(empty($currentHAStatus['STATUS'])) {
+                                echo "No Applications yet. Apply using the link below. ";
+                            }else{
+                                echo '<b> Status: </b>';
+                                echo $currentHAStatus['STATUS'];
+                            }
+                            ?>
+
                         </div>
                         <div class="card-footer" >
                             <a href = "ADMIN%20Deductions.php">View Health-Aid</a>
@@ -85,7 +156,7 @@ include 'GLOBAL_HEADER.php';
                             <b> Lifetime Membership Status</b>
                         </div>
                         <div class="card-body" >
-                            <b> Status: </b> Your Mother Gay
+                            <b> Status: </b> Eligible
                         </div>
                         <div class="card-footer" >
                             <a href = "ADMIN%20Deductions.php">View Lifetime</a>
@@ -100,9 +171,13 @@ include 'GLOBAL_HEADER.php';
 
 
 
+
                 <div class="column col-lg-6" style="margin-top: 2rem; margin-bottom: 2rem;">
 
                     <?php
+
+
+
 
                     $rows = $crud->getData("SELECT p.id, p.permalink, p.title, p.body, 
                                           CONCAT(a.firstName,' ', a.lastName) AS name, 

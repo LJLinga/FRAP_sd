@@ -32,7 +32,7 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
             //get the current month
             $loanDetails = "SELECT * FROM LOANS WHERE LOAN_ID = {$_SESSION['showFID']}";
-            $loanDetailsResult = mysqli_query($dbc,$query);
+            $loanDetailsResult = mysqli_query($dbc,$loanDetails);
             $loanDetailsRow = mysqli_fetch_assoc($loanDetailsResult);
 
             $currYear = date("Y");

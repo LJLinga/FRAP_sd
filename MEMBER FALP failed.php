@@ -23,42 +23,8 @@
                         <br>
 
                         <div class="well" align="center" style="background-color: white">
-                            <?php
-                                $query = "SELECT MAX(LOAN_ID), AMOUNT_PAID, LOAN_STATUS FROM MEMBER WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
 
-                                $result = mysqli_query($dbc, $query);
-                                $row = mysqli_fetch_array($result);
-
-                            ?>
-
-                        <h1 class="page-header">
-
-                            <?php
-                                if($row['LOAN_STATUS'] = 1) { //checks if his loan is still pending
-                                    ?>
-                                    Please wait for your loan to get approved, as the admins are still reviewing it!
-
-
-                                    <?php
-                                }else{
-                            ?>
-
-                                Not eligible for another FALP
-
-
-                                Still not yet paid 50% of the previous amount(Currently
-                                paid <?php echo sprintf('%0.2f', $row['AMOUNT_PAID']) * 100; ?> % )</h1>
-
-                                <br>
-
-                                Please wait until you have paid 50% before you can apply for another loan. Thank you!
-
-                                <br>
-
-                                <br>
-                            <?php
-                                }
-                            ?>
+                            <h1>You have already loaned once during the term! Wait until the next term for you to be able to loan again!</h1>
 
                             <br>
 
