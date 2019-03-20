@@ -6,20 +6,50 @@
  * Time: 3:48 PM
  */
 
-//include_once('GLOBAL_CLASS_CRUD.php');
-//$crud = new GLOBAL_CLASS_CRUD();
-//require_once('mysql_connect_FA.php');
-//session_start();
-//include('GLOBAL_USER_TYPE_CHECKING.php');
-//include('GLOBAL_CMS_ADMIN_CHECKING.php');
+include_once('GLOBAL_CLASS_CRUD.php');
+$crud = new GLOBAL_CLASS_CRUD();
+require_once('mysql_connect_FA.php');
+session_start();
+include('GLOBAL_USER_TYPE_CHECKING.php');
+include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
-$page_title = 'System Admin - Edit Workflow';
+$page_title = 'System Admin - Edit Process';
 include 'GLOBAL_HEADER.php';
 include 'CMS_SIDEBAR.php';
 
 //include 'SYS_MODAL_ChooseDocument.php';
 
 //$userId = $_SESSION['idnum'];
+
+if(isset($_POST['loadSteps'])){
+  $stepId = $_POST['loadSteps'];
+  $rows = $crud->getData("SELECT * FROM steps WHERE id='$stepId'");
+
+}
+if(isset($_POST['loadRoutes'])){
+    $stepId = $_POST['loadSteps'];
+    $rows = $crud->getData("SELECT * FROM steps WHERE id='$stepId'");
+
+}
+if(isset($_POST['loadRoles'])){
+    $stepId = $_POST['loadSteps'];
+    $rows = $crud->getData("SELECT * FROM steps WHERE id='$stepId'");
+
+}
+
+if(isset($_POST['btnEdit'])){
+
+    $processId = $_POST['btnEdit'];
+    $rows = $crud->getData("");
+
+    // Load steps
+
+    //AJAX saving and loading.
+
+}else{
+    echo 'hehehe';
+}
+
 
 ?>
 <script>
@@ -50,7 +80,7 @@ include 'CMS_SIDEBAR.php';
                 <!-- Steps Card -->
                 <div class="card">
                     <div class="card-header">
-                        Steps
+
                     </div>
                     <div class="class-body">
                         <div class="row" style="margin-top: 1rem;">
@@ -59,7 +89,7 @@ include 'CMS_SIDEBAR.php';
                                 <input type="text" class="form-control input-md option-input" value=" Step 1 Name" onclick="ClickTextbox()">
                             </div>
                             <div class="col-lg-1">
-                                <a href="SYS_EditWorkflow_RoutePersonel.php" class="btn btn-default" style="margin-top: 2.5rem;"><i class="fa fa-fw fa-gear"></i></a>
+                                <a href="SYS_EditSteps.php" class="btn btn-default" style="margin-top: 2.5rem;"><i class="fa fa-fw fa-gear"></i></a>
                                 <!-- <button class="btn btn-default removeStep" style="margin-top: 2rem;"><i class="fa fa-fw fa-trash"></i></button>
                                 <!-- <h4><i class="fa fa-fw fa-plus-circle addStep" style="cursor: pointer; "></i></h4> -->
                             </div>
@@ -101,7 +131,7 @@ include 'CMS_SIDEBAR.php';
             stepnum++;
             let varField = "#fieldLocation" + stepnum;
             //alert(varField);
-            $('#stepLocation').append('<div class="row" style="margin-top: 1rem;"> <div class="col-lg-9" style="margin-left: 2rem;"> <label>Step' + stepnum + '</label> <input type="text" class="form-control input-md option-input" value=" Step '+ stepnum + ' Name"> </div> <div class="col-lg-2"> <a href="SYS_EditWorkflow_RoutePersonel.php" class="btn btn-default" style="margin-top: 2.5rem;"><i class="fa fa-fw fa-gear"></i></a> <button class="btn btn-default removeStep" style="margin-top: 2rem;"><i class="fa fa-fw fa-trash"></i></button> </div> </div>');
+            $('#stepLocation').append('<div class="row" style="margin-top: 1rem;"> <div class="col-lg-9" style="margin-left: 2rem;"> <label>Step' + stepnum + '</label> <input type="text" class="form-control input-md option-input" value=" Step '+ stepnum + ' Name"> </div> <div class="col-lg-2"> <a href="SYS_EditSteps.php" class="btn btn-default" style="margin-top: 2.5rem;"><i class="fa fa-fw fa-gear"></i></a> <button class="btn btn-default removeStep" style="margin-top: 2rem;"><i class="fa fa-fw fa-trash"></i></button> </div> </div>');
             $('.addField').attr('disabled','disabled');
             $('.removeStep').on('click', function(){
                 $(this).closest('.row').remove();
