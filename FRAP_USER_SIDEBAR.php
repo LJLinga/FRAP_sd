@@ -53,6 +53,16 @@
                     </li>
 
                 </ul>
+                <?php 
+                if($_SESSION['FRAP_ROLE']==5){?>
+
+        
+
+                    <li>
+                        <a href="HA HEALTHAID applications.php"><i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;&nbsp;Health Aid Application</a>
+                    </li>
+               
+            <?php }?>
 
             </li>
 

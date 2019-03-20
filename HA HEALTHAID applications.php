@@ -87,6 +87,8 @@
                                         <td align="center"><b>ID Number</b></td>
                                         <td align="center"><b>Name</b></td>
                                         <td align="center"><b>Department</b></td>
+                                        <td align="center"><b>Amount</b></td>
+                                        <td align="center"><b>Reason</b></td>
                                         <td align="center"><b>Actions</b></td>
 
                                         </tr>
