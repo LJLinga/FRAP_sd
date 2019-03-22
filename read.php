@@ -14,7 +14,6 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 
 $userId = $_SESSION['idnum'];
 $postId = '';
-//$cmsRole = $_SESSION['CMS_ROLE'];
 
 if(!empty($_GET['pl'])){
 
@@ -66,23 +65,48 @@ if(!empty($_GET['pl'])){
     header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/feed.php");
 }
 
+//these are the queries used for later for the shit for the left side of the stuffs.
+$query3 = "SELECT M.DATE_APPROVED, D.DEPT_NAME, US.STATUS
+                                    FROM MEMBER M
+                                    JOIN ref_department D
+                                    ON M.DEPT_ID = D.DEPT_ID
+                                    JOIN user_status US
+                                    ON M.USER_STATUS = US.STATUS_ID
+                                    WHERE M.MEMBER_ID = {$_SESSION['idnum']}";
+$result3 = mysqli_query($dbc, $query3);
+$row3 = mysqli_fetch_array($result3);
+$dateOfAcceptance = date_create($row3['DATE_APPROVED']);
+// queries for the falp
+$queryCurrentLoanStatus = "SELECT ls.STATUS 
+                    from loans l
+                    join loan_status ls
+                    on l.LOAN_STATUS = ls.STATUS_ID
+                    WHERE l.MEMBER_ID = {$_SESSION['idnum']}
+                    ORDER BY LOAN_ID DESC 
+                    LIMIT 1";
+$queryCurrentLoanResult = mysqli_query($dbc, $queryCurrentLoanStatus);
+$currentLoanStatus = mysqli_fetch_array($queryCurrentLoanResult);
+// health aid
+$queryHealthAidStatus = "SELECT a.STATUS
+                          from health_aid h 
+                          JOIN app_status a 
+                          on a.STATUS_ID = h.APP_STATUS
+                          WHERE h.MEMBER_ID = {$_SESSION['idnum']}
+                          ORDER BY RECORD_ID DESC 
+                          LIMIT 1
+                          ";
+$queryCurrentHAResult= mysqli_query($dbc, $queryHealthAidStatus);
+$currentHAStatus = mysqli_fetch_array($queryCurrentHAResult);
+// lifetime statuses.
+
 $page_title = $title;
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR.php';
 
 ?>
+</div>
+</nav>
+</div>
 <style>
-    @media screen and (min-width: 1200px) {
-        #calendarColumn{
-            position: fixed;
-            right:1rem;
-        }
-    }
-    @media screen and (max-width: 1199px) {
-        #calendarColumn{
-            position: relative;
-        }
-    }
     .card {
         font-family: "Verdana", Georgia, Serif;
         font-size: 12px;
@@ -93,8 +117,80 @@ include 'CMS_SIDEBAR.php';
 </script>
     <div class="container-fluid">
         <div class="row">
-            <div class="column col-lg-7" style="margin-top: 2rem; margin-bottom: 2rem;"">
-                <div class="card">
+            <div class="column col-lg-2" style="margin-top: 1rem; margin-bottom: 1rem;">
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-header">
+                        <b> Account Information  </b>
+                    </div>
+                    <div class="card-body" >
+                        <b>Department: </b> <?php echo "Faculty - ";
+                        echo $row3["DEPT_NAME"]; ?> <br>
+                        <b>Member Since: </b><?php echo date_format($dateOfAcceptance, 'F  j,  Y'); ?><br>
+                        <b>User Type: </b>   <?php echo $row3['STATUS'];?> <br>
+                    </div>
+                </div>
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-header">
+                        <b> Faculty Assistance Loan Program </b>
+                    </div>
+                    <div class="card-body" >
+
+                        <?php if(empty($currentLoanStatus['STATUS'])) {
+                            echo "No Applications yet. Apply using the link below. ";
+                        }else{
+                            echo '<b> Status: </b>';
+                            echo $currentLoanStatus['STATUS'];
+                        }
+                        ?>
+                    </div>
+                    <div class="card-footer" >
+                        <a href = "MEMBER%20FALP%20application.php">View FALP</a>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-header">
+                        <b> Health-Aid Assistance  </b>
+                    </div>
+                    <div class="card-body" >
+                        <?php if(empty($currentHAStatus['STATUS'])) {
+                            echo "No Applications yet. Apply using the link below. ";
+                        }else{
+                            echo '<b> Status: </b>';
+                            echo $currentHAStatus['STATUS'];
+                        }
+                        ?>
+
+                    </div>
+                    <div class="card-footer" >
+                        <a href = "ADMIN%20Deductions.php">View Health-Aid</a>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-header">
+                        <b> Lifetime Membership Status</b>
+                    </div>
+                    <div class="card-body" >
+                        <b> Status: </b> Eligible
+                    </div>
+                    <div class="card-footer" >
+                        <a href = "ADMIN%20Deductions.php">View Lifetime</a>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="column col-lg-6" style="margin-top: 1rem; margin-bottom: 1rem;">
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-body">
+                        <a href="<?php echo "http://localhost/FRAP_sd/feed.php"?>" ><i class="fa fa-backward"></i> Back to Newsfeed</a>
+                    </div>
+                </div>
+                <div class="card" style="margin-top: 1rem;">
                     <div class="card-body">
                         <h4 class="card-title"><b><?php echo $page_title;?></b></h4>
                         <h5 class="card-subtitle">by <?php echo $author;?> | <?php echo date("F j, Y g:i A ", strtotime($lastUpdated)) ;?></h5>
@@ -107,7 +203,7 @@ include 'CMS_SIDEBAR.php';
                                                     FROM documents d JOIN doc_versions v ON d.documentId = v.documentId
                                                     JOIN employee e ON e.EMP_ID = d.firstAuthorId 
                                                     JOIN steps s ON s.id = d.stepId
-                                                    JOIN process pr ON pr.id = d.processId 
+                                                    JOIN process pr ON pr.id = s.processId 
                                                     JOIN post_ref_versions ref ON ref.versionId = v.versionId
                                                     WHERE ref.postId = '$postId';");
                             if(!empty($rows)) {
@@ -139,40 +235,41 @@ include 'CMS_SIDEBAR.php';
                                 }
                                 echo '</div></div>';
                             }
-                        $rows = $crud->getData("SELECT pl.id, pl.typeId, pl.question 
-                                          FROM facultyassocnew.polls pl 
-                                          JOIN posts pt ON pl.postId = pt.id WHERE pt.id='$postId';");
-                        if(!empty($rows)) {
-                            foreach ((array)$rows as $key => $row) {
-                                $pollId = $row['id'];
-                                echo '<div class="card" style="margin-top: 1rem;">
-                                            <div class="card-header"><b>Question: '.$row['question'].'</b></div>
-                                            <div class="card-body">';
-                                $rowsIfAnswered = $crud->getData("SELECT pr.responderId, po.response 
-                                                      FROM poll_options po JOIN poll_responses pr ON pr.responseId = po.optionId
-                                                      WHERE po.pollId = '$pollId' AND pr.responderId = '$userId' ;");
-                                if(empty($rowsIfAnswered)) {
-                                    $rows2 = $crud->getData("SELECT optionId, response FROM poll_options WHERE pollId = '$pollId';");
-                                    if (!empty($rows)) {
-                                        echo '<form id="submitResponse">';
-                                        echo '<input type="hidden" name="userId" value="' . $userId . '">';
-                                        foreach ((array)$rows2 as $key2 => $row2) {
-                                            if (empty($rowsIfAnswered)) {
-
-                                                echo '<div class="form-check">
-                                                      <input class="form-check-input" type="radio" name="responseId" value="' . $row2['optionId'] . '" required>
-                                                      <label class="form-check-label" for="response">' . $row2['response'] . '</label>
-                                                    </div>';
+                            $rows = $crud->getData("SELECT pl.id, pl.typeId, pl.question 
+                                              FROM polls pl WHERE pl.postId='$postId';");
+                            if(!empty($rows)) {
+                                foreach ((array)$rows as $key => $row) {
+                                    $pollId = $row['id'];
+                                    echo '<div class="card" style="margin-top: 1rem;">
+                                                <div class="card-header"><b>Question: '.$row['question'].'</b></div>
+                                                <div class="card-body">';
+                                    $rowsIfAnswered = $crud->getData("SELECT pr.responderId, po.response 
+                                                          FROM poll_options po JOIN poll_responses pr ON pr.responseId = po.optionId
+                                                          WHERE po.pollId = '$pollId' AND pr.responderId = '$userId' ;");
+                                    if(empty($rowsIfAnswered)) {
+                                        $rows2 = $crud->getData("SELECT optionId, response FROM poll_options WHERE pollId = '$pollId';");
+                                        if (!empty($rows)) {
+                                            echo '<form id="submitResponse">';
+                                            echo '<input type="hidden" name="userId" value="' . $userId . '">';
+                                            foreach ((array)$rows2 as $key2 => $row2) {
+                                                if (empty($rowsIfAnswered)) {
+                                                    echo '<div class="form-check">
+                                                          <input class="form-check-input" type="radio" name="responseId" value="' . $row2['optionId'] . '" checked>
+                                                          <label class="form-check-label" for="response">' . $row2['response'] . '</label>
+                                                        </div>';
+                                                }
                                             }
-                                        }echo '</form>';
-                                        echo '<button type="button" class="btn btn-default btn-sm" onclick="respond(this,&quot;' . $pollId . '&quot;)">Submit Response</button>';
+                                            echo '<button type="button" class="btn btn-default btn-sm" onclick="respond(this,&quot;' . $pollId . '&quot;)">Submit Response</button>';
+                                            echo '</form>';
+                                        }
+                                    }else{
+                                        echo '<div><span class="badge badge-success">You responded "'.$rowsIfAnswered[0]['response'].'"</span></div>';
                                     }
-                                }else{
-                                    echo '<div><span class="badge">You responded "'.$rowsIfAnswered[0]['response'].'"</span></div>';
                                     echo '<span class="loadResults">';
-                                    $rows3 = $crud->getData("SELECT COUNT(DISTINCT(pr.responderId))  as responseCount, pr.responseId, po.response FROM facultyassocnew.poll_responses pr
-                                    JOIN poll_options po ON pr.responseId = po.optionId 
-                                    JOIN polls p ON po.pollId = p.id WHERE p.id='$pollId' GROUP BY po.optionId;");
+                                    $rows3 = $crud->getData("SELECT COUNT(DISTINCT(pr.responderId))  as responseCount, pr.responseId, po.response 
+                                        FROM facultyassocnew.poll_responses pr
+                                        JOIN poll_options po ON pr.responseId = po.optionId 
+                                        JOIN polls p ON po.pollId = p.id WHERE p.id='$pollId' GROUP BY po.optionId;");
                                     $data = '';
                                     $total = 0;
                                     if(!empty($rows3)) {
@@ -183,7 +280,7 @@ include 'CMS_SIDEBAR.php';
                                             $percent = (int) $row3['responseCount'] / $total * 100;
                                             $percent = round($percent, 2);
                                             $data .= '<label>'.$row3['response'].'</label>';
-                                            $data .= ' ('.$row3['responseCount'].' out of '.$total.')';
+                                            $data .= ' ('.$row3['responseCount'].' out of '.$total.' votes)';
                                             $data .= '<div class="progress">';
                                             $data .= '<div class="progress-bar progress-bar-success" role="progressbar" style="width: '.$percent.'%;" aria-valuenow="'.$percent.'" aria-valuemin="0" aria-valuemax="100">'.$percent.'%</div>';
                                             $data .= '</div>';
@@ -191,10 +288,9 @@ include 'CMS_SIDEBAR.php';
                                     }
                                     echo $data;
                                     echo '</span>';
+                                    echo '</div></div>';
                                 }
-                                echo '</div></div>';
                             }
-                        }
                         ?>
                     </div>
                 </div>
@@ -222,6 +318,7 @@ include 'CMS_SIDEBAR.php';
         </div>
     </div>
 
+
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
@@ -248,7 +345,6 @@ include 'CMS_SIDEBAR.php';
             </div>
 
         </form>
-
     </div>
 </div>
 <script>
@@ -322,7 +418,6 @@ include 'CMS_SIDEBAR.php';
         loadResults($('.loadResults'), '<?php echo $pollId; ?>');
 
     });
-
     function loadResults(element,pollId){
         setInterval(function(){
             $.ajax({
@@ -336,11 +431,10 @@ include 'CMS_SIDEBAR.php';
             });
         }, 5000);
     }
-
     function respond(element, pollId){
         var form = $(element).closest('form').serialize();
-        var span = $(element).closest('form').find('.loadResponses');
-        element.remove();
+        var span = $(element).closest('div.card-body').find('span.loadResults');
+        $(element).closest('form').remove();
         $.ajax({
             url:"read_AJAX_Respond.php",
             method:"POST",
@@ -348,7 +442,7 @@ include 'CMS_SIDEBAR.php';
             dataType: "JSON",
             success:function(data)
             {
-                loadResults(span,pollId);
+                //loadResults(span,pollId);
             }
         });
     }

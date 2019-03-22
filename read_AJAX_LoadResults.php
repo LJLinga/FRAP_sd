@@ -24,7 +24,7 @@ if(isset($_POST['pollId'])){
             $percent = (int) $row['responseCount'] / $total * 100;
             $percent = round($percent, 2);
             $data .= '<label>'.$row['response'].'</label>';
-            $data .= ' ('.$row['responseCount'].' out of '.$total.')';
+            $data .= ' ('.$row['responseCount'].' out of '.$total.' votes)';
             $data .= '<div class="progress">';
             $data .= '<div class="progress-bar progress-bar-success" role="progressbar" style="width: '.$percent.'%;" aria-valuenow="'.$percent.'" aria-valuemin="0" aria-valuemax="100">'.$percent.'%</div>';
             $data .= '</div>';

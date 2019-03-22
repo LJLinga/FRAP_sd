@@ -258,7 +258,8 @@ include 'CMS_SIDEBAR.php';
             content.froalaEditor("edit.off");
             $('#form :input').attr("disabled", true);
             $('.btn').attr("disabled", false);
-            $('.btn-danger').attr("disabled", true);
+            $('.removePoll').attr("disabled", true);
+            $('#btnAddQuestion').attr("disabled", true);
         }
 
         content.on('froalaEditor.contentChanged', function (e, editor) {
@@ -392,7 +393,7 @@ include 'CMS_SIDEBAR.php';
             "                                        <input id=\"post_question\" name=\"post_question\" type=\"text\" placeholder=\"Put your question here...\" class=\"form-control input-md\" required>\n" +
             "                                    </div>\n" +
             "                                    <div class=\"col-lg-1\">\n" +
-            "                                        <button type=\"button\" class=\"btn btn-danger\" onclick=\"removePoll(this)\"><i class=\"fa fa-trash\"></i></button>\n" +
+            "                                        <button type=\"button\" class=\"btn btn-danger removePoll\" onclick=\"removePoll(this)\"><i class=\"fa fa-trash\"></i></button>\n" +
             "                                    </div>\n" +
             "                                </div>\n" +
             "                            </div>\n" +
@@ -504,7 +505,7 @@ include 'CMS_SIDEBAR.php';
                     <span id="toRemovePolls"></span>
 
                     <?php
-                        if(!isset($pollId)) echo '<button type="button" class="btn btn-default" onclick="addPoll(this)"><i class="fa fa-fw fa-plus"></i>Add Question</button>';
+                        if(!isset($pollId)) echo '<button type="button" id="btnAddQuestion" class="btn btn-default" onclick="addPoll(this)"><i class="fa fa-fw fa-plus"></i>Add Question</button>';
                     ?>
                     <div class="card" style="margin-top: 1rem;">
                         <div class="card-body">

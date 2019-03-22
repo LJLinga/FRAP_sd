@@ -76,7 +76,7 @@
             <ul class="nav navbar-right top-nav"> <!-- Top Menu Items / Notifications area -->
 
                 <li>
-                    <a href="MEMBER%20feed.php"> Home </a>
+                    <a href="feed.php"> Home </a>
                 </li>
 
                 <li>
