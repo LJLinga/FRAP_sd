@@ -28,8 +28,13 @@
 
         $_SESSION['showHAMID'] = $row['MEMBER_ID']; //assigns the member id of the record id
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN HEALTHAID appdetails.php");
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/HA MEMBER appdetails.php");
 
+    }
+    else if(isset($_POST['pickup'])){
+        $query = "UPDATE health_aid set PICKUP_STATUS = 4  WHERE RECORD_ID = {$_POST['pickup']}";
+        $result = mysqli_query($dbc, $query);
+        $row = mysqli_fetch_array($result);
     }
 
 
@@ -37,9 +42,7 @@
 
     $page_title = 'Loans - Health Applications';
     include 'GLOBAL_HEADER.php';
-    if($_SESSION['FRAP_ROLE']!=5)
-            include 'FRAP_ADMIN_SIDEBAR.php';
-    else
+    
         include 'FRAP_USER_SIDEBAR.php';
 ?>
 
@@ -99,13 +102,13 @@
 
                                         <?php
 
-                                            $query = "SELECT HA.DATE_APPLIED, HA.RECORD_ID,  M.MEMBER_ID, M.FIRSTNAME, M.LASTNAME, RD.DEPT_NAME 
+                                            $query = "SELECT HA.DATE_APPLIED, HA.RECORD_ID,  M.MEMBER_ID, M.FIRSTNAME, M.LASTNAME, RD.DEPT_NAME,HA.AMOUNT,HA.REASON,HA.PICKUP_STATUS 
                                                       FROM MEMBER M 
                                                       JOIN HEALTH_AID HA 
                                                       ON M.MEMBER_ID = HA.MEMBER_ID 
                                                       JOIN REF_DEPARTMENT RD 
                                                       ON M.DEPT_ID = RD.DEPT_ID 
-                                                      WHERE HA.APP_STATUS='1';";
+                                                      WHERE HA.APP_STATUS='1' || HA.PICKUP_STATUS = 3;";
 
                                             $result = mysqli_query($dbc, $query);
                                             
@@ -116,10 +119,21 @@
                                                         <td align='center'>". $resultRow['MEMBER_ID'] ."</td>
                                                         <td align='center'>". $resultRow['FIRSTNAME'] . " " .$resultRow['LASTNAME'] ."</td>
                                                         <td align='center'>". $resultRow['DEPT_NAME'] ."</td>
-                                                        <td align='center'>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn-xs btn-success' name='details' value='". $resultRow['RECORD_ID'] ."'>Details</button>&nbsp;&nbsp;&nbsp;</td>
-                                                    </tr>
-                                                ";
-                                            }
+                                                        <td align='center'>". $resultRow['AMOUNT'] ."</td>
+                                                        <td align='center'>". $resultRow['REASON'] ."</td>";
+
+                                                if($resultRow['PICKUP_STATUS']!=3)
+                                                    echo "
+                                                        <td align='center'>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn-xs btn-success' name='details' value='". $resultRow['RECORD_ID'] ."'>Details</button>&nbsp;&nbsp;&nbsp;</td>";
+                                                else{
+                                                    echo "<td align='center'>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn-xs btn-success' name='pickup' value='". $resultRow['RECORD_ID'] ."'>Picked Up</button>&nbsp;&nbsp;&nbsp;</td>";
+                                                }
+                                                    
+
+                                                echo "</tr>"
+                                                ;
+                                                }
+                                            
 
 
 
