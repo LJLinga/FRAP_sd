@@ -24,14 +24,6 @@
             </li>
 
             <li>
-                <a href="CMS_PollsDashboard.php"><i class="fa fa-fw fa-question" aria-hidden="true"></i> Polls</a>
-            </li>
-
-            <li>
-                <a href="CMS_AddPoll.php"><i class="fa fa-fw fa-question-circle-o" aria-hidden="true"></i> Add Poll</a>
-            </li>
-
-            <li>
                 <a href="CMS_Statistics.php"><i class="fa fa-fw fa-dashboard" aria-hidden="true"></i> Reports </a>
             </li>
 

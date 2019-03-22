@@ -265,10 +265,10 @@ include 'GLOBAL_HEADER.php';
                                     }else{
                                         echo '<div><span class="badge badge-success">You responded "'.$rowsIfAnswered[0]['response'].'"</span></div>';
                                     }
-                                    echo '<span class="loadResults">';
-                                    $rows3 = $crud->getData("SELECT COUNT(DISTINCT(pr.responderId))  as responseCount, pr.responseId, po.response 
+                                    echo '<span id="loadResults">';
+                                    $rows3 = $crud->getData("SELECT COUNT(DISTINCT(pr.responderId))  as responseCount, pr.responseId, po.response
                                         FROM facultyassocnew.poll_responses pr
-                                        JOIN poll_options po ON pr.responseId = po.optionId 
+                                        JOIN poll_options po ON pr.responseId = po.optionId
                                         JOIN polls p ON po.pollId = p.id WHERE p.id='$pollId' GROUP BY po.optionId;");
                                     $data = '';
                                     $total = 0;
@@ -415,7 +415,8 @@ include 'GLOBAL_HEADER.php';
             $('#comment_name').focus();
         });
 
-        loadResults($('.loadResults'), '<?php echo $pollId; ?>');
+        //$('#loadResults').hide();
+        loadResults($('#loadResults'), '<?php echo $pollId; ?>');
 
     });
     function loadResults(element,pollId){
