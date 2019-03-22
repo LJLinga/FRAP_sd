@@ -32,6 +32,18 @@ if(isset($_POST['btnSubmit'])){
             }
         }
 
+        if(isset($_POST['option']) && isset($_POST['post_question'])) {
+            $question = $_POST['post_question'];
+            $typeId = $_POST['responseType'];
+            $pollId = $crud->executeGetKey("INSERT INTO polls(postId, typeId, question) VALUES ('$postId','$typeId','$question')");
+            $options = $_POST['option'];
+
+            foreach((array) $options AS $key => $ref){
+                $query = "INSERT INTO poll_options(pollId,response) VALUES ('$pollId','$ref');";
+                $crud->execute($query);
+            }
+        }
+
         if($status=='3' && $cmsRole=='3'){
             $crud->execute("UPDATE posts SET reviewedById='$userId' WHERE id='$postId';");
         }
@@ -74,6 +86,8 @@ include 'CMS_SIDEBAR.php';
             $('#btnRefModal').on('click', function(){
                 reloadDataTable();
             });
+
+            /// Recently added for polls
         });
 
 
@@ -119,13 +133,72 @@ include 'CMS_SIDEBAR.php';
             reloadDataTable();
         }
 
-        function removeRef(element){
+        function removeRef(element) {
             $(element).closest('div.card').remove();
         }
 
+        function removePoll(element){
+            $(element).closest('div.card').remove();
+            $('#questionCardArea').append("<button type=\"button\" class=\"btn btn-default\" onclick=\"addPoll(this)\"><i class=\"fa fa-fw fa-plus\"></i>Add Question</button>");
+        }
+        function removeResponse(element){
+            $(element).closest('.fieldRow').remove();
+        }
+        function addResponse(element){
+            $('.fieldRow').last().after('<div class="row fieldRow"><br>\n' +
+                '                                        <div class="col-lg-10">\n' +
+                '                                            <input name="option[]" type="text" class="form-control input-md option-input" placeholder="Add an answer" required>\n' +
+                '                                        </div>\n' +
+                '                                        <div class="col-lg-2">\n' +
+                '                                            <button type="button" class="btn btn-danger" onclick="removeResponse(this)"><i class="fa fa-trash"></i></button>\n' +
+                '                                        </div>\n' +
+                '                                    </div>');
+
+        }
+        function addPoll(element){
+            $(element).remove();
+            $('#questionCardArea').append("<div class=\"card\" id=\"questionCard\">\n" +
+                "                            <div class=\"card-header\">\n" +
+                "                                <div class=\"row fieldRow\">\n" +
+                "                                    <div class=\"col-lg-2\">\n" +
+                "                                        <b>Question: </b>\n" +
+                "                                    </div>\n" +
+                "                                    <div class=\"col-lg-9\">\n" +
+                "                                        <input id=\"post_question\" name=\"post_question\" type=\"text\" placeholder=\"Put your question here...\" class=\"form-control input-md\" required>\n" +
+                "                                    </div>\n" +
+                "                                    <div class=\"col-lg-1\">\n" +
+                "                                        <button type=\"button\" class=\"btn btn-danger\" onclick=\"removePoll(this)\"><i class=\"fa fa-trash\"></i></button>\n" +
+                "                                    </div>\n" +
+                "                                </div>\n" +
+                "                            </div>\n" +
+                "                            <div class=\"card-body\">\n" +
+                "                                <div class=\"form-group\">\n" +
+                "                                    <label>Response Type</label>\n" +
+                "                                    <select name=\"responseType\" class=\"form-control\">\n" +
+                "                                        <option value=\"1\" selected>Single Response</option>\n" +
+                "                                        <option value=\"2\">Multiple Response</option>\n" +
+                "                                    </select>\n" +
+                "                                </div>"+
+                "                                <div class=\"form-group fieldGroup\">\n" +
+                "                                    <label>Responses</label>\n" +
+                "                                    <div class=\"row fieldRow\">\n" +
+                "                                        <div class=\"col-lg-10\">\n" +
+                "                                            <input name=\"option[]\" type=\"text\" class=\"form-control input-md option-input\" placeholder=\"Add an answer\" required>\n" +
+                "                                        </div>\n" +
+                "                                    </div>\n" +
+                "                                    <br>\n" +
+                "                                    <div class=\"row fieldRow\">\n" +
+                "                                        <div class=\"col-lg-10\">\n" +
+                "                                            <input name=\"option[]\" type=\"text\" class=\"form-control input-md option-input\" placeholder=\"Add an answer\" required>\n" +
+                "                                        </div>\n" +
+                "                                    </div>\n" +
+                "                                    <br>\n" +
+                "                                    <button type=\"button\" class=\"btn btn-default addResponse\" onclick=\"addResponse(this)\" >Add Option</button>\n" +
+                "                                </div>\n" +
+                "                            </div>\n" +
+                "                        </div>");
+        }
     </script>
-
-
 
     <div id="content-wrapper">
         <div class="container-fluid">
@@ -152,6 +225,10 @@ include 'CMS_SIDEBAR.php';
                             <label for="post_content">Content</label>
                             <textarea name="post_content" id="post_content"></textarea>
                         </div>
+                        <!-- Editing view -->
+                        <span id="questionCardArea">
+                        </span>
+                        <button type="button" class="btn btn-default" onclick="addPoll(this)"><i class="fa fa-fw fa-plus"></i>Add Question</button>
                     </div>
                     <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
 

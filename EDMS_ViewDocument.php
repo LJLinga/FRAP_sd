@@ -21,7 +21,7 @@ if(isset($_GET['docId'])){
     $documentId = $_GET['docId'];
 
     // Load Process and Steps assigned to current document
-    $query = "SELECT d.stepId, p.processName, s.stepName,
+    $query = "SELECT d.stepId, p.processName, s.stepName, s.isFinal,
               d.availabilityId, d.lockedById, d.statusId, st.statusName
               FROM documents d 
               JOIN steps s ON d.stepId = s.id 
@@ -37,6 +37,7 @@ if(isset($_GET['docId'])){
         $lockedById = $row['lockedById'];
         $statusId = $row['statusId'];
         $statusName = $row['statusName'];
+        $isFinal = $row['isFinal'];
     }
 
     // Load Current User Permissions
@@ -92,11 +93,6 @@ if(isset($_GET['docId'])){
         $title = $row['title'];
         $filePath = $row['filePath'];
         $availability = $row['availabilityId'];
-    }
-
-    if($firstAuthorId == $userId || $currentAuthorId == $userId){
-        $read = '2';
-        $comment = '2';
     }
 
 }else{
@@ -249,17 +245,17 @@ include 'EDMS_SIDEBAR.php';
                                     //Later
                                     //echo '<button class="btn btn-info" style="text-align: left; width: 100%;" type="button" id="btnAssignTask">Change Type</button>';
                                 }else if(isset($route) && $route=='2') {
+                                    if($statusId == 1){
+                                        echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
+                                        echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$documentId.'">Reject</button>';
+                                    }else if($statusId == 2){
+                                        echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$documentId.'">Reject</button>';
+                                    }else if($statusId == 3){
+                                        echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
+                                    }
                                     $query = "SELECT id, routeName FROM step_routes WHERE stepId ='$currentStepId';";
                                     $rows = $crud->getData($query);
                                     if (!empty($rows)) {
-                                        if($statusId == 1){
-                                            echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
-                                            echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$documentId.'">Reject</button>';
-                                        }else if($statusId == 2){
-                                            echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$documentId.'">Reject</button>';
-                                        }else if($statusId == 3){
-                                            echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
-                                        }
                                         echo '<input type="hidden" name="documentId" value="'.$documentId.'">';
                                         foreach ((array)$rows as $key => $row) {
                                             echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnRoute" value="'.$row['id'].'">'.$row['routeName'].'</button>';

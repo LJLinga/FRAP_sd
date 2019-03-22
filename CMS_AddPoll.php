@@ -73,8 +73,11 @@ include 'CMS_SIDEBAR.php';
                                         <div class="col-lg-10">
                                             <input name="option[]" type="text" class="form-control input-md option-input" placeholder="Add an answer" required>
                                         </div>
-                                        <div class="col-lg-2">
-                                            <button type="button" class="btn btn-danger removeField"><i class="fa fa-trash"></i></button>
+                                    </div>
+                                    <br>
+                                    <div class="row fieldRow">
+                                        <div class="col-lg-10">
+                                            <input name="option[]" type="text" class="form-control input-md option-input" placeholder="Add an answer" required>
                                         </div>
                                     </div>
                                     <br>
@@ -95,26 +98,11 @@ include 'CMS_SIDEBAR.php';
 
     <script>
         $(document).ready( function(){
-            $('.addField').attr('disabled',true);
-            $('.addField').closest('.form-group').find('input').last().keyup(function(){
-                if($(this).val().length !=0)
-                    $('.addField').attr('disabled', false);
-                else
-                    $('.addField').attr('disabled', true);
-            });
-
-            // $('.option-input').on('keyup', function(){
-            //     $('.addField').attr('disabled', function(){
-            //         $('.option-input').each(function(){
-            //             return($(this).val().length === 0);
-            //         });
-            //     });
-            // });
-
+            disabledAddResponse($('.addField'));
             $('.addField').on('click', function(){
                 $('.fieldRow').last().after('<div class="row fieldRow"><br>\n' +
                     '                                        <div class="col-lg-10">\n' +
-                    '                                            <input name="option[]" type="text" class="form-control input-md option-input" placeholder="Add an answer">\n' +
+                    '                                            <input name="option[]" type="text" class="form-control input-md option-input" placeholder="Add an answer" required>\n' +
                     '                                        </div>\n' +
                     '                                        <div class="col-lg-2">\n' +
                     '                                            <button type="button" class="btn btn-danger removeField"><i class="fa fa-trash"></i></button>\n' +
@@ -123,23 +111,19 @@ include 'CMS_SIDEBAR.php';
                 $('.removeField').on('click', function(){
                     $(this).closest('.fieldRow').remove();
                 });
-                $('.addField').attr('disabled',true);
-                $('.addField').closest('.form-group').find('input').last().keyup(function(){
-                    if($(this).val().length !=0)
-                        $('.addField').attr('disabled', false);
-                    else
-                        $('.addField').attr('disabled',true);
-                });
-                // $('.option-input').on('keyup', function(){
-                //     $('.addField').attr('disabled', function(){
-                //         $('.option-input').each(function(){
-                //             return($(this).val().length === 0);
-                //         });
-                //     });
-                // });
+                disabledAddResponse($('.addField'));
             });
-
         });
+
+        function disabledAddResponse(element){
+            element.attr('disabled',true);
+            element.closest('.form-group').find('input').last().keyup(function(){
+                if($(this).val().length !=0)
+                    $(element).attr('disabled', false);
+                else
+                    $(element).attr('disabled', true);
+            });
+        }
 
     </script>
 <?php include 'GLOBAL_FOOTER.php' ?>

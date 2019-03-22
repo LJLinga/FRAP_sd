@@ -135,11 +135,15 @@ if(isset($_POST['btnEdit'])){
     header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_EditPost.php?postId=" . $postId);
 }
 
-
 if(isset($_POST['btnUnlock'])){
     $availQuery = "UPDATE posts SET availabilityId='2' WHERE id='$postId'";
     $crud->execute($availQuery);
     header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_EditPost.php?postId=" . $postId);
+}
+
+if(isset($_POST['btnRestore'])){
+    $status = $_POST['btnRestore'];
+    $crud->execute("UPDATE posts SET statusId = '$status' WHERE id='$postId';");
 }
 
 if(isset($_POST['btnSubmit'])) {
@@ -151,7 +155,7 @@ if(isset($_POST['btnSubmit'])) {
     if(isset($_POST['toRemoveDocRefs'])) {
         $toRemoveDocRefs = $_POST['toRemoveDocRefs'];
         foreach((array) $toRemoveDocRefs AS $key => $ref){
-            $query = "DELETE FROM post_ref_versions WHERE postId = $postId AND versionId = $ref";
+            $query = "DELETE FROM post_ref_versions WHERE postId = '$postId' AND versionId = '$ref'";
             $crud->execute($query);
         }
     }
@@ -160,6 +164,42 @@ if(isset($_POST['btnSubmit'])) {
         $toAddDocRefs = $_POST['toAddDocRefs'];
         foreach((array) $toAddDocRefs AS $key => $ref){
             $query = "INSERT INTO post_ref_versions(postId,versionId) VALUES ('$postId','$ref');";
+            $crud->execute($query);
+        }
+    }
+
+    if(isset($_POST['toRemovePolls'])) {
+        $toRemovePolls = $_POST['toRemovePolls'];
+        foreach((array) $toRemovePolls AS $key => $ref){
+            $query = "DELETE FROM polls WHERE id = '$ref'";
+            $crud->execute($query);
+        }
+    }
+
+    if(isset($_POST['toUpdatePollId']) && isset($_POST['toUpdatePollQuestion']) && isset($_POST['toUpdateTypeId'])){
+        $typeId = $_POST['toUpdateTypeId'];
+        $question = $_POST['toUpdatePollQuestion'];
+        $pollId = $_POST['toUpdatePollId'];
+        $crud->execute("UPDATE polls SET typeId = '$typeId', question = '$question' WHERE id = '$pollId'");
+    }
+
+    if(isset($_POST['toUpdateOptionId']) && isset($_POST['toUpdateOptionContent'])) {
+        $pollId = $_POST['toUpdatePollId'];
+        $toUpdateId = $_POST['toUpdateOptionId'];
+        $toUpdateContent = $_POST['toUpdateOptionContent'];
+        foreach((array) $toUpdateContent AS $key => $ref){
+            $optionId = $toUpdateId[$key];
+            $crud->execute("UPDATE poll_options SET response = '$ref' WHERE pollId = '$pollId' AND optionId = '$optionId';");
+        }
+    }
+
+    if(isset($_POST['option']) && isset($_POST['post_question'])) {
+        $question = $_POST['post_question'];
+        $typeId = $_POST['responseType'];
+        $pollId = $crud->executeGetKey("INSERT INTO polls(postId, typeId, question) VALUES ('$postId','$typeId','$question')");
+        $options = $_POST['option'];
+        foreach((array) $options AS $key => $ref){
+            $query = "INSERT INTO poll_options(pollId,response) VALUES ('$pollId','$ref');";
             $crud->execute($query);
         }
     }
@@ -187,16 +227,6 @@ if(isset($_POST['btnSubmit'])) {
 }
 
 
-if(isset($_POST['btnRestore'])){
-    $status = $_POST['btnRestore'];
-    $crud->execute("UPDATE posts SET statusId = '$status' WHERE id='$postId';");
-}
-
-// ACTION BUTTONS
-// SAVE BUTTON
-//
-
-
 $page_title = 'Santinig - Edit Post';
 include 'GLOBAL_HEADER.php';
 include 'CMS_SIDEBAR.php';
@@ -212,6 +242,9 @@ include 'CMS_SIDEBAR.php';
         let content = $('#post_content');
 
         $('#btnUpdate').hide();
+        $('#form :input').on('keyup', function(){
+            $('#btnUpdate').show();
+        });
 
         content.froalaEditor({
             videoUpload: false,
@@ -223,13 +256,12 @@ include 'CMS_SIDEBAR.php';
 
         if(mode==='view' || mode==='view_with_button'){
             content.froalaEditor("edit.off");
+            $('#form :input').attr("disabled", true);
+            $('.btn').attr("disabled", false);
+            $('.btn-danger').attr("disabled", true);
         }
 
         content.on('froalaEditor.contentChanged', function (e, editor) {
-            $('#btnUpdate').show();
-        });
-
-        $('#post_title').on('keyup', function(){
             $('#btnUpdate').show();
         });
 
@@ -285,7 +317,6 @@ include 'CMS_SIDEBAR.php';
         });
 
     });
-
     function reloadDataTable(){
         let loadedRefs = [];
         $(".refDocuments").each(function() {
@@ -307,13 +338,11 @@ include 'CMS_SIDEBAR.php';
             ]
         });
     }
-
     function removeRef(element, verId){
         $(element).closest('div.card').remove();
         $('#toRemoveDocRefs').append('<input type="hidden" name="toRemoveDocRefs[]" value="'+verId+'">');
         $('#btnUpdate').show();
     }
-
     function addRef(element, verId, oA, cA, vN, uO, t, pN, fP, fN){
         $('#noRefsYet').remove();
         $('#btnUpdate').show();
@@ -332,6 +361,67 @@ include 'CMS_SIDEBAR.php';
             'on: <i>'+uO+'</i><br>'+
             '</div></div></div>');
         reloadDataTable();
+    }
+    function removePoll(element, pollId){
+        $(element).closest('div.card').remove();
+        $('#questionCardArea').append("<button type=\"button\" class=\"btn btn-default\" onclick=\"addPoll(this)\"><i class=\"fa fa-fw fa-plus\"></i>Add Question</button>");
+        $('#toRemovePolls').append('<input type="hidden" name="toRemovePolls[]" value="'+pollId+'">');
+    }
+    function removeResponse(element){
+        $(element).closest('.fieldRow').remove();
+    }
+    function addResponse(element){
+        $('.fieldRow').last().after('<div class="row fieldRow"><br>\n' +
+            '                                        <div class="col-lg-10">\n' +
+            '                                            <input name="option[]" type="text" class="form-control input-md option-input" placeholder="Add an answer" required>\n' +
+            '                                        </div>\n' +
+            '                                        <div class="col-lg-2">\n' +
+            '                                            <button type="button" class="btn btn-danger" onclick="removeResponse(this)"><i class="fa fa-trash"></i></button>\n' +
+            '                                        </div>\n' +
+            '                                    </div>');
+    }
+    function addPoll(element){
+        $(element).remove();
+        $('#questionCardArea').append("<div class=\"card\" id=\"questionCard\">\n" +
+            "                            <div class=\"card-header\">\n" +
+            "                                <div class=\"row fieldRow\">\n" +
+            "                                    <div class=\"col-lg-2\">\n" +
+            "                                        <b>Question: </b>\n" +
+            "                                    </div>\n" +
+            "                                    <div class=\"col-lg-9\">\n" +
+            "                                        <input id=\"post_question\" name=\"post_question\" type=\"text\" placeholder=\"Put your question here...\" class=\"form-control input-md\" required>\n" +
+            "                                    </div>\n" +
+            "                                    <div class=\"col-lg-1\">\n" +
+            "                                        <button type=\"button\" class=\"btn btn-danger\" onclick=\"removePoll(this)\"><i class=\"fa fa-trash\"></i></button>\n" +
+            "                                    </div>\n" +
+            "                                </div>\n" +
+            "                            </div>\n" +
+            "                            <div class=\"card-body\">\n" +
+            "                                <div class=\"form-group\">\n" +
+            "                                    <label>Response Type</label>\n" +
+            "                                    <select name=\"responseType\" class=\"form-control\">\n" +
+            "                                        <option value=\"1\" selected>Single Response</option>\n" +
+            "                                        <option value=\"2\">Multiple Response</option>\n" +
+            "                                    </select>\n" +
+            "                                </div>"+
+            "                                <div class=\"form-group fieldGroup\">\n" +
+            "                                    <label>Responses</label>\n" +
+            "                                    <div class=\"row fieldRow\">\n" +
+            "                                        <div class=\"col-lg-10\">\n" +
+            "                                            <input name=\"option[]\" type=\"text\" class=\"form-control input-md option-input\" placeholder=\"Add an answer\" required>\n" +
+            "                                        </div>\n" +
+            "                                    </div>\n" +
+            "                                    <br>\n" +
+            "                                    <div class=\"row fieldRow\">\n" +
+            "                                        <div class=\"col-lg-10\">\n" +
+            "                                            <input name=\"option[]\" type=\"text\" class=\"form-control input-md option-input\" placeholder=\"Add an answer\" required>\n" +
+            "                                        </div>\n" +
+            "                                    </div>\n" +
+            "                                    <br>\n" +
+            "                                    <button type=\"button\" class=\"btn btn-default addResponse\" >Add Option</button>\n" +
+            "                                </div>\n" +
+            "                            </div>\n" +
+            "                        </div>");
     }
 
 </script>
@@ -353,7 +443,69 @@ include 'CMS_SIDEBAR.php';
                         <label for="post_content">Content</label>
                         <textarea name="post_content" id="post_content"></textarea>
                     </div>
+                    <span id="questionCardArea">
+                        <?php
+                            $rows = $crud->getData("SELECT pl.id, pl.typeId, pl.question 
+                                      FROM facultyassocnew.polls pl 
+                                      JOIN posts pt ON pl.postId = pt.id WHERE pt.id='$postId';");
+                            if(!empty($rows)) {
+                                foreach ((array)$rows as $key => $row) {
+                                    $pollId = $row['id'];
+                                    $type1 = '';
+                                    $type2 = '';
+                                    if($row['typeId'] == '1'){
+                                        $type1 = 'selected';
+                                    }else if($row['typeId'] == '2') {
+                                        $type2 = 'selected';
+                                    }
+                                    echo '<div class="card" id="questionCard">
+                                            <div class="card-header">
+                                                <div class="row fieldRow">
+                                                    <div class="col-lg-2">
+                                                        <b>Question: </b>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <input type="hidden" name="toUpdatePollId" value="'.$pollId.'">
+                                                        <input id="post_question" name="toUpdatePollQuestion" type="text" placeholder="Put your question here..." class="form-control input-md" required value="'.$row['question'].'">
+                                                    </div>
+                                                    <div class="col-lg-1">
+                                                        <button type="button" class="btn btn-danger" onclick="removePoll(this,'.$pollId.')"><i class="fa fa-trash"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label>Response Type</label>
+                                                    <select name="toUpdateTypeId" class="form-control">
+                                                        <option value="1" '.$type1.'>Single Response</option>
+                                                        <option value="2" '.$type2.'>Multiple Response</option>
+                                                    </select>
+                                                </div>                                
+                                                <div class="form-group fieldGroup">
+                                                    <label>Responses</label>';
+                                    $rows2 = $crud->getData("SELECT optionId, response FROM poll_options WHERE pollId = '$pollId';");
+                                    if(!empty($rows2)){
+                                        foreach ((array)$rows2 as $key2 => $row2) {
+                                            echo '<div class="row fieldRow">
+                                                        <div class="col-lg-10">
+                                                            <input type="hidden" name="toUpdateOptionId[]" value="'.$row2['optionId'].'">
+                                                            <input type="text" name="toUpdateOptionContent[]" class="form-control input-md option-input" placeholder="Add an answer" value="'.$row2['response'].'" required>
+                                                        </div>
+                                                    </div>
+                                                    <br>';
+                                        }
+                                    }
+                                    echo '<button type="button" class="btn btn-default addResponse" onclick="addResponse(this)">Add Option</button>';
+                                    echo '</div></div></div>';
+                                }
+                            }
+                        ?>
+                    </span>
+                    <span id="toRemovePolls"></span>
 
+                    <?php
+                        if(!isset($pollId)) echo '<button type="button" class="btn btn-default" onclick="addPoll(this)"><i class="fa fa-fw fa-plus"></i>Add Question</button>';
+                    ?>
                     <div class="card" style="margin-top: 1rem;">
                         <div class="card-body">
                             <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
@@ -461,6 +613,7 @@ include 'CMS_SIDEBAR.php';
                                     }
                                 }else if($cmsRole == '3') {
                                     if($status == '1'){
+                                        echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="3">Submit for Publication</button> ';
                                         echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
                                     } else if ($status == '2') {
                                         echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="3">Submit for Publication</button> ';
