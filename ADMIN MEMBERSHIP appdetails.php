@@ -44,27 +44,125 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
     if (isset($_POST['accept'])) {
 
-        $queryAccept = "UPDATE MEMBER SET MEMBERSHIP_STATUS = 2, DATE_APPROVED = NOW(), EMP_ID_APPROVE = '{$_SESSION['idnum']}'
-                        WHERE MEMBER_ID = '{$_SESSION['memapp_selected_id']}';";
+        $queryAccept = "UPDATE MEMBER SET MEMBERSHIP_STATUS = 2, DATE_APPROVED = DATE(NOW()), EMP_ID_APPROVE = {$_SESSION['idnum']}
+                        WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
 
         $resultAccept = mysqli_query($dbc, $queryAccept);
 
-        $queryTxn = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, EMP_ID, SERVICE_TYPE) 
-                     VALUES ('{$_SESSION['memapp_selected_id']}', 1, 'Membership Application Approved', 0, NOW(), '{$_SESSION['idnum']}', 1);";
+        $queryTxn = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, EMP_ID, SERVICE_ID) 
+                     VALUES ('{$_SESSION['memapp_selected_id']}', 1, 'Membership Application Approved', 0, DATE(NOW()), '{$_SESSION['idnum']}', 1);";
 
         $resultAccept = mysqli_query($dbc, $queryTxn);
+         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN MEMBERSHIP applications.php");
+
+         // Import PHPMailer classes into the global namespace
+// These must be at the top of your script, not inside a function
+         $query = "SELECT * FROM member m 
+              where m.member_id = {$_SESSION['memapp_selected_id']}";
+    $result = mysqli_query($dbc,$query);
+    $ans = mysqli_fetch_assoc($result);
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Load Composer's autoloader
+require 'vendor/autoload.php';
+
+// Instantiation and passing `true` enables exceptions
+$mail = new PHPMailer(true);
+
+try {
+    //Server settings
+    $mail->SMTPDebug = 2;                                       // Enable verbose debug output
+    $mail->isSMTP();                                            // Set mailer to use SMTP
+    $mail->Host       = 'smtp1.example.com;smtp2.example.com';  // Specify main and backup SMTP servers
+    $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+    $mail->Username   = 'user@example.com';                     // SMTP username
+    $mail->Password   = 'secret';                               // SMTP password
+    $mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
+    $mail->Port       = 587;                                    // TCP port to connect to
+
+    //Recipients
+    $mail->setFrom('from@example.com', 'Mailer');
+    $mail->addAddress($ans['email']);     // Add a recipient
+                   // Name is optional
+    //$mail->addReplyTo('info@example.com', 'Information');
+   // $mail->addCC('cc@example.com');
+   // $mail->addBCC('bcc@example.com');
+
+    // Attachments
+   // $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
+   // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+
+    // Content
+    $mail->isHTML(true);                                  // Set email format to HTML
+    $mail->Subject = 'RE: Membership account for Faculty Association';
+    $mail->Body    = 'Your account has been approved and now able to use the system.<br> To login use the password 1234 when login to change your pw';
+    //$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+    $mail->send();
+    echo 'Message has been sent';
+} catch (Exception $e) {
+    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+}
 
     }
 
     else if (isset($_POST['reject'])) {
 
-        $queryReject = "DELETE FROM MEMBER_ACCOUNT WHERE MEMBER_ID = '{$_SESSION['memapp_selected_id']}';";
+        $queryReject = "DELETE FROM MEMBER_ACCOUNT WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
 
         $resultReject = mysqli_query($dbc, $queryReject);
 
-        $queryReject = "DELETE FROM MEMBER WHERE MEMBER_ID = '{$_SESSION['memapp_selected_id']}';";
+        $queryReject = "DELETE FROM MEMBER WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
 
         $resultReject = mysqli_query($dbc, $queryReject);
+        $queryTxn = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, EMP_ID, SERVICE_ID) 
+                     VALUES ('{$_SESSION['memapp_selected_id']}', 1, 'Membership Application Rejected', 0, DATE(NOW()), '{$_SESSION['idnum']}', 1);";
+
+        $resultAccept = mysqli_query($dbc, $queryTxn);
+         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN MEMBERSHIP applications.php");
+
+         // Load Composer's autoloader
+require 'vendor/autoload.php';
+
+// Instantiation and passing `true` enables exceptions
+$mail = new PHPMailer(true);
+
+try {
+    //Server settings
+    $mail->SMTPDebug = 2;                                       // Enable verbose debug output
+    $mail->isSMTP();                                            // Set mailer to use SMTP
+    $mail->Host       = 'smtp1.example.com;smtp2.example.com';  // Specify main and backup SMTP servers
+    $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+    $mail->Username   = 'user@example.com';                     // SMTP username
+    $mail->Password   = 'secret';                               // SMTP password
+    $mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
+    $mail->Port       = 587;                                    // TCP port to connect to
+
+    //Recipients
+    $mail->setFrom('from@example.com', 'Mailer');
+    $mail->addAddress($ans['email']);     // Add a recipient
+                   // Name is optional
+    //$mail->addReplyTo('info@example.com', 'Information');
+   // $mail->addCC('cc@example.com');
+   // $mail->addBCC('bcc@example.com');
+
+    // Attachments
+   // $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
+   // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+
+    // Content
+    $mail->isHTML(true);                                  // Set email format to HTML
+    $mail->Subject = 'RE: Membership account for Faculty Association';
+    $mail->Body    = 'Your account has been Rejected. Please send the correct or missing information when applying again';
+    //$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+    $mail->send();
+    echo 'Message has been sent';
+} catch (Exception $e) {
+    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+}
+
 
     }
 

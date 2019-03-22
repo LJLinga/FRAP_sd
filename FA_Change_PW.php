@@ -179,35 +179,32 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
     ?>
     <!-- Bootstrap Core JavaScript -->
     
-<script>
-        document.getElementById("falpcompute").onclick = function() {calculate()};
-        
-        function calculate(){
-            
-            var amount = parseFloat(document.getElementById("amount").value);
-            var terms = parseFloat(document.getElementById("terms").value);
-            var interest = 5;
-            
-            document.getElementById("totalI").innerHTML ="<b>Total Interest Payable: </b>₱"+ parseFloat((amount*interest/100)).toFixed(2);
-            document.getElementById("totalP").innerHTML ="<b>Total Amount Payable: </b> ₱"+ parseFloat((amount+amount*interest/100)).toFixed(2);
-            document.getElementById("PerP").innerHTML ="<b>Per Payment Period Payable: </b> ₱ "+ parseFloat(((amount+amount*interest/100)/terms/2)).toFixed(2);
-            document.getElementById("Monthly").innerHTML ="<b>Monthly Payable: </b> ₱"+ parseFloat(((amount+amount*interest/100)/terms)).toFixed(2);
-            
-        }
-        
-        function checkform(){
-            
-            var amount = parseFloat(document.getElementById("amount").value);
-            var terms = parseFloat(document.getElementById("terms").value);
-           
-            return true;
-            
-        }
-    </script>
+
     <script>
     $(document.getElementById("cpass")).keyup(function(){
          var pass = document.getElementById("pass").value;
          var cpass = document.getElementById("cpass").value;
+         if(pass.length <8){
+            document.getElementById("chk").innerHTML = '<font  color = "red">Password is less than 8 characters</font>';
+            return;
+            
+         }
+         else{
+            if(!format2.test(pass)){
+                document.getElementById("chk").innerHTML = '<font  color = "red">Password should be alphanumeric</font>';
+                return;
+                
+            }
+            else if(!format.test(pass)){
+                document.getElementById("chk").innerHTML = '<font  color = "red">Password should contain at least 1 special character</font>';
+                return;
+                
+            }
+            
+
+            
+            
+         }
          if(pass!=cpass){
         
         document.getElementById("chk").innerHTML = '<font  color = "red">Password is not the same</font>';
