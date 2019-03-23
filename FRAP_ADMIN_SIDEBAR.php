@@ -4,30 +4,28 @@
                     <li id="top">
                         <a href="ADMIN%20dashboard.php"> <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard </a>
                     </li>
-                    <li>
-                        <a href="ADMIN FALP manual.php"><i class="fa fa-gears" aria-hidden="true"></i> Manually Add Member </a>
-                    </li>
                    
-
+                   
                     <li>
-                        <a href="ADMIN%20FALP%20addtomember.php"><i class="fa fa-dollar" aria-hidden="true"></i> Add FALP to Member </a>
-                    </li>
-                    <li>
-                        <a href="javascript:" data-toggle="collapse" data-target="#members"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;View Members<i class="fa fa-fw fa-caret-down"></i></a>
+                        <a href="javascript:" data-toggle="collapse" data-target="#members"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;Members<i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="members" class="collapse">
-                    <li>
+                            <li>
                         <a href="ADMIN MEMBERS viewmembers.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;&nbsp;View All Registered Members</a>
                     </li>
                     <li>
-                        <a href="ADMIN MEMBERSHIP applications.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;&nbsp;View Pending Members</a>
-                    </li>
-
-                </ul></li>
-                     <li>
                         <a href="ADMIN MEMBER roles.php"><i class="fa fa-group" aria-hidden="true"></i> Member Roles </a>
                     </li>
+                        </ul>
+                    </li>
+                   
+                   
+                    
+                    
+
+                
+                     
                     <li>
-                        <a href="ADMIN%20Deductions.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;View All Deductions</a>
+                        <a href="ADMIN%20Deductions.php"><i class="fa fa-minus" aria-hidden="true"></i>&nbsp;View All Deductions</a>
                     </li>
                     <!---
                     <li>
@@ -52,6 +50,9 @@
 
                             <li>
                                 <a href="ADMIN%20HEALTHAID%20applications.php"><i class="fa fa-dollar" aria-hidden="true"></i>  Health Aid Applications</a>
+                            </li>
+                            <li>
+                                <a href="ADMIN MEMBERSHIP applications.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;&nbsp;Membership Applications</a>
                             </li>
 
                         </ul>
@@ -81,6 +82,17 @@
                     </li>
                     <li>
                         <a href="ADMIN MREPORT report.php"><i class="fa fa-table" aria-hidden="true"></i> Monthly Report</a>
+                    </li>
+                     <li>
+                        <a href="javascript:" data-toggle="collapse" data-target="#mTools"><i class="fa fa-minus" aria-hidden="true"></i>&nbsp;Migration Tools<i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="mTools" class="collapse">
+                            <li>
+                                <a href="ADMIN%20FALP%20addtomember.php"><i class="fa fa-dollar" aria-hidden="true"></i> Add FALP to Member </a>
+                            </li>
+                             <li>
+                                <a href="ADMIN FALP manual.php"><i class="fa fa-gears" aria-hidden="true"></i> Manually Add Member </a>
+                            </li>
+                        </ul>
                     </li>
 
                     <!--<li>
