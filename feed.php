@@ -142,9 +142,7 @@ include 'GLOBAL_HEADER.php';
                 </div>
 
                 <div class="column col-lg-6" style="margin-top: 1rem; margin-bottom: 1rem;">
-
                     <?php
-
                     $rows = $crud->getData("SELECT p.id, p.permalink, p.title, p.body, 
                                           CONCAT(a.firstName,' ', a.lastName) AS name, 
                                           s.description AS status, p.timePublished, p.lastUpdated 
@@ -179,9 +177,8 @@ include 'GLOBAL_HEADER.php';
                                         echo '<span class="badge">'.$rows3[0]['verCount'].' Document References</span>';
                                     }
                                 ?>
-                                <br>
+                                <br><br>
                                 <a class="card-link btn btn-default btn-sm" href="<?php echo "http://localhost/FRAP_sd/read.php?pl=".$row['permalink']?>" >Read More</a>
-
                             </div>
                         </div>
 

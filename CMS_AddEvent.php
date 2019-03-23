@@ -62,10 +62,15 @@ if(isset($_POST['btnSubmit'])){
             'reminders' => array(
                 'useDefault' => FALSE,
                 'overrides' => array(
+                    array('method' => 'email', 'minutes' => 120 * 60),
                     array('method' => 'email', 'minutes' => 72 * 60),
                     array('method' => 'email', 'minutes' => 24 * 60),
                     array('method' => 'email', 'minutes' => 180),
                     array('method' => 'popup', 'minutes' => 180),
+                    array('method' => 'email', 'minutes' => 60),
+                    array('method' => 'popup', 'minutes' => 60),
+                    array('method' => 'email', 'minutes' => 30),
+                    array('method' => 'popup', 'minutes' => 10),
                 ),
             )
         ));
@@ -76,17 +81,7 @@ if(isset($_POST['btnSubmit'])){
         $eventLink = $event->htmlLink;
 
         $id = $crud->executeGetKey("INSERT INTO events (title, description, posterId, startTime, endTime, GOOGLE_EVENTID, GOOGLE_EVENTLINK) values ('$title', '$body','$userId','$startTime','$endTime','$eventId','$eventLink')");
-        if(!empty ($id)) {
-            header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_EventsDashboard.php");
-        }else{
-            echo '<script language="javascript">';
-            echo 'alert('.$eventLink.')';
-            echo '</script>';
-        }
-
     }
-
-
 }
 
 $page_title = 'Santinig - Add Event';
@@ -186,7 +181,10 @@ include 'CMS_SIDEBAR.php';
                         <!-- Textarea -->
                         <div class="form-group">
                             <label for="post_content">Description </label>
-                            <textarea class="form-control" name="post_content" rows="5" id="post_content"></textarea>
+                            <textarea class="form-control" name="post_content" rows="5" id="post_content">
+                            </textarea>
+                            <?php echo $details; ?><br>
+                            <?php echo $calendarDetails; ?>
                         </div>
 
 

@@ -25,7 +25,16 @@ if(isset($_POST['btnSave'])){
     //$parentSectionId = $_POST['section_parent'];
     //$siblingSectionId = $_POST['section_sibling'];
     $crud->execute("UPDATE sections SET title = '$title', sectionNo = '$sectionNo', content = '$content' WHERE id = '$sectionId'");
+
+    if(isset($_POST['toAddDocRefs'])) {
+        $toAddDocRefs = $_POST['toAddDocRefs'];
+        foreach((array) $toAddDocRefs AS $key => $ref){
+            $query = "INSERT INTO section_ref_versions(sectionId,versionId) VALUES ('$sectionId','$ref');";
+            $crud->execute($query);
+        }
+    }
 }
+
 
 if(isset($_POST['btnFinish'])){
     $sectionId = $_POST['section_id'];
@@ -63,7 +72,7 @@ if(isset($_GET['secId'])){
         header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
     }
 
-    $rows = $crud->getData("SELECT s.authorId, s.firstAuthorId, s.approvedById, s.sectionNo, s.title, s.content, s.timeCreated,
+    $rows = $crud->getData("SELECT s.authorId, s.firstAuthorId, s.approvedById, s.sectionNo, s.title, s.content, s.timeCreated, s.lastUpdated,
                                     CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS firstAuthorName,
                                     (SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) FROM employee e2 WHERE e2.EMP_ID = s.authorId) AS authorName
                                     FROM facultyassocnew.sections s
@@ -80,6 +89,7 @@ if(isset($_GET['secId'])){
             $title = $row['title'];
             $content = $row['content'];
             $timeCreated = $row['timeCreated'];
+            $lastUpdated = $row['lastUpdated'];
         }
     }
 
@@ -105,14 +115,6 @@ $page_title = 'Faculty Manual - Edit Section';
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
 ?>
-    <script>
-        $(document).ready( function(){
-            $('#btnRefModal').on('click', function(){
-                reloadDataTable();
-            });
-        });
-    </script>
-
     <div id="content-wrapper">
         <div class="container-fluid">
             <!--Insert success page-->
@@ -144,12 +146,50 @@ include 'EDMS_SIDEBAR.php';
                     </div>
 
                     <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
-                        <div class="card" style="margin-bottom: 1rem;">
+                        <div class="card" style="margin-bottom: 1rem; ">
                             <div class="card-header"><b>Document References</b></div>
-                            <div class="card-body" style="max-height: 20rem; overflow-y: scroll;">
-                                <span id="noRefsYet">No References</span>
+                            <div class="card-body" style="max-height: 20rem; overflow-y: auto;">
                                 <span id="refDocuments" style="font-size: 12px;">
+                                <?php
+                                    $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor, v.filePath,
+                                                        v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.id AS processId, pr.processName, s.stepNo, s.stepName,
+                                                        (SELECT CONCAT(e.lastName,', ',e.firstName) FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
+                                                        WHERE v.versionId = vid) AS currentAuthor
+                                                        FROM documents d JOIN doc_versions v ON d.documentId = v.documentId
+                                                        JOIN employee e ON e.EMP_ID = d.firstAuthorId 
+                                                        JOIN steps s ON s.id = d.stepId
+                                                        JOIN process pr ON pr.id = s.processId 
+                                                        JOIN section_ref_versions ref ON ref.versionId = v.versionId
+                                                        WHERE ref.postId = '$sectionId';");
+                                    if(!empty($rows)) {
+                                        foreach ((array)$rows as $key => $row) {
+                                            $title = $row['title'];
+                                            $versionNo = $row['versionNo'];
+                                            $originalAuthor = $row['originalAuthor'];
+                                            $currentAuthor = $row['currentAuthor'];
+                                            $processName = $row['processName'];
+                                            $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
+                                            $filePath = $row['filePath'];
+                                            $fileName = $title.'_ver'.$versionNo.'_'.basename($filePath);
+                                            echo '<div class="card" style="position: relative;">';
+                                            echo '<input type="hidden" class="refDocuments" value="'.$row['vid'].'">';
+                                            echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
+                                            echo '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >';
+                                            echo '<a class="btn fa fa-download"  href="'.$filePath.'" download="'.$fileName.'"></a>';
+                                            echo '<a class="btn fa fa-remove" onclick="removeRef(this, &quot;'.$row['vid'].'&quot;)" ></a>';
+                                            echo '</div>';
+                                            echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
+                                            echo '<div class="card-body">';
+                                            echo 'Process: ' . $processName . '<br>';
+                                            echo 'Created by: ' . $originalAuthor . '<br>';
+                                            echo 'Modified by: ' . $currentAuthor . '<br>';
+                                            echo 'on: <i>' . $updatedOn . '</i><br>';
+                                            echo '</div></div></div>';
+                                        }
+                                    }
+                                ?>
                                 </span>
+                                <span id="toRemoveDocRefs"></span>
                             </div>
                             <div class="card-footer">
                                 <button id="btnRefModal" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
@@ -173,7 +213,7 @@ include 'EDMS_SIDEBAR.php';
                             <div class="card-body">
                                 Created by: <?php echo $firstAuthorName ?><br>
                                 Modified by: <?php echo $authorName ?><br>
-                                Last updated: <?php  echo date("F j, Y g:i:s A ", strtotime($timeCreated));?><br>
+                                Last updated: <?php  echo date("F j, Y g:i:s A ", strtotime($lastUpdated));?><br>
                             </div>
                             <div class="card-footer btn-group">
                                 <?php
@@ -184,6 +224,35 @@ include 'EDMS_SIDEBAR.php';
                                 ?>
                             </div>
                         </div>
+
+                        <?php
+                        $query = "SELECT v.timeCreated, v.title, v.sectionNo, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
+                                  FROM section_versions v 
+                                  JOIN employee e ON v.authorId = e.EMP_ID 
+                                  WHERE v.sectionId = '$sectionId' AND v.timeCreated != '$lastUpdated' ORDER BY v.timeCreated DESC;";
+                        $rows = $crud->getData($query);
+                        if (!empty($rows)) {
+
+                            echo '<div class="card" style="margin-top: 1rem;">';
+                            echo '<div class="card-header"><b>Version History</b></div>';
+                            echo '<div class="card-body" style="max-height: 50vh; overflow-y: auto;">';
+                            if(!empty($rows)) {
+                                foreach ((array)$rows as $key => $row) {
+                                    echo '<div class="card" style="margin-bottom: 1rem;">';
+                                    echo '<div class="card-body">';
+                                    echo '<span class="badge">Version ' . $row['timeCreated'] . '</span> ';
+                                    echo '<button type="button" id="btnPreview" class="btn btn-default btn-sm">Preview</button><br>';
+                                    echo '<b>Section '.$row['sectionNo'].': '. $row['title'] . ' </b><br>';
+                                    echo 'Created by: ' . $row['versionAuthor'] . '<br>';
+                                    echo 'on: <i>' . date("F j, Y g:i:s A ", strtotime($row['timeCreated'])) . '</i><br>';
+                                    echo '</div></div>';
+                                }
+                            }
+                            echo '</div></div>';
+                        }
+
+
+                        ?>
                     </div>
                 </div>
             </form>
@@ -226,8 +295,7 @@ include 'EDMS_SIDEBAR.php';
                     <div class="modal-footer">
                         <div class="form-group">
                             <input type="hidden" name="comment_id" id="comment_id" value="0" />
-                            <input type="hidden" name="versionId" id="versionId" value="<?php echo $versionId; ?>" />
-                            <input type="hidden" name="documentId" id="documentId" value="<?php echo $documentId; ?>" />
+                            <input type="hidden" name="section_id" id="version_id" value="<?php echo $sectionId; ?>" />
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit"/>
                         </div>
@@ -238,4 +306,130 @@ include 'EDMS_SIDEBAR.php';
 
         </div>
     </div>
+    <div id="modalRED" class="modal fade" role="dialog" data-backdrop="false">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                    <h5 class="modal-title">Reference Document</h5>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered" align="center" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th> Document </th>
+                            <th> Assigned Process </th>
+                            <th width="20px"> Add </th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        $(document).ready( function(){
+            $('#btnRefModal').on('click', function(){
+                reloadDataTable();
+            });
+        });
+        $('#comment_form').on('submit', function(event){
+            event.preventDefault();
+            $('#myModal').modal('toggle');
+            var form_data = $(this).serialize();
+            $.ajax({
+                url:"EDMS_AJAX_AddSectionComment.php",
+                method:"POST",
+                data:form_data,
+                dataType:"JSON",
+                success:function(data)
+                {
+                    if(data.error != '')
+                    {
+                        $('#comment_form')[0].reset();
+                        $('#comment_message').html(data.error);
+                        $('#comment_id').val('0');
+                        load_comment(postId);
+                    }
+                }
+            })
+        });
+
+        setInterval(function() {
+            load_comment('<?php echo $sectionId; ?>');
+        }, 1000);
+
+        function load_comment(sectionId)
+        {
+            $.ajax({
+                url:"EDMS_AJAX_FetchSectionComments.php",
+                method:"POST",
+                data:{sectionId: sectionId},
+                success:function(data)
+                {
+                    $('#display_comment').html(data);
+                }
+            })
+        }
+
+        $(document).on('click', '.reply', function(){
+            var comment_id = $(this).attr("id");
+            $('#comment_id').val(comment_id);
+            $('#comment_name').focus();
+        });
+
+        function reloadDataTable(){
+            let loadedRefs = [];
+            $(".refDocuments").each(function() {
+                loadedRefs.push($(this).val());
+            });
+            $('table').dataTable({
+                destroy: true,
+                "pageLength": 3,
+                "ajax": {
+                    "url":"CMS_AJAX_LoadToAddReferences.php",
+                    "type":"POST",
+                    "data":{ loadedReferences: loadedRefs },
+                    "dataSrc": ''
+                },
+                columns: [
+                    { data: "Document" },
+                    { data: "Status" },
+                    { data: "Action" }
+                ]
+            });
+        }
+
+        function removeRef(element, verId){
+            $(element).closest('div.card').remove();
+            $('#toRemoveDocRefs').append('<input type="hidden" name="toRemoveDocRefs[]" value="'+verId+'">');
+            $('#btnUpdate').show();
+        }
+        function addRef(element, verId, oA, cA, vN, uO, t, pN, fP, fN){
+            $('#noRefsYet').remove();
+            $('#btnUpdate').show();
+            $('#refDocuments').append('<div class="card" style="background-color: #e2fee2; position: relative;">'+
+                '<input type="hidden" name="toAddDocRefs[]" class="refDocuments" value="'+verId+'">'+
+                '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse'+verId+'" aria-expanded="true" aria-controls="collapse'+verId+'"><b>'+t+'</b> <span class="badge">'+vN+'</span></a>'+
+                '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >'+
+                '<a class="btn fa fa-download"  href="'+fP+'" download="'+fN+'"></a>'+
+                '<a class="btn fa fa-remove" onclick="removeRef(this)" ></a>'+
+                '</div>'+
+                '<div id="collapse'+verId+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
+                '<div class="card-body">'+
+                'Process: '+pN+'<br>'+
+                'Created by: '+oA+'<br>'+
+                'Modified by: '+cA+'<br>'+
+                'on: <i>'+uO+'</i><br>'+
+                '</div></div></div>');
+            reloadDataTable();
+        }
+
+    </script>
 <?php include 'GLOBAL_FOOTER.php' ?>

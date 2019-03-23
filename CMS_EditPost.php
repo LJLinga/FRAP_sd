@@ -580,7 +580,6 @@ include 'CMS_SIDEBAR.php';
                         <div class="card-body" >
                             Author: <b><?php echo $author; ?></b><br>
                             <i>Created on: <b><?php echo date("F j, Y g:i:s A ", strtotime($firstPosted)); ?></b></i><br><br>
-
                             Current Status: <b><?php echo $statusDesc?></b>
                             <?php if(!empty($permalink)){ ?>
                                 (<a href="<?php echo "http://localhost/FRAP_sd/read.php?pl=".$permalink?>" >Preview</a>)

@@ -80,7 +80,7 @@
                 </li>
 
                 <li>
-                    <a href="MEMBER%20dashboard.php"> FRAP Dashboard </a>
+                    <a href="MEMBER%20dashboard.php"> Loans </a>
                 </li>
                 <?php
                     if($_SESSION['FRAP_ROLE'] > 1 || $_SESSION['EDMS_ROLE'] > 1 || $_SESSION['CMS_ROLE'] > 1) {

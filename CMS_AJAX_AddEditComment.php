@@ -88,7 +88,7 @@ else
 
 if($error == '')
 {
-    $query = "INSERT INTO edit_post_comments 
+    $query = "INSERT INTO section_comments 
  (parentCommentId, postId, content, commenterId) 
  VALUES (:parent_comment_id, :postId, :comment, :comment_sender_name)
  ";
