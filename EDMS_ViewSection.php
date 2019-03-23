@@ -269,8 +269,7 @@ include 'EDMS_SIDEBAR.php';
                     <div class="modal-footer">
                         <div class="form-group">
                             <input type="hidden" name="comment_id" id="comment_id" value="0" />
-                            <input type="hidden" name="versionId" id="versionId" value="<?php echo $versionId; ?>" />
-                            <input type="hidden" name="documentId" id="documentId" value="<?php echo $documentId; ?>" />
+                            <input type="hidden" name="section_id" id="version_id" value="<?php echo $sectionId; ?>" />
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit"/>
                         </div>
@@ -281,4 +280,50 @@ include 'EDMS_SIDEBAR.php';
 
         </div>
     </div>
+<script>
+    $('#comment_form').on('submit', function(event){
+        event.preventDefault();
+        $('#myModal').modal('toggle');
+        var form_data = $(this).serialize();
+        $.ajax({
+            url:"EDMS_AJAX_AddSectionComment.php",
+            method:"POST",
+            data:form_data,
+            dataType:"JSON",
+            success:function(data)
+            {
+                if(data.error != '')
+                {
+                    $('#comment_form')[0].reset();
+                    $('#comment_message').html(data.error);
+                    $('#comment_id').val('0');
+                    load_comment(postId);
+                }
+            }
+        })
+    });
+
+    setInterval(function() {
+        load_comment('<?php echo $sectionId; ?>');
+    }, 1000);
+
+    function load_comment(sectionId)
+    {
+        $.ajax({
+            url:"EDMS_AJAX_FetchSectionComments.php",
+            method:"POST",
+            data:{sectionId: sectionId},
+            success:function(data)
+            {
+                $('#display_comment').html(data);
+            }
+        })
+    }
+
+    $(document).on('click', '.reply', function(){
+        var comment_id = $(this).attr("id");
+        $('#comment_id').val(comment_id);
+        $('#comment_name').focus();
+    });
+</script>
 <?php include 'GLOBAL_FOOTER.php' ?>

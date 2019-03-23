@@ -20,10 +20,6 @@
             </li>
 
             <li>
-                <a href="CMS_AddEvent.php"><i class="fa fa-fw fa-calendar-plus-o" aria-hidden="true"></i> Add Event</a>
-            </li>
-
-            <li>
                 <a href="CMS_Statistics.php"><i class="fa fa-fw fa-dashboard" aria-hidden="true"></i> Reports </a>
             </li>
 

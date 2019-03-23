@@ -77,9 +77,7 @@
 
             <img src="images/I-FA Logo Edited.png" id="ifalogo">
 
-
             <ul class="nav navbar-right top-nav"> <!-- Top Menu Items / Notifications area -->
-
                 <li>
                     <a href="feed.php"> Home </a>
                 </li>
@@ -98,6 +96,9 @@
                         }
                         if($_SESSION['EDMS_ROLE'] >= 1){
                             echo '<li><a href="EDMS_Workspace.php"> <i class="fa fa-file-text" aria-hidden="true"></i> Documents</a></li>';
+                        }
+                        if($_SESSION['SYS_ROLE'] >= 1){
+                            echo '<li><a href="SYS_ADMIN_UserRoles.php"> <i class="fa fa-wrench" aria-hidden="true"></i> Configurations </a></li>';
                         }
                         echo '</ul></li>';
                     }?>
