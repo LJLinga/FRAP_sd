@@ -13,8 +13,16 @@
                         <a href="ADMIN%20FALP%20addtomember.php"><i class="fa fa-dollar" aria-hidden="true"></i> Add FALP to Member </a>
                     </li>
                     <li>
-                        <a href="ADMIN MEMBERS viewmembers.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;&nbsp;View All Members</a>
+                        <a href="javascript:" data-toggle="collapse" data-target="#members"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;View Members<i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="members" class="collapse">
+                    <li>
+                        <a href="ADMIN MEMBERS viewmembers.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;&nbsp;View All Registered Members</a>
                     </li>
+                    <li>
+                        <a href="ADMIN MEMBERSHIP applications.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;&nbsp;View Pending Members</a>
+                    </li>
+
+                </ul></li>
                      <li>
                         <a href="ADMIN MEMBER roles.php"><i class="fa fa-group" aria-hidden="true"></i> Member Roles </a>
                     </li>
