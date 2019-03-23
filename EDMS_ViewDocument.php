@@ -19,6 +19,8 @@ $write = 1;
 $route = 1;
 $comment = 1;
 
+
+
 if(isset($_GET['docId'])){
 
     $documentId = $_GET['docId'];
@@ -126,13 +128,29 @@ if(isset($_POST['btnUnlock'])){
 if(isset($_POST['btnAccept'])){
     //Clickable only when unlocked. Thesis 2.
     $documentId = $_POST['btnAccept'];
-    $crud->execute("UPDATE documents SET statusId='2', availabilityId='2', lockedById=NULL WHERE documentId='$documentId'");
+    $rows = $crud->getData("SELECT availabilityId FROM documents WHERE documentId = '$documentId'");
+    foreach((array) $rows as $key => $row){
+        $availability = $row['availabilityId'];
+    }
+    if($availability == '2'){
+        $userId = $_POST['userId'];
+        $crud->execute("UPDATE documents SET statusId='2' WHERE documentId='$documentId'");
+    }
+    //$crud->execute("UPDATE documents SET statusId='2', availabilityId='2', lockedById=NULL WHERE documentId='$documentId'");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
 }
 
 if(isset($_POST['btnReject'])){
     $documentId= $_POST['btnReject'];
-    $crud->execute("UPDATE documents SET statusId='3', availabilityId='2', lockedById=NULL WHERE documentId='$documentId'");
+    $rows = $crud->getData("SELECT availabilityId FROM documents WHERE documentId = '$documentId'");
+    foreach((array) $rows as $key => $row){
+        $availability = $row['availabilityId'];
+    }
+    if($availability == '2'){
+        $userId = $_POST['userId'];
+        $crud->execute("UPDATE documents SET statusId='3' WHERE documentId='$documentId'");
+    }
+    //$crud->execute("UPDATE documents SET statusId='3', availabilityId='2', lockedById=NULL WHERE documentId='$documentId'");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
 }
 
@@ -168,7 +186,15 @@ if(isset($_POST['btnDownload'])){
 if(isset($_POST['btnRoute'])){
     $documentId = $_POST['documentId'];
     $nextStepId=$_POST['btnRoute'];
-    $crud->execute("UPDATE documents SET statusId = '1', availabilityId='2', stepId='$nextStepId', lockedById=NULL WHERE documentId='$documentId'");
+    $rows = $crud->getData("SELECT availabilityId FROM documents WHERE documentId = '$documentId'");
+    foreach((array) $rows as $key => $row){
+        $availability = $row['availabilityId'];
+    }
+    if($availability == '2'){
+        $userId = $_POST['userId'];
+        $crud->execute("UPDATE documents SET statusId = '1', stepId='$nextStepId' WHERE documentId='$documentId'");
+    }
+    //$crud->execute("UPDATE documents SET statusId = '1', availabilityId='2', stepId='$nextStepId', lockedById=NULL WHERE documentId='$documentId'");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
 }
 

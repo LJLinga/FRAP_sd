@@ -19,25 +19,39 @@ $userId = $_SESSION['idnum'];
 
 if(isset($_POST['btnEdit'])){
     $sectionId = $_POST['section_id'];
+    $lockedById = $_POST['locked_by_id'];
     $rows = $crud->getData("SELECT availabilityId FROM sections WHERE id = '$sectionId'");
     foreach((array) $rows as $key => $row){
         $availabilityId = $row['availabilityId'];
     }
     if($availabilityId == '2'){
-        $userId = $_POST['userId'];
         $crud->execute("UPDATE sections SET availabilityId='1', lockedById='$userId' WHERE id='$sectionId'");
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_EditSection.php?secId=".$sectionId);
+    }else if($lockedById == $userId){
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_EditSection.php?secId=".$sectionId);
     }
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_EditSection.php?secId=".$sectionId);
+}
+
+if(isset($_POST['btnRoute'])){
+    $sectionId = $_POST['section_id'];
+    $lockedById = $_POST['locked_by_id'];
+    $rows = $crud->getData("SELECT availabilityId FROM sections WHERE id = '$sectionId'");
+    foreach((array) $rows as $key => $row){
+        $availabilityId = $row['availabilityId'];
+    }
+    if($availabilityId == '2'){
+        $crud->execute("UPDATE sections SET statusId = '1', stepId='$nextStepId' WHERE documentId='$documentId'");
+    }
 }
 
 if(isset($_GET['secId'])){
     $sectionId = $_GET['secId'];
 
     $rows = $crud->getData("SELECT d.stepId, p.processName, s.stepName, s.isFinal,
-              d.availabilityId, d.lockedById, d.statusId, st.statusName
-              FROM sections d 
+              d.availabilityId, d.lockedById, d.statusId, st.status
+              FROM sections d
               JOIN steps s ON d.stepId = s.id 
-              JOIN doc_status st ON st.id = d.statusId 
+              JOIN section_status st ON st.id = d.statusId 
               JOIN process p ON s.processId = p.id 
               WHERE d.id='$sectionId';");
     if(!empty($rows)){
@@ -48,25 +62,39 @@ if(isset($_GET['secId'])){
             $availabilityId = $row['availabilityId'];
             $lockedById = $row['lockedById'];
             $statusId = $row['statusId'];
-            $statusName = $row['statusName'];
+            $statusName = $row['status'];
             $isFinal = $row['isFinal'];
         }
     }
 
-    $rows = $crud->getData("SELECT authorId, approvedById, sectionNo, title, content, timeCreated FROM facultyassocnew.sections WHERE id = '$sectionId';");
+    if($availabilityId == '1' && $lockedById != $userId){
+        $rows = $crud->getData("SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS name FROM employee e WHERE e.EMP_ID = '$lockedById' LIMIT 1;");
+        if(!empty($rows)){
+            foreach((array) $rows as $key=> $row){
+                $lockedByName = $row['name'];
+            }
+        }
+    }
+
+    $rows = $crud->getData("SELECT s.authorId, s.firstAuthorId, s.approvedById, s.sectionNo, s.title, s.content, s.timeCreated, s.lastUpdated,
+                                    CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS firstAuthorName,
+                                    (SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) FROM employee e2 WHERE e2.EMP_ID = s.authorId) AS authorName
+                                    FROM facultyassocnew.sections s
+                                    JOIN employee e ON e.EMP_ID = s.firstAuthorId
+                                    WHERE s.id = '$sectionId';");
     if(!empty($rows)){
         foreach((array) $rows as $key => $row){
             $authorId = $row['authorId'];
+            $authorName = $row['authorName'];
+            $firstAuthorId = $row['firstAuthorId'];
+            $firstAuthorName = $row['firstAuthorName'];
             $approvedById = $row['approvedById'];
             $sectionNo = $row['sectionNo'];
             $title = $row['title'];
             $content = $row['content'];
             $timeCreated = $row['timeCreated'];
+            $lastUpdated = $row['lastUpdated'];
         }
-    }else{
-        //header redirect back to Manual Revisions
-        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
-        echo 'nothing found';
     }
 
     $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su
@@ -75,8 +103,8 @@ if(isset($_GET['secId'])){
     if(!empty($rows)){
         foreach((array) $rows as $key => $row){
             $read = $row['read'];
-            $write= $row['write'];
-            $route= $row['route'];
+            $write = $row['write'];
+            $route = $row['route'];
             $comment = $row['comment'];
         }
     }else{
@@ -151,38 +179,44 @@ include 'EDMS_SIDEBAR.php';
                             <div class="card-body">
                                 <div class="btn-group btn-group-vertical" style="width: 100%;">
                                     <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
+                                        <input type="hidden" name="locked_by_id" value="<?php echo $lockedById;?>">
                                         <?php
-                                        if($availabilityId == '2'){
-                                            if(isset($route) && $route=='2') {
-                                                if($isFinal == '2'){
-                                                    if($statusId == '1'){
-                                                        echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$sectionId.'">Accept</button>';
-                                                        echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$sectionId.'">Reject</button>';
-                                                    }else if($statusId == '2'){
-                                                        echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$sectionId.'">Reject</button>';
-                                                    }else if($statusId == '3'){
-                                                        echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$sectionId.'">Accept</button>';
-                                                    }
-                                                }
-                                                $query = "SELECT nextStepId, routeName FROM step_routes WHERE currentStepId ='$currentStepId';";
-                                                $rows = $crud->getData($query);
-                                                if (!empty($rows)) {
-                                                    echo '<input type="hidden" name="sectionId" value="'.$sectionId.'">';
-                                                    foreach ((array)$rows as $key => $row) {
-                                                        echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnRoute" value="'.$row['nextStepId'].'">'.$row['routeName'].'</button>';
-                                                    }
+                                        $disabledButtons = "enabled";
+                                        if(isset($lockedByName)){
+                                            $disabledButtons = "disabled";
+                                        }
+                                        if(isset($route) && $route=='2') {
+                                            if($isFinal == '2'){
+                                                if($statusId == '1'){
+                                                    echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$sectionId.'" '.$disabledButtons.'>Accept</button>';
+                                                    echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$sectionId.'" '.$disabledButtons.'>Reject</button>';
+                                                }else if($statusId == '2'){
+                                                    echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$sectionId.'" '.$disabledButtons.'>Reject</button>';
+                                                }else if($statusId == '3'){
+                                                    echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$sectionId.'" '.$disabledButtons.'>Accept</button>';
                                                 }
                                             }
-                                            if(isset($write) && $write=='2'){
-                                                echo '<button class="btn btn-default" type="submit" name="btnEdit" style="text-align: left; width:100%;">Lock and Edit</button>';
-                                                //echo 'button type="button" name="btnArchive" class="btn btn-default" style="text-align: left; width: 100%;">Archive</button>';
+                                            $query = "SELECT nextStepId, routeName FROM step_routes WHERE currentStepId ='$currentStepId';";
+                                            $rows = $crud->getData($query);
+                                            if (!empty($rows)) {
+                                                echo '<input type="hidden" name="sectionId" value="'.$sectionId.'">';
+                                                foreach ((array)$rows as $key => $row) {
+                                                    echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnRoute" value="'.$row['nextStepId'].'" '.$disabledButtons.'>'.$row['routeName'].'</button>';
+                                                }
                                             }
                                         }
-                                        echo $edmsRole.','.$read.','.$write.','.$route;
+                                        if(isset($write) && $write=='2'){
+                                            echo '<button class="btn btn-default" type="submit" name="btnEdit" style="text-align: left; width:100%;" '.$disabledButtons.'>Lock and Edit</button>';
+                                            //echo 'button type="button" name="btnArchive" class="btn btn-default" style="text-align: left; width: 100%;">Archive</button>';
+                                        }
+                                        //echo $edmsRole.','.$read.','.$write.','.$route;
                                         ?>
                                     </form>
 
                                 </div>
+                            </div>
+                            <div class="card-footer">
+                                <?php if (isset($lockedByName)) echo 'Section is locked by '.$lockedByName.' for editing.'; ?>
                             </div>
                         </div>
                         <!-- Button -->

@@ -57,10 +57,10 @@ if(isset($_GET['secId'])){
     $sectionId = $_GET['secId'];
 
     $rows = $crud->getData("SELECT d.stepId, p.processName, s.stepName, s.isFinal,
-              d.availabilityId, d.lockedById, d.statusId, st.statusName
-              FROM sections d 
+              d.availabilityId, d.lockedById, d.statusId, st.status
+              FROM sections d
               JOIN steps s ON d.stepId = s.id 
-              JOIN doc_status st ON st.id = d.statusId 
+              JOIN section_status st ON st.id = d.statusId 
               JOIN process p ON s.processId = p.id 
               WHERE d.id='$sectionId';");
     if(!empty($rows)){
@@ -71,7 +71,7 @@ if(isset($_GET['secId'])){
             $availabilityId = $row['availabilityId'];
             $lockedById = $row['lockedById'];
             $statusId = $row['statusId'];
-            $statusName = $row['statusName'];
+            $statusName = $row['status'];
             $isFinal = $row['isFinal'];
         }
     }
@@ -219,6 +219,7 @@ include 'EDMS_SIDEBAR.php';
                                 <b>Section Details</b>
                             </div>
                             <div class="card-body">
+                                Stage: <?php echo $stepName; ?><br>
                                 Created by: <?php echo $firstAuthorName ?><br>
                                 Modified by: <?php echo $authorName ?><br>
                                 Last updated: <?php  echo date("F j, Y g:i:s A ", strtotime($lastUpdated));?><br>
@@ -314,6 +315,22 @@ include 'EDMS_SIDEBAR.php';
 
         </div>
     </div>
+    <div id="previewOld" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="previewHeader"></span>
+                </div>
+                <div class="modal-body">
+                    <span class="previewContent"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>    <!-- Modal content-->
+
+        </div>
+    </div>
     <div id="modalRED" class="modal fade" role="dialog" data-backdrop="false">
         <div class="modal-dialog">
 
@@ -391,6 +408,26 @@ include 'EDMS_SIDEBAR.php';
             $('#comment_id').val(comment_id);
             $('#comment_name').focus();
         });
+
+        // $('.userinfo').click(function(){
+        //     var id = this.id;
+        //     var splitid = id.split('_');
+        //     var userid = splitid[1];
+        //
+        //     // AJAX request
+        //     $.ajax({
+        //         url: 'ajaxfile.php',
+        //         type: 'post',
+        //         data: {userid: userid},
+        //         success: function(response){
+        //             // Add response in Modal body
+        //             $('.modal-body').html(response);
+        //
+        //             // Display Modal
+        //             $('#empModal').modal('show');
+        //         }
+        //     });
+        // });
 
         function reloadDataTable(){
             let loadedRefs = [];

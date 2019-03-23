@@ -106,12 +106,6 @@ include 'GLOBAL_HEADER.php';
 </div>
 </nav>
 </div>
-<style>
-    .card {
-        font-family: "Verdana", Georgia, Serif;
-        font-size: 12px;
-    }
-</style>
 <script>
 
 </script>

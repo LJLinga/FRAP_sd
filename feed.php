@@ -59,14 +59,6 @@ include 'GLOBAL_HEADER.php';
 </nav>
 </div>
 
-
-<style>
-    .card {
-        font-family: "Verdana", Georgia, Serif;
-        font-size: 12px;
-    }
-</style>
-
 <div id="content-wrapper">
 
     <div class="container-fluid">

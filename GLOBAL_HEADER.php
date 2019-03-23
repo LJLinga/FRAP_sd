@@ -60,8 +60,13 @@
         background-color: #f0f0f0;
     }
 
-
-
+    body
+    {
+        font-family: 'Helvetica', 'Tahoma', sans-serif;
+        color: #444444;
+        font-size: 11pt;
+        background-color: #FAFAFA;
+    }
 
 </style>
 
