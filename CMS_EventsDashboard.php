@@ -43,18 +43,18 @@ include 'CMS_SIDEBAR.php';
                         <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                             <tr>
-                                <th align="left" width="300px"><b>Event</b></th>
+                                <th align="left" width="200px"><b>Event</b></th>
                                 <th align="left" width="200px"><b>Start</b></th>
                                 <th align="left" width="200px"><b>End</b></th>
-                                <th align="left" width="100px"><b>GCal</b></th>
+                                <th align="left" width="200px"><b>Action</b></th>
                             </tr>
                             </thead>
                             <tfoot>
                             <tr>
-                                <th align="left" width="300px"><b>Event</b></th>
+                                <th align="left" width="200px"><b>Event</b></th>
                                 <th align="left" width="200px"><b>Start</b></th>
                                 <th align="left" width="200px"><b>End</b></th>
-                                <th align="left" width="100px"><b>GCal</b></th>
+                                <th align="left" width="200px"><b>Action</b></th>
                             </tr>
                             </tfoot>
                         </table>

@@ -10,20 +10,15 @@
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 
-$query = "";
-
-
+$query = "SELECT * FROM facultyassocnew.events ORDER BY startTime DESC;";
 $rows = $crud->getData($query);
 $data = [];
 foreach ((array) $rows as $key => $row) {
     $data[] =  array(
-        'title_version' => '<span class="badge badge-success">'.$row['type'].'</span> <b>'.$row['title'].'</b> 
-                                <span class="badge">'.$row['versionNo'].'</span><br>
-                                Author: '.$row['originalAuthor'].'<br>
-                                Modified by: '.$row['currentAuthor'].'<br>
-                                on : <i>'.date("F j, Y g:i:s A ", strtotime($row['timeCreated'])).'</i><br>',
-        'currentProcess' => '<span><b>' . $row['processName'] . '</b></span><br><span class="badge">Step ' . $row['stepNo'] . ' '. $row['stepName'].'</span><br><span class="badge">'.$row['statusName'].'</span>',
-        'actions'=> '<a class="btn btn-default" name="documentId" href="http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId='.$row['documentId'].'&versId='.$row['vid'].'">Edit</a>'
+        'event' => '<b>'.$row['title'].'</b>',
+        'start' => date("F j, Y g:i:s A ", strtotime($row['startTime'])),
+        'end' => date("F j, Y g:i:s A ", strtotime($row['endTime'])),
+        'action'=> '<button type="button" class="btn btn-default"><a href="'.$row['GOOGLE_EVENTLINK'].'" target="_blank"> Google </a></button>'
     );
 
 }
