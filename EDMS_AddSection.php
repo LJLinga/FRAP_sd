@@ -14,26 +14,25 @@ include('GLOBAL_CMS_ADMIN_CHECKING.php');
  */
 $userId = $_SESSION['idnum'];
 
-if(isset($_POST['btnSubmit'])){
-    $title = $crud->escape_string($_POST['post_title']);
-    $body = $crud->escape_string($_POST['post_content']);
-    $status = $_POST['btnSubmit'];
 
-    $postId = $crud->executeGetKey("INSERT INTO sections (firstAuthorId, manualId, authorId, statusId) values ('$title', '$body','$userId','$status')");
-    if(!empty ($postId)) {
-        if($status=='3' && $cmsRole=='3'){
-            $crud->execute("UPDATE posts SET publisherId='$userId' WHERE id='$postId';");
-            $result = $crud->execute("SELECT timePublished FROM posts WHERE id='$postId' AND permalink IS NULL");
-            if(empty($result[0]['permalink'])) {
-                include('CMS_FUNCTION_Permalink.php');
-                $permalink = generate_permalink($title);
-                $crud->execute("UPDATE posts SET permalink='$permalink' WHERE id='$postId' AND permalink IS NULL");
-            }
-        }
-        if($status=='4'){
-            $crud->execute("UPDATE posts SET archivedById='$userId' WHERE id='$postId';");
-        }
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/CMS_ADMIN_EditPost.php?postId=" . $postId);
+if(isset($_POST['btnRoute'])){
+    $title = $crud->escape_string($_POST['section_title']);
+    $sectionNo = $crud->escape_string($_POST['section_number']);
+    $content = $crud->escape_string($_POST['section_content']);
+    $nextStepId = $_POST['btnRoute'];
+    //$parentSectionId = $_POST['section_parent'];
+    //$siblingSectionId = $_POST['section_sibling'];
+    $sectionId = $crud->executeGetKey("INSERT INTO sections (authorId, sectionNo, stepId, title, content) VALUES ('$userId', '$sectionNo','$nextStepId', '$title', '$content')");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_EditSection.php?secId=".$sectionId);
+}
+
+$rows = $crud->getData("SELECT sa.* FROM step_author sa WHERE stepId = 12;");
+if(!empty($rows)){
+    foreach((array) $rows as $key => $row){
+        $read= $row['read'];
+        $write= $row['write'];
+        $route= $row['route'];
+        $comment = $row['comment'];
     }
 }
 
@@ -43,14 +42,10 @@ include 'EDMS_SIDEBAR.php';
 ?>
     <script>
         $(document).ready( function(){
-            $('textarea').froalaEditor({
-                // Disables video upload
-                videoUpload: false,
-                //
-                imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
-                // Set the file upload URL.
-                fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
-                width: 750
+            $('#section_parent').on('change', function(){
+                alert('100');
+                // AJAX query the latest section #
+                // Based on looping
             });
         });
     </script>
@@ -60,7 +55,7 @@ include 'EDMS_SIDEBAR.php';
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header">
-                        Add New Section
+                        Create New Section
                     </h3>
 
                 </div>
@@ -71,34 +66,30 @@ include 'EDMS_SIDEBAR.php';
                     <div class="column col-lg-7">
                         <!-- Text input-->
                         <div class="form-group">
-                            <label for="post_title">Title</label>
-                            <input id="post_title" name="post_title" type="text" placeholder="Put your post title here..." class="form-control input-md" value="<?php if(isset($title)){ echo $title; }; ?>" required>
+                            <label for="section_number">Section Number</label>
+                            <input id="section_number" name="section_number" type="text" placeholder="Put your section number here..." class="form-control input-md"  required>
                         </div>
-
-                        <!-- Textarea -->
                         <div class="form-group">
-                            <label for="post_content">Content</label>
-                            <textarea name="post_content" id="post_content"></textarea>
+                            <label for="section_title">Title</label>
+                            <input id="section_title" name="section_title" type="text" placeholder="Put your section title here..." class="form-control input-md" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="section_content">Content</label>
+                            <textarea name="section_content" class="form-control" rows="20" id="section_content"></textarea>
                         </div>
                     </div>
 
                     <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
                         <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-body">
-                                No parent section
+                            <div class="card-header"><b>Document References</b></div>
+                            <div class="card-body" style="max-height: 20rem; overflow-y: scroll;">
+                                <span id="noRefsYet">No References</span>
+                                <span id="refDocuments" style="font-size: 12px;">
+                                </span>
                             </div>
                             <div class="card-footer">
-                                <button class="btn btn-default">Select Parent Section</button>
-                               </div>
-                        </div>
-
-                        <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-body">
-                                No references
-                            </div>
-                            <div class="card-footer">
-                                <button class="btn btn-default"><i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-file"></i> Add New Document</button>
-                                <button class="btn btn-default"><i class="fa fa-fw fa-link"></i><i class="fa fa-fw fa-file"></i> Link Existing Document</button>
+                                <button type="button" class="btn btn-default"><i class="fa fa-fw fa-plus"></i>New</button>
+                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Existing</button>
                             </div>
                         </div>
 
@@ -107,20 +98,22 @@ include 'EDMS_SIDEBAR.php';
                                 Unsaved
                             </div>
                             <div class="card-footer">
+                                <?php if(isset($write) && $write == '2') { ?>
+                                    <button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit">Save as Draft</button>
+                                <?php } ?>
                                 <?php
-                                    if($cmsRole == '3') {
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
-                                        echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="3">Publish</button> ';
-                                    }else if($cmsRole == '2'){
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Save as Draft</button> ';
-                                        echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
+                                    if(isset($route) && $route == '2') {
+                                        $rows = $crud->getData("SELECT sr.* FROM step_routes sr WHERE sr.currentStepId = 12;");
+                                        if(!empty($rows)){
+                                            foreach((array) $rows as $key => $row){
+                                                echo '<button type="submit" class="btn btn-primary" name="btnRoute" value="'.$row['nextStepId'].'">'.$row['routeName'].'</button>';
+                                            }
+                                        }
                                     }
                                 ?>
                             </div>
                         </div>
-
                         <!-- Button -->
-
                     </div>
                 </div>
             </form>

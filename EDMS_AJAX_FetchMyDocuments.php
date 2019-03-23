@@ -11,9 +11,12 @@ $crud = new GLOBAL_CLASS_CRUD();
 session_start();
 
 
-if(isset($_POST['role'])){
+if(isset($_POST['userId'])){
 
-    $role = $_POST['role'];
+
+
+    $userId = $_POST['userId'];
+
 
     $query = "SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor, d.stepId, t.type, stat.statusName,
                 v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.processName, s.stepNo, s.stepName,
@@ -21,14 +24,13 @@ if(isset($_POST['role'])){
                 WHERE v.versionId = vid) AS currentAuthor
                 FROM documents d JOIN doc_versions v ON d.documentId = v.documentId
                 JOIN doc_status stat ON stat.id = d.statusId
-                JOIN doc_type t ON t.id = d.typeId
+                JOIN doc_type t ON d.typeId = t.id
                 JOIN employee e ON e.EMP_ID = d.firstAuthorId 
                 JOIN steps s ON s.id = d.stepId
-                JOIN step_roles sr ON sr.stepId = s.id
                 JOIN process pr ON pr.id = s.processId
-                WHERE s.processId = pr.id AND v.versionId = 
-                (SELECT MAX(v1.versionId) FROM doc_versions v1 WHERE v1.documentId = d.documentId)
-                AND sr.roleId = '$role' AND sr.read = 2 ORDER BY v.timeCreated DESC;";
+                WHERE v.versionId = (SELECT MAX(v1.versionId) FROM doc_versions v1 WHERE v1.documentId = d.documentId)
+                AND d.firstAuthorId = '$userId' OR v.authorId = '$userId'
+                GROUP BY vid ORDER BY v.timeCreated DESC;";
 
 
     $rows = $crud->getData($query);

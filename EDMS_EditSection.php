@@ -11,178 +11,180 @@ $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
-include('GLOBAL_CMS_ADMIN_CHECKING.php');
+//include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
-//hardcoded value for userType, will add MYSQL verification
 $userId = $_SESSION['idnum'];
+//Buttons here
 
+if(isset($_POST['btnSubmit'])){
+    $title = $crud->escape_string($_POST['section_title']);
+    $sectionNo = $crud->escape_string($_POST['section_number']);
+    $content = $crud->escape_string($_POST['section_content']);
+    //$parentSectionId = $_POST['section_parent'];
+    //$siblingSectionId = $_POST['section_sibling'];
+    $sectionId = $crud->executeGetKey("INSERT INTO sections (authorId, sectionNo, title, content) VALUES ('$userId', '$sectionNo', '$title', '$content')");
+}
 
+if(isset($_GET['secId'])){
+    $sectionId = $_GET['secId'];
+
+    $rows = $crud->getData("SELECT authorId, stepId, statusId, availabilityId, approvedById, lockedById, sectionNo, title, content, timeCreated FROM facultyassocnew.sections;");
+    if(!empty($rows)){
+        foreach((array) $rows as $key => $row){
+            $authorId = $row['authorId'];
+            $stepId = $row['stepId'];
+            $statusId = $row['statusId'];
+            $availabilityId = $row['availabilityId'];
+            $approvedById = $row['approvedById'];
+            $lockedById = $row['lockedById'];
+            $sectionNo = $row['sectionNo'];
+            $title = $row['title'];
+            $content = $row['content'];
+            $timeCreated = $row['timeCreated'];
+        }
+    }else{
+        //header redirect back to Manual Revisions
+        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+        echo 'nothing found';
+    }
+
+    $rows = $crud->getData("SELECT sa.* FROM step_author sa WHERE stepId = 12;");
+    if(!empty($rows)){
+        foreach((array) $rows as $key => $row){
+            $read= $row['read'];
+            $write= $row['write'];
+            $route= $row['route'];
+            $comment = $row['comment'];
+        }
+    }
+
+    if($userId == $authorId){
+        $query = "SELECT su.read, su.write, su.route, su.comment FROM step_author su
+                WHERE su.stepId='$currentStepId' LIMIT 1;";
+        $rows = $crud->getData($query);
+        if(!empty($rows)){
+            foreach((array) $rows as $key => $row){
+                $read= $row['read'];
+                $write= $row['write'];
+                $route= $row['route'];
+                $comment = $row['comment'];
+            }
+        }else{
+            $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su
+                WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
+            $rows = $crud->getData($query);
+            if(!empty($rows)){
+                //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
+                foreach((array) $rows as $key => $row){
+                    $read= $row['read'];
+                    $write= $row['write'];
+                    $route= $row['route'];
+                    $comment = $row['comment'];
+                }
+            }
+        }
+    }else{
+        $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su
+                WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
+        $rows = $crud->getData($query);
+        if(!empty($rows)){
+            //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
+            foreach((array) $rows as $key => $row){
+                $read= $row['read'];
+                $write= $row['write'];
+                $route= $row['route'];
+                $comment = $row['comment'];
+            }
+        }
+    }
+}
+
+$page_title = 'Faculty Manual - Edit Section';
+include 'GLOBAL_HEADER.php';
+include 'EDMS_SIDEBAR.php';
 ?>
     <script>
         $(document).ready( function(){
 
-            let status = <?php echo $status; ?>;
-            let cmsRole = <?php echo $cmsRole; ?>;
-
-            $('#btnUpdate').hide();
-
-            $('textarea').froalaEditor({
-                //Disables video upload
-                videoUpload: false,
-                // Set the image upload URL
-                imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
-                // Set the file upload URL.
-                fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
-                //Allow comments
-                width: 750
-            });
-
-            if(status == 3 && cmsRole!= 3){
-                $('textarea').froalaEditor("edit.off");
-            }
-
-            $('textarea').on('froalaEditor.contentChanged', function (e, editor) {
-                $('#btnUpdate').show();
-            });
-
-            $('textarea').froalaEditor('html.set', '<?php echo $body?>');
-
-            $('#btnComment').onclick( function(){
-                $('#comment').html($('textarea').froalaEditor('html.getSelected'));
-                alert('hello');
-            });
-
-            $('textarea').on('froalaEditor.image');
-
-//        $('#modalTriggerSubmit').click(function() {
-//            $('#changeText').text($('.btn').val());
-//            $('#submit').click(function() {
-//                document.getElementById("addToPay").click();
-//            });
-//        });
-//        $('#modalTriggerUpdate').click(function() {
-//            $('#changeText').text('50 % immediately');
-//            $('#submit').click(function() {
-//                document.getElementById("addFifty").click();
-//            });
-//        });
-
         });
-
-        function addComment(){
-            $('#comment').html($('textarea').froalaEditor('html.getSelected'));
-        }
     </script>
 
     <div id="content-wrapper">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h3 class="page-header">
-                        <?php echo $head;?>
-                    </h3>
-                </div>
-            </div>
             <!--Insert success page-->
             <form id="form" name="form" method="POST" action="<?php $_SERVER["PHP_SELF"]?>">
-                <div class="row">
+                <div class="row" style="margin-top: 2rem;">
                     <div class="column col-lg-7">
                         <!-- Text input-->
                         <div class="form-group">
-                            <label for="post_title">Title</label>
-                            <input <?php if($cmsRole != '3' && $status == '3') echo 'disabled' ?> id="post_title" name="post_title" type="text" placeholder="Put your post title here..." class="form-control input-md" value="<?php if(isset($title)){ echo $title; }; ?>" required>
+                            <label for="section_number">Section Number</label>
+                            <input id="section_number" name="section_number" type="text" class="form-control input-md" value="<?php echo $sectionNo;?>"required>
                         </div>
-
-                        <!-- Textarea -->
                         <div class="form-group">
-                            <label for="post_content">Content</label>
-                            <textarea name="post_content" id="post_content"></textarea>
+                            <label for="section_title">Title</label>
+                            <input id="section_title" name="section_title" type="text" class="form-control input-md" value="<?php echo $title;?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="section_content">Content</label>
+                            <textarea name="section_content" class="form-control" rows="25" id="section_content"><?php echo $content;?></textarea>
+                        </div>
+                        <div class="card" style="margin-top: 1rem;">
+                            <div class="card-header"><b>Comments</b></div>
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
+                                <span id="comment_message"></span>
+                                <div id="display_comment"></div>
+                            </div>
                         </div>
                     </div>
-                    <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem; ">
 
+                    <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
                         <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="reference">Parent Section</label>
-                                </div>
+                            <div class="card-header"><b>Document References</b></div>
+                            <div class="card-body" style="max-height: 20rem; overflow-y: scroll;">
+                                <span id="noRefsYet">No References</span>
+                                <span id="refDocuments" style="font-size: 12px;">
+                                </span>
                             </div>
                             <div class="card-footer">
-                                <button class="btn btn-default">Select Parent Section</button>
+                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
+                            </div>
+                        </div>
+                        <div class="card" style="margin-bottom: 1rem;">
+                            <div class="card-header"><b>Referenced Minutes</b></div>
+                            <div class="card-body" style="max-height: 20rem; overflow-y: scroll;">
+                                <span id="noRefsYet">No References</span>
+                                <span id="refDocuments" style="font-size: 12px;">
+                                </span>
+                            </div>
+                            <div class="card-footer">
+                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
                             </div>
                         </div>
 
                         <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-body" >
-                                <div class="form-group">
-                                    <label for="reference">References</label>
-                                    <div id="reference">
-                                        <button type="button" onclick="alertBox();" id="btnReference" name="btnReference" class="btn btn-sm">Add Reference</button><p></p>
-                                        <input id="ref_1" name="ref_1" type="text" placeholder="No document referenced yet..." class="form-control input-sm" disabled required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-body" >
-                                Author: <b><?php echo $author; ?></b><br>
-                                <i>Created on: <b><?php echo date("F j, Y g:i:s A ", strtotime($firstPosted)); ?></b></i><br><br>
-
-                                Current Status: <b><?php echo $statusDesc?></b>
-                                <?php if(!empty($permalink)){ ?>
-                                    (<a href="<?php echo "http://localhost/FRAP_sd/read.php?pl=".$permalink?>" >Preview</a>)
-                                <?php } ?>
-                                <br>
-                                <?php if(!empty($publisher)){ echo "Publisher: <b>".$publisher."</b><br>"; }?>
-                                <i>Last updated: <b><?php  echo date("F j, Y g:i:s A ", strtotime($lastUpdated));?></b></i><br><br>
-                            </div>
-
                             <div class="card-body">
-                                <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;}; ?>">
-                                <div class="form-group">
-                                    <?php
-                                    if($cmsRole == '3') {
-                                        if ($status == '2' || $status == '1') {
-                                            echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="3">Publish</button> ';
-                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="4">Trash</button> ';
-                                        } else if ($status == '3') {
-                                            echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnUpdate" value="3" hidden>Publish Changes</button> ';
-                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Switch to Draft</button> ';
-                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="4">Trash</button> ';
-                                        } else if ($status == '4') {
-                                            echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="' . $prevStatus . '">Restore</button> ';
-                                        }
-                                    }else if($cmsRole == '2'){
-                                        if ($status == '1') {
-                                            echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
-                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="4">Trash</button> ';
-                                        } else if ($status == '2') {
-                                            echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnUpdate" value="2">Resubmit for Review</button> ';
-                                            echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Switch to Draft</button> ';
-                                            echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="4">Trash</button> ';
-                                        } else if ($status == '4') {
-                                            echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="' . $prevStatus . '">Restore</button> ';
+                                Unsaved
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit">Save as Draft</button>
+                                <?php
+                                    if(isset($write) && $write == '2') {
+                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit">Save as Draft</button>';
+                                    }
+                                    if(isset($route) && $route == '2') {
+                                        $rows = $crud->getData("SELECT sr.* FROM step_routes sr WHERE sr.currentStepId = '$stepId';");
+                                        if(!empty($rows)){
+                                            foreach((array) $rows as $key => $row){
+                                                echo '<button type="submit" class="btn btn-primary" name="btnRoute" value="'.$row['nextStepId'].'">'.$row['routeName'].'</button>';
+                                            }
                                         }
                                     }
-                                    ?>
-                                </div>
+                                ?>
                             </div>
                         </div>
-
-                        <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-body" >
-                                <button type="button" class="btn btn-default" name="btnComment" id="btnComment" onclick="addComment()">Comment</button>
-                                <p id="comment" name="comment"></p>
-                            </div>
-                        </div>
+                        <!-- Button -->
                     </div>
-
-                </div>
-                <div class="row">
-
                 </div>
             </form>
         </div>

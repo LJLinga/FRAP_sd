@@ -11,27 +11,35 @@ $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
-include('GLOBAL_EDMS_ADMIN_CHECKING.php');
-
-include 'GLOBAL_HEADER.php';
-include 'EDMS_SIDEBAR.php';
-
+//include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 $userId = $_SESSION['idnum'];
+$edmsRole = $_SESSION['EDMS_ROLE'];
 $revisions = 'closed';
 
-$query = "SELECT m.year, m.title, m.revisionsStarted FROM faculty_manual m WHERE statusId = 1 ORDER BY year DESC LIMIT 1;";
+if(isset($_POST['btnOpen'])){
+    $crud->execute("INSERT INTO revisions (initiatedById, statusId) VALUES ('$userId','2')");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+}
+
+if(isset($_POST['btnClose'])){
+    $revisionsId = $_POST['btnClose'];
+    $crud->execute("UPDATE revisions SET closedById = '$userId', statusId = 1 WHERE id = '$revisionsId' ");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+}
+
+$query = "SELECT r.id, r.revisionsOpened FROM revisions r WHERE r.statusId = 2 ORDER BY r.id DESC LIMIT 1;";
 $rows = $crud->getData($query);
 if(!empty($rows)){
     $revisions = 'open';
     foreach ((array) $rows as $key => $row){
-        $year = $row['year'];
-        $title = $row['title'];
-        $revisionsStarted = $row['revisionsStarted'];
+        $revisionsOpened = $row['revisionsOpened'];
+        $revisionsId = $row['id'];
     }
 }
 
-//$edmsRole = '4';
+include 'GLOBAL_HEADER.php';
+include 'EDMS_SIDEBAR.php';
 ?>
 
 <div id="content-wrapper">
@@ -50,57 +58,52 @@ if(!empty($rows)){
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body" style="position: relative;">
+                        <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
                         <?php if($revisions == 'open') {
-                            echo 'Revisions for <b>Faculty Manual '.$year.'</b> started last '.$revisionsStarted;
-                            //$edmsRole = '4';
+                            echo '<b> Faculty Manual Revisions </b> started last '.$revisionsOpened;
                             if($edmsRole == '4'){
                                 echo '<span style="position: absolute; top:4px; right:4px;">';
                                 echo 'Revisions Actions: ';
-                                echo '<button class="btn btn-warning" name="btnRevisions" value="5"> Hold Revisions </button> ';
-                                // All editing is halted. Everyone can still view and comment.
-                                echo '<button class="btn btn-danger" name="btnRevisions" value="2"> End Revisions </button> ';
-                                echo '<button class="btn btn-danger" name="btnRevisions" value="6"> Cancel Revisions </button> ';
-                                // Prompts whether PRESIDENT is sure to END revisions.
-                                // Shows which sections are currently not yet finalized/edits ongoing.
-                                // All recent saved progress are retained if PRESIDENT chooses to save still.
+                                echo '<button class="btn btn-danger" name="btnClose" value="'.$revisionsId.'"> Close Revisions </button> ';
                                 echo '</span>';
                             }
                         }else{
                             echo 'Faculty Manual Revisions are still closed.';
-                            echo '<span style="position: absolute; top:4px; right:4px;">';
-                            echo '<button class="btn btn-danger" name="btnRevisions"> Open Revisions </button>';
-                            echo '</span>';
-
+                            if($edmsRole == '4') {
+                                echo '<span style="position: absolute; top:4px; right:4px;">';
+                                echo '<button class="btn btn-danger" name="btnOpen"> Open Revisions </button>';
+                                echo '</span>';
+                            }
                         }
                         ?>
+                        </form>
                     </div>
                 </div>
-                <?php if ($revisions == 'open') { ?>
                 <div class="card" style="margin-top: 1rem;">
                     <div class="card-header btn-group">
-                        <a type="button" class="btn btn-default" id="btnAll">All</a>
-                        <a type="button" class="btn btn-default" id="btnMine">Mine</a>
-                        <a type="button" class="btn btn-success" id="btnPublished">Published</a>
-                        <a type="button" class="btn btn-warning" id="btnPending">Pending Review</a>
-                        <a type="button" class="btn btn-primary" id="btnDraft">Drafts</a>
-                        <a type="button" class="btn btn-danger" id="btnArchived">Archived</a>
+                        <a type="button" class="btn btn-default" id="btnAll" onclick="searchTable('')">All</a>
+                        <?php
+                        $rows = $crud->getData("SELECT status FROM facultyassocnew.section_status;");
+                        foreach((array) $rows as $key => $row){
+                            echo '<a type="button" class="btn btn-default" onclick="searchTable(&quot;'.$row['status'].'&quot;)">'.$row['status'].'</a>';
+                        }
+                        ?>
                     </div>
                     <div class="card-body">
                         <table id="myTable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th width="600px;">Title</th>
-                                <th width="200px;">Process</th>
+                                <th width="500px;">Title</th>
+                                <th width="300px;">Process</th>
                                 <th width="100px;">Action</th>
                             </tr>
                             </thead>
                         </table>
                     </div>
                     <div class="card-footer">
-                        <span>Last Updated on....</span>
+                        <span id="lastUpdatedOn">Last Updated on....</span>
                     </div>
                 </div>
-                <?php } ?>
             </div>
             <div class="col-lg-4">
                 <div class="card">

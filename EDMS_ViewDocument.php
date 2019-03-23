@@ -13,8 +13,11 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 //include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 $edmsRole = $_SESSION['EDMS_ROLE'];
-//$edmsRole = 2;
 $userId = $_SESSION['idnum'];
+$read = 2;
+$write = 1;
+$route = 1;
+$comment = 1;
 
 if(isset($_GET['docId'])){
 
@@ -41,37 +44,6 @@ if(isset($_GET['docId'])){
     }
 
     // Load Current User Permissions
-    $query = "SELECT su.read, su.write, su.route, su.comment FROM step_author su
-                WHERE su.stepId='$currentStepId' LIMIT 1;";
-    $rows = $crud->getData($query);
-    if(empty($rows)){
-        $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su
-                WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
-        $rows = $crud->getData($query);
-        if(empty($rows)){
-            //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Dashboard.php");
-        }else{
-            foreach((array) $rows as $key => $row){
-                $read= $row['read'];
-                $write= $row['write'];
-                $route= $row['route'];
-                $comment = $row['comment'];
-            }
-        }
-    }else{
-        foreach((array) $rows as $key => $row){
-            $read= $row['read'];
-            $write= $row['write'];
-            $route= $row['route'];
-            $comment = $row['comment'];
-        }
-    }
-
-    if($availability == '1'){
-        $route = '1';
-        if($lockedById == $userId) $write = '2';
-        else $write = '1';
-    }
 
     //Get the rest of the document.
     $query = "SELECT d.firstAuthorId, d.timeFirstPosted, d.availabilityId, v.timeCreated, v.versionId, v.versionNo, v.authorId, v.title, v.filePath, 
@@ -95,8 +67,54 @@ if(isset($_GET['docId'])){
         $availability = $row['availabilityId'];
     }
 
+    if($userId == $firstAuthorId){
+        $query = "SELECT su.read, su.write, su.route, su.comment FROM step_author su
+                WHERE su.stepId='$currentStepId' LIMIT 1;";
+        $rows = $crud->getData($query);
+        if(!empty($rows)){
+            foreach((array) $rows as $key => $row){
+                $read= $row['read'];
+                $write= $row['write'];
+                $route= $row['route'];
+                $comment = $row['comment'];
+            }
+        }else{
+            $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su
+                WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
+            $rows = $crud->getData($query);
+            if(!empty($rows)){
+                //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
+                foreach((array) $rows as $key => $row){
+                    $read= $row['read'];
+                    $write= $row['write'];
+                    $route= $row['route'];
+                    $comment = $row['comment'];
+                }
+            }
+        }
+    }else{
+        $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su
+                WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
+        $rows = $crud->getData($query);
+        if(!empty($rows)){
+            //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
+            foreach((array) $rows as $key => $row){
+                $read= $row['read'];
+                $write= $row['write'];
+                $route= $row['route'];
+                $comment = $row['comment'];
+            }
+        }
+    }
+
+    if($availability == '1'){
+        $route = '1';
+        if($lockedById == $userId) $write = '2';
+        else $write = '1';
+    }
+
 }else{
-   header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Dashboard.php");
+   header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
 }
 
 if(isset($_POST['btnUnlock'])){
@@ -149,14 +167,8 @@ if(isset($_POST['btnDownload'])){
 
 if(isset($_POST['btnRoute'])){
     $documentId = $_POST['documentId'];
-    $routeId=$_POST['btnRoute'];
-    $rows = $crud->getData("SELECT nextStepId, nextProcessId FROM step_routes WHERE id='$routeId' LIMIT 1");
-    foreach ((array)$rows as $key => $row) {
-        $nextStepId = $row['nextStepId'];
-        $nextProcessId = $row['nextProcessId'];
-    }
-    //$crud->execute("UPDATE documents SET availabilityId='2', stepId='$nextStepId', processId = '$nextProcessId', lockedById=NULL WHERE documentId='$documentId'");
-    $crud->execute("UPDATE documents SET statusId = '1', availabilityId='2', stepId='$nextStepId', processId = '$nextProcessId', lockedById=NULL WHERE documentId='$documentId'");
+    $nextStepId=$_POST['btnRoute'];
+    $crud->execute("UPDATE documents SET statusId = '1', availabilityId='2', stepId='$nextStepId', lockedById=NULL WHERE documentId='$documentId'");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
 }
 
@@ -169,7 +181,7 @@ include 'EDMS_SIDEBAR.php';
             <div class="col-lg-12" style="margin-top: 2rem;">
                 <ol class="breadcrumb">
                     <li>
-                        <a href="http://localhost/FRAP_sd/EDMS_Dashboard.php">Documents</a>
+                        <a href="http://localhost/FRAP_sd/EDMS_Workspace.php">Workspace</a>
                     </li>
                     <li>
                         <?php echo $processName;?>
@@ -182,7 +194,22 @@ include 'EDMS_SIDEBAR.php';
         </div>
         <div class="row">
             <div class="col-lg-8">
-                <iframe src = "/ViewerJS/../FRAP_sd/<?php echo $filePath;?>" width='850' style="height:80vh;"; allowfullscreen webkitallowfullscreen></iframe>
+
+                <?php
+                    $ext = pathinfo($filePath, PATHINFO_EXTENSION);
+                    if($ext == 'pdf' || $ext == 'jpg' || $ext='odt'){
+                        echo '<iframe src="/ViewerJS/../FRAP_sd/'.$filePath.'" width=\'850\' style="height:80vh;"; allowfullscreen webkitallowfullscreen></iframe>';
+                    }else{
+                        echo '<div class="card" style="margin-top: 1rem;">
+                                <div class="card-header"><b>Document File</b></div>
+                                <div class="card-body">
+                                    <p>Viewer does not support format : <b>'.$ext.'</b></p>
+                                    <a class="btn fa fa-download"  href="'.$filePath.'" download="'.$title.'_ver'.$versionNo.'_'.basename($filePath).'"> Download </a>
+                                </div>
+                            </div>';
+                    }
+                ?>
+
 
                 <div class="card" style="margin-top: 1rem;">
                     <div class="card-header"><b>Comments</b></div>
@@ -245,20 +272,22 @@ include 'EDMS_SIDEBAR.php';
                                     //Later
                                     //echo '<button class="btn btn-info" style="text-align: left; width: 100%;" type="button" id="btnAssignTask">Change Type</button>';
                                 }else if(isset($route) && $route=='2') {
-                                    if($statusId == 1){
-                                        echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
-                                        echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$documentId.'">Reject</button>';
-                                    }else if($statusId == 2){
-                                        echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$documentId.'">Reject</button>';
-                                    }else if($statusId == 3){
-                                        echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
+                                    if($isFinal == '2'){
+                                        if($statusId == 1){
+                                            echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
+                                            echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$documentId.'">Reject</button>';
+                                        }else if($statusId == 2){
+                                            echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$documentId.'">Reject</button>';
+                                        }else if($statusId == 3){
+                                            echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
+                                        }
                                     }
-                                    $query = "SELECT id, routeName FROM step_routes WHERE stepId ='$currentStepId';";
+                                    $query = "SELECT nextStepId, routeName FROM step_routes WHERE currentStepId ='$currentStepId';";
                                     $rows = $crud->getData($query);
                                     if (!empty($rows)) {
                                         echo '<input type="hidden" name="documentId" value="'.$documentId.'">';
                                         foreach ((array)$rows as $key => $row) {
-                                            echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnRoute" value="'.$row['id'].'">'.$row['routeName'].'</button>';
+                                            echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnRoute" value="'.$row['nextStepId'].'">'.$row['routeName'].'</button>';
                                         }
                                     }
                                 }
@@ -270,6 +299,8 @@ include 'EDMS_SIDEBAR.php';
                                     echo '<button class="btn btn-default" type="submit" name="btnUnlock" id="btnUnlock" value="'.$documentId.'" style="text-align: left; width: 100%;">Cancel Editing</button>';
                                     echo '<button type="button" class="btn btn-default" id="btnUpload" data-toggle="modal" data-target="#uploadModal" style="text-align: left; width: 100%;">Upload New Version</button>';
                                 }
+
+                                echo $edmsRole.','.$read.','.$write.','.$route;
                                 ?>
                                 <a href="<?php echo $filePath?>" download><button type="button" class="btn btn-default" style="text-align: left; width: 100%;">Download</button></a>
                                 <button type="button" name="btnArchive" class="btn btn-default" style="text-align: left; width: 100%;">Archive</button>

@@ -11,20 +11,22 @@ $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
-include('GLOBAL_EDMS_ADMIN_CHECKING.php');
+//include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
 
 $edmsRole = $_SESSION['EDMS_ROLE'];
 $userId = $_SESSION['idnum'];
+$rows = $crud->getData("SELECT CONCAT(e.FIRSTNAME, ,e.LASTNAME) AS name FROM employee e WHERE e.EMP_ID ='$userId' LIMIT 1;");
+$userName = $rows[0]['name'];
 ?>
 
 <div id="content-wrapper">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <h3 class="page-header"> My Documents
+                <h3 class="page-header"> Workspace
                     <button name="btnAddDocument" id="btnAddDocument" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Add Document</button>
                 </h3>
             </div>
@@ -32,20 +34,42 @@ $userId = $_SESSION['idnum'];
         <div class="row">
             <div class="col-lg-8">
                 <div class="card">
-                    <div class="card-header btn-group">
-                        <a type="button" class="btn btn-default" id="btnAll">All</a>
-                        <a type="button" class="btn btn-default" id="btnMine">Mine</a>
-                        <a type="button" class="btn btn-success" id="btnPublished">Published</a>
-                        <a type="button" class="btn btn-warning" id="btnPending">Pending Review</a>
-                        <a type="button" class="btn btn-primary" id="btnDraft">Drafts</a>
-                        <a type="button" class="btn btn-danger" id="btnArchived">Archived</a>
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="btn-group">
+                                    <a type="button" class="btn btn-default" id="btnAll" onclick="searchTable('',1)">All</a>
+                                    <a type="button" class="btn btn-default" id="btnMine" onclick="searchTable('<?php echo $userName; ?>',0)">Mine</a>
+                                    <?php
+                                    $rows = $crud->getData("SELECT statusName FROM facultyassocnew.doc_status;");
+                                    foreach((array) $rows as $key => $row){
+                                        echo '<a type="button" class="btn btn-default" onclick="searchTable(&quot;'.$row['statusName'].'&quot;,1)">'.$row['statusName'].'</a>';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-inline">
+                                    <label for="sel1">Type</label>
+                                    <select class="form-control" onchange="searchTable(this.value,0)">
+                                        <option value="All">All</option>
+                                        <?php
+                                        $rows = $crud->getData("SELECT t.type FROM facultyassocnew.doc_type t;");
+                                        foreach((array)$rows as $key => $row){
+                                            echo '<option value="'.$row['type'].'">'.$row['type'].'</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body">
                         <table id="myTable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th width="600px;">Title</th>
-                                <th width="200px;">Process</th>
+                                <th width="500px;">Title</th>
+                                <th width="300px;">Process</th>
                                 <th width="100px;">Action</th>
                             </tr>
                             </thead>
@@ -134,29 +158,6 @@ $userId = $_SESSION['idnum'];
 <script>
     $(document).ready(function() {
 
-        $('#dataTable').DataTable();
-
-        $('#btnAddDocument').on('click', function(){
-
-        });
-
-        let mode = '<?php echo $edmsRole; ?>';
-
-        $('table.table').DataTable( {
-            "ajax": {
-                "url":"EDMS_AJAX_FetchDocuments.php",
-                "type":"POST",
-                "data":{ role: mode },
-                "dataSrc": ''
-            },
-            columns: [
-                { data: "title_version" },
-                { data: "currentProcess" },
-                { data: "actions"}
-                ]
-        } );
-
-
         $("#documentUploadForm").on('submit', function(e){
             e.preventDefault();
             $.ajax({
@@ -179,6 +180,36 @@ $userId = $_SESSION['idnum'];
         });
 
     } );
+
+    let mode = '<?php echo $edmsRole; ?>';
+
+    searchTable('',1);
+
+    function searchTable(searchText,col){
+        let table = $('table.table').DataTable( {
+            bSort: false,
+            destroy: true,
+            pageLength: 5,
+            "ajax": {
+                "url":"EDMS_AJAX_FetchDocuments.php",
+                "type":"POST",
+                "data":{ role : mode },
+                "dataSrc": ''
+            },
+            columns: [
+                { data: "title_version" },
+                { data: "currentProcess" },
+                { data: "actions"}
+            ]
+        });
+        if(searchText === 'All'){
+            searchText = '';
+        }
+        table.column(col).search(searchText).draw();
+        // setInterval(function(){
+        //     table.ajax.reload();
+        // },1000)
+    }
 
 </script>
 
