@@ -33,6 +33,14 @@ if(isset($_POST['btnSave'])){
             $crud->execute($query);
         }
     }
+
+    if(isset($_POST['toRemoveDocRefs'])) {
+        $toRemoveDocRefs = $_POST['toRemoveDocRefs'];
+        foreach((array) $toRemoveDocRefs AS $key => $ref){
+            $query = "DELETE FROM section_ref_versions WHERE sectionId = '$sectionId' AND versionId = '$ref'";
+            $crud->execute($query);
+        }
+    }
 }
 
 
@@ -160,7 +168,7 @@ include 'EDMS_SIDEBAR.php';
                                                         JOIN steps s ON s.id = d.stepId
                                                         JOIN process pr ON pr.id = s.processId 
                                                         JOIN section_ref_versions ref ON ref.versionId = v.versionId
-                                                        WHERE ref.postId = '$sectionId';");
+                                                        WHERE ref.sectionId = '$sectionId';");
                                     if(!empty($rows)) {
                                         foreach ((array)$rows as $key => $row) {
                                             $title = $row['title'];
@@ -172,7 +180,7 @@ include 'EDMS_SIDEBAR.php';
                                             $filePath = $row['filePath'];
                                             $fileName = $title.'_ver'.$versionNo.'_'.basename($filePath);
                                             echo '<div class="card" style="position: relative;">';
-                                            echo '<input type="hidden" class="refDocuments" value="'.$row['vid'].'">';
+                                            echo '<input type="hidden" name="toAddDocRefs[]" class="refDocuments" value="'.$row['vid'].'">';
                                             echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
                                             echo '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >';
                                             echo '<a class="btn fa fa-download"  href="'.$filePath.'" download="'.$fileName.'"></a>';

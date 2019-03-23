@@ -103,9 +103,11 @@ include 'EDMS_SIDEBAR.php';
                         <table id="myTable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th width="500px;">Title</th>
-                                <th width="300px;">Process</th>
-                                <th width="100px;">Action</th>
+                                <th width="100px">No.</th>
+                                <th width="400px">Title</th>
+                                <th width="300px">Modified By</th>
+                                <th width="200px">Status</th>
+                                <th width="100px">Action</th>
                             </tr>
                             </thead>
                         </table>
@@ -146,24 +148,22 @@ include 'EDMS_SIDEBAR.php';
 
 
 <script>
-    $(document).ready(function() {
 
 
-        $('table.table').DataTable( {
-            // "ajax": {
-            //     "url":"EDMS_AJAX_FetchDocuments.php",
-            //     "type":"POST",
-            //     "data":{ mode: '1'},
-            //     "dataSrc": ''
-            // },
-            // columns: [
-            //     { data: "title_version" },
-            //     { data: "currentProcess" },
-            //     { data: "actions"}
-            // ]
-        } );
-
-
+    $('table.table').DataTable( {
+        "ajax": {
+            "url":"EDMS_AJAX_FetchSections.php",
+            "type":"POST",
+            "data":{ role: '<?php echo $edmsRole;?>'},
+            "dataSrc": ''
+        },
+        columns: [
+            { data: "section_no" },
+            { data: "title" },
+            { data: "modified_by" },
+            { data: "status" },
+            { data: "action" },
+        ]
     } );
 
 </script>
