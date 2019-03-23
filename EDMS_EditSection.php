@@ -13,90 +13,92 @@ session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 //include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
+$edmsRole= $_SESSION['EDMS_ROLE'];
 $userId = $_SESSION['idnum'];
 //Buttons here
 
-if(isset($_POST['btnSubmit'])){
+if(isset($_POST['btnSave'])){
+    $sectionId = $_POST['section_id'];
     $title = $crud->escape_string($_POST['section_title']);
     $sectionNo = $crud->escape_string($_POST['section_number']);
     $content = $crud->escape_string($_POST['section_content']);
     //$parentSectionId = $_POST['section_parent'];
     //$siblingSectionId = $_POST['section_sibling'];
-    $sectionId = $crud->executeGetKey("INSERT INTO sections (authorId, sectionNo, title, content) VALUES ('$userId', '$sectionNo', '$title', '$content')");
+    $crud->execute("UPDATE sections SET title = '$title', sectionNo = '$sectionNo', content = '$content' WHERE id = '$sectionId'");
+}
+
+if(isset($_POST['btnFinish'])){
+    $sectionId = $_POST['section_id'];
+    $title = $crud->escape_string($_POST['section_title']);
+    $sectionNo = $crud->escape_string($_POST['section_number']);
+    $content = $crud->escape_string($_POST['section_content']);
+    $crud->execute("UPDATE sections SET title = '$title', sectionNo = '$sectionNo', content = '$content', availabilityId='2', lockedById=NULL WHERE id = '$sectionId'");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewSection.php?secId=".$sectionId);
 }
 
 if(isset($_GET['secId'])){
     $sectionId = $_GET['secId'];
 
-    $rows = $crud->getData("SELECT authorId, stepId, statusId, availabilityId, approvedById, lockedById, sectionNo, title, content, timeCreated FROM facultyassocnew.sections;");
+    $rows = $crud->getData("SELECT d.stepId, p.processName, s.stepName, s.isFinal,
+              d.availabilityId, d.lockedById, d.statusId, st.statusName
+              FROM sections d 
+              JOIN steps s ON d.stepId = s.id 
+              JOIN doc_status st ON st.id = d.statusId 
+              JOIN process p ON s.processId = p.id 
+              WHERE d.id='$sectionId';");
+    if(!empty($rows)){
+        foreach((array) $rows as $key => $row){
+            $currentStepId= $row['stepId'];
+            $processName = $row['processName'];
+            $stepName = $row['stepName'];
+            $availabilityId = $row['availabilityId'];
+            $lockedById = $row['lockedById'];
+            $statusId = $row['statusId'];
+            $statusName = $row['statusName'];
+            $isFinal = $row['isFinal'];
+        }
+    }
+
+    if($availabilityId == '1' && $lockedById != $userId){
+        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+    }
+
+    $rows = $crud->getData("SELECT s.authorId, s.firstAuthorId, s.approvedById, s.sectionNo, s.title, s.content, s.timeCreated,
+                                    CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS firstAuthorName,
+                                    (SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) FROM employee e2 WHERE e2.EMP_ID = s.authorId) AS authorName
+                                    FROM facultyassocnew.sections s
+                                    JOIN employee e ON e.EMP_ID = s.firstAuthorId
+                                    WHERE s.id = '$sectionId';");
     if(!empty($rows)){
         foreach((array) $rows as $key => $row){
             $authorId = $row['authorId'];
-            $stepId = $row['stepId'];
-            $statusId = $row['statusId'];
-            $availabilityId = $row['availabilityId'];
+            $authorName = $row['authorName'];
+            $firstAuthorId = $row['firstAuthorId'];
+            $firstAuthorName = $row['firstAuthorName'];
             $approvedById = $row['approvedById'];
-            $lockedById = $row['lockedById'];
             $sectionNo = $row['sectionNo'];
             $title = $row['title'];
             $content = $row['content'];
             $timeCreated = $row['timeCreated'];
         }
-    }else{
-        //header redirect back to Manual Revisions
-        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
-        echo 'nothing found';
     }
 
-    $rows = $crud->getData("SELECT sa.* FROM step_author sa WHERE stepId = 12;");
+    $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su
+                WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
+    $rows = $crud->getData($query);
     if(!empty($rows)){
         foreach((array) $rows as $key => $row){
-            $read= $row['read'];
             $write= $row['write'];
             $route= $row['route'];
-            $comment = $row['comment'];
-        }
-    }
-
-    if($userId == $authorId){
-        $query = "SELECT su.read, su.write, su.route, su.comment FROM step_author su
-                WHERE su.stepId='$currentStepId' LIMIT 1;";
-        $rows = $crud->getData($query);
-        if(!empty($rows)){
-            foreach((array) $rows as $key => $row){
-                $read= $row['read'];
-                $write= $row['write'];
-                $route= $row['route'];
-                $comment = $row['comment'];
-            }
-        }else{
-            $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su
-                WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
-            $rows = $crud->getData($query);
-            if(!empty($rows)){
-                //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
-                foreach((array) $rows as $key => $row){
-                    $read= $row['read'];
-                    $write= $row['write'];
-                    $route= $row['route'];
-                    $comment = $row['comment'];
-                }
-            }
+            //$comment = $row['comment'];
         }
     }else{
-        $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su
-                WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
-        $rows = $crud->getData($query);
-        if(!empty($rows)){
-            //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
-            foreach((array) $rows as $key => $row){
-                $read= $row['read'];
-                $write= $row['write'];
-                $route= $row['route'];
-                $comment = $row['comment'];
-            }
-        }
+        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
     }
+
+}else{
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+    echo 'nothing found';
 }
 
 $page_title = 'Faculty Manual - Edit Section';
@@ -105,7 +107,9 @@ include 'EDMS_SIDEBAR.php';
 ?>
     <script>
         $(document).ready( function(){
-
+            $('#btnRefModal').on('click', function(){
+                reloadDataTable();
+            });
         });
     </script>
 
@@ -113,6 +117,7 @@ include 'EDMS_SIDEBAR.php';
         <div class="container-fluid">
             <!--Insert success page-->
             <form id="form" name="form" method="POST" action="<?php $_SERVER["PHP_SELF"]?>">
+                <input type="hidden" name="section_id" value="<?php echo $sectionId;?>">
                 <div class="row" style="margin-top: 2rem;">
                     <div class="column col-lg-7">
                         <!-- Text input-->
@@ -126,7 +131,7 @@ include 'EDMS_SIDEBAR.php';
                         </div>
                         <div class="form-group">
                             <label for="section_content">Content</label>
-                            <textarea name="section_content" class="form-control" rows="25" id="section_content"><?php echo $content;?></textarea>
+                            <textarea name="section_content" class="form-control" rows="20" id="section_content"><?php echo $content;?></textarea>
                         </div>
                         <div class="card" style="margin-top: 1rem;">
                             <div class="card-header"><b>Comments</b></div>
@@ -147,7 +152,7 @@ include 'EDMS_SIDEBAR.php';
                                 </span>
                             </div>
                             <div class="card-footer">
-                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
+                                <button id="btnRefModal" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
                             </div>
                         </div>
                         <div class="card" style="margin-bottom: 1rem;">
@@ -158,32 +163,27 @@ include 'EDMS_SIDEBAR.php';
                                 </span>
                             </div>
                             <div class="card-footer">
-                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
+                                <button id="btnRefModal" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
                             </div>
                         </div>
-
-                        <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-body">
-                                Unsaved
+                        <div class="card" style="margin-top: 1rem;">
+                            <div class="card-header">
+                                <b>Section Details</b>
                             </div>
-                            <div class="card-footer">
-                                <button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit">Save as Draft</button>
+                            <div class="card-body">
+                                Created by: <?php echo $firstAuthorName ?><br>
+                                Modified by: <?php echo $authorName ?><br>
+                                Last updated: <?php  echo date("F j, Y g:i:s A ", strtotime($timeCreated));?><br>
+                            </div>
+                            <div class="card-footer btn-group">
                                 <?php
-                                    if(isset($write) && $write == '2') {
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit">Save as Draft</button>';
-                                    }
-                                    if(isset($route) && $route == '2') {
-                                        $rows = $crud->getData("SELECT sr.* FROM step_routes sr WHERE sr.currentStepId = '$stepId';");
-                                        if(!empty($rows)){
-                                            foreach((array) $rows as $key => $row){
-                                                echo '<button type="submit" class="btn btn-primary" name="btnRoute" value="'.$row['nextStepId'].'">'.$row['routeName'].'</button>';
-                                            }
-                                        }
-                                    }
+                                if(isset($write) && $write == '2') {
+                                    echo '<button type="submit" class="btn btn-primary" name="btnSave" id="btnSave">Save</button>';
+                                    echo '<button type="submit" class="btn btn-warning" name="btnFinish" id="btnFinish">Finish Editing</button>';
+                                }
                                 ?>
                             </div>
                         </div>
-                        <!-- Button -->
                     </div>
                 </div>
             </form>
@@ -205,6 +205,37 @@ include 'EDMS_SIDEBAR.php';
                     <a href="#" id="submit" class="btn btn-success success">Yes, I'm sure</a>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <form method="POST" id="comment_form">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="hidden" name="comment_name" id="comment_name" class="form-control" placeholder="Enter Name" value="<?php echo $userId; ?>"/>
+                        </div>
+                        <div class="form-group">
+                            <textarea name="comment_content" id="comment_content" class="form-control" placeholder="Enter Comment" rows="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <input type="hidden" name="comment_id" id="comment_id" value="0" />
+                            <input type="hidden" name="versionId" id="versionId" value="<?php echo $versionId; ?>" />
+                            <input type="hidden" name="documentId" id="documentId" value="<?php echo $documentId; ?>" />
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit"/>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
         </div>
     </div>
 <?php include 'GLOBAL_FOOTER.php' ?>

@@ -271,7 +271,7 @@ include 'EDMS_SIDEBAR.php';
                                 if($currentStepId == '999'){
                                     //Later
                                     //echo '<button class="btn btn-info" style="text-align: left; width: 100%;" type="button" id="btnAssignTask">Change Type</button>';
-                                }else if(isset($route) && $route=='2') {
+                                }else if(isset($route) && $route=='2' && $availability=='2') {
                                     if($isFinal == '2'){
                                         if($statusId == 1){
                                             echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
@@ -296,7 +296,7 @@ include 'EDMS_SIDEBAR.php';
                                     echo '<input type="hidden" name="userId" value="'.$userId.'">';
                                     echo '<button class="btn btn-default" type="submit" name="btnLock" value="'.$documentId.'" style="text-align: left; width:100%;">Lock and Edit</button>';
                                 }else if(isset($write) && $write=='2' && $availability=='1'){
-                                    echo '<button class="btn btn-default" type="submit" name="btnUnlock" id="btnUnlock" value="'.$documentId.'" style="text-align: left; width: 100%;">Cancel Editing</button>';
+                                    echo '<button class="btn btn-default" type="submit" name="btnUnlock" id="btnUnlock" value="'.$documentId.'" style="text-align: left; width: 100%;">Finish Editing</button>';
                                     echo '<button type="button" class="btn btn-default" id="btnUpload" data-toggle="modal" data-target="#uploadModal" style="text-align: left; width: 100%;">Upload New Version</button>';
                                 }
 

@@ -1,71 +1,243 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Serus Caligo
- * Date: 10/4/2018
+ * User: nicol
+ * Date: 10/10/2018
  * Time: 3:48 PM
  */
+
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
-include('GLOBAL_EDMS_ADMIN_CHECKING.php');
+//include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
+$edmsRole= $_SESSION['EDMS_ROLE'];
+$userId = $_SESSION['idnum'];
+//Buttons here
+
+if(isset($_POST['btnEdit'])){
+    $sectionId = $_POST['section_id'];
+    $rows = $crud->getData("SELECT availabilityId FROM sections WHERE id = '$sectionId'");
+    foreach((array) $rows as $key => $row){
+        $availabilityId = $row['availabilityId'];
+    }
+    if($availabilityId == '2'){
+        $userId = $_POST['userId'];
+        $crud->execute("UPDATE sections SET availabilityId='1', lockedById='$userId' WHERE id='$sectionId'");
+    }
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_EditSection.php?secId=".$sectionId);
+}
+
+if(isset($_GET['secId'])){
+    $sectionId = $_GET['secId'];
+
+    $rows = $crud->getData("SELECT d.stepId, p.processName, s.stepName, s.isFinal,
+              d.availabilityId, d.lockedById, d.statusId, st.statusName
+              FROM sections d 
+              JOIN steps s ON d.stepId = s.id 
+              JOIN doc_status st ON st.id = d.statusId 
+              JOIN process p ON s.processId = p.id 
+              WHERE d.id='$sectionId';");
+    if(!empty($rows)){
+        foreach((array) $rows as $key => $row){
+            $currentStepId= $row['stepId'];
+            $processName = $row['processName'];
+            $stepName = $row['stepName'];
+            $availabilityId = $row['availabilityId'];
+            $lockedById = $row['lockedById'];
+            $statusId = $row['statusId'];
+            $statusName = $row['statusName'];
+            $isFinal = $row['isFinal'];
+        }
+    }
+
+    $rows = $crud->getData("SELECT authorId, approvedById, sectionNo, title, content, timeCreated FROM facultyassocnew.sections WHERE id = '$sectionId';");
+    if(!empty($rows)){
+        foreach((array) $rows as $key => $row){
+            $authorId = $row['authorId'];
+            $approvedById = $row['approvedById'];
+            $sectionNo = $row['sectionNo'];
+            $title = $row['title'];
+            $content = $row['content'];
+            $timeCreated = $row['timeCreated'];
+        }
+    }else{
+        //header redirect back to Manual Revisions
+        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+        echo 'nothing found';
+    }
+
+    $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su
+                WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
+    $rows = $crud->getData($query);
+    if(!empty($rows)){
+        foreach((array) $rows as $key => $row){
+            $read = $row['read'];
+            $write= $row['write'];
+            $route= $row['route'];
+            $comment = $row['comment'];
+        }
+    }else{
+        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+    }
+}else{
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+    echo 'nothing found';
+}
+
+$page_title = 'Faculty Manual - Edit Section';
 include 'GLOBAL_HEADER.php';
-include 'EDMS_SIDEBAR_ViewSection.php';
+include 'EDMS_SIDEBAR.php';
 ?>
-<div id="content-wrapper">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-7">
-                <h1 class="page-header">Faculty Manual</h1>
-                <ol class="breadcrumb">
-                    <li>
-                        1.0 Membership
-                    </li>
-                    <li>
-                        1.0.1 Requirements
-                    </li>
-                    <li class="active">
-                        1.0.1.1 Beneficiaries
-                    </li>
-                </ol>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-7">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <p>
-                            The member must acquire the form from the office and accomplish it. They should have it notarized before submitting it back to the office for processing. This is required before their membership is approved
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card" style="margin-bottom: 1rem;">
-                    <div class="card-header"><i class="fa fa-fw fa-file"></i> Sub Sections</div>
-                    <div class="card-body">
-                        <div class="collapse navbar-collapse navbar-ex1-collapse">
-                            <ul class="nav">
-                                <li><a href="#" class="active"><i class="fa fa-fw fa-folder"></i> 1.0.1.1 Beneficiaries</a></li>
-                                <li><a href="#"><i class="fa fa-fw fa-folder"></i> 1.0.1.1.1 Exceptions</a></li>
-                                <li><a href="#"><i class="fa fa-fw fa-folder"></i> 1.0.1.1.2 Adding More Beneficiaries</a></li>
-                                <li><a href=""><i class="fa fa-fw fa-folder"></i> 1.0.1.2 Beneficiaries</a></li>
-                                <li><a href="#"><i class="fa fa-fw fa-folder"></i> 1.0.1.2.1 Exceptions</a></li>
-                                <li><a href="#"><i class="fa fa-fw fa-folder"></i> 1.0.1.2.2 Adding More Beneficiaries</a></li>
-                            </ul>
+    <script>
+        $(document).ready( function(){
+
+        });
+    </script>
+
+    <div id="content-wrapper">
+        <div class="container-fluid">
+            <!--Insert success page-->
+            <form id="form" name="form" method="POST" action="<?php $_SERVER["PHP_SELF"]?>">
+                <input type="hidden" name="section_id" value="<?php echo $sectionId;?>">
+                <div class="row" style="margin-top: 2rem;">
+                    <div class="column col-lg-7" >
+                        <!-- Text input-->
+                        <div class="card" style="margin-top: 1rem;">
+                            <div class="card-body">
+                                <h3 class="card-title"><b><?php echo $sectionNo.' '.$title; ?></b></h3>
+                                <p class="card-text"><?php echo $content; ?></p>
+                            </div>
+                        </div>
+                        <div class="card" style="margin-top: 1rem;">
+                            <div class="card-header"><b>Comments</b></div>
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
+                                <span id="comment_message"></span>
+                                <div id="display_comment"></div>
+                            </div>
                         </div>
                     </div>
+
+                    <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
+                        <div class="card" style="margin-bottom: 1rem;">
+                            <div class="card-header"><b>Document References</b></div>
+                            <div class="card-body" style="max-height: 20rem; overflow-y: scroll;">
+                                <span id="noRefsYet">No References</span>
+                                <span id="refDocuments" style="font-size: 12px;">
+                                </span>
+                            </div>
+                            <div class="card-footer">
+                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
+                            </div>
+                        </div>
+                        <div class="card" style="margin-bottom: 1rem;">
+                            <div class="card-header"><b>Referenced Minutes</b></div>
+                            <div class="card-body" style="max-height: 20rem; overflow-y: scroll;">
+                                <span id="noRefsYet">No References</span>
+                                <span id="refDocuments" style="font-size: 12px;">
+                                </span>
+                            </div>
+                            <div class="card-footer">
+                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
+                            </div>
+                        </div>
+                        <div class="card" style="margin-top: 1rem;">
+                            <div class="card-header">
+                                <b>Document Actions</b>
+                            </div>
+                            <div class="card-body">
+                                <div class="btn-group btn-group-vertical" style="width: 100%;">
+                                    <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
+                                        <?php
+                                        if($availabilityId == '2'){
+                                            if(isset($route) && $route=='2') {
+                                                if($isFinal == '2'){
+                                                    if($statusId == '1'){
+                                                        echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$sectionId.'">Accept</button>';
+                                                        echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$sectionId.'">Reject</button>';
+                                                    }else if($statusId == '2'){
+                                                        echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$sectionId.'">Reject</button>';
+                                                    }else if($statusId == '3'){
+                                                        echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$sectionId.'">Accept</button>';
+                                                    }
+                                                }
+                                                $query = "SELECT nextStepId, routeName FROM step_routes WHERE currentStepId ='$currentStepId';";
+                                                $rows = $crud->getData($query);
+                                                if (!empty($rows)) {
+                                                    echo '<input type="hidden" name="sectionId" value="'.$sectionId.'">';
+                                                    foreach ((array)$rows as $key => $row) {
+                                                        echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnRoute" value="'.$row['nextStepId'].'">'.$row['routeName'].'</button>';
+                                                    }
+                                                }
+                                            }
+                                            if(isset($write) && $write=='2'){
+                                                echo '<button class="btn btn-default" type="submit" name="btnEdit" style="text-align: left; width:100%;">Lock and Edit</button>';
+                                                //echo 'button type="button" name="btnArchive" class="btn btn-default" style="text-align: left; width: 100%;">Archive</button>';
+                                            }
+                                        }
+                                        echo $edmsRole.','.$read.','.$write.','.$route;
+                                        ?>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Button -->
+                    </div>
                 </div>
-                <div class="card">
-                    <div class="card-header"><i class="fa fa-fw fa-file"></i> References</div>
-                    <div class="card-body">No Document Referenced</div>
+            </form>
+        </div>
+    </div>
+    <!-- Modal by xtian pls dont delete hehe -->
+    <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Confirm Action
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to <b id="changeText"></b> ?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <a href="#" id="submit" class="btn btn-success success">Yes, I'm sure</a>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<?php include 'GLOBAL_FOOTER.php';?>
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <form method="POST" id="comment_form">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="hidden" name="comment_name" id="comment_name" class="form-control" placeholder="Enter Name" value="<?php echo $userId; ?>"/>
+                        </div>
+                        <div class="form-group">
+                            <textarea name="comment_content" id="comment_content" class="form-control" placeholder="Enter Comment" rows="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <input type="hidden" name="comment_id" id="comment_id" value="0" />
+                            <input type="hidden" name="versionId" id="versionId" value="<?php echo $versionId; ?>" />
+                            <input type="hidden" name="documentId" id="documentId" value="<?php echo $documentId; ?>" />
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit"/>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+<?php include 'GLOBAL_FOOTER.php' ?>

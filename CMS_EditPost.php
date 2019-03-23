@@ -530,7 +530,7 @@ include 'CMS_SIDEBAR.php';
                                             FROM documents d JOIN doc_versions v ON d.documentId = v.documentId
                                             JOIN employee e ON e.EMP_ID = d.firstAuthorId 
                                             JOIN steps s ON s.id = d.stepId
-                                            JOIN process pr ON pr.id = d.processId 
+                                            JOIN process pr ON pr.id = s.processId 
                                             JOIN post_ref_versions ref ON ref.versionId = v.versionId
                                             WHERE ref.postId = $postId;");
                             if(!empty($rows)) {
@@ -570,8 +570,7 @@ include 'CMS_SIDEBAR.php';
 
                             if($mode == 'edit'){
                                 echo '<div class="card-footer">
-                                <button type="button" class="btn btn-default"><i class="fa fa-fw fa-plus"></i>New</button>
-                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Existing</button>
+                                <button id="btnRefModal" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
                             </div>';
                             }
                         ?>

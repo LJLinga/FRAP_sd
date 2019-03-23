@@ -19,14 +19,16 @@ $crud = new GLOBAL_CLASS_CRUD();
         }
     }
 
-    $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor, v.filePath,
+    $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor, v.filePath, t.type, stats.statusName,
                                          v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.id AS processId, pr.processName, s.stepNo, s.stepName,
                                          (SELECT CONCAT(e.lastName,', ',e.firstName) FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
                                          WHERE v.versionId = vid) AS currentAuthor
                                          FROM documents d JOIN doc_versions v ON d.documentId = v.documentId
+                                         JOIN doc_type t ON t.id = d.typeId
+                                         JOIN doc_status stats ON stats.id = d.statusId
                                          JOIN employee e ON e.EMP_ID = d.firstAuthorId 
                                          JOIN steps s ON s.id = d.stepId
-                                         JOIN process pr ON pr.id = d.processId 
+                                         JOIN process pr ON pr.id = s.processId 
                                          WHERE s.processId = pr.id AND v.versionId = 
                                          (SELECT MAX(v1.versionId) FROM doc_versions v1 WHERE v1.documentId = d.documentId)
                                          $append; ");
@@ -36,18 +38,22 @@ $crud = new GLOBAL_CLASS_CRUD();
         foreach ((array)$rows as $key => $row) {
             $vid = $row['vid'];
             $title = $row['title'];
+            $type = $row['type'];
             $versionNo = $row['versionNo'];
             $originalAuthor = $row['originalAuthor'];
             $currentAuthor = $row['currentAuthor'];
             $processName = $row['processName'];
+            $stepNo = $row['stepNo'];
+            $stepName = $row['stepName'];
             $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
             $filePath = $row['filePath'];
             $fileName = $title.'_ver'.$versionNo.'_'.basename($filePath);
-            $htmlA = '<b>'.$title.'</b><span class="badge">'.$versionNo.'</span><br>
+            $htmlA = '<span class="badge badge-success">'.$row['type'].'</span><br><b>'.$title.'</b>
+                        <span class="badge">'.$versionNo.'</span><br>
                       Author:'.$originalAuthor.'<br>
                       Modified by: '.$currentAuthor .'<br>
                       on : <i>'.$updatedOn.'</i><br>';
-            $htmlB = $processName;
+            $htmlB = '<span><b>' . $row['processName'] . '</b></span><br><span class="badge">Step ' . $stepNo . ' '. $stepName.'</span><br><span class="badge">'.$row['statusName'].'</span>';
             $htmlC = '<button type="button" class="btn btn-default" onclick="addRef(this, &quot;' . $vid . '&quot;,&quot;' . $originalAuthor . '&quot;,&quot;' . $currentAuthor . '&quot;,&quot;' . $versionNo . '&quot;,&quot;' . $updatedOn . '&quot;,&quot;' . $title . '&quot;,&quot;' . $processName . '&quot;,&quot;' . $filePath. '&quot;,&quot;' . $fileName . '&quot;);" value="' . $row['vid'] . '">Add</button>';
             $data[] = array(
                 'Document' => $htmlA,

@@ -13,7 +13,19 @@ include('GLOBAL_CMS_ADMIN_CHECKING.php');
  * Time: 3:48 PM
  */
 $userId = $_SESSION['idnum'];
+$edmsRole = $_SESSION['EDMS_ROLE'];
 
+$rows = $crud->getData("SELECT sr.* FROM step_roles sr WHERE stepId = 9 AND roleId = '$edmsRole';");
+if(!empty($rows)){
+    foreach((array) $rows as $key => $row){
+        //$read= $row['read'];
+        $write= $row['write'];
+        $route= $row['route'];
+        //$comment = $row['comment'];
+    }
+}else{
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_EditSection.php?secId=".$sectionId);
+}
 
 if(isset($_POST['btnRoute'])){
     $title = $crud->escape_string($_POST['section_title']);
@@ -22,18 +34,8 @@ if(isset($_POST['btnRoute'])){
     $nextStepId = $_POST['btnRoute'];
     //$parentSectionId = $_POST['section_parent'];
     //$siblingSectionId = $_POST['section_sibling'];
-    $sectionId = $crud->executeGetKey("INSERT INTO sections (authorId, sectionNo, stepId, title, content) VALUES ('$userId', '$sectionNo','$nextStepId', '$title', '$content')");
+    $sectionId = $crud->executeGetKey("INSERT INTO sections (authorId, firstAuthorId, sectionNo, stepId, title, content) VALUES ('$userId','$userId','$sectionNo','$nextStepId', '$title', '$content')");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_EditSection.php?secId=".$sectionId);
-}
-
-$rows = $crud->getData("SELECT sa.* FROM step_author sa WHERE stepId = 12;");
-if(!empty($rows)){
-    foreach((array) $rows as $key => $row){
-        $read= $row['read'];
-        $write= $row['write'];
-        $route= $row['route'];
-        $comment = $row['comment'];
-    }
 }
 
 $page_title = 'Faculty Manual - Add Section';
@@ -98,12 +100,9 @@ include 'EDMS_SIDEBAR.php';
                                 Unsaved
                             </div>
                             <div class="card-footer">
-                                <?php if(isset($write) && $write == '2') { ?>
-                                    <button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit">Save as Draft</button>
-                                <?php } ?>
                                 <?php
                                     if(isset($route) && $route == '2') {
-                                        $rows = $crud->getData("SELECT sr.* FROM step_routes sr WHERE sr.currentStepId = 12;");
+                                        $rows = $crud->getData("SELECT sr.* FROM step_routes sr WHERE sr.currentStepId = 9;");
                                         if(!empty($rows)){
                                             foreach((array) $rows as $key => $row){
                                                 echo '<button type="submit" class="btn btn-primary" name="btnRoute" value="'.$row['nextStepId'].'">'.$row['routeName'].'</button>';

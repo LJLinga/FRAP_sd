@@ -38,6 +38,16 @@ if(!empty($rows)){
     }
 }
 
+$rows = $crud->getData("SELECT sr.* FROM step_roles sr WHERE stepId = 9 AND roleId = '$edmsRole';");
+if(!empty($rows)){
+    foreach((array) $rows as $key => $row){
+        $read= $row['read'];
+        $write= $row['write'];
+        $route= $row['route'];
+        $comment = $row['comment'];
+    }
+}
+
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
 ?>
@@ -48,7 +58,7 @@ include 'EDMS_SIDEBAR.php';
             <div class="col-lg-12">
                 <h3 class="page-header"> Manual Revisions
                     <?php
-                        if($revisions == 'open') echo '<a class="btn btn-primary" href="EDMS_AddSection.php">Add Section</a>';
+                        if($revisions == 'open' && isset($write) && $write = '2') echo '<a class="btn btn-primary" href="EDMS_AddSection.php">Add Section</a>';
                         else if ($revisions == 'closed') echo '';
                         ?>
                 </h3>
