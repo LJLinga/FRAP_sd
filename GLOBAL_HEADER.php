@@ -132,7 +132,7 @@
 
                         <li>
 
-                            <a href="FA_Profile.php"><i class="fa fa-fw fa-profile"></i> Profile</a>
+                            <a href="FA_Profile.php"><i class="fa fa-fw fa-user"></i> Profile</a>
 
                         </li>
                         <li>

@@ -55,8 +55,8 @@ from loans l
 
 join member m
 on l.member_id = m.member_id
-join (SELECT max(date_applied) as 'Date' from loans) latest
-        where  l.LOAN_STATUS = 3 AND date(latest.Date) = date(l.DATE_APPLIED)
+join (SELECT max(date_matured) as 'Date' from loans) latest
+        where  l.LOAN_STATUS = 3 AND date(latest.Date) = date(l.date_matured)
         group by m.member_ID";
 
 }
@@ -76,7 +76,7 @@ from loans l
 
 join member m
 on l.member_id = m.member_id
-                    where  l.LOAN_STATUS = 3 AND $monthStart = Month(l.date_applied) AND $yearStart = Year(l.date_applied) 
+                    where  l.LOAN_STATUS = 3 AND $monthStart = Month(l.date_matured) AND $yearStart = Year(l.date_matured) 
                     group by l.loan_id";
     }
     else{
@@ -85,7 +85,7 @@ from loans l
 
 join member m
 on l.member_id = m.member_id
-                    where l.LOAN_STATUS = 3 AND (l.date_applied between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-31 23:59:59') 
+                    where l.LOAN_STATUS = 3 AND (l.date_matured between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-31 23:59:59') 
                     group by l.loan_id ";
     }
 
