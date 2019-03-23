@@ -118,16 +118,16 @@ include 'CMS_SIDEBAR.php';
                         <textarea name="event_content" id="eventDescription" class="form-control" rows="5" placeholder="Describe your event..." required></textarea>
                     </div>
                     <div class="form-group">
+                        <label for="event_desc">Invite Members</label>
                         <div class="card" style="min-height: 10rem; max-height: 10rem; overflow: auto;" id="addEmails">
                         </div>
-                        <span id="formAppend"></span>
                     </div>
                     <div class="form-group">
                         <div class="card" style="min-height: 10rem; max-height: 10rem; overflow: auto;" id="toAddEmails">
                             <?php
                                 $rows = $crud->getData("SELECT CONCAT(e.LASTNAME,', ',e.LASTNAME) as name, e.EMAIL FROM MEMBER e;");
                                 foreach((array)$rows as $key=>$row){
-                                    echo '<div class="btn btn-default btn-sm" onclick="addEmail(this,&quot;'.$row['EMAIL'].'&quot;)" style="text-align: left;"><b>'.$row['name'].' ('.$row['EMAIL'].')</b></div>';
+                                    echo '<div class="btn btn-default btn-sm" onclick="addEmail(this,&quot;'.$row['EMAIL'].'&quot;,&quot;'.$row['name'].'&quot;)" style="text-align: left;"><b>'.$row['name'].' ('.$row['EMAIL'].')</b></div>';
                                 }
                             ?>
                         </div>
@@ -193,21 +193,15 @@ include 'CMS_SIDEBAR.php';
         });
         return false;
     });
-    function addEmail(element, email){
-        $(element).removeClass("btn-default");
-        $(element).addClass("btn-success");
-        $(element).removeAttr('onclick');
-        $(element).on('click', function(){ removeEmail(element, email); });
-        $(element).appendTo($('#addEmails'));
-        $('#formAppend').append('<div id="'+email+'"><input type="hidden" name="toAddEmails[]" value="'+email+'"></div>');
+    function addEmail(element, email, name){
+        $(element).remove();
+        $('#addEmails').append('<div class="btn btn-success btn-sm" onclick="removeEmail(this,&quot;'+email+'&quot;,&quot;'+name+'&quot;)" style="text-align: left;"><b>'+name+' ('+email+')</b>' +
+            '<input type="hidden" name="toAddEmails[]" value="'+email+'"></div>');
     }
-    function removeEmail(element, email){
-        $(element).removeClass("btn-success");
-        $(element).addClass("btn-default");
-        $(element).off();
-        $(element).on('click', function(){ addEmail(element, email); });
-        $(element).appendTo($('#toAddEmails'));
-        $('#'+email).remove();
+    function removeEmail(element, email, name){
+        $(element).remove();
+        $('#toAddEmails').append('<div class="btn btn-default btn-sm" onclick="addEmail(this,&quot;'+email+'&quot;,&quot;'+name+'&quot;)" style="text-align: left;"><b>'+name+' ('+email+')</b></div>');
+        //$('#toRemoveDocRefs').append('<input type="hidden" name="toRemoveDocRefs[]" value="'+verId+'">');
     }
 </script>
 <?php include 'GLOBAL_FOOTER.php'?>

@@ -104,8 +104,6 @@ include 'CMS_SIDEBAR.php';
     <script>
         $(document).ready( function(){
 
-
-
             $('#datetimepicker1').datetimepicker( {
                 minDate: moment(),
                 locale: moment().local('ph'),

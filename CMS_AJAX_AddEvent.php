@@ -73,5 +73,10 @@ $crud = new GLOBAL_CLASS_CRUD();
 
         $id = $crud->executeGetKey("INSERT INTO events (title, description, posterId, startTime, endTime, GOOGLE_EVENTID, GOOGLE_EVENTLINK) values ('$title', '$body','$userId','$startTime','$endTime','$eventId','$eventLink')");
 
+        if(isset($id)){
+            foreach((array) $email_array as $key=>$value) {
+                $crud->execute("INSERT INTO event_emails (eventId, email) VALUES ('$id','$value')");
+            }
+        }
         echo $id;
     }
