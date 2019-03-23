@@ -54,7 +54,7 @@ $userName = $rows[0]['name'];
                                     <select class="form-control" onchange="searchTable(this.value,0)">
                                         <option value="All">All</option>
                                         <?php
-                                        $rows = $crud->getData("SELECT t.type FROM facultyassocnew.doc_type t;");
+                                        $rows = $crud->getData("SELECT t.type FROM facultyassocnew.doc_type t WHERE isActive = 2;");
                                         foreach((array)$rows as $key => $row){
                                             echo '<option value="'.$row['type'].'">'.$row['type'].'</option>';
                                         }
@@ -125,7 +125,7 @@ $userName = $rows[0]['name'];
                     <div class="form-group">
                         <select class="form-control" id="selectedType" name="selectedType">
                             <?php
-                            $rows = $crud->getData("SELECT id, type FROM doc_type");
+                            $rows = $crud->getData("SELECT t.type FROM facultyassocnew.doc_type t WHERE isActive = 2;");
                             if(!empty($rows)){
                                 foreach ((array) $rows as $key => $row) {
                                     echo '<option value="'.$row['id'].'">'.$row['type'].'</option>';

@@ -13,10 +13,13 @@
             <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-folder-open"></i> Documents <i class="fa fa-fw fa-caret-down"></i></a>
             <ul id="demo" class="collapse"> -->
         <li>
-            <a href="SYS_ADMIN_UserRoles.php"><i class="fa fa-fw fa-user"></i> User Roles </a>
+            <a href="SYS_UserRoles.php"><i class="fa fa-fw fa-user"></i> User Roles </a>
         </li>
         <li>
             <a href="SYS_Workflows.php"><i class="fa fa-fw fa-chain"></i> Workflows </a>
+        </li>
+        <li>
+            <a href="SYS_DocumentTypes.php"><i class="fa fa-fw fa-chain"></i> Document Types </a>
         </li>
     </ul>
 </div>

@@ -98,7 +98,7 @@
                             echo '<li><a href="EDMS_Workspace.php"> <i class="fa fa-file-text" aria-hidden="true"></i> Documents</a></li>';
                         }
                         if($_SESSION['SYS_ROLE'] >= 1){
-                            echo '<li><a href="SYS_ADMIN_UserRoles.php"> <i class="fa fa-wrench" aria-hidden="true"></i> Configurations </a></li>';
+                            echo '<li><a href="SYS_UserRoles.php"> <i class="fa fa-wrench" aria-hidden="true"></i> Configurations </a></li>';
                         }
                         echo '</ul></li>';
                     }?>
