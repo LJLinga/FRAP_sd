@@ -34,7 +34,7 @@ if(isset($_POST['btnSubmit'])){
 
         if(isset($_POST['option']) && isset($_POST['post_question'])) {
             $question = $_POST['post_question'];
-            $typeId = $_POST['responseType'];
+            $typeId = '1';
             $pollId = $crud->executeGetKey("INSERT INTO polls(postId, typeId, question) VALUES ('$postId','$typeId','$question')");
             $options = $_POST['option'];
 
@@ -172,13 +172,6 @@ include 'CMS_SIDEBAR.php';
                 "                                </div>\n" +
                 "                            </div>\n" +
                 "                            <div class=\"card-body\">\n" +
-                "                                <div class=\"form-group\">\n" +
-                "                                    <label>Response Type</label>\n" +
-                "                                    <select name=\"responseType\" class=\"form-control\">\n" +
-                "                                        <option value=\"1\" selected>Single Response</option>\n" +
-                "                                        <option value=\"2\">Multiple Response</option>\n" +
-                "                                    </select>\n" +
-                "                                </div>"+
                 "                                <div class=\"form-group fieldGroup\">\n" +
                 "                                    <label>Responses</label>\n" +
                 "                                    <div class=\"row fieldRow\">\n" +

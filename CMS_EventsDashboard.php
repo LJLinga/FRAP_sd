@@ -145,7 +145,8 @@ include 'CMS_SIDEBAR.php';
     </div>
 </div>
 <script>
-    $('table.table').DataTable( {
+
+    let table = $('table.table').DataTable( {
         bSort: false,
         destroy: true,
         pageLength: 5,
@@ -161,6 +162,11 @@ include 'CMS_SIDEBAR.php';
             { data: "action"}
         ]
     });
+
+    setInterval(function(){
+        table.ajax.reload();
+    }, 1000);
+
     $('#datetimepicker1').datetimepicker( {
         minDate: moment(),
         locale: moment().local('ph'),

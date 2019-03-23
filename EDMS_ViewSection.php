@@ -33,6 +33,7 @@ if(isset($_POST['btnEdit'])){
 }
 
 if(isset($_POST['btnRoute'])){
+    $nextStepId = $_POST['btnRoute'];
     $sectionId = $_POST['section_id'];
     $lockedById = $_POST['locked_by_id'];
     $rows = $crud->getData("SELECT availabilityId FROM sections WHERE id = '$sectionId'");
@@ -40,7 +41,7 @@ if(isset($_POST['btnRoute'])){
         $availabilityId = $row['availabilityId'];
     }
     if($availabilityId == '2'){
-        $crud->execute("UPDATE sections SET statusId = '1', stepId='$nextStepId' WHERE documentId='$documentId'");
+        $crud->execute("UPDATE sections SET statusId = '1', stepId='$nextStepId' WHERE id ='$sectionId'");
     }
 }
 
@@ -174,7 +175,14 @@ include 'EDMS_SIDEBAR.php';
                         </div>
                         <div class="card" style="margin-top: 1rem;">
                             <div class="card-header">
-                                <b>Document Actions</b>
+                                <b>Section Actions</b>
+                            </div>
+                            <div class="card-body">
+                                Status: <b><?php echo $statusName;?></b><br>
+                                Stage: <b><?php echo $stepName; ?></b><br>
+                                Created by: <b><?php echo $firstAuthorName ?></b><br>
+                                Modified by: <b><?php echo $authorName ?></b><br>
+                                on <i><b><?php  echo date("F j, Y g:i:s A ", strtotime($lastUpdated));?></b></i>
                             </div>
                             <div class="card-body">
                                 <div class="btn-group btn-group-vertical" style="width: 100%;">
@@ -212,7 +220,6 @@ include 'EDMS_SIDEBAR.php';
                                         //echo $edmsRole.','.$read.','.$write.','.$route;
                                         ?>
                                     </form>
-
                                 </div>
                             </div>
                             <div class="card-footer">

@@ -177,7 +177,7 @@ if(isset($_POST['btnSubmit'])) {
     }
 
     if(isset($_POST['toUpdatePollId']) && isset($_POST['toUpdatePollQuestion']) && isset($_POST['toUpdateTypeId'])){
-        $typeId = $_POST['toUpdateTypeId'];
+        $typeId = '1';
         $question = $_POST['toUpdatePollQuestion'];
         $pollId = $_POST['toUpdatePollId'];
         $crud->execute("UPDATE polls SET typeId = '$typeId', question = '$question' WHERE id = '$pollId'");
@@ -195,7 +195,7 @@ if(isset($_POST['btnSubmit'])) {
 
     if(isset($_POST['option']) && isset($_POST['post_question'])) {
         $question = $_POST['post_question'];
-        $typeId = $_POST['responseType'];
+        $typeId = '1';
         $pollId = $crud->executeGetKey("INSERT INTO polls(postId, typeId, question) VALUES ('$postId','$typeId','$question')");
         $options = $_POST['option'];
         foreach((array) $options AS $key => $ref){
@@ -398,13 +398,6 @@ include 'CMS_SIDEBAR.php';
             "                                </div>\n" +
             "                            </div>\n" +
             "                            <div class=\"card-body\">\n" +
-            "                                <div class=\"form-group\">\n" +
-            "                                    <label>Response Type</label>\n" +
-            "                                    <select name=\"responseType\" class=\"form-control\">\n" +
-            "                                        <option value=\"1\" selected>Single Response</option>\n" +
-            "                                        <option value=\"2\">Multiple Response</option>\n" +
-            "                                    </select>\n" +
-            "                                </div>"+
             "                                <div class=\"form-group fieldGroup\">\n" +
             "                                    <label>Responses</label>\n" +
             "                                    <div class=\"row fieldRow\">\n" +
@@ -475,13 +468,6 @@ include 'CMS_SIDEBAR.php';
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <div class="form-group">
-                                                    <label>Response Type</label>
-                                                    <select name="toUpdateTypeId" class="form-control">
-                                                        <option value="1" '.$type1.'>Single Response</option>
-                                                        <option value="2" '.$type2.'>Multiple Response</option>
-                                                    </select>
-                                                </div>                                
                                                 <div class="form-group fieldGroup">
                                                     <label>Responses</label>';
                                     $rows2 = $crud->getData("SELECT optionId, response FROM poll_options WHERE pollId = '$pollId';");

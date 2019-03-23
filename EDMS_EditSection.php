@@ -219,10 +219,11 @@ include 'EDMS_SIDEBAR.php';
                                 <b>Section Details</b>
                             </div>
                             <div class="card-body">
-                                Stage: <?php echo $stepName; ?><br>
-                                Created by: <?php echo $firstAuthorName ?><br>
-                                Modified by: <?php echo $authorName ?><br>
-                                Last updated: <?php  echo date("F j, Y g:i:s A ", strtotime($lastUpdated));?><br>
+                                Status: <b><?php echo $statusName;?></b><br>
+                                Stage: <b><?php echo $stepName; ?></b><br>
+                                Created by: <b><?php echo $firstAuthorName ?></b><br>
+                                Modified by: <b><?php echo $authorName ?></b><br>
+                                on <i><b><?php  echo date("F j, Y g:i:s A ", strtotime($lastUpdated));?></b></i><br>
                             </div>
                             <div class="card-footer btn-group">
                                 <?php
