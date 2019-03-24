@@ -25,7 +25,6 @@ if(isset($_POST['btnSave'])){
     //$parentSectionId = $_POST['section_parent'];
     //$siblingSectionId = $_POST['section_sibling'];
     $crud->execute("UPDATE sections SET title = '$title', sectionNo = '$sectionNo', content = '$content' WHERE id = '$sectionId'");
-
     if(isset($_POST['toAddDocRefs'])) {
         $toAddDocRefs = $_POST['toAddDocRefs'];
         foreach((array) $toAddDocRefs AS $key => $ref){
@@ -33,7 +32,6 @@ if(isset($_POST['btnSave'])){
             $crud->execute($query);
         }
     }
-
     if(isset($_POST['toRemoveDocRefs'])) {
         $toRemoveDocRefs = $_POST['toRemoveDocRefs'];
         foreach((array) $toRemoveDocRefs AS $key => $ref){
@@ -180,7 +178,6 @@ include 'EDMS_SIDEBAR.php';
                                             $filePath = $row['filePath'];
                                             $fileName = $title.'_ver'.$versionNo.'_'.basename($filePath);
                                             echo '<div class="card" style="position: relative;">';
-                                            echo '<input type="hidden" name="toAddDocRefs[]" class="refDocuments" value="'.$row['vid'].'">';
                                             echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
                                             echo '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >';
                                             echo '<a class="btn fa fa-download"  href="'.$filePath.'" download="'.$fileName.'"></a>';

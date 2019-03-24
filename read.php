@@ -288,10 +288,31 @@ include 'GLOBAL_HEADER.php';
                         ?>
                     </div>
                 </div>
+                <?php
+                    $query = "SELECT timeStamp, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) as name 
+                    FROM post_views v JOIN employee e ON e.EMP_ID = v.viewerId 
+                    WHERE typeId = 2 AND id = '$postId' GROUP BY v.viewerId ORDER BY timestamp DESC;";
+
+                    $rows = $crud->getData($query);
+                    $html = '';
+                    $output = '';
+                    $count = 0;
+                    if(!empty($rows)){
+                        foreach ((array) $rows as $key => $row) {
+                            $html .= '<b>'.$row['name'].'</b> ('.date("F j, Y g:i:s A ", strtotime($row['timeStamp'])).')<br>';
+                            $count++;
+                        }
+                        $output .= '<div class="card" style="margin-top: 1rem;">';
+                        $output .= '<div class="card-body">';
+                        $output .= '<a style="text-align: left" data-toggle="collapse" data-target="#collapse_seen" aria-expanded="true" aria-controls="collapse_seen">Seen by '.$count.' people.</a><br>';
+                        $output .= '<div id="collapse_seen" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
+                        $output .= $html;
+                        $output .= '</div></div></div>';
+
+                    }
+                    echo $output;
+                ?>
                 <div class="card" style="margin-top: 1rem;">
-                    <div class="card-body">
-                        <div id="display_view"></div>
-                    </div>
                     <div class="card-body">
                         <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
                         <span id="comment_message"></span>
@@ -371,6 +392,24 @@ include 'GLOBAL_HEADER.php';
             })
         });
 
+        var dlg=$('#register').dialog({
+            title: 'Register for LifeStor',
+            resizable: true,
+            autoOpen:false,
+            modal: true,
+            hide: 'fade',
+            width:350,
+            height:275
+        });
+
+
+        $('#reg_link').click(function(e) {
+            e.preventDefault();
+            dlg.load('register.php', function(){
+                dlg.dialog('open');
+            });
+        });
+
 
         setInterval(function() {
             load_comment(postId);
@@ -390,17 +429,17 @@ include 'GLOBAL_HEADER.php';
             })
         }
 
-        function load_views(postId) {
-            $.ajax({
-                url:"CMS_AJAX_FetchViewers.php",
-                method:"POST",
-                data:{postId: postId},
-                success:function(data)
-                {
-                    $('#display_view').html(data);
-                }
-            })
-        }
+        // function load_views(postId) {
+        //     $.ajax({
+        //         url:"CMS_AJAX_FetchViewers.php",
+        //         method:"POST",
+        //         data:{postId: postId},
+        //         success:function(data)
+        //         {
+        //             $('#display_view').html(data);
+        //         }
+        //     })
+        // }
 
 
         $(document).on('click', '.reply', function(){
@@ -411,6 +450,7 @@ include 'GLOBAL_HEADER.php';
 
         //$('#loadResults').hide();
         loadResults($('#loadResults'), '<?php echo $pollId; ?>');
+
 
     });
     function loadResults(element,pollId){
@@ -440,6 +480,9 @@ include 'GLOBAL_HEADER.php';
                 //loadResults(span,pollId);
             }
         });
+    }
+    function preview(){
+        $('#register').load('register.php');
     }
 </script>
 <?php include 'GLOBAL_FOOTER.php'; ?>

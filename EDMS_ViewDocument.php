@@ -223,7 +223,7 @@ include 'EDMS_SIDEBAR.php';
 
                 <?php
                     $ext = pathinfo($filePath, PATHINFO_EXTENSION);
-                    if($ext == 'pdf' || $ext == 'jpg' || $ext='odt'){
+                    if($ext == 'pdf' || $ext == 'jpg'){
                         echo '<iframe src="/ViewerJS/../FRAP_sd/'.$filePath.'" width=\'850\' style="height:80vh;"; allowfullscreen webkitallowfullscreen></iframe>';
                     }else{
                         echo '<div class="card" style="margin-top: 1rem;">

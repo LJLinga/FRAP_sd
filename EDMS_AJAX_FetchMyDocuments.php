@@ -29,7 +29,7 @@ if(isset($_POST['userId'])){
                 JOIN steps s ON s.id = d.stepId
                 JOIN process pr ON pr.id = s.processId
                 WHERE v.versionId = (SELECT MAX(v1.versionId) FROM doc_versions v1 WHERE v1.documentId = d.documentId)
-                AND t.isActive = 2 AND d.firstAuthorId = '$userId' OR v.authorId = '$userId'
+                AND t.isActive = 2 AND (d.firstAuthorId = '$userId' OR v.authorId = '$userId')
                 GROUP BY vid ORDER BY v.timeCreated DESC;";
 
 

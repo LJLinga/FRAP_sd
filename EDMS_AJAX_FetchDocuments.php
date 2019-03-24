@@ -10,7 +10,7 @@ include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 session_start();
 
-
+$userId = $_SESSION['idnum'];
 if(isset($_POST['role'])){
 
     $role = $_POST['role'];
@@ -28,7 +28,8 @@ if(isset($_POST['role'])){
                 JOIN process pr ON pr.id = s.processId
                 WHERE s.processId = pr.id AND v.versionId = 
                 (SELECT MAX(v1.versionId) FROM doc_versions v1 WHERE v1.documentId = d.documentId)
-                AND t.isActive = 2 AND sr.roleId = '$role' AND sr.read = 2 ORDER BY v.timeCreated DESC;";
+                AND t.isActive = 2 AND sr.roleId = '$role' 
+                AND sr.read = 2 ORDER BY v.timeCreated DESC;";
 
 
     $rows = $crud->getData($query);

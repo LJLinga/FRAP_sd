@@ -26,8 +26,13 @@ if(isset($_POST['postId'])){
             $html .= '<b>'.$row['name'].'</b> ('.date("F j, Y g:i:s A ", strtotime($row['timeStamp'])).')<br>';
             $count++;
         }
-        $output = 'Seen by '.$count.' people.<br>';
+        $output .= '<div class="card" style="margin-top: 1rem;">';
+        $output .= '<a style="text-align: left" data-toggle="collapse" data-target="#collapse_seen" aria-expanded="true" aria-controls="collapse_seen">Seen by '.$count.' people.</a><br>';
+        $output .= '<div id="collapse_seen" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
+        $output .= '<div class="card-body">';
         $output .= $html;
+        $output .= '</div></div></div>';
+
     }
     echo $output;
 }else{

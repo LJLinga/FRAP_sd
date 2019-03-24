@@ -18,15 +18,15 @@ $page_title = 'Santinig - Posts Dashboard';
 include 'GLOBAL_HEADER.php';
 include 'SYS_SIDEBAR.php';
 
-//$userId = $_SESSION['idnum'];
+$userId = $_SESSION['idnum'];
+
+if(isset($_POST['btnSubmit'])){
+    $assigned = $_POST['assigned_process'];
+    $type = $_POST['type'];
+    $crud->execute("INSERT INTO doc_type(type, processId) VALUES('$type','$assigned');");
+}
 
 ?>
-<script>
-    $(document).ready(function() {
-        $('#dataTable').DataTable();
-    });
-</script>
-
 <div class="content-wrapper" >
     <div class="container-fluid" id="printable">
 
@@ -34,7 +34,7 @@ include 'SYS_SIDEBAR.php';
             <div class="col-lg-12">
                 <h3 class="page-header">
                     Document Types
-                    <button class="btn btn-primary"> Add Document Type</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Add Type </button>
                 </h3>
             </div>
         </div>
@@ -107,6 +107,44 @@ include 'SYS_SIDEBAR.php';
 
 </div>
 <!-- /#wrapper -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="type">Document Type</label>
+                        <input type="text" name="type" id="documentType" class="form-control" placeholder="New Document Type" required>
+                    </div>
+                    <label for="assigned_process">Assigned Process</label>
+                    <div class="form-group">
+                        <select class="form-control" id="selectedType" name="assigned_process">
+                            <?php
+                            $rows = $crud->getData("SELECT id, processName FROM facultyassocnew.process WHERE processForId = 1;");
+                            if(!empty($rows)){
+                                foreach ((array) $rows as $key => $row) {
+                                    echo '<option value="'.$row['id'].'">'.$row['processName'].'</option>';
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <input type="submit" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>
 <script>
     $(document).ready(function(){
         $('#dataTable').DataTable();

@@ -26,10 +26,8 @@ if(isset($_POST['btnEdit'])){
     }
     if($availabilityId == '2'){
         $crud->execute("UPDATE sections SET availabilityId='1', lockedById='$userId' WHERE id='$sectionId'");
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_EditSection.php?secId=".$sectionId);
-    }else if($lockedById == $userId){
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_EditSection.php?secId=".$sectionId);
     }
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_EditSection.php?secId=".$sectionId);
 }
 
 if(isset($_POST['btnRoute'])){
@@ -109,7 +107,12 @@ if(isset($_GET['secId'])){
             $comment = $row['comment'];
         }
     }else{
-        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+        //need to add a read permission in the db if user wants to access files continiously
+        //$read = 2;
+        //$write = 1;
+        //$route = 1;
+        //$comment = 2;
+        //header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
     }
 }else{
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
@@ -190,7 +193,7 @@ include 'EDMS_SIDEBAR.php';
                                         <input type="hidden" name="locked_by_id" value="<?php echo $lockedById;?>">
                                         <?php
                                         $disabledButtons = "enabled";
-                                        if(isset($lockedByName)){
+                                        if($availabilityId == '1' && $userId != $lockedById){
                                             $disabledButtons = "disabled";
                                         }
                                         if(isset($route) && $route=='2') {
@@ -222,9 +225,12 @@ include 'EDMS_SIDEBAR.php';
                                     </form>
                                 </div>
                             </div>
-                            <div class="card-footer">
-                                <?php if (isset($lockedByName)) echo 'Section is locked by '.$lockedByName.' for editing.'; ?>
-                            </div>
+                            <?php if (isset($lockedByName)) {
+                                echo '<div class="card-footer">';
+                                echo 'Section is locked by ' . $lockedByName . ' for editing.';
+                                echo '</div>';
+                            }
+                            ?>
                         </div>
                         <!-- Button -->
                     </div>
