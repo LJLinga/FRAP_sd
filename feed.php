@@ -63,25 +63,25 @@ include 'GLOBAL_HEADER.php';
 
     <div class="container-fluid">
         <!---     PLace php code here for the information here thank you please.         -->
-            <div class="row">
+            <div class="row" style="position: relative;">
 
-                <div class="column col-lg-2" style="margin-top: 1rem; margin-bottom: 1rem;">
-                    <div class="card" style="margin-top: 1rem;">
-                        <div class="card-header">
+                <div class="column col-lg-2" style="margin-top: 1rem; margin-bottom: 1rem; position:fixed;">
+                    <div class="panel panel-default" style="margin-top: 1rem;">
+                        <div class="panel-heading">
                             <b> Account Information  </b>
                         </div>
-                        <div class="card-body" >
+                        <div class="panel-body" >
                             <b>Department: </b> <?php echo "Faculty - ";
                                 echo $row3["DEPT_NAME"]; ?> <br>
                             <b>Member Since: </b><?php echo date_format($dateOfAcceptance, 'F  j,  Y'); ?><br>
                             <b>User Type: </b>   <?php echo $row3['STATUS'];?> <br>
                         </div>
                     </div>
-                    <div class="card" style="margin-top: 1rem;">
-                        <div class="card-header">
+                    <div class="panel panel-default" style="margin-top: 1rem;">
+                        <div class="panel-heading">
                             <b> Faculty Assistance Loan Program </b>
                         </div>
-                        <div class="card-body" >
+                        <div class="panel-body" >
 
                             <?php if(empty($currentLoanStatus['STATUS'])) {
                                 echo "No Applications yet. Apply using the link below. ";
@@ -91,17 +91,17 @@ include 'GLOBAL_HEADER.php';
                             }
                                 ?>
                         </div>
-                        <div class="card-footer" >
+                        <div class="panel-footer" >
                             <a href = "MEMBER%20FALP%20application.php">View FALP</a>
                             <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                         </div>
                     </div>
 
-                    <div class="card" style="margin-top: 1rem;">
-                        <div class="card-header">
+                    <div class="panel panel-default" style="margin-top: 1rem;">
+                        <div class="panel-heading">
                             <b> Health-Aid Assistance  </b>
                         </div>
-                        <div class="card-body" >
+                        <div class="panel-body" >
                             <?php if(empty($currentHAStatus['STATUS'])) {
                                 echo "No Applications yet. Apply using the link below. ";
                             }else{
@@ -111,20 +111,20 @@ include 'GLOBAL_HEADER.php';
                             ?>
 
                         </div>
-                        <div class="card-footer" >
+                        <div class="panel-footer" >
                             <a href = "ADMIN%20Deductions.php">View Health-Aid</a>
                             <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                         </div>
                     </div>
 
-                    <div class="card" style="margin-top: 1rem;">
-                        <div class="card-header">
+                    <div class="panel panel-default" style="margin-top: 1rem;">
+                        <div class="panel-heading">
                             <b> Lifetime Membership Status</b>
                         </div>
-                        <div class="card-body" >
+                        <div class="panel-body" >
                             <b> Status: </b> Eligible
                         </div>
-                        <div class="card-footer" >
+                        <div class="panel-footer" >
                             <a href = "ADMIN%20Deductions.php">View Lifetime</a>
                             <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                         </div>
@@ -133,7 +133,7 @@ include 'GLOBAL_HEADER.php';
 
                 </div>
 
-                <div class="column col-lg-6" style="margin-top: 1rem; margin-bottom: 1rem;">
+                <div class="column col-lg-6 col-lg-offset-2" style="margin-top: 1rem; margin-bottom: 1rem;">
                     <?php
                     $rows = $crud->getData("SELECT p.id, p.permalink, p.title, p.body, 
                                           CONCAT(a.firstName,' ', a.lastName) AS name, 
@@ -147,13 +147,13 @@ include 'GLOBAL_HEADER.php';
                         $postId = $row['id'];
                         ?>
 
-                        <div class="card" style="margin-top: 1rem;">
-                            <div class="card-body" style="overflow: hidden; max-height: 50rem;">
+                        <div class="panel panel-default" style="margin-top: 1rem;">
+                            <div class="panel-body" style="overflow: hidden; max-height: 50rem;">
                                 <h4 class="card-title"><b><?php echo $row['title'];?></b></h4>
                                 <h5 class="card-subtitle">by <?php echo $row['name'];?> | <?php echo date("F j, Y g:i A ", strtotime($row['lastUpdated'])) ;?></h5>
                                 <br><p class="card-text"><?php echo $row['body'] ?></p>
                             </div>
-                            <div class="card-body">
+                            <div class="panel-body">
                                 <?php
                                     $rows2 = $crud->getData("SELECT pl.question 
                                                   FROM facultyassocnew.polls pl WHERE pl.postId='$postId';");
@@ -182,8 +182,8 @@ include 'GLOBAL_HEADER.php';
                         $lastTimeStamp = $row['timePublished'];
                     }?>
 
-                    <div class="card">
-                        <div class="card-body">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
                             <?php if(!empty($rows[0]['permalink'])) { ?>
                                 <a href="<?php echo "http://localhost/FRAP_sd/feed.php?lastTimeStamp=".$lastTimeStamp ?>" >Load More</a>
                             <?php } else { ?>
@@ -194,12 +194,12 @@ include 'GLOBAL_HEADER.php';
 
                 </div>
 
-                <div id="calendarColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
-                    <div class="card" style="margin-top: 1rem;">
-                        <div class="card-header">
+                <div id="calendarColumn" class="column col-lg-4 col-lg-offset-8" style="margin-top: 1rem; margin-bottom: 1rem; position: fixed;">
+                    <div class="panel panel-default" style="margin-top: 1rem;">
+                        <div class="panel-heading">
                             <b> Events </b>
                         </div>
-                        <div class="card-body" >
+                        <div class="panel-body" >
                             <iframe src="https://calendar.google.com/calendar/b/3/embed?showTitle=0&amp;showCalendars=0&amp;mode=AGENDA&amp;height=800&amp;wkst=2&amp;bgcolor=%23ffffff&amp;src=noreply.lapdoc%40gmail.com&amp;color=%231B887A&amp;src=en.philippines%23holiday%40group.v.calendar.google.com&amp;color=%23125A12&amp;ctz=Asia%2FManila" style="border-width:0" width="480" height="360" frameborder="0" scrolling="no"></iframe>
                         </div>
                     </div>

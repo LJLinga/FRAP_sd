@@ -11,7 +11,7 @@
 require ('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 
-    $append = 'NULL';
+    $append = '';
     if(isset($_POST['loadedReferences'])) {
         $arrayRefs = $_POST['loadedReferences'];
         foreach ((array)$arrayRefs as $key => $ref) {
@@ -34,7 +34,7 @@ $crud = new GLOBAL_CLASS_CRUD();
                 WHERE v.versionId = (SELECT MAX(v2.versionId) FROM doc_versions v2 WHERE v2.documentId = d.documentId)
                 AND (t.id = 4 OR t.id = 5)
                 AND stat.id = 2
-                AND v.versionId != '$append'");
+                $append");
 
     $data = [];
     if(!empty($rows)) {

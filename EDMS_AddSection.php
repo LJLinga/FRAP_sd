@@ -15,6 +15,18 @@ include('GLOBAL_CMS_ADMIN_CHECKING.php');
 $userId = $_SESSION['idnum'];
 $edmsRole = $_SESSION['EDMS_ROLE'];
 
+$query = "SELECT r.id, r.revisionsOpened FROM revisions r WHERE r.statusId = 2 ORDER BY r.id DESC LIMIT 1;";
+$rows = $crud->getData($query);
+if(!empty($rows)){
+    $revisions = 'open';
+    foreach ((array) $rows as $key => $row){
+        $revisionsOpened = $row['revisionsOpened'];
+        $revisionsId = $row['id'];
+    }
+}else{
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+}
+
 $rows = $crud->getData("SELECT sr.* FROM step_roles sr WHERE stepId = 9 AND roleId = '$edmsRole';");
 if(!empty($rows)){
     foreach((array) $rows as $key => $row){
@@ -24,7 +36,7 @@ if(!empty($rows)){
         //$comment = $row['comment'];
     }
 }else{
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_EditSection.php?secId=".$sectionId);
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
 }
 
 if(isset($_POST['btnRoute'])){
@@ -34,6 +46,13 @@ if(isset($_POST['btnRoute'])){
     $nextStepId = $_POST['btnRoute'];
     //$parentSectionId = $_POST['section_parent'];
     //$siblingSectionId = $_POST['section_sibling'];
+    if(isset($_POST['toAddDocRefs'])) {
+        $toAddDocRefs = $_POST['toAddDocRefs'];
+        foreach((array) $toAddDocRefs AS $key => $ref){
+            $query = "INSERT INTO section_ref_versions(sectionId,versionId) VALUES ('$sectionId','$ref');";
+            $crud->execute($query);
+        }
+    }
     $sectionId = $crud->executeGetKey("INSERT INTO sections (authorId, firstAuthorId, sectionNo, stepId, title, content) VALUES ('$userId','$userId','$sectionNo','$nextStepId', '$title', '$content')");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_EditSection.php?secId=".$sectionId);
 }
@@ -42,16 +61,6 @@ $page_title = 'Faculty Manual - Add Section';
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
 ?>
-    <script>
-        $(document).ready( function(){
-            $('#section_parent').on('change', function(){
-                alert('100');
-                // AJAX query the latest section #
-                // Based on looping
-            });
-        });
-    </script>
-
     <div id="content-wrapper">
         <div class="container-fluid">
             <div class="row">
@@ -83,15 +92,14 @@ include 'EDMS_SIDEBAR.php';
 
                     <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
                         <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-header"><b>Document References</b></div>
+                            <div class="card-header"><b>Referenced Minutes</b></div>
                             <div class="card-body" style="max-height: 20rem; overflow-y: scroll;">
                                 <span id="noRefsYet">No References</span>
                                 <span id="refDocuments" style="font-size: 12px;">
                                 </span>
                             </div>
                             <div class="card-footer">
-                                <button type="button" class="btn btn-default"><i class="fa fa-fw fa-plus"></i>New</button>
-                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Existing</button>
+                                <button id="btnRefModal" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
                             </div>
                         </div>
 
@@ -119,4 +127,87 @@ include 'EDMS_SIDEBAR.php';
         </div>
     </div>
     <!-- /#page-wrapper -->
+    <div id="modalRED" class="modal fade" role="dialog" data-backdrop="false">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                    <h5 class="modal-title">Reference Document</h5>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered" align="center" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th> Document </th>
+                            <th> Assigned Process </th>
+                            <th width="20px"> Add </th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+<script>
+    $(document).ready( function(){
+        $('#section_parent').on('change', function(){
+            alert('100');
+            // AJAX query the latest section #
+            // Based on looping
+        });
+        $('#btnRefModal').on('click', function(){
+            reloadDataTable();
+        });
+    });
+    function reloadDataTable(){
+        let loadedRefs = [];
+        $(".refDocuments").each(function() {
+            loadedRefs.push($(this).val());
+        });
+        $('table').dataTable({
+            destroy: true,
+            "pageLength": 3,
+            "ajax": {
+                "url":"EDMS_AJAX_LoadToReferences.php",
+                "type":"POST",
+                "data":{ loadedReferences: loadedRefs },
+                "dataSrc": ''
+            },
+            columns: [
+                { data: "Document" },
+                { data: "Status" },
+                { data: "Action" }
+            ]
+        });
+    }
+    function addRef(element, verId, oA, cA, vN, uO, t, pN, fP, fN){
+        $('#noRefsYet').remove();
+        $('#btnUpdate').show();
+        $('#refDocuments').append('<div class="card" style="background-color: #e2fee2; position: relative;">'+
+            '<input type="hidden" name="toAddDocRefs[]" class="refDocuments" value="'+verId+'">'+
+            '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse'+verId+'" aria-expanded="true" aria-controls="collapse'+verId+'"><b>'+t+'</b> <span class="badge">'+vN+'</span></a>'+
+            '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >'+
+            '<a class="btn fa fa-download"  href="'+fP+'" download="'+fN+'"></a>'+
+            '<a class="btn fa fa-remove" onclick="removeRef(this)" ></a>'+
+            '</div>'+
+            '<div id="collapse'+verId+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
+            '<div class="card-body">'+
+            'Process: '+pN+'<br>'+
+            'Created by: '+oA+'<br>'+
+            'Modified by: '+cA+'<br>'+
+            'on: <i>'+uO+'</i><br>'+
+            '</div></div></div>');
+        reloadDataTable();
+    }
+
+    function removeRef(element) {
+        $(element).closest('div.card').remove();
+    }
+</script>
 <?php include 'GLOBAL_FOOTER.php' ?>

@@ -86,6 +86,25 @@
                     <a href="MEMBER%20dashboard.php"> Loans </a>
                 </li>
                 <?php
+
+                    $query = "SELECT FRAP_ROLE, EDMS_ROLE, CMS_ROLE, SYS_ROLE FROM employee WHERE MEMBER_ID = '{$_SESSION['idnum']}' ";
+                    $row = mysqli_query($dbc, $query);
+                    $result = mysqli_fetch_array($row);
+
+                    $_SESSION['FRAP_ROLE'] =  $result['FRAP_ROLE'];
+                    $_SESSION['CMS_ROLE'] =  $result['CMS_ROLE'];
+                    $_SESSION['EDMS_ROLE'] =  $result['EDMS_ROLE'];
+                    $_SESSION['SYS_ROLE'] =  $result['SYS_ROLE'];
+
+                    //$rows = $crud->getData("SELECT roleName FROM edms_roles WHERE id = ".$_SESSION['EDMS_ROLE']." LIMIT 1;");
+                    //$_SESSION['EDMS_ROLE_NAME'] = $rows[0]['roleName'];
+
+                    //$rows = $crud->getData("SELECT roleName FROM cms_roles WHERE id = ".$_SESSION['CMS_ROLE']." LIMIT 1;");
+                    //$_SESSION['CMS_ROLE_NAME'] = $rows[0]['roleName'];
+
+                    //$rows = $crud->getData("SELECT roleName FROM frap_roles WHERE id = ".$_SESSION['FRAP_ROLE']." LIMIT 1;");
+                    //$_SESSION['FRAP_ROLE_NAME'] = $rows[0]['roleName'];
+
                     if($_SESSION['FRAP_ROLE'] > 1 || $_SESSION['EDMS_ROLE'] > 1 || $_SESSION['CMS_ROLE'] > 1) {
                         echo '<li class="dropdown sideicons"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> Admin Tools <b class="caret"></b></a><ul class="dropdown-menu alert-dropdown">';
                         if($_SESSION['FRAP_ROLE'] > 1) {
@@ -130,6 +149,7 @@
                         $result = mysqli_query($dbc, $query);
                         $row = mysqli_fetch_array($result);
                         $displayName = $row['LASTNAME']." , ".$row['FIRSTNAME'][0].". ";
+                        $_SESSION['NAME'] = $displayName;
                     ?>
 
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $displayName; ?> <b class="caret"></b></a>

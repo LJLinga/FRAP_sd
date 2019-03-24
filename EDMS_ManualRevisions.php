@@ -17,6 +17,20 @@ $userId = $_SESSION['idnum'];
 $edmsRole = $_SESSION['EDMS_ROLE'];
 $revisions = 'closed';
 
+if(isset($_POST['btnPrint'])){
+    //$crud->execute("INSERT INTO revisions (initiatedById, statusId) VALUES ('$userId','2')");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_PublishSections.php");
+}
+
+if(isset($_POST['btnPublish'])){
+
+    $rows = $crud->execute("SELECT v.* FROM facultyassocnew.section_versions v 
+                    WHERE v.timeCreated = (SELECT MAX(v2.timeCreated) FROM section_versions v2 WHERE v.sectionId = v2.sectionId)
+                    AND v.statusId = 2");
+    //$crud->execute("INSERT INTO revisions (initiatedById, statusId) VALUES ('$userId','2')");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_PublishSections.php");
+}
+
 if(isset($_POST['btnOpen'])){
     $crud->execute("INSERT INTO revisions (initiatedById, statusId) VALUES ('$userId','2')");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
@@ -61,6 +75,9 @@ include 'EDMS_SIDEBAR.php';
                         if($revisions == 'open' && isset($write) && $write = '2') echo '<a class="btn btn-primary" href="EDMS_AddSection.php">Add Section</a>';
                         else if ($revisions == 'closed') echo '';
                         ?>
+                    <form method="POST" action="<?php $_SERVER["PHP_SELF"]?>">
+                        <button name="btnPrint">Generate Manual PDF</button>
+                    </form>
                 </h3>
             </div>
         </div>
@@ -81,7 +98,7 @@ include 'EDMS_SIDEBAR.php';
                             echo 'Faculty Manual Revisions are still closed.';
                             if($edmsRole == '4') {
                                 echo '<span style="position: absolute; top:4px; right:4px;">';
-                                echo '<button class="btn btn-danger" name="btnOpen"> Open Revisions </button>';
+                                echo '<button class="btn btn-success" name="btnOpen"> Open Revisions </button>';
                                 echo '</span>';
                             }
                         }
@@ -118,24 +135,40 @@ include 'EDMS_SIDEBAR.php';
                 </div>
             </div>
             <div class="col-lg-4">
+                <div class="panel panel-green">
+                    <div class="panel-heading">
+                        Your (<b>
+                            <?php
+                            $rows = $crud->getData("SELECT roleName FROM edms_roles WHERE id = ".$_SESSION['EDMS_ROLE']." LIMIT 1;");
+                            echo $rows[0]['roleName'];
+                            ?>
+                        </b>) Workflows
+                    </div>
+                    <div class="panel-body">
+                        <?php
+                        $rows = $crud->getData("SELECT  pr.processName, s.stepNo, s.stepName AS name 
+                                                FROM employee e 
+                                                JOIN edms_roles er ON e.EDMS_ROLE = er.id 
+                                                JOIN step_roles sr ON sr.roleId = er.id
+                                                JOIN steps s ON s.id = sr.stepId
+                                                JOIN process pr ON pr.id = s.processId
+                                                WHERE e.EMP_ID = '$userId'
+                                                ORDER BY pr.processName, s.stepNo");
+                        foreach((array)$rows AS $key => $row){
+                            echo '<div class="card">';
+                            echo '<div class="card-body">';
+                            echo $row['processName'].' -> Step '.$row['stepNo'].' '.$row['name'].'<br>';
+                            echo '</div></div>';
+                        }
+                        ?>
+                    </div>
+                </div>
                 <div class="card">
                     <div class="card-header">
                         My Activities
                     </div>
                     <div class="card-body">
                         <div class="col-lg-2">All <b class="caret"></b></div>
-                        <div class="col-lg-7"></div>
-                        <div class="col-lg-3"><i class="fa fa-fw fa-plus-circle"></i>Create Groups</div>
-                    </div>
-                </div>
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-header">
-                        My Documents
-                    </div>
-                    <div class="card-body">
-                        <div class="col-lg-2">
-                            Documents I modified <b class="caret"></b>
-                        </div>
                         <div class="col-lg-7"></div>
                         <div class="col-lg-3"><i class="fa fa-fw fa-plus-circle"></i>Create Groups</div>
                     </div>

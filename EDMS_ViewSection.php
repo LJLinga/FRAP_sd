@@ -15,7 +15,19 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 
 $edmsRole= $_SESSION['EDMS_ROLE'];
 $userId = $_SESSION['idnum'];
-//Buttons here
+//Buttons
+
+$revisions = 'closed';
+
+$query = "SELECT r.id, r.revisionsOpened FROM revisions r WHERE r.statusId = 2 ORDER BY r.id DESC LIMIT 1;";
+$rows = $crud->getData($query);
+if(!empty($rows)){
+    $revisions = 'open';
+    foreach ((array) $rows as $key => $row){
+        $revisionsOpened = $row['revisionsOpened'];
+        $revisionsId = $row['id'];
+    }
+}
 
 if(isset($_POST['btnEdit'])){
     $sectionId = $_POST['section_id'];
@@ -114,6 +126,14 @@ if(isset($_GET['secId'])){
         //$comment = 2;
         //header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
     }
+
+    if($revisions=='closed'){
+        $read = 2;
+        $write = 1;
+        $route = 1;
+        $comment = 2;
+    }
+
 }else{
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
     echo 'nothing found';
@@ -139,8 +159,8 @@ include 'EDMS_SIDEBAR.php';
                         <!-- Text input-->
                         <div class="card" style="margin-top: 1rem;">
                             <div class="card-body">
-                                <h3 class="card-title"><b><?php echo $sectionNo.' '.$title; ?></b></h3>
-                                <p class="card-text"><?php echo $content; ?></p>
+                                <h3 class="card-title"><b>Section <?php echo $sectionNo.' '.$title; ?></b></h3>
+                                <p class="card-text" style="text-align: justify;"><?php echo $content; ?></p>
                             </div>
                         </div>
                         <div class="card" style="margin-top: 1rem;">
@@ -281,7 +301,6 @@ include 'EDMS_SIDEBAR.php';
                             }
                             echo '</div></div>';
                         }
-
 
                         ?>
                         <!-- Button -->

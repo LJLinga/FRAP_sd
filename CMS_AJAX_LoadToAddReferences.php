@@ -10,7 +10,7 @@
 require ('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 
-    $append = 'NULL';
+    $append = '';
     if(isset($_POST['loadedReferences'])) {
         $arrayRefs = $_POST['loadedReferences'];
         foreach ((array)$arrayRefs as $key => $ref) {
@@ -31,7 +31,7 @@ $crud = new GLOBAL_CLASS_CRUD();
                 JOIN steps s ON s.id = d.stepId
                 JOIN process pr ON pr.id = s.processId
                 WHERE v.versionId = (SELECT MAX(v2.versionId) FROM doc_versions v2 WHERE v2.documentId = d.documentId)
-                AND v.versionId != '$append'");
+                $append");
 
     $data = [];
     if(!empty($rows)) {

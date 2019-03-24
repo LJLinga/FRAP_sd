@@ -15,7 +15,21 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 
 $edmsRole= $_SESSION['EDMS_ROLE'];
 $userId = $_SESSION['idnum'];
-//Buttons here
+//Buttons
+
+$revisions = 'closed';
+
+$query = "SELECT r.id, r.revisionsOpened FROM revisions r WHERE r.statusId = 2 ORDER BY r.id DESC LIMIT 1;";
+$rows = $crud->getData($query);
+if(!empty($rows)){
+    $revisions = 'open';
+    foreach ((array) $rows as $key => $row){
+        $revisionsOpened = $row['revisionsOpened'];
+        $revisionsId = $row['id'];
+    }
+}else{
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+}
 
 if(isset($_POST['btnSave'])){
     $sectionId = $_POST['section_id'];

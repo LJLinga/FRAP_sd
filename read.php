@@ -111,23 +111,23 @@ include 'GLOBAL_HEADER.php';
 </script>
     <div class="container-fluid">
         <div class="row">
-            <div class="column col-lg-2" style="margin-top: 1rem; margin-bottom: 1rem;">
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-header">
+            <div class="column col-lg-2" style="margin-top: 1rem; margin-bottom: 1rem; position: fixed;">
+                <div class="panel panel-default" style="margin-top: 1rem;">
+                    <div class="panel-heading">
                         <b> Account Information  </b>
                     </div>
-                    <div class="card-body" >
+                    <div class="panel-body" >
                         <b>Department: </b> <?php echo "Faculty - ";
                         echo $row3["DEPT_NAME"]; ?> <br>
                         <b>Member Since: </b><?php echo date_format($dateOfAcceptance, 'F  j,  Y'); ?><br>
                         <b>User Type: </b>   <?php echo $row3['STATUS'];?> <br>
                     </div>
                 </div>
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-header">
+                <div class="panel panel-default" style="margin-top: 1rem;">
+                    <div class="panel-heading">
                         <b> Faculty Assistance Loan Program </b>
                     </div>
-                    <div class="card-body" >
+                    <div class="panel-body" >
 
                         <?php if(empty($currentLoanStatus['STATUS'])) {
                             echo "No Applications yet. Apply using the link below. ";
@@ -137,17 +137,17 @@ include 'GLOBAL_HEADER.php';
                         }
                         ?>
                     </div>
-                    <div class="card-footer" >
+                    <div class="panel-footer" >
                         <a href = "MEMBER%20FALP%20application.php">View FALP</a>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                     </div>
                 </div>
 
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-header">
+                <div class="panel panel-default" style="margin-top: 1rem;">
+                    <div class="panel-heading">
                         <b> Health-Aid Assistance  </b>
                     </div>
-                    <div class="card-body" >
+                    <div class="panel-body" >
                         <?php if(empty($currentHAStatus['STATUS'])) {
                             echo "No Applications yet. Apply using the link below. ";
                         }else{
@@ -157,20 +157,20 @@ include 'GLOBAL_HEADER.php';
                         ?>
 
                     </div>
-                    <div class="card-footer" >
+                    <div class="panel-footer" >
                         <a href = "ADMIN%20Deductions.php">View Health-Aid</a>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                     </div>
                 </div>
 
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-header">
+                <div class="panel panel-default" style="margin-top: 1rem;">
+                    <div class="panel-heading">
                         <b> Lifetime Membership Status</b>
                     </div>
-                    <div class="card-body" >
+                    <div class="panel-body" >
                         <b> Status: </b> Eligible
                     </div>
-                    <div class="card-footer" >
+                    <div class="panel-footer" >
                         <a href = "ADMIN%20Deductions.php">View Lifetime</a>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                     </div>
@@ -178,16 +178,16 @@ include 'GLOBAL_HEADER.php';
 
 
             </div>
-            <div class="column col-lg-6" style="margin-top: 1rem; margin-bottom: 1rem;">
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-body">
+            <div class="column col-lg-6 col-lg-offset-2" style="margin-top: 1rem; margin-bottom: 1rem;">
+                <div class="panel panel-default" style="margin-top: 1rem;">
+                    <div class="panel-body">
                         <a href="<?php echo "http://localhost/FRAP_sd/feed.php"?>" ><i class="fa fa-backward"></i> Back to Newsfeed</a>
                     </div>
                 </div>
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-body">
-                        <h4 class="card-title"><b><?php echo $page_title;?></b></h4>
-                        <h5 class="card-subtitle">by <?php echo $author;?> | <?php echo date("F j, Y g:i A ", strtotime($lastUpdated)) ;?></h5>
+                <div class="panel panel-default" style="margin-top: 1rem;">
+                    <div class="panel-body">
+                        <h4 class="panel-title"><b><?php echo $page_title;?></b></h4>
+                        <h5 class="card-text">by <?php echo $author;?> | <?php echo date("F j, Y g:i A ", strtotime($lastUpdated)) ;?></h5>
                         <br><p class="card-text"><?php echo $body ?></p>
                         <?php
 
@@ -207,9 +207,9 @@ include 'GLOBAL_HEADER.php';
                                                                 WHERE ref.postId = $postId");
 
                             if(!empty($rows)) {
-                                echo '<div class="card" style="margin-top: 1rem;">
-                                        <div class="card-header"><b>Document References</b></div>
-                                        <div class="card-body">';
+                                echo '<div class="panel panel-default" style="margin-top: 1rem;">
+                                        <div class="panel-heading"><b>Document References</b></div>
+                                        <div class="panel-body">';
                                 foreach ((array)$rows as $key => $row) {
                                     $title = $row['title'];
                                     $versionNo = $row['versionNo'];
@@ -219,14 +219,14 @@ include 'GLOBAL_HEADER.php';
                                     $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
                                     $filePath = $row['filePath'];
                                     $fileName = $title.'_ver'.$versionNo.'_'.basename($filePath);
-                                    echo '<div class="card" style="position: relative;">';
+                                    echo '<div class="panel panel-default" style="position: relative;">';
                                     echo '<input type="hidden" class="refDocuments" value="'.$row['vid'].'">';
                                     echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
                                     echo '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >';
                                     echo '<a class="btn fa fa-download"  href="'.$filePath.'" download="'.$fileName.'"></a>';
                                     echo '</div>';
                                     echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
-                                    echo '<div class="card-body">';
+                                    echo '<div class="panel-body">';
                                     echo 'Process: ' . $processName . '<br>';
                                     echo 'Created by: ' . $originalAuthor . '<br>';
                                     echo 'Modified by: ' . $currentAuthor . '<br>';
@@ -240,9 +240,9 @@ include 'GLOBAL_HEADER.php';
                             if(!empty($rows)) {
                                 foreach ((array)$rows as $key => $row) {
                                     $pollId = $row['id'];
-                                    echo '<div class="card" style="margin-top: 1rem;">
-                                                <div class="card-header"><b>Question: '.$row['question'].'</b></div>
-                                                <div class="card-body">';
+                                    echo '<div class="panel panel-default" style="margin-top: 1rem;">
+                                                <div class="panel-heading"><b>Question: '.$row['question'].'</b></div>
+                                                <div class="panel-body">';
                                     $rowsIfAnswered = $crud->getData("SELECT pr.responderId, po.response 
                                                           FROM poll_options po JOIN poll_responses pr ON pr.responseId = po.optionId
                                                           WHERE po.pollId = '$pollId' AND pr.responderId = '$userId' ;");
@@ -308,8 +308,8 @@ include 'GLOBAL_HEADER.php';
                             $html .= '<b>'.$row['name'].'</b> ('.date("F j, Y g:i:s A ", strtotime($row['timeStamp'])).')<br>';
                             $count++;
                         }
-                        $output .= '<div class="card" style="margin-top: 1rem;">';
-                        $output .= '<div class="card-body">';
+                        $output .= '<div class="panel panel-default" style="margin-top: 1rem;">';
+                        $output .= '<div class="panel-body">';
                         $output .= '<a style="text-align: left" data-toggle="collapse" data-target="#collapse_seen" aria-expanded="true" aria-controls="collapse_seen">Seen by '.$count.' people.</a><br>';
                         $output .= '<div id="collapse_seen" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
                         $output .= $html;
@@ -318,20 +318,20 @@ include 'GLOBAL_HEADER.php';
                     }
                     echo $output;
                 ?>
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-body">
+                <div class="panel panel-default" style="margin-top: 1rem;">
+                    <div class="panel-body">
                         <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
                         <span id="comment_message"></span>
                         <div id="display_comment"></div>
                     </div>
                 </div>
             </div>
-            <div id="calendarColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 2rem;">
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-header">
+            <div id="calendarColumn" class="column col-lg-4 col-lg-offset-8" style="margin-top: 1rem; margin-bottom: 2rem; position: fixed;">
+                <div class="panel panel-default" style="margin-top: 1rem;">
+                    <div class="panel-heading">
                         <b> Events </b>
                     </div>
-                    <div class="card-body" >
+                    <div class="panel-body" >
                         <iframe src="https://calendar.google.com/calendar/b/3/embed?showTitle=0&amp;showCalendars=0&amp;mode=AGENDA&amp;height=800&amp;wkst=2&amp;bgcolor=%23ffffff&amp;src=noreply.lapdoc%40gmail.com&amp;color=%231B887A&amp;src=en.philippines%23holiday%40group.v.calendar.google.com&amp;color=%23125A12&amp;ctz=Asia%2FManila" style="border-width:0" width="480" height="360" frameborder="0" scrolling="no"></iframe>
                     </div>
                 </div>

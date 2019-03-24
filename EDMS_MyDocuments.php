@@ -33,8 +33,8 @@ $userName = $rows[0]['name'];
         </div>
         <div class="row">
             <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-header">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
                         <div class="row">
                             <div class="col-lg-7">
                                 <div class="btn-group">
@@ -49,7 +49,7 @@ $userName = $rows[0]['name'];
                             </div>
                             <div class="col-lg-5">
                                 <div class="form-inline">
-                                    <label for="sel1">Document Type</label>
+                                    <label for="sel1">Type</label>
                                     <select class="form-control" onchange="searchTable(this.value,0)">
                                         <option value="All">All</option>
                                         <?php
@@ -64,7 +64,7 @@ $userName = $rows[0]['name'];
                         </div>
                     </div>
 
-                    <div class="card-body">
+                    <div class="panel-body">
                         <table id="myTable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
                             <tr>
@@ -75,30 +75,46 @@ $userName = $rows[0]['name'];
                             </thead>
                         </table>
                     </div>
-                    <div class="card-footer">
+                    <div class="panel-footer">
                         <span>Last Updated on....</span>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                        My Activities
+                <div class="panel panel-green">
+                    <div class="panel-heading">
+                        Your (<b>
+                            <?php
+                            $rows = $crud->getData("SELECT roleName FROM edms_roles WHERE id = ".$_SESSION['EDMS_ROLE']." LIMIT 1;");
+                            echo $rows[0]['roleName'];
+                            ?>
+                        </b>) Workflows
                     </div>
-                    <div class="card-body">
-                        <div class="col-lg-2">All <b class="caret"></b></div>
-                        <div class="col-lg-7"></div>
-                        <div class="col-lg-3"><i class="fa fa-fw fa-plus-circle"></i>Create Groups</div>
+                    <div class="panel-body">
+                        <?php
+                        $rows = $crud->getData("SELECT  pr.processName, s.stepNo, s.stepName AS name 
+                                                FROM employee e 
+                                                JOIN edms_roles er ON e.EDMS_ROLE = er.id 
+                                                JOIN step_roles sr ON sr.roleId = er.id
+                                                JOIN steps s ON s.id = sr.stepId
+                                                JOIN process pr ON pr.id = s.processId
+                                                WHERE e.EMP_ID = '$userId'
+                                                ORDER BY pr.processName, s.stepNo");
+                        foreach((array)$rows AS $key => $row){
+                            echo '<div class="card">';
+                            echo '<div class="card-body">';
+                            echo $row['processName'].' -> Step '.$row['stepNo'].' '.$row['name'].'<br>';
+                            echo '</div></div>';
+                        }
+                        ?>
                     </div>
                 </div>
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-header">
-                        My Documents
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        My Activities
                     </div>
-                    <div class="card-body">
-                        <div class="col-lg-2">
-                            Documents I modified <b class="caret"></b>
-                        </div>
+                    <div class="panel-body">
+                        <div class="col-lg-2">All <b class="caret"></b></div>
                         <div class="col-lg-7"></div>
                         <div class="col-lg-3"><i class="fa fa-fw fa-plus-circle"></i>Create Groups</div>
                     </div>
