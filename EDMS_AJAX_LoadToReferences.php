@@ -2,9 +2,10 @@
 /**
  * Created by PhpStorm.
  * User: Christian
- * Date: 3/16/2019
- * Time: 3:55 PM
+ * Date: 3/24/2019
+ * Time: 9:07 PM
  */
+
 
 
 require ('GLOBAL_CLASS_CRUD.php');
@@ -31,6 +32,8 @@ $crud = new GLOBAL_CLASS_CRUD();
                 JOIN steps s ON s.id = d.stepId
                 JOIN process pr ON pr.id = s.processId
                 WHERE v.versionId = (SELECT MAX(v2.versionId) FROM doc_versions v2 WHERE v2.documentId = d.documentId)
+                AND (t.id = 4 OR t.id = 5)
+                AND stat.id = 2
                 AND v.versionId != '$append'");
 
     $data = [];
@@ -65,6 +68,4 @@ $crud = new GLOBAL_CLASS_CRUD();
     }
 
     echo json_encode($data);
-
-
 ?>

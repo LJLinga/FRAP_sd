@@ -509,22 +509,26 @@ include 'CMS_SIDEBAR.php';
                         <span id="refDocuments" style="font-size: 12px;">
                         <?php
 
-                            $rows = $crud->getData("SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor, v.filePath,
-                                            v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.id AS processId, pr.processName, s.stepNo, s.stepName,
-                                            (SELECT CONCAT(e.lastName,', ',e.firstName) FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
-                                            WHERE v.versionId = vid) AS currentAuthor
-                                            FROM documents d JOIN doc_versions v ON d.documentId = v.documentId
-                                            JOIN employee e ON e.EMP_ID = d.firstAuthorId 
-                                            JOIN steps s ON s.id = d.stepId
-                                            JOIN process pr ON pr.id = s.processId 
-                                            JOIN post_ref_versions ref ON ref.versionId = v.versionId
-                                            WHERE ref.postId = $postId;");
+                            $rows = $crud->getData("SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName, 
+                                                                v.filePath, v.title, v.versionNo, v.timeCreated, d.lastUpdated,
+                                                                stat.statusName, s.stepNo, s.stepName, t.type,
+                                                                pr.processName, v.versionId AS vid,
+                                                                (SELECT CONCAT(e.FIRSTNAME,', ',e.LASTNAME) FROM employee e2 WHERE e2.EMP_ID = d.firstAuthorId) AS firstAuthorName 
+                                                                FROM doc_versions v 
+                                                                JOIN documents d ON v.documentId = d.documentId
+                                                                JOIN post_ref_versions ref ON ref.versionId = v.versionId
+                                                                JOIN employee e ON e.EMP_ID = v.authorId
+                                                                JOIN doc_status stat ON stat.id = d.statusId 
+                                                                JOIN doc_type t ON t.id = d.typeId
+                                                                JOIN steps s ON s.id = d.stepId
+                                                                JOIN process pr ON pr.id = s.processId
+                                                                WHERE ref.postId = $postId");
                             if(!empty($rows)) {
                                 foreach ((array)$rows as $key => $row) {
                                     $title = $row['title'];
                                     $versionNo = $row['versionNo'];
-                                    $originalAuthor = $row['originalAuthor'];
-                                    $currentAuthor = $row['currentAuthor'];
+                                    $originalAuthor = $row['firstAuthorName'];
+                                    $currentAuthor = $row['authorName'];
                                     $processName = $row['processName'];
                                     $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
                                     $filePath = $row['filePath'];

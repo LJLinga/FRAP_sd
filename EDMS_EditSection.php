@@ -153,7 +153,7 @@ include 'EDMS_SIDEBAR.php';
 
                     <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
                         <div class="card" style="margin-bottom: 1rem; ">
-                            <div class="card-header"><b>Document References</b></div>
+                            <div class="card-header"><b>Referenced Minutes</b></div>
                             <div class="card-body" style="max-height: 20rem; overflow-y: auto;">
                                 <span id="refDocuments" style="font-size: 12px;">
                                 <?php
@@ -195,17 +195,6 @@ include 'EDMS_SIDEBAR.php';
                                 ?>
                                 </span>
                                 <span id="toRemoveDocRefs"></span>
-                            </div>
-                            <div class="card-footer">
-                                <button id="btnRefModal" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
-                            </div>
-                        </div>
-                        <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-header"><b>Referenced Minutes</b></div>
-                            <div class="card-body" style="max-height: 20rem; overflow-y: scroll;">
-                                <span id="noRefsYet">No References</span>
-                                <span id="refDocuments" style="font-size: 12px;">
-                                </span>
                             </div>
                             <div class="card-footer">
                                 <button id="btnRefModal" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
@@ -436,7 +425,7 @@ include 'EDMS_SIDEBAR.php';
                 destroy: true,
                 "pageLength": 3,
                 "ajax": {
-                    "url":"CMS_AJAX_LoadToAddReferences.php",
+                    "url":"EDMS_AJAX_LoadToReferences.php",
                     "type":"POST",
                     "data":{ loadedReferences: loadedRefs },
                     "dataSrc": ''

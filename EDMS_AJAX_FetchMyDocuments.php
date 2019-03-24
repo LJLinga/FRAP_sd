@@ -28,10 +28,9 @@ if(isset($_POST['userId'])){
                 JOIN doc_status stat ON stat.id = d.statusId 
                 JOIN doc_type t ON t.id = d.typeId
                 JOIN steps s ON s.id = d.stepId
-                JOIN step_roles sr ON sr.stepId = s.id
                 JOIN process pr ON pr.id = s.processId
                 WHERE t.isActive = 2 AND (d.firstAuthorId = '$userId' OR d.authorId = '$userId')
-                GROUP BY d.documentId ORDER BY d.lastUpdated DESC;";
+                ORDER BY d.lastUpdated DESC;";
 
 
     $rows = $crud->getData($query);

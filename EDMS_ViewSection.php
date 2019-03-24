@@ -153,29 +153,53 @@ include 'EDMS_SIDEBAR.php';
                         </div>
                     </div>
 
-                    <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
-                        <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-header"><b>Document References</b></div>
-                            <div class="card-body" style="max-height: 20rem; overflow-y: scroll;">
-                                <span id="noRefsYet">No References</span>
-                                <span id="refDocuments" style="font-size: 12px;">
-                                </span>
-                            </div>
-                            <div class="card-footer">
-                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
-                            </div>
-                        </div>
-                        <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-header"><b>Referenced Minutes</b></div>
-                            <div class="card-body" style="max-height: 20rem; overflow-y: scroll;">
-                                <span id="noRefsYet">No References</span>
-                                <span id="refDocuments" style="font-size: 12px;">
-                                </span>
-                            </div>
-                            <div class="card-footer">
-                                <button id="btnRefModal" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
-                            </div>
-                        </div>
+                    <div id="publishColumn" class="column col-lg-4" style="margin-bottom: 1rem;">
+                        <?php
+                        $rows = $crud->getData("SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName, 
+                                                                v.filePath, v.title, v.versionNo, v.timeCreated, d.lastUpdated,
+                                                                stat.statusName, s.stepNo, s.stepName, t.type,
+                                                                pr.processName, v.versionId AS vid,
+                                                                (SELECT CONCAT(e.FIRSTNAME,', ',e.LASTNAME) FROM employee e2 WHERE e2.EMP_ID = d.firstAuthorId) AS firstAuthorName 
+                                                                FROM doc_versions v 
+                                                                JOIN documents d ON v.documentId = d.documentId
+                                                                JOIN section_ref_versions ref ON ref.versionId = v.versionId
+                                                                JOIN employee e ON e.EMP_ID = v.authorId
+                                                                JOIN doc_status stat ON stat.id = d.statusId 
+                                                                JOIN doc_type t ON t.id = d.typeId
+                                                                JOIN steps s ON s.id = d.stepId
+                                                                JOIN process pr ON pr.id = s.processId
+                                                                WHERE ref.sectionId = $sectionId");
+
+                        if(!empty($rows)) {
+                            echo '<div class="card" style="margin-top: 1rem;">
+                                        <div class="card-header"><b>Referenced Minutes</b></div>
+                                        <div class="card-body">';
+                            foreach ((array)$rows as $key => $row) {
+                                $title = $row['title'];
+                                $versionNo = $row['versionNo'];
+                                $originalAuthor = $row['firstAuthorName'];
+                                $currentAuthor = $row['authorName'];
+                                $processName = $row['processName'];
+                                $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
+                                $filePath = $row['filePath'];
+                                $fileName = $title.'_ver'.$versionNo.'_'.basename($filePath);
+                                echo '<div class="card" style="position: relative;">';
+                                echo '<input type="hidden" class="refDocuments" value="'.$row['vid'].'">';
+                                echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
+                                echo '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >';
+                                echo '<a class="btn fa fa-download"  href="'.$filePath.'" download="'.$fileName.'"></a>';
+                                echo '</div>';
+                                echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
+                                echo '<div class="card-body">';
+                                echo 'Process: ' . $processName . '<br>';
+                                echo 'Created by: ' . $originalAuthor . '<br>';
+                                echo 'Modified by: ' . $currentAuthor . '<br>';
+                                echo 'on: <i>' . $updatedOn . '</i><br>';
+                                echo '</div></div></div>';
+                            }
+                            echo '</div></div>';
+                        }
+                        ?>
                         <div class="card" style="margin-top: 1rem;">
                             <div class="card-header">
                                 <b>Section Actions</b>
@@ -232,6 +256,34 @@ include 'EDMS_SIDEBAR.php';
                             }
                             ?>
                         </div>
+                        <?php
+                        $query = "SELECT v.timeCreated, v.title, v.sectionNo, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
+                                  FROM section_versions v 
+                                  JOIN employee e ON v.authorId = e.EMP_ID 
+                                  WHERE v.sectionId = '$sectionId' AND v.timeCreated != '$lastUpdated' ORDER BY v.timeCreated DESC;";
+                        $rows = $crud->getData($query);
+                        if (!empty($rows)) {
+
+                            echo '<div class="card" style="margin-top: 1rem;">';
+                            echo '<div class="card-header"><b>Version History</b></div>';
+                            echo '<div class="card-body" style="max-height: 50vh; overflow-y: auto;">';
+                            if(!empty($rows)) {
+                                foreach ((array)$rows as $key => $row) {
+                                    echo '<div class="card" style="margin-bottom: 1rem;">';
+                                    echo '<div class="card-body">';
+                                    echo '<span class="badge">Version ' . $row['timeCreated'] . '</span> ';
+                                    echo '<button type="button" id="btnPreview" class="btn btn-default btn-sm">Preview</button><br>';
+                                    echo '<b>Section '.$row['sectionNo'].': '. $row['title'] . ' </b><br>';
+                                    echo 'Created by: ' . $row['versionAuthor'] . '<br>';
+                                    echo 'on: <i>' . date("F j, Y g:i:s A ", strtotime($row['timeCreated'])) . '</i><br>';
+                                    echo '</div></div>';
+                                }
+                            }
+                            echo '</div></div>';
+                        }
+
+
+                        ?>
                         <!-- Button -->
                     </div>
                 </div>
