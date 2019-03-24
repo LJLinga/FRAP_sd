@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: Christian
@@ -18,11 +19,12 @@ $errors = []; // Store all foreseen and unforseen errors here
 
 $fileExtensions = ['jpeg','jpg','png','ppt','doc','docx','pptx','pdf']; // Get all the file extensions
 
-if(!empty($_POST['documentTitle']) && !empty($_POST['selectedType']) && !empty($_POST['userId']) ) {
+if(!empty($_POST['documentId']) && !empty($_POST['newVersionNo']) && !empty($_POST['userId']) && !empty($_POST['versionTitle'])) {
 
     $userId = $_POST['userId'];
-    $title = $_POST['documentTitle'];
-    $typeId = $_POST['selectedType'];
+    $title = $_POST['versionTitle'];
+    $versionNo = $_POST['newVersionNo'];
+    $documentId = $_POST['documentId'];
 
     $fileName = $_FILES['file']['name'];
     $fileSize = $_FILES['file']['size'];
@@ -52,23 +54,11 @@ if(!empty($_POST['documentTitle']) && !empty($_POST['selectedType']) && !empty($
         $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
 
         if ($didUpload) {
-
-            $stepId = '999'; $statusId = '99';
-            $rows = $crud->getData("SELECT s.id FROM steps s 
-                                  JOIN process pr ON s.processId = pr.id JOIN doc_type t ON t.processId = pr.id 
-                                  WHERE t.id = '$typeId' AND s.stepNo = 1 LIMIT 1;");
-            if(!empty($rows)) {
-                foreach ((array)$rows as $key => $row) {
-                    $stepId = $row['id'];
-                }
-                if($stepId != '999'){
-                    $statusId = '1';
-                }
-            }
-
-            $insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, authorId, stepId, typeId, statusId, versionNo, filePath, title) VALUES ('$userId','$userId','$stepId','$typeId','$statusId','1.0','$uploadPath','$title')");
-            echo $insertDocument;
-
+            $crud->execute("UPDATE documents SET availabilityId='2', 
+                                    authorId='$userId', versionNo='$versionNo', title='$title',filePath='$uploadPath',
+                                    lockedById=NULL WHERE documentId='$documentId'");
+            //echo $documentId;
+            echo 'http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId='.$documentId;
         } else {
             echo "An error occurred somewhere. Try again or contact the admin";
         }
@@ -80,5 +70,5 @@ if(!empty($_POST['documentTitle']) && !empty($_POST['selectedType']) && !empty($
     }
 
 }else{
-    echo 'error';
+    echo 'PHP Error.'.$_POST['userId'].' '.$_POST['documentTitle'].' '.$_POST['selectedTask'].' '.$_FILES['file'];
 }

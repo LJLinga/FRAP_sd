@@ -125,12 +125,12 @@ $userName = $rows[0]['name'];
                     <div class="form-group">
                         <select class="form-control" id="selectedType" name="selectedType">
                             <?php
-                            $rows = $crud->getData("SELECT t.id, t.type FROM facultyassocnew.doc_type t WHERE isActive = 2;");
-                            if(!empty($rows)){
-                                foreach ((array) $rows as $key => $row) {
-                                    echo '<option value="'.$row['id'].'">'.$row['type'].'</option>';
+                                $rows = $crud->getData("SELECT t.id, t.type FROM facultyassocnew.doc_type t WHERE isActive = 2;");
+                                if(!empty($rows)){
+                                    foreach ((array) $rows as $key => $row) {
+                                        echo '<option value="'.$row['id'].'">'.$row['type'].'</option>';
+                                    }
                                 }
-                            }
                             ?>
                         </select>
                     </div>

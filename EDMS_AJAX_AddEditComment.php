@@ -6,7 +6,6 @@ $error = '';
 $comment_name = '';
 $comment_content = '';
 $documentId = '';
-$versionId = '';
 
 if(empty($_POST["comment_name"]))
 {
@@ -35,21 +34,12 @@ else
     $documentId = $_POST["documentId"];
 }
 
-if(empty($_POST['versionId']))
-{
-    $error .= '<p class="text-danger">Cannot identify document version</p>';
-}
-else
-{
-    $versionId = $_POST["versionId"];
-}
-
 if($error == '')
 {
     $query = "
  INSERT INTO doc_comments 
- (parentCommentId, documentId, versionId, content, commenterId) 
- VALUES (:parent_comment_id, :documentId, :versionId, :comment, :comment_sender_name)
+ (parentCommentId, documentId, content, commenterId) 
+ VALUES (:parent_comment_id, :documentId, :comment, :comment_sender_name)
  ";
     $statement = $connect->prepare($query);
     $statement->execute(
@@ -57,8 +47,7 @@ if($error == '')
             ':parent_comment_id' => $_POST["comment_id"],
             ':comment'    => $comment_content,
             ':comment_sender_name' => $comment_name,
-            ':documentId' => $documentId,
-            ':versionId' => $versionId
+            ':documentId' => $documentId
         )
     );
     $error = '<label class="text-success">Comment Added</label>';
@@ -66,8 +55,7 @@ if($error == '')
 
 $data = array(
     'error'  => $error,
-    'documentId' => $documentId,
-    'versionId' => $versionId
+    'documentId' => $documentId
 );
 
 echo json_encode($data);

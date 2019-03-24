@@ -1,13 +1,13 @@
 <?php
 
-$versionId = $_POST['versionId'];
+$documentId = $_POST['documentId'];
 
 $connect = new PDO('mysql:host=localhost;dbname=facultyassocnew', 'root', '1234');
 
 $query = "
 SELECT c.id, c.commenterId, c.parentCommentId, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS commenterName, 
 c.content, c.timePosted FROM doc_comments c JOIN employee e WHERE c.commenterId = e.EMP_ID
-AND c.parentCommentId = '0' AND c.versionId = '$versionId'
+AND c.parentCommentId = '0' AND c.documentId = '$documentId'
 ORDER BY id DESC
 ";
 

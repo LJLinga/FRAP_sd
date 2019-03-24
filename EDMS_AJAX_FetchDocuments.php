@@ -15,21 +15,19 @@ if(isset($_POST['role'])){
 
     $role = $_POST['role'];
 
-    $query = "SELECT d.documentId, CONCAT(e.lastName,', ',e.firstName) AS originalAuthor, d.stepId, t.type, stat.statusName,
-                v.versionId as vid, v.versionNo, v.title, v.timeCreated, pr.processName, s.stepNo, s.stepName,
-                (SELECT CONCAT(e.lastName,', ',e.firstName) FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
-                WHERE v.versionId = vid) AS currentAuthor
-                FROM documents d JOIN doc_versions v ON d.documentId = v.documentId
-                JOIN doc_status stat ON stat.id = d.statusId
+    $query = "SELECT d.documentId, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName, 
+                d.filePath, d.title, d.versionNo, d.timeCreated, d.lastUpdated,
+                stat.statusName, s.stepNo, s.stepName, t.type, pr.processName,
+                (SELECT CONCAT(e.FIRSTNAME,', ',e.LASTNAME) FROM employee e2 WHERE e2.EMP_ID = d.firstAuthorId) AS firstAuthorName 
+                FROM facultyassocnew.documents d 
+                JOIN employee e ON e.EMP_ID = d.authorId
+                JOIN doc_status stat ON stat.id = d.statusId 
                 JOIN doc_type t ON t.id = d.typeId
-                JOIN employee e ON e.EMP_ID = d.firstAuthorId 
                 JOIN steps s ON s.id = d.stepId
                 JOIN step_roles sr ON sr.stepId = s.id
                 JOIN process pr ON pr.id = s.processId
-                WHERE s.processId = pr.id AND v.versionId = 
-                (SELECT MAX(v1.versionId) FROM doc_versions v1 WHERE v1.documentId = d.documentId)
-                AND t.isActive = 2 AND sr.roleId = '$role' 
-                AND sr.read = 2 ORDER BY v.timeCreated DESC;";
+                WHERE t.isActive = 2 AND sr.roleId = '$role' 
+                AND sr.read = 2 ORDER BY d.lastUpdated DESC;";
 
 
     $rows = $crud->getData($query);
@@ -38,9 +36,9 @@ if(isset($_POST['role'])){
         $data[] =  array(
             'title_version' => '<span class="badge badge-success">'.$row['type'].'</span> <b>'.$row['title'].'</b> 
                                 <span class="badge">'.$row['versionNo'].'</span><br>
-                                Author: '.$row['originalAuthor'].'<br>
-                                Modified by: '.$row['currentAuthor'].'<br>
-                                on : <i>'.date("F j, Y g:i:s A ", strtotime($row['timeCreated'])).'</i><br>',
+                                Author: '.$row['firstAuthorName'].'<br>
+                                Modified by: '.$row['authorName'].'<br>
+                                on : <i>'.date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])).'</i><br>',
             'currentProcess' => '<span><b>' . $row['processName'] . '</b></span><br><span class="badge">Step ' . $row['stepNo'] . ' '. $row['stepName'].'</span><br><span class="badge">'.$row['statusName'].'</span>',
             'actions'=> '<a class="btn btn-default" name="documentId" href="http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId='.$row['documentId'].'">Edit</a>'
         );

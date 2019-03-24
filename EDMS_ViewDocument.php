@@ -48,19 +48,19 @@ if(isset($_GET['docId'])){
     // Load Current User Permissions
 
     //Get the rest of the document.
-    $query = "SELECT d.firstAuthorId, d.timeFirstPosted, d.availabilityId, v.timeCreated, v.versionId, v.versionNo, v.authorId, v.title, v.filePath, 
+    $query = "SELECT d.firstAuthorId, d.timeCreated, d.availabilityId,  d.versionNo, d.authorId, d.title, d.filePath, 
               CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS originalAuthor,
-              (SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) FROM employee e WHERE e.EMP_ID = v.authorId) AS currentAuthor
-              FROM documents d JOIN doc_versions v ON d.documentId = v.documentId 
+              (SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) FROM employee e WHERE e.EMP_ID = d.authorId) AS currentAuthor
+              FROM documents d
               JOIN employee e ON d.firstAuthorId = e.EMP_ID WHERE d.documentId='$documentId';";
 
     $rows = $crud->getData($query);
     foreach((array) $rows as $key => $row){
         $firstAuthorId = $row['firstAuthorId'];
         $originalAuthor = $row['originalAuthor'];
-        $timeFirstPosted = $row['timeFirstPosted'];
+        $timeFirstPosted = $row['timeCreated'];
         $timeUpdated = $row['timeCreated'];
-        $versionId = $row['versionId'];
+        //$versionId = $row['versionId'];
         $versionNo = $row['versionNo'];
         $currentAuthorId = $row['authorId'];
         $currentAuthor = $row['currentAuthor'];
@@ -242,32 +242,9 @@ include 'EDMS_SIDEBAR.php';
                     <div class="card-body">
                         <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
                         <span id="comment_message"></span>
-                        <div id="display_comment<?php echo $versionId;?>"></div>
+                        <div id="display_comment"></div>
                     </div>
                 </div>
-
-                <?php
-                $query = "SELECT v.versionId as vid, v.timeCreated, v.versionNo, v.title, v.filePath, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
-                              FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
-                              WHERE v.documentId = '$documentId' AND v.versionId != '$versionId' ORDER BY v.versionId DESC;";
-                $rows = $crud->getData($query);
-                if(!empty($rows)) {
-                    foreach ((array)$rows as $key => $row) {
-                        echo '<div class="card" style="margin-top: 1rem;">';
-                        echo '<div class="card-header" style="position: relative; "><b>Comments for</b>';
-                        echo '<a style="text-align: left;" class="btn btn-link" onclick="load_comment(&quot;'.$documentId.'&quot;,&quot;'.$row['vid'].'&quot;)" type="button" data-toggle="collapse" data-target="#collapseComments' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><span class="badge">Version ' . $row['versionNo'] . '</span> <b>' . $row['title'] . ' </b></a>';
-                        echo '<a class="btn fa fa-download" style="position: absolute; right: 2px; top: 2px;" href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"></a>';
-                        echo '</div>';
-                        echo '<div id="collapseComments' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
-                        echo '<div class="card-body">';
-                        echo 'Version author: ' . $row['versionAuthor'];
-                        echo ' on: <i>' . date("F j, Y g:i:s A ", strtotime($row['timeCreated'])) . '</i><br>';
-                        echo '<div id="display_comment'.$row['vid'].'"></div>';
-                        echo '</div></div>';
-                        echo '</div>';
-                    }
-                }
-                ?>
             </div>
             <div class="col-lg-4">
 
@@ -336,9 +313,9 @@ include 'EDMS_SIDEBAR.php';
                     </div>
                 </div>
                 <?php
-                    $query = "SELECT v.versionId as vid, v.timeCreated, v.versionNo, v.title, v.filePath, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
+                    $query = "SELECT v.timeCreated, v.versionNo, v.title, v.filePath, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
                               FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
-                              WHERE v.documentId = '$documentId' AND v.versionId != '$versionId' ORDER BY v.versionId DESC;";
+                              WHERE v.documentId = '$documentId' AND v.timeCreated < '$timeUpdated' ORDER BY v.timeCreated DESC;";
                     $rows = $crud->getData($query);
                     if (!empty($rows)) {
 
@@ -387,7 +364,6 @@ include 'EDMS_SIDEBAR.php';
                 <div class="modal-footer">
                     <div class="form-group">
                         <input type="hidden" name="comment_id" id="comment_id" value="0" />
-                        <input type="hidden" name="versionId" id="versionId" value="<?php echo $versionId; ?>" />
                         <input type="hidden" name="documentId" id="documentId" value="<?php echo $documentId; ?>" />
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit"/>
@@ -446,7 +422,6 @@ include 'EDMS_SIDEBAR.php';
     $(document).ready(function(){
 
         let documentId = "<?php echo $documentId; ?>";
-        let versionId = "<?php echo $versionId; ?>";
 
         $("#documentUploadForm").on('submit', function(e){
             e.preventDefault();
@@ -498,21 +473,21 @@ include 'EDMS_SIDEBAR.php';
         });
 
         setInterval(function() {
-            load_comment(documentId,versionId);
+            load_comment(documentId);
         }, 1000);
 
 
     });
 
-    function load_comment(documentId,versionId)
+    function load_comment(documentId)
     {
         $.ajax({
             url:"EDMS_AJAX_FetchEditComments.php",
             method:"POST",
-            data:{documentId: documentId, versionId: versionId },
+            data:{documentId: documentId},
             success:function(data)
             {
-                $('#display_comment'+versionId).html(data);
+                $('#display_comment').html(data);
             }
         })
     }
