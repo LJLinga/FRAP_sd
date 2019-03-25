@@ -83,12 +83,12 @@ $userName = $rows[0]['name'];
             <div class="col-lg-4">
                 <div class="panel panel-green">
                     <div class="panel-heading">
-                        Your (<b>
+                        Your <b>
                         <?php
                             $rows = $crud->getData("SELECT roleName FROM edms_roles WHERE id = ".$_SESSION['EDMS_ROLE']." LIMIT 1;");
                             echo $rows[0]['roleName'];
                         ?>
-                        </b>) Workflows
+                        </b> Workflows
                     </div>
                     <div class="panel-body">
                         <?php

@@ -22,9 +22,17 @@
             <li>
                 <a href="EDMS_FacultyManual.php"><i class="fa fa-fw fa-folder"></i> Faculty Manual</a>
             </li>
-            <li>
-                <a href="EDMS_ManualRevisions.php"><i class="fa fa-fw fa-folder"></i> Manual Revisions</a>
-            </li>
+
+            <?php
+                if($_SESSION['EDMS_ROLE'] != 3 && $_SESSION['EDMS_ROLE'] != 4 && $_SESSION['EDMS_ROLE'] != 5 && $_SESSION['EDMS_ROLE'] != 6){
+
+                }else{
+                    echo '<li>
+                                <a href="EDMS_ManualRevisions.php"><i class="fa fa-fw fa-folder"></i> Manual Revisions</a>
+                            </li>';
+                }
+            ?>
+
         </ul>
     </div>
     <!-- /.navbar-collapse -->

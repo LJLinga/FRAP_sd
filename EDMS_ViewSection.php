@@ -42,6 +42,32 @@ if(isset($_POST['btnEdit'])){
     header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_EditSection.php?secId=".$sectionId);
 }
 
+if(isset($_POST['btnAccept'])){
+    //Clickable only when unlocked. Thesis 2.
+    $sectionId = $_POST['btnAccept'];
+    $rows = $crud->getData("SELECT availabilityId FROM sections WHERE id = '$sectionId'");
+    foreach((array) $rows as $key => $row){
+        $availabilityId = $row['availabilityId'];
+    }
+    if($availabilityId == '2'){
+        $crud->execute("UPDATE sections SET statusId='2', approvedById='$userId' WHERE id='$sectionId'");
+    }
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewSection.php?secId=".$sectionId);
+}
+
+if(isset($_POST['btnReject'])){
+    $sectionId= $_POST['btnReject'];
+    $rows = $crud->getData("SELECT availabilityId FROM sections WHERE id = '$sectionId'");
+    foreach((array) $rows as $key => $row){
+        $availability = $row['availabilityId'];
+    }
+    if($availability == '2'){
+        $crud->execute("UPDATE sections SET statusId='3', approvedById='$userId' WHERE id='$sectionId'");
+    }
+
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewSection.php?secId=".$sectionId);
+}
+
 if(isset($_POST['btnRoute'])){
     $nextStepId = $_POST['btnRoute'];
     $sectionId = $_POST['section_id'];
@@ -53,6 +79,7 @@ if(isset($_POST['btnRoute'])){
     if($availabilityId == '2'){
         $crud->execute("UPDATE sections SET statusId = '1', stepId='$nextStepId' WHERE id ='$sectionId'");
     }
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewSection.php?secId=".$sectionId);
 }
 
 if(isset($_GET['secId'])){
@@ -105,6 +132,13 @@ if(isset($_GET['secId'])){
             $content = $row['content'];
             $timeCreated = $row['timeCreated'];
             $lastUpdated = $row['lastUpdated'];
+        }
+    }
+
+    $rows = $crud->getData("SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS name FROM employee e WHERE e.EMP_ID = '$approvedById' LIMIT 1;");
+    if(!empty($rows)){
+        foreach((array) $rows as $key=> $row){
+            $approvedByName = $row['name'];
         }
     }
 
@@ -225,7 +259,7 @@ include 'EDMS_SIDEBAR.php';
                                 <b>Section Actions</b>
                             </div>
                             <div class="card-body">
-                                Status: <b><?php echo $statusName;?></b><br>
+                                Status: <b><?php echo $statusName;?></b> (by <?php echo $approvedByName;?>)<br>
                                 Stage: <b><?php echo $stepName; ?></b><br>
                                 Created by: <b><?php echo $firstAuthorName ?></b><br>
                                 Modified by: <b><?php echo $authorName ?></b><br>
@@ -237,7 +271,7 @@ include 'EDMS_SIDEBAR.php';
                                         <input type="hidden" name="locked_by_id" value="<?php echo $lockedById;?>">
                                         <?php
                                         $disabledButtons = "enabled";
-                                        if($availabilityId == '1' && $userId != $lockedById){
+                                        if($availabilityId == '1'){
                                             $disabledButtons = "disabled";
                                         }
                                         if(isset($route) && $route=='2') {
@@ -261,7 +295,14 @@ include 'EDMS_SIDEBAR.php';
                                             }
                                         }
                                         if(isset($write) && $write=='2'){
-                                            echo '<button class="btn btn-default" type="submit" name="btnEdit" style="text-align: left; width:100%;" '.$disabledButtons.'>Lock and Edit</button>';
+                                            if($availabilityId == '1' && $userId != $lockedById) {
+                                                echo '<button class="btn btn-default" type="submit" name="btnEdit" style="text-align: left; width:100%;" disabled>Lock and Edit</button>';
+                                            }else if($availabilityId == '1' && $userId == $lockedById){
+                                                echo '<button class="btn btn-default" type="submit" name="btnEdit" style="text-align: left; width:100%;">Continue Editing</button>';
+                                            }
+                                            else{
+                                                echo '<button class="btn btn-default" type="submit" name="btnEdit" style="text-align: left; width:100%;">Lock and Edit</button>';
+                                            }
                                             //echo 'button type="button" name="btnArchive" class="btn btn-default" style="text-align: left; width: 100%;">Archive</button>';
                                         }
                                         //echo $edmsRole.','.$read.','.$write.','.$route;
