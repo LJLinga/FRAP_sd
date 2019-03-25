@@ -19,11 +19,12 @@ function Header()
     $this->SetFont('Arial','B',10);
     // Move to the right
 	$this->Cell(15);
-	 $this->Cell(30,10,'Faculty Association,Inc.',0,0,'C');
+
+	 $this->Cell(80,10,'Faculty Association,Inc.',0,0,'C');
 	 $this->Ln(5);
 	 $this->Cell(19);
 	 $this->SetFont('Arial','',10);
-	$this->Cell(30,10,'De La Salle University - Manila',0,0,'C');
+	$this->Cell(80,10,'De La Salle University - Manila',0,0,'C');
     $this->Cell(80);
     // Title
    
@@ -87,7 +88,7 @@ left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SER
 on m.MEMBER_ID = mf.member_id
 left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 2 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) ha
 on m.MEMBER_ID = ha.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 3 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) f
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 4 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) f
 on m.MEMBER_ID = f.member_id
 
 join txn_reference t
@@ -104,7 +105,7 @@ left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SER
 on m.MEMBER_ID = mf.member_id
 left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 2 AND (txn_date between '$yearStart-$monthStart-$dayStart 00:00:00' AND '$yearEnd-$monthEnd-$dayEnd 23:59:59') AND TXN_TYPE =2 group by member_id) ha
 on m.MEMBER_ID = ha.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 3 AND(txn_date between '$yearStart-$monthStart-$dayStart 00:00:00' AND '$yearEnd-$monthEnd-$dayEnd 23:59:59') AND TXN_TYPE =2 group by member_id)  f
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 4 AND(txn_date between '$yearStart-$monthStart-$dayStart 00:00:00' AND '$yearEnd-$monthEnd-$dayEnd 23:59:59') AND TXN_TYPE =2 group by member_id)  f
 on m.MEMBER_ID = f.member_id
 
 join txn_reference t

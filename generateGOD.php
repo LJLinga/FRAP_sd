@@ -21,11 +21,11 @@ function Header()
     $this->SetFont('Arial','B',10);
     // Move to the right
 	$this->Cell(15);
-	 $this->Cell(30,10,'Faculty Association,Inc.',0,0,'C');
+	 $this->Cell(80,10,'Faculty Association,Inc.',0,0,'C');
 	 $this->Ln(5);
 	 $this->Cell(19);
 	 $this->SetFont('Arial','',10);
-	$this->Cell(30,10,'De La Salle University - Manila',0,0,'C');
+	$this->Cell(80,10,'De La Salle University - Manila',0,0,'C');
     $this->Cell(80);
     // Title
    
