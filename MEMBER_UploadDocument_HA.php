@@ -12,7 +12,7 @@ $checkForHealthAidApplication = mysqli_fetch_array($checkForHealthAidApplication
 
 if(!empty($checkForHealthAidApplication)){
 
-    if($checkForHealthAidApplication['APP_STATUS'] == 1){
+    if($checkForHealthAidApplication['APP_STATUS'] == 1 && $checkForHealthAidApplication['PICKED_UP_STATUS'] == 1){
 
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
 
@@ -20,17 +20,18 @@ if(!empty($checkForHealthAidApplication)){
 
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
 
-    }else if($checkForHealthAidApplication['APP_STATUS'] == 2 && $checkForHealthAidApplication['PICKUP_STATUS'] == 3){ //which means it was accepted and was picked up.
+    }else if($checkForHealthAidApplication['APP_STATUS'] == 2 && $checkForHealthAidApplication['PICKED_UP_STATUS'] == 2){
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
 
-    }else if($checkForHealthAidApplication['APP_STATUS'] == 3){ //which means the fucker got rejected lulzzzzzzzzzz meaning you dont have to check the pickupstatus
-
+    }
+    else{
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
 
     }
 
 }
+
 
 //heres the realest code
 
@@ -47,7 +48,7 @@ if(!empty($_FILES['upload_file'])){
                                                             VALUES({$_SESSION['idnum']}, {$_POST['amount']},'{$_POST['message']}')");
 
     $crud->execute("INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, HA_REF, SERVICE_ID) 
-                          VALUES({$_SESSION['idnum']}, 1, 'Health Aid Application Sent!', {$_POST['amount']}, {$recordID}, 2)");
+                          VALUES({$_SESSION['idnum']}, 1, 'Health Aid Application Sent!', 0.00 , {$recordID}, 2)");
 
 
 
@@ -100,10 +101,8 @@ if(!empty($_FILES['upload_file'])){
 
 
                 //insert query for the docs
-                $insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, stepId, statusedById, typeId, statusId) VALUES ('$userId', '$stepId','$userId','$typeId','$statusId')");
-                $crud->execute("INSERT into doc_versions (documentId, authorId, versionNo, title, filePath) VALUES ('$insertDocument','$userId','1.0','$title','$uploadPath')");
+                $insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, authorId, stepId, typeId, statusId, versionNo, filePath, title) VALUES ('$userId','$userId','$stepId','$typeId','$statusId','1.0','$uploadPath','$title')");
                 echo $insertDocument;
-
                 //insert query for the reference documents
                 $crud->execute("INSERT INTO ref_document_healthaid(RECORD_ID, DOC_ID) VALUES ({$recordID},{$insertDocument}) ");
 

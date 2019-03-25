@@ -51,6 +51,18 @@ $queryCurrentHAResult= mysqli_query($dbc, $queryHealthAidStatus);
 $currentHAStatus = mysqli_fetch_array($queryCurrentHAResult);
 // lifetime statuses.
 
+//check if the member is at least 10 years.
+
+$query = "SELECT YEAR(DATE_APPROVED) as 'year' from member where member_id = ".$_SESSION['idnum']." ";
+
+$hireDate = mysqli_fetch_assoc(mysqli_query($dbc,$query));
+
+$yearHired = $hireDate['year'];
+
+$yearNOW = date('Y');
+
+
+
 $page_title = 'Newsfeed';
 include 'GLOBAL_HEADER.php';
 
@@ -122,7 +134,11 @@ include 'GLOBAL_HEADER.php';
                             <b> Lifetime Membership Status</b>
                         </div>
                         <div class="panel-body" >
+                            <?php if(($yearNOW - $yearHired) >= 10 ){?>
                             <b> Status: </b> Eligible
+                            <?php }else{?>
+                                <b> Status: </b> Ineligible
+                            <?php }?>
                         </div>
                         <div class="panel-footer" >
                             <a href = "ADMIN%20Deductions.php">View Lifetime</a>

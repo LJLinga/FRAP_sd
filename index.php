@@ -145,7 +145,7 @@
                     $_SESSION['SYS_ROLE'] =  $result['SYS_ROLE'];
                     //$_SESSION['SYS_ROLE'] =  $result['SYS_ROLE'];
 
-                        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER dashboard.php");
+                        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/feed.php");
 
                 }
                 else if ($rowMem['ACC_STATUS']==1){

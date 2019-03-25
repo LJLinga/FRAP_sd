@@ -36,7 +36,6 @@
 
                 if ($row['PAYMENT_TERMS'] > $row['PAYMENTS_MADE']){ //checks if the loan is 50%
 
-
                     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
 
 
@@ -47,8 +46,6 @@
     }
 
     if($ifPartTimeLoaned['PART_TIME_LOANED'] == "YES"){
-
-        $_SESSION['GLOBAL_MESSAGE'] = ' You cannot loan again for this month. Please wait for another term before you can loan again. ';
 
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
 
@@ -64,11 +61,7 @@
             <div class="container-fluid">
 
                 <!-- Page Heading -->
-                <?php if($_SESSION['GLOBAL_MESSAGE']){?>
-                <div class="alert alert-warning">
-                    <strong><?php echo $_SESSION['GLOBAL_MESSAGE'] ?></strong>
-                </div>
-                <?php }?>
+
 
                 <div class="row">
                 
@@ -249,7 +242,7 @@
                                         <div class="form-group input-group">
 
                                             <span class="input-group-addon"><b>₱</b></span>
-                                            <input type="text" name = "amount" id = "amount" class="form-control" placeholder="Enter Amount">
+                                            <input type="text" name = "amount" id = "amount" class="form-control" placeholder="Enter Amount" required>
 
                                         </div>
 

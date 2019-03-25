@@ -227,8 +227,6 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                              from ref_document_loans rdl
                                              join documents d 
                                              ON rdl.DOC_ID = d.documentId
-                                             join doc_versions dv
-                                             on d.documentId = dv.documentId
                                              join doc_status ds
                                              on d.statusId = ds.id
                                              WHERE  rdl.LOAN_ID = {$_SESSION['showFID']}
@@ -285,7 +283,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     <?php if($isThereRejected){ // meaning it was rejected?>
                                         <textarea   id="noresize" name="response" class="form-control" rows="5" cols="125" required></textarea>
                                     <?php }else{ ?>
-                                        <textarea   id="noresize" name="response" class="form-control" rows="5" cols="125" ></textarea>
+                                        <textarea   id="noresize" name="response" class="form-control" rows="5" cols="125" disabled></textarea>
                                     <?php } ?>
                                 </div>
 
@@ -330,12 +328,10 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                     <?php
                                     //gets the document ids and their
-                                    $query = "SELECT d.documentId, dv.title, ds.statusName, rdlrq.REQ_TYPE
+                                    $query = "SELECT d.documentId, d.title, ds.statusName, rdlrq.REQ_TYPE
                                              from ref_document_loans rdl
                                              join documents d 
                                              ON rdl.DOC_ID = d.documentId
-                                             join doc_versions dv
-                                             on d.documentId = dv.documentId
                                              join doc_status ds
                                              on d.statusId = ds.id
                                              join ref_document_loans_req_type rdlrq
