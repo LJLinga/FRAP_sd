@@ -21,16 +21,16 @@ if(!isset($_POST['event_start'])){
 from member m
 join ref_department d
 on m.dept_id = d.dept_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 1 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) mf
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 1 AND DATE(TXN_DATE) = DATE(latest.Date) AND txn_type = 2 group by member_id) mf
 on m.MEMBER_ID = mf.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 2 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) ha
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 2 AND DATE(TXN_DATE) = DATE(latest.Date) AND txn_type = 2 group by member_id) ha
 on m.MEMBER_ID = ha.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 3 AND DATE(TXN_DATE) = DATE(latest.Date) group by member_id) f
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest where SERVICE_ID = 4 AND DATE(TXN_DATE) = DATE(latest.Date) AND txn_type = 2 group by member_id) f
 on m.MEMBER_ID = f.member_id
 join txn_reference t
 on t.member_id = m.member_id
 join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
-where DATE(latest.Date) = date(TXN_DATE) group by m.member_ID";
+where DATE(latest.Date) = date(TXN_DATE) AND txn_type = 2 group by m.member_ID";
 
 }
 else {
@@ -50,11 +50,11 @@ else {
 from member m
 join ref_department d
 on m.dept_id = d.dept_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 1 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) mf
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 1 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) AND txn_type = 2 group by member_id) mf
 on m.MEMBER_ID = mf.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 2 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) ha
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 2 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) AND txn_type = 2 group by member_id) ha
 on m.MEMBER_ID = ha.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 4 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) f
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 4 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) AND txn_type = 2 group by member_id) f
 on m.MEMBER_ID = f.member_id
 
 join txn_reference t
@@ -206,14 +206,14 @@ $result2=mysqli_query($dbc,$query2);
 
                                         <?php 
                                         while($ans = mysqli_fetch_assoc($result2)){
-                                            $total  =(float)100+(float)$ans['HAFee']+(float)$ans['FFee'];
+                                            $total  =(float)$ans['MFee']+(float)$ans['HAFee']+(float)$ans['FFee'];
 
                                         ?>
                                         <tr>
 
                                         <td align="center"><b><?php echo $ans['ID'];?></b></td>
                                         <td align="center" width="250px"><b><?php echo $ans['FIRST']." ".$ans['MIDDLE']." ".$ans['LAST'];?></b></td>
-                                        <td align="center"><b><?php echo sprintf("%.2f",(100));?></b></td>
+                                        <td align="center"><b><?php echo sprintf("%.2f",(float)$ans['MFee']);?></b></td>
                                         <td align="center"><b><?php echo sprintf("%.2f",(float)$ans['HAFee']);?></b></td>
                                         <td align="center"><b><?php echo sprintf("%.2f",(float)$ans['FFee']);?></b></td>
                                         <td align="center"><b><?php echo sprintf("%.2f",(float)$total);?></b></td>

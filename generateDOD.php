@@ -84,11 +84,11 @@ else {
 from member m
 join ref_department d
 on m.dept_id = d.dept_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 1 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) mf
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 1 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) AND txn_type = 2 group by member_id) mf
 on m.MEMBER_ID = mf.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 2 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) ha
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 2 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) AND txn_type = 2 group by member_id) ha
 on m.MEMBER_ID = ha.member_id
-left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 4 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) group by member_id) f
+left join (SELECT sum(amount) as 'Amount',member_id from txn_reference where SERVICE_ID = 4 AND $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date) AND txn_type = 2  group by member_id) f
 on m.MEMBER_ID = f.member_id
 
 join txn_reference t
