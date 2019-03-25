@@ -1027,6 +1027,9 @@ $success = null;
         if(!empty($failedLife)){
             $string = $string.'Missing fields in Lifetime';
         }
+        else{
+            $string = $string.'Possible error is date is unrealistic';
+        }
         echo "<script type='text/javascript'>alert('{$string}');</script>";
         
     }

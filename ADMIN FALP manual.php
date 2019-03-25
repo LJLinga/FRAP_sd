@@ -1006,7 +1006,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
         
     }
     else if(empty($success) && isset($_POST['submit'])){
-        $string = 'Failed to Add!';
+        $string = 'Failed to Add! Possible error may be unrealistic dates';
         if(!empty($failedFalp)){
         	$string = $string.'Missing fields in FALP';
         }
@@ -1049,6 +1049,8 @@ include 'FRAP_ADMIN_SIDEBAR.php';
     <!-- Scroll to top script-->
     <div id ="scrollToTopScript">
     		</div>
+
+
 
 </body>
 
