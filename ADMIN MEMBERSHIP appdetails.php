@@ -1,13 +1,19 @@
 <?php
 
 require_once ("mysql_connect_FA.php");
+require 'PHPMailer/src/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
 session_start();
 include 'GLOBAL_USER_TYPE_CHECKING.php';
 include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 
 
     $queryMem = "SELECT M.MEMBER_ID, M.LASTNAME, M.FIRSTNAME, M.MIDDLENAME, C.STATUS, M.DATE_HIRED, D.DEPT_NAME, M.HOME_ADDRESS, 
-                 M.BUSINESS_ADDRESS, M.HOME_NUM, M.BUSINESS_NUM, M.BIRTHDATE, M.SEX
+                 M.BUSINESS_ADDRESS, M.HOME_NUM, M.BUSINESS_NUM, M.BIRTHDATE, M.SEX,M.email
                  FROM MEMBER AS M
                  JOIN REF_DEPARTMENT AS D
                  ON M.DEPT_ID = D.DEPT_ID
@@ -53,7 +59,7 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
                      VALUES ('{$_SESSION['memapp_selected_id']}', 1, 'Membership Application Approved', 0, DATE(NOW()), '{$_SESSION['idnum']}', 1);";
 
         $resultAccept = mysqli_query($dbc, $queryTxn);
-         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN MEMBERSHIP applications.php");
+         
 
          // Import PHPMailer classes into the global namespace
 // These must be at the top of your script, not inside a function
@@ -61,49 +67,33 @@ include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
               where m.member_id = {$_SESSION['memapp_selected_id']}";
     $result = mysqli_query($dbc,$query);
     $ans = mysqli_fetch_assoc($result);
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+
 
 // Load Composer's autoloader
 require 'vendor/autoload.php';
 
 // Instantiation and passing `true` enables exceptions
-$mail = new PHPMailer(true);
+$mail = new PHPMailer(); // create a new object
+$mail->IsSMTP(); // enable SMTP
+$mail->SMTPDebug = 2; // debugging: 1 = errors and messages, 2 = messages only
+$mail->SMTPAuth = true; // authentication enabled
+$mail->SMTPSecure = 'ssl'; // secure transfer enabled REQUIRED for Gmail
+$mail->Host = "smtp.gmail.com";
+$mail->Port = 465; // or 587
+$mail->IsHTML(true);
+$mail->Username = "duminacc@gmail.com";
+$mail->Password = "rewq/4321";
+$mail->SetFrom("duminacc@gmail.com");
+$mail->Subject = "RE: Membership account for Faculty Association";
+$mail->Body = 'THIS IS AN AUTO-GENERATED MESSAGE PLEASE DO NOT REPLY.<br>------------<br>Your account has been approved and now able to use the system.<br> To login use the password 1234 when login to change your password<br>';
+$mail->AddAddress($rowMem['email']);
 
-try {
-    //Server settings
-    $mail->SMTPDebug = 2;                                       // Enable verbose debug output
-    $mail->isSMTP();                                            // Set mailer to use SMTP
-    $mail->Host       = 'smtp1.example.com;smtp2.example.com';  // Specify main and backup SMTP servers
-    $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-    $mail->Username   = 'user@example.com';                     // SMTP username
-    $mail->Password   = 'secret';                               // SMTP password
-    $mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
-    $mail->Port       = 587;                                    // TCP port to connect to
-
-    //Recipients
-    $mail->setFrom('from@example.com', 'Mailer');
-    $mail->addAddress($ans['email']);     // Add a recipient
-                   // Name is optional
-    //$mail->addReplyTo('info@example.com', 'Information');
-   // $mail->addCC('cc@example.com');
-   // $mail->addBCC('bcc@example.com');
-
-    // Attachments
-   // $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
-   // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
-
-    // Content
-    $mail->isHTML(true);                                  // Set email format to HTML
-    $mail->Subject = 'RE: Membership account for Faculty Association';
-    $mail->Body    = 'Your account has been approved and now able to use the system.<br> To login use the password 1234 when login to change your pw';
-    //$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-
-    $mail->send();
-    echo 'Message has been sent';
-} catch (Exception $e) {
-    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-}
+ if(!$mail->Send()) {
+    ;
+ } else {
+    echo "Message has been sent";
+ }
+header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN MEMBERSHIP applications.php");
 
     }
 
@@ -120,48 +110,32 @@ try {
                      VALUES ('{$_SESSION['memapp_selected_id']}', 1, 'Membership Application Rejected', 0, DATE(NOW()), '{$_SESSION['idnum']}', 1);";
 
         $resultAccept = mysqli_query($dbc, $queryTxn);
-         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN MEMBERSHIP applications.php");
-
+         
          // Load Composer's autoloader
 require 'vendor/autoload.php';
 
 // Instantiation and passing `true` enables exceptions
-$mail = new PHPMailer(true);
+$mail = new PHPMailer(); // create a new object
+$mail->IsSMTP(); // enable SMTP
+$mail->SMTPDebug = 2; // debugging: 1 = errors and messages, 2 = messages only
+$mail->SMTPAuth = true; // authentication enabled
+$mail->SMTPSecure = 'ssl'; // secure transfer enabled REQUIRED for Gmail
+$mail->Host = "smtp.gmail.com";
+$mail->Port = 465; // or 587
+$mail->IsHTML(true);
+$mail->Username = "duminacc@gmail.com";
+$mail->Password = "rewq/4321";
+$mail->SetFrom("duminacc@gmail.com");
+$mail->Subject = "RE: Membership account for Faculty Association";
+$mail->Body = 'THIS IS AN AUTO-GENERATED MESSAGE PLEASE DO NOT REPLY.<br>------------<br>Your account has been Rejected. Please send the correct or missing information when applying again';
+$mail->AddAddress($rowMem['email']);
 
-try {
-    //Server settings
-    $mail->SMTPDebug = 2;                                       // Enable verbose debug output
-    $mail->isSMTP();                                            // Set mailer to use SMTP
-    $mail->Host       = 'smtp1.example.com;smtp2.example.com';  // Specify main and backup SMTP servers
-    $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-    $mail->Username   = 'user@example.com';                     // SMTP username
-    $mail->Password   = 'secret';                               // SMTP password
-    $mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
-    $mail->Port       = 587;                                    // TCP port to connect to
-
-    //Recipients
-    $mail->setFrom('from@example.com', 'Mailer');
-    $mail->addAddress($ans['email']);     // Add a recipient
-                   // Name is optional
-    //$mail->addReplyTo('info@example.com', 'Information');
-   // $mail->addCC('cc@example.com');
-   // $mail->addBCC('bcc@example.com');
-
-    // Attachments
-   // $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
-   // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
-
-    // Content
-    $mail->isHTML(true);                                  // Set email format to HTML
-    $mail->Subject = 'RE: Membership account for Faculty Association';
-    $mail->Body    = 'Your account has been Rejected. Please send the correct or missing information when applying again';
-    //$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-
-    $mail->send();
-    echo 'Message has been sent';
-} catch (Exception $e) {
-    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-}
+ if(!$mail->Send()) {
+    ;
+ } else {
+    echo "Message has been sent";
+ }
+header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN MEMBERSHIP applications.php");
 
 
     }
@@ -200,7 +174,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                         <div class="panel-heading">
 
-                                            <b>Personal Information<p></b>
+                                            <b>Personal Information <?php echo $query ;?><p></b>
 
                                         </div>
 
@@ -292,22 +266,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
     <!-- /#wrapper -->
 
     <!-- jQuery -->
-    <script src="js/jquery.js"></script>
+   
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-
-    <script type="text/javascript" src="DataTables/datatables.min.js"></script>
-    <script>
-
-        $(document).ready(function(){
-    
-            $('#table').DataTable();
-
-        });
-
-    </script>
-
-</body>
-
-</html>
+   <?php include 'GLOBAL_FOOTER.php' ?>

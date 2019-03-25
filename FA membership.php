@@ -438,7 +438,7 @@ $success = null;
                                                 <label class="memfieldlabel">Year</label>
                                                 <select class="form-control datedropdown"  name =  "bYear">
 
-                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
+                                                    <?php for($y = date("Y"); $y >= 1900; $y--) { ?>
 
                                                         <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
 
