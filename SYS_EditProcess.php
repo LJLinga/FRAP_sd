@@ -11,11 +11,11 @@ $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
-include('GLOBAL_CMS_ADMIN_CHECKING.php');
+include('GLOBAL_SYS_ADMIN_CHECKING.php');
 
 $page_title = 'System Admin - Edit Process';
 include 'GLOBAL_HEADER.php';
-include 'CMS_SIDEBAR.php';
+include 'SYS_SIDEBAR.php';
 
 //include 'SYS_MODAL_ChooseDocument.php';
 

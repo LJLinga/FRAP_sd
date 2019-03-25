@@ -17,7 +17,7 @@ include('GLOBAL_SYS_ADMIN_CHECKING.php');
 //hardcoded value for userType, will add MYSQL verification
 $userId = $_SESSION['idnum'];
 
-$page_title = 'Santinig - User Permissions Quick Edit';
+$page_title = 'Configuration - User Roles';
 include 'GLOBAL_HEADER.php';
 include 'SYS_SIDEBAR.php';
 

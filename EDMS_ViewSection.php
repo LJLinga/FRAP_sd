@@ -42,6 +42,32 @@ if(isset($_POST['btnEdit'])){
     header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_EditSection.php?secId=".$sectionId);
 }
 
+if(isset($_POST['btnAccept'])){
+    //Clickable only when unlocked. Thesis 2.
+    $sectionId = $_POST['btnAccept'];
+    $rows = $crud->getData("SELECT availabilityId FROM sections WHERE id = '$sectionId'");
+    foreach((array) $rows as $key => $row){
+        $availabilityId = $row['availabilityId'];
+    }
+    if($availabilityId == '2'){
+        $crud->execute("UPDATE sections SET statusId='2', approvedById='$userId' WHERE id='$sectionId'");
+    }
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewSection.php?secId=".$sectionId);
+}
+
+if(isset($_POST['btnReject'])){
+    $sectionId= $_POST['btnReject'];
+    $rows = $crud->getData("SELECT availabilityId FROM sections WHERE id = '$sectionId'");
+    foreach((array) $rows as $key => $row){
+        $availability = $row['availabilityId'];
+    }
+    if($availability == '2'){
+        $crud->execute("UPDATE sections SET statusId='3', approvedById='$userId' WHERE id='$sectionId'");
+    }
+
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewSection.php?secId=".$sectionId);
+}
+
 if(isset($_POST['btnRoute'])){
     $nextStepId = $_POST['btnRoute'];
     $sectionId = $_POST['section_id'];
@@ -53,6 +79,7 @@ if(isset($_POST['btnRoute'])){
     if($availabilityId == '2'){
         $crud->execute("UPDATE sections SET statusId = '1', stepId='$nextStepId' WHERE id ='$sectionId'");
     }
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewSection.php?secId=".$sectionId);
 }
 
 if(isset($_GET['secId'])){
@@ -105,6 +132,13 @@ if(isset($_GET['secId'])){
             $content = $row['content'];
             $timeCreated = $row['timeCreated'];
             $lastUpdated = $row['lastUpdated'];
+        }
+    }
+
+    $rows = $crud->getData("SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS name FROM employee e WHERE e.EMP_ID = '$approvedById' LIMIT 1;");
+    if(!empty($rows)){
+        foreach((array) $rows as $key=> $row){
+            $approvedByName = $row['name'];
         }
     }
 
@@ -225,7 +259,7 @@ include 'EDMS_SIDEBAR.php';
                                 <b>Section Actions</b>
                             </div>
                             <div class="card-body">
-                                Status: <b><?php echo $statusName;?></b><br>
+                                Status: <b><?php echo $statusName;?></b> (by <?php echo $approvedByName;?>)<br>
                                 Stage: <b><?php echo $stepName; ?></b><br>
                                 Created by: <b><?php echo $firstAuthorName ?></b><br>
                                 Modified by: <b><?php echo $authorName ?></b><br>
@@ -237,7 +271,7 @@ include 'EDMS_SIDEBAR.php';
                                         <input type="hidden" name="locked_by_id" value="<?php echo $lockedById;?>">
                                         <?php
                                         $disabledButtons = "enabled";
-                                        if($availabilityId == '1' && $userId != $lockedById){
+                                        if($availabilityId == '1'){
                                             $disabledButtons = "disabled";
                                         }
                                         if(isset($route) && $route=='2') {
@@ -261,7 +295,14 @@ include 'EDMS_SIDEBAR.php';
                                             }
                                         }
                                         if(isset($write) && $write=='2'){
-                                            echo '<button class="btn btn-default" type="submit" name="btnEdit" style="text-align: left; width:100%;" '.$disabledButtons.'>Lock and Edit</button>';
+                                            if($availabilityId == '1' && $userId != $lockedById) {
+                                                echo '<button class="btn btn-default" type="submit" name="btnEdit" style="text-align: left; width:100%;" disabled>Lock and Edit</button>';
+                                            }else if($availabilityId == '1' && $userId == $lockedById){
+                                                echo '<button class="btn btn-default" type="submit" name="btnEdit" style="text-align: left; width:100%;">Continue Editing</button>';
+                                            }
+                                            else{
+                                                echo '<button class="btn btn-default" type="submit" name="btnEdit" style="text-align: left; width:100%;">Lock and Edit</button>';
+                                            }
                                             //echo 'button type="button" name="btnArchive" class="btn btn-default" style="text-align: left; width: 100%;">Archive</button>';
                                         }
                                         //echo $edmsRole.','.$read.','.$write.','.$route;
@@ -277,54 +318,45 @@ include 'EDMS_SIDEBAR.php';
                             ?>
                         </div>
                         <?php
-                        $query = "SELECT v.timeCreated, v.title, v.sectionNo, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
+                        $query = "SELECT v.timeCreated, v.title, v.sectionNo, v.content, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
                                   FROM section_versions v 
                                   JOIN employee e ON v.authorId = e.EMP_ID 
                                   WHERE v.sectionId = '$sectionId' AND v.timeCreated != '$lastUpdated' ORDER BY v.timeCreated DESC;";
                         $rows = $crud->getData($query);
                         if (!empty($rows)) {
-
+                            $count= 0;
                             echo '<div class="card" style="margin-top: 1rem;">';
                             echo '<div class="card-header"><b>Version History</b></div>';
                             echo '<div class="card-body" style="max-height: 50vh; overflow-y: auto;">';
-                            if(!empty($rows)) {
                                 foreach ((array)$rows as $key => $row) {
+                                    $count++;
                                     echo '<div class="card" style="margin-bottom: 1rem;">';
                                     echo '<div class="card-body">';
                                     echo '<span class="badge">Version ' . $row['timeCreated'] . '</span> ';
-                                    echo '<button type="button" id="btnPreview" class="btn btn-default btn-sm">Preview</button><br>';
+                                    echo '<button type="button" id="btnPreview" class="btn btn-default btn-sm" data-toggle="collapse" data-target="#collapse'.$count.'" aria-expanded="false" aria-controls="collapse'.$count.'">Read</button><br>';
                                     echo '<b>Section '.$row['sectionNo'].': '. $row['title'] . ' </b><br>';
                                     echo 'Created by: ' . $row['versionAuthor'] . '<br>';
                                     echo 'on: <i>' . date("F j, Y g:i:s A ", strtotime($row['timeCreated'])) . '</i><br>';
+                                    echo '<div id="collapse'.$count.'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
+                                    echo '<div class="card-body">';
+                                    echo $row['content'];
+                                    echo '</div>';
+                                    echo '</div>';
                                     echo '</div></div>';
                                 }
-                            }
+
                             echo '</div></div>';
                         }
 
                         ?>
                         <!-- Button -->
                     </div>
+                    <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Collapsible Group Item #1
+                    </button>
+
                 </div>
             </form>
-        </div>
-    </div>
-    <!-- Modal by xtian pls dont delete hehe -->
-    <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    Confirm Action
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to <b id="changeText"></b> ?
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <a href="#" id="submit" class="btn btn-success success">Yes, I'm sure</a>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -354,6 +386,24 @@ include 'EDMS_SIDEBAR.php';
                 </div>
 
             </form>
+
+        </div>
+    </div>
+    <div class="modal fade" id="previewModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
 
         </div>
     </div>
@@ -402,5 +452,25 @@ include 'EDMS_SIDEBAR.php';
         $('#comment_id').val(comment_id);
         $('#comment_name').focus();
     });
+
+
+    // function preview(timeCreated){
+    //
+    //     var options = {
+    //         modal : true,
+    //         height : 300,
+    //         width : 500
+    //     };
+    //     $('#previewModal.modal-body').load('EDMS_SectionPreview.php?timeCreated='+timeCreated,
+    //         function() {
+    //             $('#previewModal').modal({
+    //                 show : true
+    //             });
+    //         });
+    //     //alert(timeCreated);
+    // }
+
+
+
 </script>
 <?php include 'GLOBAL_FOOTER.php' ?>

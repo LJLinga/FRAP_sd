@@ -13,7 +13,7 @@ session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
-$page_title = 'Santinig - Posts Dashboard';
+$page_title = 'Configuration - Process';
 include 'GLOBAL_HEADER.php';
 include 'SYS_SIDEBAR.php';
 
