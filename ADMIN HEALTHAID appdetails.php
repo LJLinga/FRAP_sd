@@ -1,476 +1,119 @@
 <?php
-    require_once ("mysql_connect_FA.php");
-    session_start();
-    include 'GLOBAL_USER_TYPE_CHECKING.php';
-    include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
+
+require_once ("mysql_connect_FA.php");
+session_start();
+include('GLOBAL_CLASS_CRUD.php');
+$crud = new GLOBAL_CLASS_CRUD();
+include 'GLOBAL_USER_TYPE_CHECKING.php';
 
 
+ 
+        $queryHA = "SELECT * FROM health_aid  WHERE RECORD_ID = {$_SESSION['showHAID']}";
+        $result = mysqli_query($dbc, $queryHA);
+        $checkForHealthAidApplication = mysqli_fetch_array($result);
+
+        $queryNameOfMember = "SELECT FIRSTNAME, LASTNAME from member where MEMBER_ID = {$checkForHealthAidApplication['MEMBER_ID']}";
+        $resultNameOfMember = mysqli_query($dbc, $queryNameOfMember);
+        $nameOfApplicant = mysqli_fetch_array($resultNameOfMember);
+
+        
 
 
-    if(isset($_POST['action'])){
-        if($_POST['action'] == "Accept Application"){
-            //Change the status into Approved (APP_STATUS =2)
-            $query = "UPDATE HEALTH_AID SET APP_STATUS = '2', DATE_APPROVED = NOW(), EMP_ID =". $_SESSION['idnum'] ."
-                      WHERE MEMBER_ID =" . $_SESSION['showHAMID']." && RECORD_ID =" . $_SESSION['showHAID']."  ;";
-            $result = mysqli_query($dbc, $query);
+$page_title = 'Loans - Health Aid Application';
+include 'GLOBAL_HEADER.php';
+include 'FRAP_ADMIN_SIDEBAR.php';
 
-           //Insert into transaction table
-            $queryTnx = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, HA_REF, EMP_ID, SERVICE_ID) 
-                                            VALUES({$_SESSION['showHAMID']}, '1', 'Health Aid Approved', 0, NOW(), {$_SESSION['showHAID']}, {$_SESSION['idnum']}, '2'); ";
-            $resultTnx = mysqli_query($dbc, $queryTnx);
-
-            header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/ADMIN HEALTHAID applications.php");
-
-        }
-        else if($_POST['action'] == "Reject Application"){
-            //Change the status into Rejected (APP_STATUS =3)
-            $query = "UPDATE HEALTH_AID SET APP_STATUS = '3', EMP_ID =". $_SESSION['idnum'] ." 
-            WHERE RECORD_ID = {$_SESSION['showHAID']};";
-            $result = mysqli_query($dbc, $query);
-
-           //Insert into transaction table
-            $queryTnx = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, HA_REF, EMP_ID, SERVICE_ID) 
-                                VALUES({$_SESSION['showHAMID']}, '1', 'Health Aid Rejected', 0, NOW(), {$_SESSION['showHAID']}, {$_SESSION['idnum']}, '2'); ";
-            $resultTnx = mysqli_query($dbc, $queryTnx);
-
-            header("Location: http://".$_SERVER['HTTP_HOST']. dirname($_SERVER['PHP_SELF'])."/ADMIN HEALTHAID applications.php");
-
-        }
-
-
-
+?>
+<style>
+    #noresize {
+        resize: none;
     }
 
+</style>
+
+<script type="text/javascript">
 
 
-    $page_title = 'Loans - Health Aid Application Details';
-    include 'GLOBAL_HEADER.php';
-    include 'FRAP_ADMIN_SIDEBAR.php';
-?>
-
-<!---
-<script>
-    $(document).ready(function(){
-        $('input[name=action]').on('click', function(){
-            console.log("Are you sure?");
-            confirm("Are you sure?");
+    $(document).ready(function() {
+        $("input[id^='upload_file']").each(function() {
+            var id = parseInt(this.id.replace("upload_file", ""));
+            $("#upload_file" + id).change(function() {
+                if ($("#upload_file" + id).val() != "") {
+                    $("#moreImageUploadLink").show();
+                }
+            });
         });
     });
+
+    $(document).ready(function() {
+        var upload_number = 2;
+        $('#attachMore').click(function() {
+            //add more file
+            var moreUploadTag = '';
+            moreUploadTag += '<div class="element">';
+            moreUploadTag += '<input type="file" id="upload_file' + upload_number + '" name="upload_file[]" required/>';
+            moreUploadTag += ' <a href="javascript:del_file(' + upload_number + ')" style="cursor:pointer;" onclick="return confirm("Are you really want to delete ?")"><i class="fa fa-trash"></i>  Delete </a></div>';
+            $('<dl id="delete_file' + upload_number + '">' + moreUploadTag + '</dl>').fadeIn('slow').appendTo('#moreImageUpload');
+            upload_number++;
+        });
+    });
+
+    function del_file(eleId) {
+        var ele = document.getElementById("delete_file" + eleId);
+        ele.parentNode.removeChild(ele);
+    }
+
 </script>
 
---->
 
-        <div id="page-wrapper">
+<div id="page-wrapper">
 
-            <div class="container-fluid">
+    <div class="container-fluid">
 
-                <div class="row">
-                
-                    <div class="col-lg-12">
+        <div class="row"> <!-- Title & Breadcrumb -->
 
-                        <h1 class="page-header">
-                            View Health Aid Details
-                        </h1>
-                    
+            <div class="col-lg-12">
+
+                <h1 class="page-header"><i class="fa fa-plus fa-border"></i> Health Aid Application Summary of <?php echo $nameOfApplicant['FIRSTNAME']." ".$nameOfApplicant['LASTNAME']?></h1>
+
+            </div>
+
+            <div class = "col-lg-12">
+
+                <label> Please review the details below and check the receipt that was uploaded by the member.  </label>
+
+            </div>
+
+        </div>
+
+        <div class = "row" style="margin-top: 5px;">
+
+            <div class="col-lg-8">
+
+                <div class="panel panel-green">
+
+                    <div class="panel-heading">
+
+                        <b> Health Aid Application Details </b>
+
                     </div>
-                    
-                </div>
-                <!-- alert -->
-                <div class="row">
-                    <div class="col-lg-12">
 
-                       <div class="row">
 
-                            <div class="col-lg-12">
+                    <div class="panel-body">
 
-                                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST"> <!-- SERVER SELF -->
+                        <div class="form-group">
 
-                                    <div class="panel panel-green">
+                            <label for="usr">Amount to Borrow:</label>
 
-                                        <div class="panel-heading">
+                            <input type="number" name="amount" placeholder="<?php echo $checkForHealthAidApplication['AMOUNT_TO_BORROW'] ?>" class="form-control" id="usr" size="5" style="width:250px;" disabled>
 
-                                            <b>Applicant Information</b>
+                        </div>
 
-                                        </div>
+                        <div class="form-group">
 
-                                        <div class="panel-body"><p>
-                                            <?php 
-                                                $query = "SELECT M.FIRSTNAME, M.LASTNAME, M.MIDDLENAME, RD.DEPT_NAME 
-                                                          FROM MEMBER M 
-                                                          JOIN HEALTH_AID HA 
-                                                          ON M.MEMBER_ID = HA.MEMBER_ID 
-                                                          JOIN REF_DEPARTMENT RD 
-                                                          ON M.DEPT_ID = RD.DEPT_ID 
-                                                          WHERE M.MEMBER_ID = ". $_SESSION['showHAMID'] .";";
-                                                $result = mysqli_query($dbc, $query);
-                                                $row = mysqli_fetch_array($result);
-                                            ?>
+                            <label>Reason for the Health Aid Application: </label>
 
-                                            <b>ID Number:</b> <?php echo $_SESSION['showHAMID'] ?> <p>
-                                            <b>First Name:</b> <?php echo $row['FIRSTNAME'] ?> <p>
-                                            <b>Last Name:</b> <?php echo $row['LASTNAME'] ?> <p>
-                                            <b>Middle Name:</b> <?php echo $row['MIDDLENAME'] ?> <p>
-                                            <b>Department:</b> <?php echo $row['DEPT_NAME'] ?><p>
-                                            
-                                        </div>
-
-                                    </div>
-
-                                    <?php
-                                        $query = "SELECT * FROM FATHER WHERE RECORD_ID =" . $_SESSION['showHAID'].";";
-                                        $result = mysqli_query($dbc, $query);
-                                        $row = mysqli_fetch_array($result);
-
-                                        if(!empty($row)){
-
-
-                                        $today = date("Y-m-d");
-                                        $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
-                                    ?>
-
-                                    <div class="panel panel-primary">
-
-                                        <div class="panel-heading">
-
-                                            <b>Father Details</b>
-
-                                        </div>
-
-                                        <div class="panel-body"><p>
-
-                                            <table id="table" class="table table-bordered">
-                                
-                                                <thread>
-
-                                                    <tr>
-
-                                                    <td align="center"><b>Name</b></td>
-                                                    <td align="center"><b>Age</b></td>
-                                                    <td align="center"><b>Birthday</b></td>
-                                                    <td align="center"><b>Status</b></td>
-
-
-                                                    </tr>
-
-                                                </thread>
-
-                                                <tbody>
-
-                                                    <tr>
-
-                                                        <td align="center"><?php echo $row['FIRSTNAME'] . " " . $row['LASTNAME']; ?></td>
-                                                        <td align="center"><?php echo $diff->format('%y'); ?></td>
-                                                        <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
-                                                        <td align="center">
-                                                            <?php
-                                                            if ($row["STATUS"] == 1) echo "Alive";
-                                                            else if ($row["STATUS"] == 0) echo "Deceased";
-
-
-                                                            }
-                                                        ?>
-                                                    </td>
-
-                                                    </tr>
-
-                                                </tbody>
-
-                                            </table>
-                                            
-                                        </div>
-
-                                    </div>
-
-                                    <?php
-                                        $query = "SELECT * FROM MOTHER WHERE RECORD_ID =" . $_SESSION['showHAID'].";";
-                                        $result = mysqli_query($dbc, $query);
-                                        $row = mysqli_fetch_array($result);
-
-                                        if(!empty($row)){
-
-                                        $today = date("Y-m-d");
-                                        $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
-                                    ?>
-
-
-                                    <div class="panel panel-primary">
-
-                                        <div class="panel-heading">
-
-                                            <b>Mother Details</b>
-
-                                        </div>
-
-                                        <div class="panel-body"><p>
-
-                                            <table class="table table-bordered">
-                                
-                                                <thread>
-
-                                                    <tr>
-
-                                                    <td align="center"><b>Name</b></td>
-                                                    <td align="center"><b>Age</b></td>
-                                                    <td align="center"><b>Birthday</b></td>
-                                                    <td align="center"><b>Status</b></td>
-
-
-                                                    </tr>
-
-                                                </thread>
-
-                                                <tbody>
-
-                                                    <tr>
-                                                        <td align="center"><?php echo $row['FIRSTNAME'] . " " . $row['LASTNAME']; ?></td>
-                                                        <td align="center"><?php echo $diff->format('%y'); ?></td>
-                                                        <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
-                                                        <td align="center">
-                                                            <?php
-                                                            if ($row["STATUS"] == 1) echo "Alive";
-                                                            else if ($row["STATUS"] == 0) echo "Deceased";
-
-
-                                                            }
-                                                        ?>
-                                                    </td>
-
-                                                    </tr>
-
-                                                </tbody>
-
-                                            </table>
-
-                                        </div>
-
-                                    </div>
-
-                                    <?php
-                                        $query = "SELECT * FROM SPOUSE WHERE RECORD_ID =" . $_SESSION['showHAID'].";";
-                                        $result = mysqli_query($dbc, $query);
-                                        $row = mysqli_fetch_array($result);
-
-                                        if(!empty($row)){
-
-                                        $today = date("Y-m-d");
-                                        $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
-                                    ?>
-
-                                    <div class="panel panel-primary">
-
-                                        <div class="panel-heading">
-
-                                            <b>Spouse Details</b>
-
-                                        </div>
-
-                                        <div class="panel-body"><p>
-
-                                            <table class="table table-bordered">
-                                
-                                                <thread>
-
-                                                    <tr>
-
-                                                    <td align="center"><b>Name</b></td>
-                                                    <td align="center"><b>Age</b></td>
-                                                    <td align="center"><b>Birthday</b></td>
-                                                    <td align="center"><b>Status</b></td>
-
-
-                                                    </tr>
-
-                                                </thread>
-
-                                                <tbody>
-
-                                                    <tr>
-
-
-
-                                                        <td align="center"><?php echo $row['FIRSTNAME'] . " " . $row['LASTNAME']; ?></td>
-                                                        <td align="center"><?php echo $diff->format('%y'); ?></td>
-                                                        <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
-                                                        <td align="center">
-                                                            <?php
-                                                            if ($row["STATUS"] == 1) echo "Alive";
-                                                            else if ($row["STATUS"] == 0) echo "Deceased";
-
-                                                            }
-                                                        ?>
-                                                    </td>
-
-                                                    </tr>
-
-                                                </tbody>
-
-                                            </table>
-                                            
-                                        </div>
-
-                                    </div>
-                                    <?php
-                                        $query = "SELECT * FROM SIBLINGS WHERE RECORD_ID =" . $_SESSION['showHAID'].";";
-                                        $result = mysqli_query($dbc, $query);
-
-                                        if(!empty(mysqli_fetch_array($result))) {
-                                    ?>
-
-                                    <div class="panel panel-primary">
-
-                                        <div class="panel-heading">
-
-                                            <b>Siblings Details</b>
-
-                                        </div>
-
-                                        <div class="panel-body"><p>
-
-                                            <table class="table table-bordered">
-                                
-                                                <thread>
-
-                                                    <tr>
-
-                                                    <td align="center"><b>Name</b></td>
-                                                    <td align="center"><b>Age</b></td>
-                                                    <td align="center"><b>Birthday</b></td>
-                                                    <td align="center"><b>Status</b></td>
-                                                    <td align="center"><b>Sex</b></td>
-
-
-                                                    </tr>
-
-                                                </thread>
-
-                                                <tbody>
-
-                                                    <?php
-
-                                                        foreach ($result as $resultRow) {
-                                                            $today = date("Y-m-d");
-                                                            $diff = date_diff(date_create($resultRow['BIRTHDATE']), date_create($today));
-
-                                                            echo "    
-                                                            <tr>
-                                                                <td align='center'>" . $resultRow['FIRSTNAME'] . " " . $resultRow['LASTNAME'] . "</td>
-                                                                <td align='center'>" . $diff->format('%y') . "</td>
-                                                                <td align='center'>" . $resultRow['BIRTHDATE'] . "</td>
-                                                                <td align='center'>";
-                                                            if ($resultRow["STATUS"] == 1) echo "Alive";
-                                                            else if ($resultRow["STATUS"] == 0) echo "Deceased";
-                                                            echo "</td>
-                                                                <td align='center'>";
-                                                            if ($resultRow['SEX'] = 1) echo "Male";
-                                                            else echo "Female";
-                                                            echo "</td>
-                                                            </tr>    
-                                                            ";
-                                                        }
-
-                                                    }
-                                                    ?>
-
-
-                                                </tbody>
-
-                                            </table>
-                                            
-                                        </div>
-
-                                    </div>
-
-                                    <?php
-                                    $query = "SELECT * FROM CHILDREN WHERE RECORD_ID =" . $_SESSION['showHAID'].";";
-                                    $result = mysqli_query($dbc, $query);
-
-                                    if(!empty(mysqli_fetch_array($result))) {
-
-                                    ?>
-
-                                    <div class="panel panel-primary">
-
-                                        <div class="panel-heading">
-
-                                            <b>Children Details</b>
-
-                                        </div>
-
-                                        <div class="panel-body"><p>
-
-                                            <table class="table table-bordered">
-                                
-                                                <thread>
-
-                                                    <tr>
-
-                                                    <td align="center"><b>Name</b></td>
-                                                    <td align="center"><b>Age</b></td>
-                                                    <td align="center"><b>Birthday</b></td>
-                                                    <td align="center"><b>Status</b></td>
-                                                    <td align="center"><b>Sex</b></td>
-
-
-                                                    </tr>
-
-                                                </thread>
-
-                                                <tbody>
-
-                                                    <?php 
-
-                                                        foreach ($result as $resultRow) {
-                                                            $today = date("Y-m-d");
-                                                            $diff = date_diff(date_create($resultRow['BIRTHDATE']), date_create($today));
-
-                                                            echo "
-                                                            <tr>    
-                                                                <td align='center'>" . $resultRow['FIRSTNAME'] . " " . $resultRow['LASTNAME'] . "</td>
-                                                                <td align='center'>" . $diff->format('%y') . "</td>
-                                                                <td align='center'>" . $resultRow['BIRTHDATE'] . "</td>
-                                                                <td align='center'>";
-                                                            if ($resultRow["STATUS"] == 1) echo "Alive";
-                                                            else if ($resultRow["STATUS"] == 0) echo "Deceased";
-                                                            echo "</td>
-                                                                <td align='center'>";
-                                                            if ($resultRow['SEX'] = 1) echo "Male";
-                                                            else echo "Female";
-                                                            echo "</td>
-                                                            </tr>    
-                                                            ";
-                                                        }
-
-                                                    }
-                                                    ?>
-
-                                                    
-
-                                                </tbody>
-
-                                            </table>
-                                            
-                                        </div>
-
-                                    </div>
-
-                                    <div class="panel panel-green">
-
-                                        <div class="panel-heading">
-
-                                            <b>Actions</b>
-
-                                        </div>
-
-                                        <div class="panel-body"><p> 
-                                                <input type="submit" class="btn btn-success" name="action" value="Accept Application">
-                                                <input type="submit" class="btn btn-danger" name="action" value="Reject Application">
-                                        </div>
-
-                                    </div>
-
-                                </form>
-
-                            </div>
+                            <textarea  placeholder="<?php echo $checkForHealthAidApplication['MESSAGE'] ?>"  id="noresize" name="message" class="form-control" rows="5" cols="125" disabled></textarea>
 
                         </div>
 
@@ -480,23 +123,307 @@
 
             </div>
 
+
+
+
+
+            <div class= "col-lg-4">
+
+                <div class="panel panel-green">
+
+                    <div class="panel-heading">
+
+                        <b>View Uploaded Files and their Status</b>
+
+                    </div>
+
+                    <div class="panel-body">
+
+                        <?php
+                        //gets the document ids and their
+                        $query = "SELECT d.documentId, dv.title, d.statusId,ds.statusName
+                                         from ref_document_healthaid rdh
+                                         join documents d 
+                                         ON rdh.DOC_ID = d.documentId
+                                         join doc_versions dv
+                                         on d.documentId = dv.documentId
+                                         join doc_status ds
+                                         on d.statusId = ds.id
+                                         WHERE rdh.RECORD_ID = {$checkForHealthAidApplication['RECORD_ID']}
+                                         AND rdh.DOC_REF_TYPE = 1";
+                        $rows = $crud->getData($query);
+
+
+                        foreach((array) $rows as $key => $row){   ?>
+
+                            <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>">
+
+                                <button type="button" class="btn btn-success"><?php echo $row['title'] ?></button></a>
+
+                            <?php echo $row['statusName'] ?>
+
+
+                        <?php }?>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
-        <!-- /#page-wrapper -->
+
+        <?php
+        //this is for checking if the amount of documents is all goods
+
+        $queryCheckDocs = "SELECT d.statusId
+                                             from ref_document_healthaid rdh
+                                             join documents d 
+                                             ON rdh.DOC_ID = d.documentId
+                                             join doc_versions dv
+                                             on d.documentId = dv.documentId
+                                             join doc_status ds
+                                             on d.statusId = ds.id
+                                             WHERE rdh.RECORD_ID = {$checkForHealthAidApplication['RECORD_ID']}
+                                             AND rdh.DOC_REF_TYPE = 1";
+
+        $resultCheckDocs = mysqli_query($dbc,$queryCheckDocs);
+
+
+
+
+        $numAccepted = 0; //to check if all the files have been accepted. Remember it works both ways. If numAccepted
+        $isThereRejected = false;
+
+
+        while($row = mysqli_fetch_assoc($resultCheckDocs)){
+
+            if($row['statusId'] == 2){ //check if rejected
+                $numAccepted++;
+            }else if($row['statusId'] == 3){
+                $isThereRejected = true;
+            }
+        }
+
+        $checkDocs = mysqli_fetch_array($resultCheckDocs);
+
+
+
+        $queryGetNumReceipts = "SELECT COUNT (DOC_ID) as 'NUMDOCS'
+                                             from ref_document_healthaid rdh
+                                             join documents d 
+                                             ON rdh.DOC_ID = d.documentId
+                                             join doc_versions dv
+                                             on d.documentId = dv.documentId
+                                             join doc_status ds
+                                             on d.statusId = ds.id
+                                             WHERE rdh.RECORD_ID = {$checkForHealthAidApplication['RECORD_ID']}
+                                             AND rdh.DOC_REF_TYPE = 1";
+        $resultGetNumReceiptss = mysqli_query($dbc,$queryGetNumReceipts);
+        $checkReceipts = mysqli_fetch_array($resultCheckDocs);
+
+
+
+
+        ?>
+
+        <form action="ADMIN_FRAP_HA_UploadDocument.php" method="POST" enctype="multipart/form-data" >
+            <div class="col-lg-12">
+
+                <h3 class="page-header"><i class="fa fa-reply fa-border"></i> Your Response to the Application </h3>
+
+            </div>
+
+            <div class = "col-lg-12">
+                <label> Please type your response here and do not forget to upload the receipt for the application if it is approved.  </label>
+
+            </div>
+
+
+
+            <div class="row">
+
+                <div class="col-lg-8">
+
+                    <div class="panel panel-primary">
+
+                        <div class="panel-heading">
+
+                            <b> Response Details </b>
+
+                        </div>
+
+
+                        <div class="panel-body">
+
+                            <div class="form-group">
+
+                                <label for="usr">Amount to Give: </label>
+
+                                <?php if($isThereRejected){ ?>
+
+                                <input type="number" name="amount_to_give"  class="form-control" id="usr" size="5" style="width:250px;">
+
+                                <?php }else if($checkForHealthAidApplication['APP_STATUS'] == 2 ){ ?>
+
+                                    <input type="number" placeholder="<?php echo $checkForHealthAidApplication['AMOUNT_GIVEN']?>" name="amount_to_give"  class="form-control" id="usr" size="5" style="width:250px;" disabled>
+
+                               <?php }else { ?>
+
+                                    <input type="number" name="amount_to_give"  class="form-control" id="usr" size="5" style="width:250px;" required>
+
+                                <?php }?>
+                            </div>
+
+                            <div class="form-group">
+
+                                <label> Justification for the Amount Given: </label>
+                                <?php if($checkForHealthAidApplication['APP_STATUS'] == 2 ){ ?>
+
+                                <textarea   id="noresize" placeholder="<?php echo $checkForHealthAidApplication['RESPONSE'] ?>" name="response" class="form-control" rows="5" cols="125" disabled></textarea>
+
+                                <?php }else { ?>
+
+                                    <textarea   id="noresize" name="response" class="form-control" rows="5" cols="125" required></textarea>
+
+                                <?php }?>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Check first if the doc status has been accepted. check if the Doc status = 2 - accepted. But you have to be dynamic. Check everything.-->
+                    <!--  Btw, when there is even but one receipt that has been rejected, then you enable the reject button. You gotta hve the count. -->
+
+
+                    <?php
+
+                        //these are the sets of buttons that you must be able to display.
+                        if($checkForHealthAidApplication['APP_STATUS'] == 2 || $checkForHealthAidApplication['APP_STATUS'] == 3 ){
+
+                            echo "<input type='submit' class='btn btn-success' name='accept' value ='Accept Application' disabled>&nbsp&nbsp&nbsp";
+                            echo "<input type='submit' class='btn btn-danger' name='reject' value ='Reject Application' disabled>";
+
+
+                        } else if($isThereRejected){ //check first if there are rejected
+                            echo "<input type='submit' class='btn btn-success'  value ='Accept Application' name='accept' disabled>&nbsp&nbsp&nbsp";
+                            echo "<input type='submit' class='btn btn-danger'  value ='Reject Application' name='reject'>";
+
+                        }else if($checkReceipts['NUMDOCS'] = $numAccepted){ //then check if the num accepted are all goods
+
+                            echo "<input type='submit' class='btn btn-success'  value ='Accept Application' name='accept'>&nbsp&nbsp&nbsp";
+                            echo "<input type='submit' class='btn btn-danger'  value ='Reject Application' name='reject'>";
+
+                        }else{ //if none, then disable both buttons.
+
+                            echo "<input type='submit' class='btn btn-success' name='accept' value ='Accept Application' disabled>&nbsp&nbsp&nbsp";
+                            echo "<input type='submit' class='btn btn-danger' name='reject' value ='Reject Application' disabled>";
+
+                        }
+
+                    ?>
+                </div>
+                <div class= "col-lg-4">
+
+                    <div class="panel panel-primary">
+
+                        <div class="panel-heading">
+
+                            <b>Pickup Status</b>
+
+                        </div>
+
+                        <div class="panel-body">
+                            <div class ="row">
+                                <div class= "col-lg-12">
+                                    <?php
+
+                                    $query = "SELECT ps.STATUS
+                                            from health_aid ha
+                                            join pickup_status ps
+                                            on ha.PICKED_UP_STATUS = ps.STATUS_ID
+                                            WHERE ha.RECORD_ID = {$checkForHealthAidApplication['RECORD_ID']}";
+
+                                    $result = mysqli_query($dbc,$query);
+                                    $rows = mysqli_fetch_array($result);
+
+
+                                    echo $rows['STATUS'];
+
+
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php if(!$isThereRejected){?>
+                        <div class="panel panel-primary">
+
+                            <div class="panel-heading">
+
+                                <b>Upload Receipt for Health Aid</b>
+
+                            </div>
+
+                            <div class="panel-body">
+
+                                <div class ="row">
+
+                                    <div class= "col-lg-12">
+
+
+
+                                       <div class="element">
+                                        <input type="file" name="upload_file[]" id="upload_file1" required/>
+                                    </div>
+
+                                    <div id="moreImageUpload">
+                                        <br>
+                                    </div>
+
+                                    <div class="clear">
+
+                                    </div>
+
+                                    <div id="moreImageUploadLink" style="display:none;margin-left: 10px;">
+                                        <i class="fa fa-plus"></i>   <a href="javascript:void(0);" id="attachMore">Attach another file</a>
+                                    </div>
+
+
+
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            </div>
+
+                        </div>
+                    <?php }?>
+
+
+                </form>
+                </div>
+
+
+            </div>
+
 
     </div>
-    <!-- /#wrapper -->
+
+</div>
 
 
-    <script>
+</div>
+<!-- /.container-fluid -->
 
-        $(document).ready(function(){
-    
-            $('#table').DataTable();
+</div>
+<!-- /#page-wrapper -->
 
-        });
-
-    </script>
-
-</body>
-
-</html>
+<?php include 'GLOBAL_FOOTER.php' ?>

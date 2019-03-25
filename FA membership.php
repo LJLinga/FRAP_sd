@@ -438,7 +438,7 @@ $success = null;
                                                 <label class="memfieldlabel">Year</label>
                                                 <select class="form-control datedropdown"  name =  "bYear">
 
-                                                    <?php for($y = 2025; $y >= 1900; $y--) { ?>
+                                                    <?php for($y = date("Y"); $y >= 1900; $y--) { ?>
 
                                                         <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
 
@@ -1026,6 +1026,9 @@ $success = null;
         }
         if(!empty($failedLife)){
             $string = $string.'Missing fields in Lifetime';
+        }
+        else{
+            $string = $string.'Possible error is date is unrealistic';
         }
         echo "<script type='text/javascript'>alert('{$string}');</script>";
         

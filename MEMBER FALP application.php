@@ -15,6 +15,14 @@
     $ifPartTimeLoaned= mysqli_fetch_assoc($resultIfPartTimeLoaned);
 
 
+    //check first if the guy is a part time.
+
+
+    //then check if the guy has currently a pending loan - which brings the dude to the summary page.
+
+
+    //then check if the guy has paid 50% of the Loan.... shit. we actually have a screen that keeps track of TWO Loans at the fucking same time jesus fucking christ
+
 
 
 
@@ -26,7 +34,8 @@
 
             } else if($row['LOAN_STATUS'] == 2 ) { //checks if you have a loan that is ongoing.
 
-                if ($row['PAYMENT_TERMS'] > $row['PAYMENTS_MADE']){ //checks if the loan is
+                if ($row['PAYMENT_TERMS'] > $row['PAYMENTS_MADE']){ //checks if the loan is 50%
+
 
                     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
 
@@ -39,15 +48,11 @@
 
     if($ifPartTimeLoaned['PART_TIME_LOANED'] == "YES"){
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
+        $_SESSION['GLOBAL_MESSAGE'] = ' You cannot loan again for this month. Please wait for another term before you can loan again. ';
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
 
     }
-
-
-
-
-
-
 
     $page_title = 'Loans - FALP Application';
     include 'GLOBAL_HEADER.php';
@@ -59,6 +64,12 @@
             <div class="container-fluid">
 
                 <!-- Page Heading -->
+                <?php if($_SESSION['GLOBAL_MESSAGE']){?>
+                <div class="alert alert-warning">
+                    <strong><?php echo $_SESSION['GLOBAL_MESSAGE'] ?></strong>
+                </div>
+                <?php }?>
+
                 <div class="row">
                 
                     <div class="col-lg-12">

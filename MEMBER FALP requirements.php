@@ -6,54 +6,61 @@
 
     //check if the person has anongoing  loan first dammit then if he/she has, redirect to a pending. but if its accepted, redirect to activity
     //to check if the user has applied in FALP but this code can be edited to check other applications. e.g. Health aid and shi like th sort
-
-    $query = "SELECT MAX(LOAN_ID), LOAN_STATUS from loans where member_id = {$_SESSION['idnum']} and app_status != 3 ";
+    $query = "SELECT * from loans where member_id = {$_SESSION['idnum']} && loan_status != 3 && app_status != 3 ORDER BY LOAN_ID DESC LIMIT 1";
     $result = mysqli_query($dbc,$query);
-
     $row = mysqli_fetch_assoc($result);
 
-    if($row['LOAN_STATUS'] == 1){ //checks if you have a pending loan
+    $queryIfPartTimeLoaned = "SELECT PART_TIME_LOANED from member  where member_id = {$_SESSION['idnum']} ";
+    $resultIfPartTimeLoaned  = mysqli_query($dbc,$queryIfPartTimeLoaned );
+    $ifPartTimeLoaned= mysqli_fetch_assoc($resultIfPartTimeLoaned);
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
 
-    }else if($row['LOAN_STATUS'] == 2) { //checks if you have a loan that is ongoing.
+    //check first if the guy is a part time.
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
+
+    //then check if the guy has currently a pending loan - which brings the dude to the summary page.
+
+
+    //then check if the guy has paid 50% of the Loan.... shit. we actually have a screen that keeps track of TWO Loans at the fucking same time jesus fucking christ
+
+
+
+
+    if(!empty($row)){
+
+            if($row['LOAN_STATUS'] == 1){ //checks if you have a pending loan
+
+                header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
+
+            } else if($row['LOAN_STATUS'] == 2 ) { //checks if you have a loan that is ongoing.
+
+                if ($row['PAYMENT_TERMS'] > $row['PAYMENTS_MADE']){ //checks if the loan is 50%
+
+                    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
+
+                }
+
+            }
 
     }
+
+    if($ifPartTimeLoaned['PART_TIME_LOANED'] == "YES"){
+
+        $_SESSION['GLOBAL_MESSAGE'] = ' You cannot loan again for this month. Please wait for another term before you can loan again. ';
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
+
+    }
+
 
     $page_title = 'Loans - FALP Requirements';
     include 'GLOBAL_HEADER.php';
     include 'FRAP_USER_SIDEBAR.php';
 ?>
-<script>
 
-
-    function checkForm(){
-
-        if(document.getElementById("IncomeTax").files.length == 0){ // checks if the income tax field is emptty
-            alert("please enter incomeTax");
-            return false;
-        }else if(document.getElementById("payslip").files.length == 0){ // checks if the payslip is empty
-            alert("please enter payslip");
-            return false;
-        }else if(document.getElementById("emp_ID").files.length == 0){ // checks if the emp_id is empty
-            alert("no files selected for emp_id");
-            return false;
-        }else if(document.getElementById("gov_ID").files.length == 0){ // checks if the gov_id is empty
-            alert("No Files selected for gov_ID");
-            return false;
-        }else{
-            alert("All files uploaded!");
-            return true;
-        }
-
-    }
-</script>
         <div id="page-wrapper">
 
             <div class="container-fluid">
-
                 <!-- Page Heading -->
                 <div class="row">
                 
@@ -91,7 +98,7 @@
 
                 <div class="row">
 
-                    <form action="MEMBER%20FALP%20appsent.php" method = "post" enctype="multipart/form-data" onsubmit="return checkForm()">  <!-- SERVERSELF, REDIRECT TO NEXT PAGE -->
+                    <form action="MEMBER_UploadDocument_Loans.php" method = "post" enctype="multipart/form-data" >  <!-- SERVERSELF, REDIRECT TO NEXT PAGE -->
 
                         <div class="col-lg-3 col-1">
 
@@ -113,7 +120,7 @@
 
                                         <div class="col-lg-10">
 
-                                            <input type="file" accept = ".jpeg, .jpg, .png, .pdf, .doc, .docx" name = "IncomeTax" id = "IncomeTax" >
+                                            <input type="file" accept = ".jpeg, .jpg, .png, .pdf, .doc, .docx" name = "upload_file[]" id = "IncomeTax" required>
 
                                         </div>
 
@@ -145,7 +152,7 @@
 
                                         <div class="col-lg-10">
 
-                                            <input type="file" accept = ".jpeg, .jpg, .png, .pdf, .doc, .docx" name = "payslip" id="payslip">
+                                            <input type="file" accept = ".jpeg, .jpg, .png, .pdf, .doc, .docx" name = "upload_file[]" id="payslip" required>
 
                                         </div>
 
@@ -177,7 +184,7 @@
 
                                         <div class="col-lg-10">
 
-                                            <input type="file" accept = ".jpeg, .jpg, .png, .pdf, .doc, .docx" name = "emp_ID" id = "emp_ID">
+                                            <input type="file" accept = ".jpeg, .jpg, .png, .pdf, .doc, .docx" name = "upload_file[]" id = "emp_ID" required>
 
                                         </div>
 
@@ -209,7 +216,7 @@
 
                                         <div class="col-lg-10">
 
-                                            <input type="file" accept = ".jpeg, .jpg, .png, .pdf, .doc, .docx" name = "gov_ID" id = "gov_ID">
+                                            <input type="file" accept = ".jpeg, .jpg, .png, .pdf, .doc, .docx" name = "upload_file[]" id = "gov_ID" required>
 
                                         </div>
 

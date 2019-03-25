@@ -5,333 +5,133 @@ require_once('mysql_connect_FA.php');
 session_start();
 include 'GLOBAL_USER_TYPE_CHECKING.php';
 include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
+include('GLOBAL_CLASS_CRUD.php');
+$crud = new GLOBAL_CLASS_CRUD();
 
 
 
-    if(isset($_POST['action'])){
-
-        $query = "SELECT MEMBER_ID FROM loans WHERE LOAN_ID = ". $_SESSION['showFID'] .";";
-        $result = mysqli_query($dbc, $query);
-        $row = mysqli_fetch_array($result);
-
-        if($_POST['action'] == "Accept Application"){
-
-            //Change the status into Approved (APP_STATUS =2)
-            $query = "UPDATE LOANS SET APP_STATUS = '2', LOAN_STATUS= '2', DATE_APPROVED = NOW(), EMP_ID =". $_SESSION['idnum'] ." WHERE LOAN_ID =" . $_SESSION['showFID'].";";
-            $result = mysqli_query($dbc, $query);
-
-           //Insert into transaction table
-            $queryTnx = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, LOAN_REF, EMP_ID, SERVICE_ID) 
-            VALUES({$row['MEMBER_ID']}, '1', 'FALP Approved', 0, NOW(), {$_SESSION['showFID']}, {$_SESSION['idnum']}, '4'); ";
-            $resultTnx = mysqli_query($dbc, $queryTnx);
-
-            $message = "Accepted" ;
-
-
-            // put the insert code for the To_Deduct table here.
-
-            //get the current month
-            $loanDetails = "SELECT * FROM LOANS WHERE LOAN_ID = {$_SESSION['showFID']}";
-            $loanDetailsResult = mysqli_query($dbc,$loanDetails);
-            $loanDetailsRow = mysqli_fetch_assoc($loanDetailsResult);
-
-            $currYear = date("Y");
-            $currDay = date('d');
-            $currMonth = date("m");
-
-            $dateToInsert = date("Y-m-d", strtotime($currYear."-".$currMonth."-".$currDay));
-
-
-            $i = 0; //this will keep track on how many payments has been inserted.
-
-            while($i < (($loanDetailsRow['PAYMENT_TERMS']*2) - $loanDetailsRow['PAYMENTS_MADE'])){  //get the payment terms, and have the counter keep track on how many has been  inserted already.
-
-                //check if it is February first so we can adjust the end date by February 28.
-
-                if($currMonth == 2){ //assumes that the current month is February
-
-                    if($currDay < 15){
-
-                        $currDay = 15;
-
-                        $dateToInsert = date("Y-m-d", strtotime($currYear."-".$currMonth."-".$currDay));
-
-                        $query5 = "INSERT INTO to_deduct(LOAN_REF, DEDUCTION_DATE)
-                             values ({$loanDetailsRow['LOAN_ID']},'{$dateToInsert}')";
-
-                        if (!mysqli_query($dbc,$query5))
-                        {
-                            echo("Error description: " . mysqli_error($dbc));
-                        }
-
-                        $i++;
-
-                    }else if($currDay < 28){
-
-                        $currDay = 28;
-
-                        $dateToInsert = date("Y-m-d", strtotime($currYear."-".$currMonth."-".$currDay));
-
-                        $query5 = "INSERT INTO to_deduct(LOAN_REF, DEDUCTION_DATE)
-                             values ({$loanDetailsRow['LOAN_ID']},'{$dateToInsert}')";
-
-                        if (!mysqli_query($dbc,$query5))
-                        {
-                            echo("Error description: " . mysqli_error($dbc));
-                        }
-
-                        $i++;
-
-                    }else{
-
-                        $currMonth++;
-
-                        $currDay = 1;
-
-                    }
-
-                }else { //this means its just any day of the month
-
-                    if($currDay < 15){
-
-                        $currDay = 15;
-
-                        $dateToInsert = date("Y-m-d", strtotime($currYear."-".$currMonth."-".$currDay));
-
-                        $query5 = "INSERT INTO to_deduct(LOAN_REF, DEDUCTION_DATE)
-                             values ({$loanDetailsRow['LOAN_ID']},'{$dateToInsert}')";
-
-                        if (!mysqli_query($dbc,$query5))
-                        {
-                            echo("Error description: " . mysqli_error($dbc));
-                        }
-
-                        $i++;
-
-                    }else if($currDay < 30){
-
-                        $currDay = 30;
-
-                        $dateToInsert = date("Y-m-d", strtotime($currYear."-".$currMonth."-".$currDay));
-
-                        $query5 = "INSERT INTO to_deduct(LOAN_REF, DEDUCTION_DATE)
-                             values ({$loanDetailsRow['LOAN_ID']},'{$dateToInsert}')";
-
-                        if (!mysqli_query($dbc,$query5))
-                        {
-                            echo("Error description: " . mysqli_error($dbc));
-                        }
-
-                        $i++;
-
-                    }else {
-
-                        $currMonth++;
-
-                        if ($currMonth == 13) {
-                            $currMonth = 1;
-
-                            $currYear++;
-                        }
-
-                        $currDay = 1;
-                    }
-
-                }
-
-            }
-
-
-        }
-
-        else if($_POST['action'] == "Reject Application"){
-            //Change the status into Approved (APP_STATUS =2)
-            $query = "UPDATE LOANS SET APP_STATUS = '3', LOAN_STATUS= '1', DATE_APPROVED = NOW(), EMP_ID =". $_SESSION['idnum'] ." WHERE LOAN_ID =" . $_SESSION['showFID'].";";
-            $result = mysqli_query($dbc, $query);
-
-           //Insert into transaction table
-            $queryTnx = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, LOAN_REF, EMP_ID, SERVICE_ID) 
-            VALUES({$row['MEMBER_ID']}, '1', 'FALP Rejected', 0, NOW(), {$_SESSION['showFID']}, {$_SESSION['idnum']}, '4'); ";
-            $resultTnx = mysqli_query($dbc, $queryTnx);
-
-            $message = "Rejected";
-        }
-
-    }
-     //prepare the code in order for us to link the stuff from the database to the View Document Screen.
-
-    if(isset($_POST['download'])){
-        $query = "SELECT * FROM falp_requirements WHERE LOAN_ID = ". $_SESSION['showFID'] .";";
-        $result = mysqli_query($dbc, $query);
-        $row = mysqli_fetch_array($result);
-
-        if($_POST['download'] == "Download ICR"){
-
-          header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadFile.php?loanID=".urlencode(''.$row['ICR_DIR']) );
-
-        }else if($_POST['download'] == "Download Payslip"){
-
-           header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadFile.php?loanID=".urlencode(''.$row['PAYSLIP_DIR']) );
-
-        }else if($_POST['download'] == "Download Employee ID"){
-
-          header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadFile.php?loanID=".urlencode(''.$row['EMP_ID_DIR']) );
-
-        }else if($_POST['download'] == "Download Government ID"){
-
-           header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadFile.php?loanID=".urlencode(''.$row['GOV_ID_DIR']) );
-
-        }
-
-    }
-
-
-$page_title = 'Loans - Membership Application Details';
+$page_title = 'Loans - FALP Application Details';
 include 'GLOBAL_HEADER.php';
 include 'FRAP_ADMIN_SIDEBAR.php';
+
+
 ?>
+<style>
+    #noresize {
+        resize: none;
+    }
+
+</style>
+
+<div id="page-wrapper">
+
+    <div class="container-fluid">
+        <?php
+        $query = "SELECT * FROM LOANS where LOAN_ID = {$_SESSION['showFID']} ORDER BY LOAN_ID DESC LIMIT 1";
+        $result = mysqli_query($dbc,$query);
+        $ans = mysqli_fetch_assoc($result);
+
+        $query = "SELECT l1.APP_STATUS,l2.STATUS as 'Status' FROM LOANS l1 JOIN LOAN_STATUS l2 ON l1.LOAN_STATUS = l2.STATUS_ID where l1.LOAN_ID = {$_SESSION['showFID']}
+                    ORDER BY loan_id DESC LIMIT 1";
+        $result = mysqli_query($dbc,$query);
+        $ans1 = mysqli_fetch_assoc($result);
+
+        $queryMemName = "SELECT M.LASTNAME, M.FIRSTNAME FROM LOANS L
+                          join member M
+                          on L.MEMBER_ID = M.MEMBER_ID
+                         where LOAN_ID = {$_SESSION['showFID']} ORDER BY LOAN_ID DESC LIMIT 1";
+        $resultMemName = mysqli_query($dbc,$queryMemName);
+        $memName = mysqli_fetch_assoc($resultMemName);
 
 
-<body>
-        <div id="page-wrapper">
+        ?>
 
-            <div class="container-fluid">
 
-                <div class="row">
-                
-                    <div class="col-lg-12">
+        <!-- Page Heading -->
+        <div class="row">
 
-                        <h1 class="page-header">
-                            View FALP Loan Details
-                        </h1>
-                        <?php
-                            if(isset($message)){
-                                echo"  
-                                <div class='alert alert-warning'>
-                                    ". $message ."
-                                </div>
-                                ";
-                            }
-                        ?>
-                    </div>
-                    
-                </div>
-                <!-- alert -->
-                <div class="row">
-                    <div class="col-lg-12">
+            <div class="col-lg-12">
 
-                       <div class="row">
+                <h1 class="page-header"><i class="fa fa-border fa-dollar"></i> FALP Loan Summary of <?php echo $memName['LASTNAME'].", ".$memName['FIRSTNAME'] ?></h1>
 
-                            <div class="col-lg-12">
+            </div>
 
-                                    <div class="panel panel-green">
+        </div>
 
-                                        <div class="panel-heading">
+            <div class="col-lg-8">
 
-                                            <b>Personal Information</b>
+                <div class="col-lg-6">
 
-                                        </div>
+                    <div class="panel panel-green">
 
-                                        <div class="panel-body"><p>
-                                            <?php 
-                                                $query = "SELECT M.MEMBER_ID, M.FIRSTNAME, M.LASTNAME, M.MIDDLENAME FROM LOANS L 
-                                                JOIN MEMBER M 
-                                                ON L.MEMBER_ID = M.MEMBER_ID
-                                                WHERE L.LOAN_ID= ". $_SESSION['showFID'] .";";
-                                                $result = mysqli_query($dbc, $query);
-                                                $row = mysqli_fetch_array($result);
-                                            ?>
+                        <div class="panel-heading">
 
-                                            <b>ID Number: </b><?php echo $row['MEMBER_ID']; ?> <p>
-                                            <b>First Name: </b><?php echo $row['FIRSTNAME']; ?> <p>
-                                            <b>Last Name: </b><?php echo $row['LASTNAME']; ?> <p>
-                                            <b>Middle Name: </b><?php echo $row['MIDDLENAME']; ?> <p>
-                                            
-                                        </div>
+                            <b>Current FALP Loan Plan</b>
 
-                                    </div>
+                        </div>
 
-                                    <div class="panel panel-green">
 
-                                        <div class="panel-heading">
 
-                                            <b>FALP Details</b>
+                        <div class="panel-body">
 
-                                        </div>
+                            <table class="table table-bordered" style="width: 100%;">
 
-                                        <div class="panel-body"><p>
-                                            <?php 
-                                                $query = "SELECT AMOUNT, PAYABLE, PAYMENT_TERMS, PER_PAYMENT FROM LOANS WHERE LOAN_ID = ". $_SESSION['showFID'] .";";
-                                                $result = mysqli_query($dbc, $query);
-                                                $row = mysqli_fetch_array($result);
-                                            ?>
-                                            <b>Amount to Borrow:</b><?php echo $row['AMOUNT']; ?> <p>
-                                            <b>Amount Payable:</b><?php echo $row['PAYABLE']; ?> <p>
-                                            <b>Payment Terms:</b><?php echo $row['PAYMENT_TERMS']; ?> <p>
-                                            <b>Monthly Deductions:</b><?php echo $row['PER_PAYMENT'] * 2; ?> <p>
-                                            <b>Number of Payments:</b><?php echo $row['PAYMENT_TERMS'] * 2; ?> <p>
-                                            <b>Per Payment Deduction:</b><?php echo $row['PER_PAYMENT']; ?> <p>
+                                <thread>
 
-                                        </div>
+                                    <tr>
 
-                                    </div>
+                                        <td align="center"><b>Description</b></td>
+                                        <td align="center"><b>Amount</b></td>
 
-                                    <div class="panel panel-green">
+                                    </tr>
 
-                                        <div class="panel-heading">
+                                </thread>
 
-                                            <b> Application Forms to Review </b>
+                                <tbody>
 
-                                        </div>
+                                <tr>
 
-                                        <div class="panel-body"><p>
-                                                <?php
+                                    <td>Amount to Borrow</td>
+                                    <td>₱ <?php echo $ans['AMOUNT'];?></td>
 
-                                                ?>
+                                </tr>
 
-                                            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+                                <tr>
 
-                                                <input type="submit" class="btn btn-success" name="download" value="Download ICR">
-                                                <input type="submit" class="btn btn-success" name="download" value="Download Payslip">
-                                                <input type="submit" class="btn btn-success" name="download" value="Download Employee ID">
-                                                <input type="submit" class="btn btn-success" name="download" value="Download Government ID">
+                                    <td>Amount Payable</td>
+                                    <td>₱ <?php echo $ans['PAYABLE'];?></td>
 
-                                            </form>
+                                </tr>
 
-                                        </div>
+                                <tr>
 
-                                    </div>
+                                    <td>Payment Terms</td>
+                                    <td><?php echo $ans['PAYMENT_TERMS'];?> months</td>
 
-                                <?php
-                                $query = "SELECT APP_STATUS FROM LOANS WHERE LOAN_ID = ". $_SESSION['showFID'] .";";
-                                $result = mysqli_query($dbc, $query);
-                                $row = mysqli_fetch_array($result);
+                                </tr>
 
-                                if($row['APP_STATUS'] == 1){
-                                ?>
+                                <tr>
 
-                                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST"> <!-- SERVER SELF -->
+                                    <td>Monthly Deduction</td>
+                                    <td>₱ <?php echo sprintf("%.2f",(float)$ans['PER_PAYMENT']*2);?></td>
 
-                                    <div class="panel panel-primary">
+                                </tr>
 
-                                        <div class="panel-heading">
+                                <tr>
 
-                                            <b>Actions</b>
+                                    <td>Number of Payments</td>
+                                    <td><?php echo $ans['PAYMENT_TERMS']*2;?> payments</td>
 
-                                        </div>
+                                </tr>
 
-                                        <div class="panel-body"><p>
+                                <tr>
 
-                                            <input type="submit" class="btn btn-success" name="action" value="Accept Application">
-                                            <input type="submit" class="btn btn-danger" name="action" value="Reject Application">
+                                    <td>Per Payment Deduction</td>
+                                    <td>₱ <?php echo $ans['PER_PAYMENT'] ;?></td>
 
-                                        </div>
+                                </tr>
 
-                                    </div>
-
-                                </form>
-                            <?php } ?>
-                            </div>
+                            </table>
 
                         </div>
 
@@ -339,22 +139,376 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                 </div>
 
+                <div class="col-lg-6">
+
+                    <div class="panel panel-green">
+
+                        <div class="panel-heading">
+
+                            <b>Current FALP Loan Summary</b>
+
+                        </div>
+
+                        <div class="panel-body">
+
+                            <table class="table table-bordered" style="width: 100%;">
+
+                                <thread>
+
+                                    <tr>
+
+                                        <td align="center"><b>Description</b></td>
+                                        <td align="center"><b>Amount</b></td>
+
+                                    </tr>
+
+                                </thread>
+
+                                <tbody>
+
+                                <tr>
+
+                                    <td>Date Approved</td>
+                                    <td><?php echo $ans['DATE_APPROVED'];?></td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <td>Payments Made</td>
+                                    <td><?php echo (int)$ans['PAYMENTS_MADE'];?> Payments</td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <td>Payments Left</td>
+                                    <td><?php echo ($ans['PAYMENT_TERMS']*2) - $ans['PAYMENTS_MADE'];?> Payments</td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <td>Total Amount Paid</td>
+                                    <td>₱ <?php echo sprintf("%.2f",(float)$ans['AMOUNT_PAID']);?></td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <td>Outstanding Balance</td>
+                                    <td>₱ <?php echo sprintf("%.2f",$ans['PAYABLE']-$ans['AMOUNT_PAID']);?></td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <td>Status</td>
+                                    <td><?php echo $ans1['Status'];?></td>
+
+                                </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <?php
+
+
+                $queryCheckDocs = "SELECT   d.statusId
+                                             from ref_document_loans rdl
+                                             join documents d 
+                                             ON rdl.DOC_ID = d.documentId
+                                             join doc_versions dv
+                                             on d.documentId = dv.documentId
+                                             join doc_status ds
+                                             on d.statusId = ds.id
+                                             WHERE  rdl.LOAN_ID = {$_SESSION['showFID']}
+                                             AND rdl.DOC_REF_TYPE = 1";
+
+                $resultCheckDocs = mysqli_query($dbc,$queryCheckDocs);
+
+
+                $numAccepted = 0; //to check if all the files have been accepted. Remember it works both ways. If numAccepted
+                $isThereRejected = false;
+
+                while($queryRows = mysqli_fetch_assoc($resultCheckDocs)){
+
+                    if($queryRows['statusId'] == 2){ //check if rejected
+                        $numAccepted++;
+                    }else if($queryRows['statusId'] == 3){
+                        $isThereRejected = true;
+                    }
+                }
+
+                $checkDocs = mysqli_fetch_array($resultCheckDocs);
+
+
+
+
+                ?>
+
+                <form action="ADMIN_FRAP_FALP_UploadDocument.php" method="POST" enctype="multipart/form-data" >
+
+                    <div class="row">
+
+                        <div class="col-lg-12">
+
+                            <h1 class="page-header"><i class="fa fa-border fa-reply"></i> Your Reply </h1>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="panel panel-primary">
+
+                                <div class="panel-heading">
+
+                                    <b>Justification from the Administrator if Rejected</b>
+
+                                </div>
+
+                                <div class="panel-body">
+
+                                    <?php if($isThereRejected){ // meaning it was rejected?>
+                                        <textarea   id="noresize" name="response" class="form-control" rows="5" cols="125" required></textarea>
+                                    <?php }else{ ?>
+                                        <textarea   id="noresize" name="response" class="form-control" rows="5" cols="125" ></textarea>
+                                    <?php } ?>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+            </div>
+
+            <!--                        Containsthe Statuses + Receipt-->
+
+            <div class="col-lg-4">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <div class="panel panel-green">
+
+                            <div class="panel-heading">
+
+                                <b>View Uploaded Files and their Status</b>
+
+                            </div>
+
+                            <div class="panel-body">
+
+                                <table id="table" name="table" class="table table-bordered table-striped">
+
+                                    <thead>
+
+                                    <tr>
+
+                                        <td align="center"><b>Document Name</b></td>
+                                        <td align="center"><b>Status</b></td>
+                                        <td align="center"><b>Link to Doc</b></td>
+
+                                    </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                    <?php
+                                    //gets the document ids and their
+                                    $query = "SELECT d.documentId, dv.title, ds.statusName, rdlrq.REQ_TYPE
+                                             from ref_document_loans rdl
+                                             join documents d 
+                                             ON rdl.DOC_ID = d.documentId
+                                             join doc_versions dv
+                                             on d.documentId = dv.documentId
+                                             join doc_status ds
+                                             on d.statusId = ds.id
+                                             join ref_document_loans_req_type rdlrq
+                                             on rdl.DOC_REQ_TYPE = rdlrq.ID
+                                             WHERE rdl.LOAN_ID = {$ans['LOAN_ID']}
+                                             AND rdl.DOC_REF_TYPE = 1";
+                                    $rows = $crud->getData($query);
+
+
+                                    foreach((array) $rows as $key => $row){   ?>
+                                        <tr>
+                                            <td align='center'> <?php echo $row['REQ_TYPE']; ?></td>
+                                            <td align='center'> <?php echo $row['statusName']; ?></td>
+                                            <td align='center'> <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>">
+
+                                                    <button type="button" class="btn btn-success"><i class="fa fa-search" aria-hidden="true"></i></button></a></td>
+                                        </tr>
+                                    <?php }?>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <!--                            here is where the uploaded files coming from the Admin will be. dont forgetto spaghetto.-->
+
+                    <!--                                this is where we track the pickup status-->
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="panel panel-primary">
+
+                                <div class="panel-heading">
+
+                                    <b>Pickup Status for the Loan</b>
+
+                                </div>
+
+                                <div class="panel-body">
+
+                                    <?php
+
+                                    $query = "SELECT ps.STATUS
+                                            from loans l
+                                            join pickup_status ps
+                                            on l.PICKUP_STATUS = ps.STATUS_ID
+                                            WHERE l.LOAN_ID = {$ans['LOAN_ID']}";
+
+                                    $result = mysqli_query($dbc,$query);
+                                    $rows = mysqli_fetch_array($result);
+
+
+                                    echo $rows['STATUS'];
+
+
+                                    ?>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <?php if($numAccepted == 4){?>
+                    <div class="row">
+                        <div class="col-lg-12">
+
+
+                            <div class="panel panel-primary">
+
+                                <div class="panel-heading">
+
+                                    <b>Upload Receipt</b>
+
+                                </div>
+
+                                <div class="panel-body">
+
+                                <div class ="row">
+
+                                    <div class= "col-lg-12">
+
+
+
+                                        <div class="element">
+                                            <input type="file" name="upload_file[]" id="upload_file1" required/>
+                                        </div>
+
+                                        <div id="moreImageUpload">
+                                            <br>
+                                        </div>
+
+                                        <div class="clear">
+
+                                        </div>
+
+                                        <div id="moreImageUploadLink" style="display:none;margin-left: 10px;">
+                                            <i class="fa fa-plus"></i>   <a href="javascript:void(0);" id="attachMore">Attach another file</a>
+                                        </div>
+
+
+
+
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+            </div>
+            <?php } ?>
+        </div>
+
+        <div class="row">
+
+            <div class="col-lg-12">
+
+                <div align="center">
+                    <!--                            put an if here that will stop them from accessing the Payment activity UNTIL the shit is accepted.-->
+                    <?php
+
+                    if($isThereRejected){ //check first if there are rejected
+                        echo "<input type='submit' class='btn btn-success'  value ='Accept Application' name='accept' disabled>&nbsp&nbsp&nbsp";
+                        echo "<input type='submit' class='btn btn-danger'  value ='Reject Application' name='reject'>";
+
+                    }else if($numAccepted == 4){ //then check if the num accepted are all goods
+
+                        echo "<input type='submit' class='btn btn-success'  value ='Accept Application' name='accept'>&nbsp&nbsp&nbsp";
+                        echo "<input type='submit' class='btn btn-danger'  value ='Reject Application' name='reject'>";
+
+                    }else{ //if none, then disable both buttons.
+
+                        echo "<input type='submit' class='btn btn-success' name='accept' value ='Accept Application' disabled>&nbsp&nbsp&nbsp";
+                        echo "<input type='submit' class='btn btn-danger' name='reject' value ='Reject Application' disabled>";
+
+                    }
+
+
+                    ?>
+                </div>
+
             </div>
 
         </div>
+        </form>
 
 
+    </div>
 
-    <script>
+    <!-- /.row -->
 
-        $(document).ready(function(){
-    
-            $('#table').DataTable();
+</div>
+<!-- /.container-fluid -->
 
-        });
-
-    </script>
-
-</body>
-
-</html>
+</div>
+<!-- /#page-wrapper -->
+<?php include 'GLOBAL_FOOTER.php' ?>

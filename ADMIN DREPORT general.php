@@ -142,13 +142,13 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                     <div class="col-lg-3" align="left">
 
-                                        <input type="submit" class="btn btn-success" name="select_date" value="Generate Report">
+                                        <input onclick="$('form').attr('target', '')" type="submit" class="btn btn-success" name="select_date" value="Generate Report">
 
                                     </div>
 
                                     <div class="col-lg-3" align="left">
 
-                                        <input type="submit" class="btn btn-default" name="print" value="Print Report">
+                                        <input onclick="$('form').attr('target', '_blank')"  type="submit" class="btn btn-default" name="print" value="Print Report">
                                         </form>
                                     </div>
 

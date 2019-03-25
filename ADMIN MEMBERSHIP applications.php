@@ -142,19 +142,4 @@ include 'FRAP_ADMIN_SIDEBAR.php';
         
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-
-    <script type="text/javascript" src="DataTables/datatables.min.js"></script>
-    <script>
-
-        $(document).ready(function(){
-    
-            $('#table').DataTable();
-
-        });
-
-    </script>
-
-</body>
-
-</html>
+   <?php include 'GLOBAL_FOOTER.php' ?>

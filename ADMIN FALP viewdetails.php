@@ -61,7 +61,7 @@ if(isset($_POST['addToPay'])){
 
             //we reverse the fucking deductions code into something else.
 
-            $query = "UPDATE to_deduct SET HAS_PAID = 2 WHERE LOAN_REF = {$_SESSION['details']} AND HAS_PAID = 1 ORDER BY ID DESC LIMIT{$_POST['terms']} ";
+            $query = "UPDATE to_deduct SET HAS_PAID = 2 WHERE LOAN_REF = {$_SESSION['details']} AND HAS_PAID = 1 ORDER BY ID DESC LIMIT {$_POST['terms']} ";
 
             if (!mysqli_query($dbc,$query))
             {

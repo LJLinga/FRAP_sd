@@ -138,9 +138,9 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                     <div class="col-lg-2" align="center">
                                         <label>
-                                        <input type="submit" class="btn btn-success" name="select_date" value="Generate Report"></label>
+                                        <input onclick="$('form').attr('target', '')"  type="submit" class="btn btn-success" name="select_date" value="Generate Report"></label>
                                         <label>
-                                        <input type="submit" class="btn btn-default" name="print" value="Print Report" ></label>
+                                        <input onclick="$('form').attr('target', '_blank')"  type="submit" class="btn btn-default" name="print" value="Print Report" ></label>
                                     </div>
 
                                     
