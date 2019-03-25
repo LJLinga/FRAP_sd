@@ -19,11 +19,11 @@ include 'EDMS_SIDEBAR.php';
 $edmsRole = $_SESSION['EDMS_ROLE'];
 ?>
 
-<script>
-    $(document).ready(function() {
-        $('#dataTable').DataTable();
-    });
-</script>
+<style>
+    .search-found {
+        text-decoration: underline;
+    }
+</style>
 
 <div class="content-wrapper">
     <div class="container-fluid">
@@ -51,7 +51,7 @@ $edmsRole = $_SESSION['EDMS_ROLE'];
                 <div class="panel panel-default" style="margin-bottom: 1rem;">
                     <div class="panel-heading">
                         <a class="btn btn-link" data-toggle="collapse" data-target="#collapse<?php echo $count;?>" aria-expanded="false" aria-controls="collapse<?php echo $count;?>">
-                            <div class="panel-title">Section <?php echo $row['sectionNo'].' - '.$row['title'];?></div>
+                            <div class="panel-title"><b>Section <?php echo $row['sectionNo'].' - '.$row['title'];?></b></div>
                         </a>
                     </div>
                     <div id="collapse<?php echo $count;?>" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
@@ -65,7 +65,7 @@ $edmsRole = $_SESSION['EDMS_ROLE'];
             <div class="col-lg-4" >
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        Published Manual Editions
+                        Export as PDF (Current and Old Editions)
                     </div>
                     <div class="panel-body">
                         <?php
@@ -89,5 +89,20 @@ $edmsRole = $_SESSION['EDMS_ROLE'];
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function(){
+
+
+    });
+    $('#searchfor').keyup(function(){
+        page = $('#all_text').text();
+        searchedText = $('#searchfor').val();
+        $("p:contains('"+searchedText+"')").each( function( i, element ) {
+            var content = $(element).text();
+            content = content.replace( searchedText, '<span class="search-found">' + searchedText + '</span>' );
+            element.html( content );
+        });
+    });
+</script>
 
 <?php include 'GLOBAL_FOOTER.php';?>
