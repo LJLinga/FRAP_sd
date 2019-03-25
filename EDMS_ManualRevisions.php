@@ -189,13 +189,13 @@ include 'EDMS_SIDEBAR.php';
                     <div class="panel-body">
                         <?php
                         $rows = $crud->getData("SELECT id, year, title, timePublished, publishedById 
-                                        FROM facultyassocnew.faculty_manual;");
+                                        FROM facultyassocnew.faculty_manual ORDER BY id DESC;");
                         if(!empty($rows)){
                             foreach((array)$rows AS $key => $row){
-                                echo '<div class="card">';
+                                echo '<div class="card" style="position: relative;">';
                                 echo '<div class="card-body">';
                                 echo $row['title'].' ('.$row['year'].')<br>';
-                                echo '<a href="EDMS_PublishSections.php?id='.$row['id'].'" target="_blank" class="btn btn-primary btn-sm"><i class="fa fa-print"></i></a>';
+                                echo '<a href="EDMS_PublishSections.php?id='.$row['id'].'" target="_blank" class="btn btn-primary btn-sm" style="position: absolute; right: 2rem; top: 0.5rem;"><i class="fa fa-print"></i></a>';
                                 echo '</div></div>';
                             }
                         }else{

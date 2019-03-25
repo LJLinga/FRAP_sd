@@ -43,7 +43,7 @@ $edmsRole = $_SESSION['EDMS_ROLE'];
                     <div class="card-body" >
                         Manual Sections
                         <div class="card">
-
+                        </div>
                     </div>
                 </div>
             </div>

@@ -318,54 +318,45 @@ include 'EDMS_SIDEBAR.php';
                             ?>
                         </div>
                         <?php
-                        $query = "SELECT v.timeCreated, v.title, v.sectionNo, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
+                        $query = "SELECT v.timeCreated, v.title, v.sectionNo, v.content, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
                                   FROM section_versions v 
                                   JOIN employee e ON v.authorId = e.EMP_ID 
                                   WHERE v.sectionId = '$sectionId' AND v.timeCreated != '$lastUpdated' ORDER BY v.timeCreated DESC;";
                         $rows = $crud->getData($query);
                         if (!empty($rows)) {
-
+                            $count= 0;
                             echo '<div class="card" style="margin-top: 1rem;">';
                             echo '<div class="card-header"><b>Version History</b></div>';
                             echo '<div class="card-body" style="max-height: 50vh; overflow-y: auto;">';
-                            if(!empty($rows)) {
                                 foreach ((array)$rows as $key => $row) {
+                                    $count++;
                                     echo '<div class="card" style="margin-bottom: 1rem;">';
                                     echo '<div class="card-body">';
                                     echo '<span class="badge">Version ' . $row['timeCreated'] . '</span> ';
-                                    echo '<button type="button" id="btnPreview" class="btn btn-default btn-sm">Preview</button><br>';
+                                    echo '<button type="button" id="btnPreview" class="btn btn-default btn-sm" data-toggle="collapse" data-target="#collapse'.$count.'" aria-expanded="false" aria-controls="collapse'.$count.'">Read</button><br>';
                                     echo '<b>Section '.$row['sectionNo'].': '. $row['title'] . ' </b><br>';
                                     echo 'Created by: ' . $row['versionAuthor'] . '<br>';
                                     echo 'on: <i>' . date("F j, Y g:i:s A ", strtotime($row['timeCreated'])) . '</i><br>';
+                                    echo '<div id="collapse'.$count.'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
+                                    echo '<div class="card-body">';
+                                    echo $row['content'];
+                                    echo '</div>';
+                                    echo '</div>';
                                     echo '</div></div>';
                                 }
-                            }
+
                             echo '</div></div>';
                         }
 
                         ?>
                         <!-- Button -->
                     </div>
+                    <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Collapsible Group Item #1
+                    </button>
+
                 </div>
             </form>
-        </div>
-    </div>
-    <!-- Modal by xtian pls dont delete hehe -->
-    <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    Confirm Action
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to <b id="changeText"></b> ?
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <a href="#" id="submit" class="btn btn-success success">Yes, I'm sure</a>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -395,6 +386,24 @@ include 'EDMS_SIDEBAR.php';
                 </div>
 
             </form>
+
+        </div>
+    </div>
+    <div class="modal fade" id="previewModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
 
         </div>
     </div>
@@ -443,5 +452,25 @@ include 'EDMS_SIDEBAR.php';
         $('#comment_id').val(comment_id);
         $('#comment_name').focus();
     });
+
+
+    // function preview(timeCreated){
+    //
+    //     var options = {
+    //         modal : true,
+    //         height : 300,
+    //         width : 500
+    //     };
+    //     $('#previewModal.modal-body').load('EDMS_SectionPreview.php?timeCreated='+timeCreated,
+    //         function() {
+    //             $('#previewModal').modal({
+    //                 show : true
+    //             });
+    //         });
+    //     //alert(timeCreated);
+    // }
+
+
+
 </script>
 <?php include 'GLOBAL_FOOTER.php' ?>
