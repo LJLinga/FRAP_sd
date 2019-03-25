@@ -351,10 +351,6 @@ include 'EDMS_SIDEBAR.php';
                         ?>
                         <!-- Button -->
                     </div>
-                    <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Collapsible Group Item #1
-                    </button>
-
                 </div>
             </form>
         </div>
