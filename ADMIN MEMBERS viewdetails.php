@@ -8,15 +8,15 @@
 
 
     if(isset($_POST['action'])){
-        if($_POST['action']=="Reactivate Account"){
+        if($_POST['action'] == "Reactivate Account"){
             $query1 = "UPDATE member
                       set USER_STATUS = 1,
                       MEMBERSHIP_STATUS = 2
                       where MEMBER_ID = {$_SESSION['currID']}  ";
         }
-        else if($_POST['action']=="Deactivate Account"){
+        else if($_POST['action'] == "Deactivate Account"){
             $query1 = "UPDATE member
-                      set USER_STATUS = 4
+                      set USER_STATUS = 4,
                       MEMBERSHIP_STATUS = 3
                       where MEMBER_ID = {$_SESSION['currID']}  ";
         }

@@ -4,6 +4,9 @@
     session_start();
     include 'GLOBAL_USER_TYPE_CHECKING.php';
     include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
+    require 'GLOBAL_CLASS_CRUD.php';
+    $crud = new GLOBAL_CLASS_CRUD();
+
 
      //Test value
     //$_SESSION['idnum']=1141231234;
@@ -30,17 +33,41 @@
 
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN HEALTHAID appdetails.php");
 
+    }else if(isset($_POST['pickup'])){
+
+        $query = "UPDATE health_aid set PICKED_UP_STATUS = 2 WHERE RECORD_ID = '{$_POST['pickup']}'";
+        $result = mysqli_query($dbc, $query);
+
+        $query = "SELECT MEMBER_ID FROM health_aid  WHERE RECORD_ID = '{$_POST['pickup']}'";
+        $result = mysqli_query($dbc, $query);
+        $row = mysqli_fetch_array($result);
+
+        $crud->execute("INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, HA_REF, SERVICE_ID) 
+                          VALUES({$row['MEMBER_ID']}, 1, 'Health Aid Ready to Pickup!', 0.00, {$_POST['pickup']}, 2)");
+
+
+    } else if(isset($_POST['pickedup'])){
+
+        $query = "UPDATE health_aid set PICKED_UP_STATUS = 3  WHERE RECORD_ID = {$_POST['pickedup']}";
+        $result = mysqli_query($dbc, $query);
+
+        $query = "SELECT MEMBER_ID FROM health_aid  WHERE RECORD_ID = '{$_POST['pickedup']}'";
+        $result = mysqli_query($dbc, $query);
+        $row = mysqli_fetch_array($result);
+
+        $crud->execute("INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, HA_REF, SERVICE_ID) 
+                          VALUES({$row['MEMBER_ID']}, 1, 'Health Aid Has Been Picked Up! You may now apply again.', 0.00, {$_POST['pickedup']}, 2)");
+
+
     }
 
 
 
 
-    $page_title = 'Loans - Health Applications';
+
+$page_title = 'Loans - Health Applications';
     include 'GLOBAL_HEADER.php';
-    if($_SESSION['FRAP_ROLE']!=5)
-            include 'FRAP_ADMIN_SIDEBAR.php';
-    else
-        include 'FRAP_USER_SIDEBAR.php';
+    include 'FRAP_ADMIN_SIDEBAR.php';
 ?>
 
 <script>
@@ -61,7 +88,7 @@
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
-                            Pending Health Aid Applications
+                            Pending Health Aid Applications And Pickup
                         </h1>
                     
                     </div>
@@ -87,6 +114,8 @@
                                         <td align="center"><b>ID Number</b></td>
                                         <td align="center"><b>Name</b></td>
                                         <td align="center"><b>Department</b></td>
+                                        <td align="center"><b>Amount to Borrow</b></td>
+                                        <td align="center"><b>Reason for Application</b></td>
                                         <td align="center"><b>Actions</b></td>
 
                                         </tr>
@@ -97,26 +126,41 @@
 
                                         <?php
 
-                                            $query = "SELECT HA.DATE_APPLIED, HA.RECORD_ID,  M.MEMBER_ID, M.FIRSTNAME, M.LASTNAME, RD.DEPT_NAME 
+                                            $query = "SELECT HA.DATE_APPLIED, HA.RECORD_ID, HA.APP_STATUS, M.MEMBER_ID, M.FIRSTNAME, M.LASTNAME, RD.DEPT_NAME,HA.AMOUNT_TO_BORROW,HA.MESSAGE, HA.PICKED_UP_STATUS
                                                       FROM MEMBER M 
                                                       JOIN HEALTH_AID HA 
                                                       ON M.MEMBER_ID = HA.MEMBER_ID 
                                                       JOIN REF_DEPARTMENT RD 
                                                       ON M.DEPT_ID = RD.DEPT_ID 
-                                                      WHERE HA.APP_STATUS='1';";
+                                                      WHERE HA.APP_STATUS != 3 && HA.PICKED_UP_STATUS != 4 ;";
 
                                             $result = mysqli_query($dbc, $query);
                                             
                                             foreach ($result as $resultRow) {
-                                                echo"
+                                                if ($resultRow['APP_STATUS'] != 3 && $resultRow['PICKED_UP_STATUS'] != 3) {
+                                                    echo "
                                                     <tr>
-                                                        <td align='center'>". $resultRow['DATE_APPLIED'] ."</td>
-                                                        <td align='center'>". $resultRow['MEMBER_ID'] ."</td>
-                                                        <td align='center'>". $resultRow['FIRSTNAME'] . " " .$resultRow['LASTNAME'] ."</td>
-                                                        <td align='center'>". $resultRow['DEPT_NAME'] ."</td>
-                                                        <td align='center'>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn-xs btn-success' name='details' value='". $resultRow['RECORD_ID'] ."'>Details</button>&nbsp;&nbsp;&nbsp;</td>
-                                                    </tr>
-                                                ";
+                                                        <td align='center'>" . $resultRow['DATE_APPLIED'] . "</td>
+                                                        <td align='center'>" . $resultRow['MEMBER_ID'] . "</td>
+                                                        <td align='center'>" . $resultRow['FIRSTNAME'] . " " . $resultRow['LASTNAME'] . "</td>
+                                                        <td align='center'>" . $resultRow['DEPT_NAME'] . "</td>
+                                                        <td align='center'>" . $resultRow['AMOUNT_TO_BORROW'] . "</td>
+                                                        <td align='center'>" . $resultRow['MESSAGE'] . "</td>";
+
+                                                    if ($resultRow['APP_STATUS'] == 1 && $resultRow['PICKED_UP_STATUS'] == 1) {
+                                                        echo "
+                                                        <td align='center'><button type='submit' class='btn-xs btn-success' name='details' value='" . $resultRow['RECORD_ID'] . "'>App Details</button>&nbsp;&nbsp;&nbsp; ";
+                                                    } else if ($resultRow['APP_STATUS'] == 2 && $resultRow['PICKED_UP_STATUS'] == 1) {
+                                                        echo "<td align='center'>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn-xs btn-success' name='details' value='" . $resultRow['RECORD_ID'] . "'>App Details</button>&nbsp;&nbsp;&nbsp;
+                                                    <button type='submit' class='btn-xs btn-success' name='pickup' value='" . $resultRow['RECORD_ID'] . "'>Ready To Pickup</button></td>";
+                                                    } else if ($resultRow['APP_STATUS'] == 2 && $resultRow['PICKED_UP_STATUS'] == 2) {
+                                                        echo "<td align='center'>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn-xs btn-success' name='details' value='" . $resultRow['RECORD_ID'] . "'>App Details</button>&nbsp;&nbsp;&nbsp;
+                                                    <button type='submit' class='btn-xs btn-success' name='pickedup' value='" . $resultRow['RECORD_ID'] . "'>Picked Up</button></td>";
+                                                    }
+
+
+                                                    echo "</tr>";
+                                                }
                                             }
 
 

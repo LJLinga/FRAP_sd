@@ -1,15 +1,31 @@
 <?php
-
 require_once ("mysql_connect_FA.php");
 session_start();
 include 'GLOBAL_USER_TYPE_CHECKING.php';
 
+$_SESSION['errorsFromHAUpload'] = null;
 
 
 
+//gets the latest addition if the member has applied for this shit already.
 
+$checkForHealthAidApplicationQuery = "SELECT * FROM health_aid where MEMBER_ID = {$_SESSION['idnum']} ORDER BY RECORD_ID DESC LIMIT 1";
+$checkForHealthAidApplicationResult = mysqli_query($dbc,$checkForHealthAidApplicationQuery);
+$checkForHealthAidApplication = mysqli_fetch_array($checkForHealthAidApplicationResult);
 
+if(!empty($checkForHealthAidApplication)){
 
+    if($checkForHealthAidApplication['APP_STATUS'] == 1){
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
+
+    }else if($checkForHealthAidApplication['APP_STATUS'] == 2 && $checkForHealthAidApplication['PICKED_UP_STATUS'] == 1){
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
+
+    }
+
+}
 
 
 
@@ -27,6 +43,8 @@ include 'FRAP_USER_SIDEBAR.php';
 </style>
 
 <script type="text/javascript">
+
+
     $(document).ready(function() {
         $("input[id^='upload_file']").each(function() {
             var id = parseInt(this.id.replace("upload_file", ""));
@@ -44,7 +62,7 @@ include 'FRAP_USER_SIDEBAR.php';
             //add more file
             var moreUploadTag = '';
             moreUploadTag += '<div class="element">';
-            moreUploadTag += '<input type="file" id="upload_file' + upload_number + '" name="upload_file[]"/>';
+            moreUploadTag += '<input type="file" id="upload_file' + upload_number + '" name="upload_file[]" required/>';
             moreUploadTag += ' <a href="javascript:del_file(' + upload_number + ')" style="cursor:pointer;" onclick="return confirm("Are you really want to delete ?")"><i class="fa fa-trash"></i>  Delete </a></div>';
             $('<dl id="delete_file' + upload_number + '">' + moreUploadTag + '</dl>').fadeIn('slow').appendTo('#moreImageUpload');
             upload_number++;
@@ -58,16 +76,27 @@ include 'FRAP_USER_SIDEBAR.php';
 
 </script>
 
-
     <div id="page-wrapper">
 
         <div class="container-fluid">
 
-            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" enctype="multipart/form-data" >
+            <form action="MEMBER_UploadDocument_HA.php" method="POST" enctype="multipart/form-data" >
 
                 <div class="row"> <!-- Title & Breadcrumb -->
 
                     <div class="col-lg-12">
+                        <?php if(!empty($_SESSION['errorsFromHAUpload'])){?>
+                        <div class="alert alert-danger">
+                            <strong>Failure!</strong> Something Wrong Happened. Whoops Errors are as follows.
+
+                            <?php foreach($_SESSION['errorsFromHAUpload'] as $errorsHA){
+                                echo $errorsHA.' ';
+                            }?>
+
+
+                        </div>
+
+                        <?php }?>
 
                         <h1 class="page-header"><i class="fa fa-plus fa-border"></i> Health Aid Application Form</h1>
 
@@ -99,7 +128,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                                     <label for="usr">Amount to Borrow:</label>
 
-                                    <input type="number" class="form-control" id="usr" size="5" style="width:250px;" required>
+                                    <input type="number" name="amount" placeholder="Range: 1000-20000 PhP" class="form-control" id="usr" size="5" style="width:250px;" required>
 
                                 </div>
 
@@ -107,10 +136,8 @@ include 'FRAP_USER_SIDEBAR.php';
 
                                     <label>Reason for the Health Aid Application: </label>
 
-                                    <textarea id="noresize" class="form-control" rows="5" cols="125" required>
+                                    <textarea placeholder="Place your Plea for Aid here" id="noresize" name="message" class="form-control" rows="5" cols="125" required></textarea>
 
-
-                                    </textarea>
 
                                 </div>
 
@@ -138,7 +165,7 @@ include 'FRAP_USER_SIDEBAR.php';
                             <div class="panel-body">
 
                                 <div class="element">
-                                    <input type="file" name="upload_file[]" id="upload_file1"/>
+                                    <input type="file" name="upload_file[]" id="upload_file1" required/>
                                 </div>
 
                                 <div id="moreImageUpload">

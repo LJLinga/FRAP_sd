@@ -1,83 +1,79 @@
 <?php
-    require_once ("mysql_connect_FA.php");
-    session_start();
-    include 'GLOBAL_USER_TYPE_CHECKING.php';
-
-    $query = "SELECT RECORD_ID,APP_STATUS from health_aid WHERE MEMBER_ID = {$_SESSION['idnum']} ";
-    $result = mysqli_query($dbc,$query);
-    $row = mysqli_fetch_array($result);
+require_once ("mysql_connect_FA.php");
+include('GLOBAL_CLASS_CRUD.php');
+$crud = new GLOBAL_CLASS_CRUD();
+session_start();
+include 'GLOBAL_USER_TYPE_CHECKING.php';
 
 
-    //checks if you have not applied for one yet.
-     if($row['APP_STATUS'] == 1){ // it you have a pending HA application
+//checks the status of the application that you have sent
+$checkForHealthAidApplicationQuery = "SELECT * FROM health_aid where MEMBER_ID = {$_SESSION['idnum']} ORDER BY RECORD_ID DESC LIMIT 1";
+$checkForHealthAidApplicationResult = mysqli_query($dbc,$checkForHealthAidApplicationQuery);
+$checkForHealthAidApplication = mysqli_fetch_array($checkForHealthAidApplicationResult);
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA appsent.php");
+if(empty($checkForHealthAidApplication)){
 
-     }else if(empty($row)){ // it means that hindi ka pa nagaaply.
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
 
-         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
-
-     }else{
-
-         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
-
-     }
+}
 
 
-$page_title = 'Loans - Health Aid Summary';
+
+$page_title = 'Loans - Health Aid Application Sent';
 include 'GLOBAL_HEADER.php';
 include 'FRAP_USER_SIDEBAR.php';
-
 ?>
 
-        <div id="content-wrapper">
+    <div id="page-wrapper">
 
-            <div class="container-fluid">
+        <div class="container-fluid">
 
-                <!-- Page Heading -->
-                <div class="row">
-                
+                <div class="row"> <!-- Title & Breadcrumb -->
+
                     <div class="col-lg-12">
 
-                        <h1 class="page-header">Health Aid Program Summary</h1>
-                    
+                        <h1 class="page-header"><i class="fa fa-plus fa-border"></i> Health Aid Application Summary</h1>
+
                     </div>
 
-                </div>
+                    <div class = "col-lg-12">
 
-                <div class="row">
-
-                    <div class="col-lg-12">
-
-                        <div class="alert alert-info">
-
-                            The names listed below are eligible to enjoy the benefits of the Health Aid Program.
-
-                        </div>
+                        <label> Below are your details that will be reviewed by the Committee and President.  </label>
 
                     </div>
 
                 </div>
 
-                <div class="row">
-
-                    <div class="col-lg-2">
-
-                    </div>
+                <div class = "row" style="margin-top: 5px;">
 
                     <div class="col-lg-8">
 
-                        <div class="well" align="center" style="background-color: white">
-                            <?php
-                                $query = "SELECT DATE_APPROVED FROM HEALTH_AID WHERE MEMBER_ID = ". $_SESSION['idnum'] .";";
-                                $result = mysqli_query($dbc, $query);
-                                $row = mysqli_fetch_array($result);
-                            ?>
-                            <b>Health Aid Program Member Since:</b> <?php echo $row['DATE_APPROVED']; ?>
+                        <div class="panel panel-green">
 
-                            <div>
-                                <!-- Insert code here to update every month -->
-                                <b>Total Health Aid Contribution:</b> ₱ 1,800.00
+                            <div class="panel-heading">
+
+                                <b> Health Aid Application Details </b>
+
+                            </div>
+
+
+                            <div class="panel-body">
+
+                                <div class="form-group">
+
+                                    <label for="usr">Amount to Borrow:</label>
+
+                                    <input type="number" name="amount" placeholder="<?php echo $checkForHealthAidApplication['AMOUNT_TO_BORROW'] ?>" class="form-control" id="usr" size="5" style="width:250px;" disabled>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label>Reason for the Health Aid Application: </label>
+
+                                    <textarea  placeholder="<?php echo $checkForHealthAidApplication['MESSAGE'] ?>"  id="noresize" name="message" class="form-control" rows="5" cols="125" disabled></textarea>
+
+                                </div>
 
                             </div>
 
@@ -85,373 +81,224 @@ include 'FRAP_USER_SIDEBAR.php';
 
                     </div>
 
-                </div>
 
-                <div class="row">
 
-                    <div class="col-lg-12 col-1">
 
-                        <div class="panel panel-default">
+
+                    <div class= "col-lg-4">
+
+                        <div class="panel panel-green">
 
                             <div class="panel-heading">
 
-                                <b>Health Aid Program Beneficiaries</b>
+                                <b>View Uploaded Files and their Status</b>
 
                             </div>
 
-                        <div class="panel-body">
+                                <div class="panel-body">
 
-                        <div class="row">
+                                    <?php
+                                    //gets the document ids and their
+                                    $query = "SELECT d.documentId, dv.title, ds.statusName
+                                         from ref_document_healthaid rdh
+                                         join documents d 
+                                         ON rdh.DOC_ID = d.documentId
+                                         join doc_versions dv
+                                         on d.documentId = dv.documentId
+                                         join doc_status ds
+                                         on d.statusId = ds.id
+                                         WHERE rdh.RECORD_ID = {$checkForHealthAidApplication['RECORD_ID']}
+                                         AND rdh.DOC_REF_TYPE = 1";
+                                    $rows = $crud->getData($query);
 
-                            <div class="col-lg-1 col-1">
+
+                                    foreach((array) $rows as $key => $row){   ?>
+
+                                        <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>">
+
+                                            <button type="button" class="btn btn-success"><?php echo $row['title'] ?></button></a>
+
+                                        <?php echo $row['statusName'] ?>
+
+
+                                    <?php }?>
+
+                                </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            <?php if($checkForHealthAidApplication['APP_STATUS'] != 1){?>
+
+                <div class="col-lg-12">
+                <?php if($checkForHealthAidApplication['APP_STATUS'] == 2){?>
+
+                    <h3 class="page-header"><i class="fa fa-reply fa-border"></i> Response from Administration - Accepted </h3>
+
+                <?php }else if($checkForHealthAidApplication['APP_STATUS'] == 3){ ?>
+
+                    <h3 class="page-header"><i class="fa fa-reply fa-border"></i> Response from Administration - Rejected</h3>
+
+                <?php }?>
+
+                </div>
+
+                <div class = "col-lg-12">
+
+
+                </div>
+
+
+
+                <div class="row">
+
+                    <div class="col-lg-8">
+
+                        <div class="panel panel-primary">
+
+                            <div class="panel-heading">
+
+                                <b> Response Details </b>
 
                             </div>
 
-                            <?php
-                                $query = "SELECT * FROM FATHER WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
-                                $result = mysqli_query($dbc, $query);
-                                $row = mysqli_fetch_array($result);
 
-                                $today = date("Y-m-d");
-                                $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
-                                $diff->format('%y'); //Displays computed age
+                            <div class="panel-body">
 
-                                if(!empty($row)){
-                            ?>
+                                <div class="form-group">
 
-                            <div class="col-lg-10 col-2">
+                                    <label for="usr">Amount to Receive: </label>
 
+                                    <input type="number" placeholder = "<?php echo $checkForHealthAidApplication['AMOUNT_GIVEN'] ?>" name="amount"  class="form-control" id="usr" size="5" style="width:250px;" disabled>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label> Justification for the Amount Given: </label>
+
+                                    <textarea   id="noresize" name="message" class="form-control" rows="5" cols="125" disabled><?php echo $checkForHealthAidApplication['RESPONSE'] ?></textarea>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+
+
+                    <div class= "col-lg-4">
+
+                        <div class="panel panel-primary">
+
+                            <div class="panel-heading">
+
+                                <b>Pickup Status</b>
+
+                            </div>
+
+                            <div class="panel-body">
+                                <div class ="row">
+                                    <div class= "col-lg-12">
+                                            <?php
+
+                                            $query = "SELECT ps.STATUS
+                                            from health_aid ha
+                                            join pickup_status ps
+                                            on ha.PICKED_UP_STATUS = ps.STATUS_ID
+                                            WHERE ha.RECORD_ID = {$checkForHealthAidApplication['RECORD_ID']}";
+
+                                            $result = mysqli_query($dbc,$query);
+                                            $rows = mysqli_fetch_array($result);
+
+
+                                            echo $rows['STATUS'];
+
+
+                                          ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                            <?php if($rows['APP_STATUS'] = 1){?>
                                 <div class="panel panel-primary">
 
                                     <div class="panel-heading">
 
-                                        Father's Information
+                                        <b>Receipt for Health Aid</b>
 
                                     </div>
 
                                     <div class="panel-body">
 
-                                        <table class="table table-bordered">
+                                        <div class ="row">
 
-                                            <thread>
+                                            <div class= "col-lg-12">
 
-                                                <tr>
+                                                <?php
+                                                //gets the document ids and their
+                                                $query = "SELECT d.documentId, dv.title, ds.statusName
+                                                 from ref_document_healthaid rdh
+                                                 join documents d 
+                                                 ON rdh.DOC_ID = d.documentId
+                                                 join doc_versions dv
+                                                 on d.documentId = dv.documentId
+                                                 join doc_status ds
+                                                 on d.statusId = ds.id
+                                                 WHERE rdh.RECORD_ID = {$checkForHealthAidApplication['RECORD_ID']}
+                                                 AND rdh.DOC_REF_TYPE = 2";
+                                                 $rows = $crud->getData($query);
 
-                                                    <td align="center"><b>Name</b></td>
-                                                    <td align="center"><b>Age</b></td>
-                                                    <td align="center"><b>Birthday</b></td>
 
-                                                </tr>
+                                                foreach((array) $rows as $key => $row){   ?>
 
-                                            </thread>
+                                                    <div class="row">
+                                                        <div class="col-lg-2"></div>
+                                                        <div class="col-lg-8" align="center">
+                                                            <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>">
+                                                                <button type="button" class="btn btn-success"><?php echo $row['title'] ?></button></a>
+                                                            <br>
+                                                            <br>
+                                                        </div>
+                                                        <div class="col-lg-2"></div>
 
-                                            <tbody>
+                                                    </div>
 
-                                            <tr>
 
-                                                <td align="center"><?php echo $row['FIRSTNAME'] . " " . $row['LASTNAME']; ?></td>
-                                                <td align="center"><?php echo $diff->format('%y'); ?></td>
-                                                <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
 
-                                            </tr>
-
-                                            </tbody>
-
-                                        </table>
-
+                                                <?php }?>
+                                            </div>
+                                        </div>
                                     </div>
-
                                 </div>
-                                <?php
-                                }
-                                ?>
+                            <?php }?>
 
 
-                                <?php
-
-                                    $query = "SELECT * FROM MOTHER WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
-                                    $result = mysqli_query($dbc, $query);
-                                    $row = mysqli_fetch_array($result);
-
-                                    $today = date("Y-m-d");
-                                    $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
-                                    $diff->format('%y');
-
-                                    if(!empty($row)) {
-                                        ?>
-
-
-                                        <div class="panel panel-primary">
-
-                                            <div class="panel-heading">
-
-                                                Mother's Information
-
-                                            </div>
-
-                                            <div class="panel-body">
-
-                                                <table class="table table-bordered">
-
-                                                    <thread>
-
-                                                        <tr>
-
-                                                            <td align="center"><b>Name</b></td>
-                                                            <td align="center"><b>Age</b></td>
-                                                            <td align="center"><b>Birthday</b></td>
-
-                                                        </tr>
-
-                                                    </thread>
-
-                                                    <tbody>
-
-                                                    <tr>
-
-
-                                                        <td align="center"><?php echo $row['FIRSTNAME'] . " " . $row['LASTNAME']; ?></td>
-                                                        <td align="center"><?php echo $diff->format('%y'); ?></td>
-                                                        <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
-
-                                                    </tr>
-
-                                                    </tbody>
-
-                                                </table>
-
-                                            </div>
-
-                                        </div>
-                                        <?php
-                                    }
-                                ?>
-
-                                <?php
-                                    $query = "SELECT * FROM SPOUSE WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
-                                    $result = mysqli_query($dbc, $query);
-                                    $row = mysqli_fetch_array($result);
-
-                                    $today = date("Y-m-d");
-                                    $diff = date_diff(date_create($row['BIRTHDATE']), date_create($today));
-
-                                    if(!empty($row)) {
-                                        ?>
-
-                                        <div class="panel panel-primary">
-
-                                            <div class="panel-heading">
-
-                                                Spouse's Information
-
-                                            </div>
-
-                                            <div class="panel-body">
-
-                                                <table class="table table-bordered">
-
-                                                    <thread>
-
-                                                        <tr>
-
-                                                            <td align="center"><b>Name</b></td>
-                                                            <td align="center"><b>Age</b></td>
-                                                            <td align="center"><b>Birthday</b></td>
-
-                                                        </tr>
-
-                                                    </thread>
-
-                                                    <tbody>
-
-                                                    <tr>
-
-
-                                                        <td align="center"><?php echo $row['FIRSTNAME'] . " " . $row['LASTNAME']; ?></td>
-                                                        <td align="center"><?php echo $diff->format('%y'); ?></td>
-                                                        <td align="center"><?php echo $row['BIRTHDATE']; ?></td>
-
-                                                    </tr>
-
-                                                    </tbody>
-
-                                                </table>
-
-                                            </div>
-
-                                        </div>
-                                        <?php
-                                    }
-                                ?>
-
-                                <?php
-                                    $query = "SELECT * FROM SIBLINGS WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
-                                    $result = mysqli_query($dbc, $query);
-                                    $row = mysqli_fetch_array($result);
-                                    if(!empty($row)) {
-                                        ?>
-
-
-                                        <div class="panel panel-primary">
-
-                                            <div class="panel-heading">
-
-                                                Sibling's Information
-
-                                            </div>
-
-                                            <div class="panel-body">
-
-                                                <table class="table table-bordered">
-
-                                                    <thread>
-
-                                                        <tr>
-
-                                                            <td align="center"><b>Name</b></td>
-                                                            <td align="center"><b>Age</b></td>
-                                                            <td align="center"><b>Birthday</b></td>
-
-                                                        </tr>
-
-                                                    </thread>
-
-                                                    <tbody>
-
-                                                    <tr>
-
-                                                        <?php
-
-
-                                                        foreach ($result as $resultRow) {
-                                                            $today = date("Y-m-d");
-                                                            $diff = date_diff(date_create($resultRow['BIRTHDATE']), date_create($today));
-
-                                                            echo "
-                                                                <tr>
-                                                                    <td align='center'>" . $resultRow['FIRSTNAME'] . " " . $resultRow['LASTNAME'] . "</td>
-                                                                    <td align='center'>" . $diff->format('%y') . "</td>
-                                                                    <td align='center'>" . $resultRow['BIRTHDATE'] . "</td>
-                                                                </tr>
-                                                            ";
-                                                        }
-                                                        ?>
-
-                                                    </tr>
-
-                                                    </tbody>
-
-                                                </table>
-
-                                            </div>
-
-                                        </div>
-                                        <?php
-                                    }
-                                ?>
-
-                                <?php
-                                    $query = "SELECT * FROM CHILDREN WHERE MEMBER_ID =" . $_SESSION['idnum'].";";
-                                    $result = mysqli_query($dbc, $query);
-                                    $row = mysqli_fetch_array($result);
-
-                                    if(!empty($row)) {
-                                        ?>
-
-
-                                        <div class="panel panel-primary">
-
-                                            <div class="panel-heading">
-
-                                                Children's Information
-
-                                            </div>
-
-                                            <div class="panel-body">
-
-                                                <table class="table table-bordered">
-
-                                                    <thread>
-
-                                                        <tr>
-
-                                                            <td align="center"><b>Name</b></td>
-                                                            <td align="center"><b>Age</b></td>
-                                                            <td align="center"><b>Birthday</b></td>
-
-                                                        </tr>
-
-                                                    </thread>
-
-                                                    <tbody>
-
-                                                    <tr>
-
-                                                        <?php
-
-                                                        foreach ($result as $resultRow) {
-                                                            $today = date("Y-m-d");
-                                                            $diff = date_diff(date_create($resultRow['BIRTHDATE']), date_create($today));
-
-                                                            echo "
-                                                                <tr>
-                                                                    <td align='center'>" . $resultRow['FIRSTNAME'] . " " . $resultRow['LASTNAME'] . "</td>
-                                                                    <td align='center'>" . $diff->format('%y') . "</td>
-                                                                    <td align='center'>" . $resultRow['BIRTHDATE'] . "</td>
-                                                                </tr>
-                                                            ";
-                                                        }
-                                                        ?>
-
-                                                    </tr>
-
-                                                    </tbody>
-
-                                                </table>
-
-                                            </div>
-
-                                        </div>
-                                        <?php
-                                    }
-                                ?>
-
-                                </div>
-
-                            </div>
-
-                            </div>
-
-                        </div>
 
                     </div>
 
-                </div>
-
-                <div class="row">
-
-                    <div class="col-lg-12" align="center">
-
-                         <a href="MEMBER dashboard.php" class="btn btn-default" role="button">Go Back</a>
-
-                    </div>
 
                 </div>
+            <?php } ?>
 
-                <div class="row">
-
-                    <div class="col-lg-12">
-                        &nbsp;
-                    </div>
-
-                </div>
-
-                <!-- /.row -->
-
-            </div>
-            <!-- /.container-fluid -->
 
         </div>
-        <!-- /#page-wrapper -->
+
+    </div>
+
+
+    </div>
+    <!-- /.container-fluid -->
+
+    </div>
+    <!-- /#page-wrapper -->
 
 <?php include 'GLOBAL_FOOTER.php' ?>

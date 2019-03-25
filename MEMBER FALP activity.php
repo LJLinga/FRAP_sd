@@ -1,21 +1,51 @@
 <?php
     require_once ("mysql_connect_FA.php");
     session_start();
+    error_reporting(0);
     include 'GLOBAL_USER_TYPE_CHECKING.php';
 
 
-    $query = "SELECT MAX(LOAN_ID), LOAN_STATUS from loans where member_id = {$_SESSION['idnum']} ";
+    $query = "SELECT * from loans where member_id = {$_SESSION['idnum']} && loan_status != 3 && app_status != 3 ORDER BY LOAN_ID DESC LIMIT 1";
     $result = mysqli_query($dbc,$query);
     $row = mysqli_fetch_assoc($result);
 
-    if($row['LOAN_STATUS'] == 1){ //checks if you have a pending loan
+    $queryIfPartTimeLoaned = "SELECT PART_TIME_LOANED from member  where member_id = {$_SESSION['idnum']} ";
+    $resultIfPartTimeLoaned  = mysqli_query($dbc,$queryIfPartTimeLoaned );
+    $ifPartTimeLoaned= mysqli_fetch_assoc($resultIfPartTimeLoaned);
 
-        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP failed.php");
+    if(!empty($row)){
+
+        if($row['LOAN_STATUS'] == 1){ //checks if you have a pending loan
+
+            header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
+
+        } else if($row['LOAN_STATUS'] == 2 ) { //checks if you have a loan that is ongoing.
+
+//            if ($row['PAYMENT_TERMS'] > $row['PAYMENTS_MADE']){ //checks if the loan is 50%
+//
+//
+//                $_SESSION['GLOBAL_MESSAGE'] = ' Your Loan has not been paid to 50% yet.  ';
+//
+//                header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
+//
+//
+//            }
+
+        }
 
     }
+
+    if($ifPartTimeLoaned['PART_TIME_LOANED'] == "YES"){
+
+        $_SESSION['GLOBAL_MESSAGE'] = ' You cannot loan again for this month. Please wait for another term before you can loan again. ';
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
+
+    }
+
+
     
-    $query = "SELECT * FROM LOANS where MEMBER_ID = {$_SESSION['idnum']} 
-               AND 	loan_status != 3 ";
+    $query = "SELECT * FROM LOANS where MEMBER_ID = {$_SESSION['idnum']} ORDER  BY LOAN_ID DESC LIMIT 1";
     $result = mysqli_query($dbc,$query);
     $ans = mysqli_fetch_assoc($result);
 

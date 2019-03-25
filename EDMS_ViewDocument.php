@@ -14,10 +14,10 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 
 $edmsRole = $_SESSION['EDMS_ROLE'];
 $userId = $_SESSION['idnum'];
-$read = 2;
-$write = 1;
-$route = 1;
-$comment = 1;
+//$read = 2;
+//$write = 1;
+//$route = 1;
+//$comment = 1;
 
 
 
@@ -303,7 +303,7 @@ include 'EDMS_SIDEBAR.php';
                                     echo '<button type="button" class="btn btn-default" id="btnUpload" data-toggle="modal" data-target="#uploadModal" style="text-align: left; width: 100%;">Upload New Version</button>';
                                 }
 
-                                echo $edmsRole.','.$read.','.$write.','.$route;
+                                //echo $edmsRole.','.$read.','.$write.','.$route;
                                 ?>
                                 <a href="<?php echo $filePath?>" download><button type="button" class="btn btn-default" style="text-align: left; width: 100%;">Download</button></a>
                                 <button type="button" name="btnArchive" class="btn btn-default" style="text-align: left; width: 100%;">Archive</button>

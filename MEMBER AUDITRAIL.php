@@ -58,11 +58,10 @@
                             </div>
                             <?php
 
-                                $query = "SELECT tr.TXN_DATE,tr.TXN_DESC, tr.AMOUNT, tt.TYPE, e.FIRSTNAME, e.LASTNAME  FROM txn_reference tr
+                                $query = "SELECT tr.TXN_DATE,tr.TXN_DESC, tr.AMOUNT, tt.TYPE
+                                          FROM txn_reference tr
                                           join txn_type tt
                                           on tr.txn_type = tt.type_id
-                                          join employee e
-                                          on tr.EMP_ID = e.EMP_ID
                                           WHERE tr.MEMBER_ID =" . $_SESSION['idnum'].";";
 
 
@@ -85,7 +84,6 @@
                                             <td align="center"><b> Transaction Type </b></td>
                                             <td align="center"><b> Transaction Description </b></td>
                                             <td align="center"><b> Amount </b></td>
-                                            <td align="center"><b>  Employee Involved </b></td>
 
                                         </tr>
 
@@ -104,7 +102,6 @@
                                             <td align="center"><?php echo $row['TYPE'];?> </td>
                                             <td align="center"><?php echo $row['TXN_DESC'];?></td>
                                             <td align="center"><?php echo $row['AMOUNT'];?></td>
-                                            <td align="center">&nbsp;<?php echo $row['FIRSTNAME']." ".$row['LASTNAME'];  ?></td>
 
                                         </tr>
                                     <?php }?>

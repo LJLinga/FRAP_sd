@@ -28,7 +28,7 @@
 //MENTAL NOTE TO SELF..... DAPAT AYUSIN WHEN THELOAN STARTS! Loans should start when it is APPROVED! just keep this code here for now as placeholder.
 
     $query = "INSERT INTO loans(MEMBER_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED)
-    values({$_SESSION['idnum']},{$_POST['amount']},{$_POST['interest']},{$_POST['payT']},{$_POST['amountP']},{$_POST['monD']}/2,1,1,DATE(now()));";
+    values({$_SESSION['idnum']},{$_POST['amount']},{$_POST['interest']},{$_POST['payT']},{$_POST['amountP']},{$_POST['monD']}/2,1,1);";
 
     mysqli_query($dbc,$query);
 
