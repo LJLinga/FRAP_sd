@@ -77,8 +77,7 @@ if(!empty($_FILES['upload_file'])){
 
 
                 //insert query for the docs
-                $insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, stepId, statusedById, typeId, statusId) VALUES ('$userId', '$stepId','$userId','$typeId','$statusId')");
-                $crud->execute("INSERT into doc_versions (documentId, authorId, versionNo, title, filePath) VALUES ('$insertDocument','$userId','1.0','$title','$uploadPath')");
+                $insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, authorId, stepId, typeId, statusId, versionNo, filePath, title) VALUES ('$userId','$userId','$stepId','$typeId','$statusId','1.0','$uploadPath','$title')");
                 echo $insertDocument;
 
                 //insert query for the reference documents

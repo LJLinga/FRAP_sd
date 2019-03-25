@@ -141,12 +141,10 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                         <?php
                         //gets the document ids and their
-                        $query = "SELECT d.documentId, dv.title, d.statusId,ds.statusName
+                        $query = "SELECT d.documentId, d.title, d.statusId,ds.statusName
                                          from ref_document_healthaid rdh
                                          join documents d 
                                          ON rdh.DOC_ID = d.documentId
-                                         join doc_versions dv
-                                         on d.documentId = dv.documentId
                                          join doc_status ds
                                          on d.statusId = ds.id
                                          WHERE rdh.RECORD_ID = {$checkForHealthAidApplication['RECORD_ID']}
@@ -180,8 +178,6 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                              from ref_document_healthaid rdh
                                              join documents d 
                                              ON rdh.DOC_ID = d.documentId
-                                             join doc_versions dv
-                                             on d.documentId = dv.documentId
                                              join doc_status ds
                                              on d.statusId = ds.id
                                              WHERE rdh.RECORD_ID = {$checkForHealthAidApplication['RECORD_ID']}

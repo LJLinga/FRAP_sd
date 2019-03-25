@@ -18,7 +18,7 @@
     include 'GLOBAL_HEADER.php';
     include 'FRAP_USER_SIDEBAR.php';
 
-    $query = "SELECT * FROM LOANS where MEMBER_ID = {$_SESSION['idnum']} ORDER BY LOAN_ID DESC LIMIT 1";
+    $query = "SELECT * FROM LOANS where MEMBER_ID = {$_SESSION['idnum']} && APP_STATUS != 3 && PICKUP_STATUS != 4 ORDER BY LOAN_ID DESC LIMIT 1 ";
     $result = mysqli_query($dbc,$query);
     $ans = mysqli_fetch_assoc($result);
 
@@ -86,12 +86,6 @@
 
                 <div class="row">
 
-                    <div class="col-lg-12">
-                        <?php if($_SESSION['GLOBAL_MESSAGE']){?>
-                            <div class="alert alert-warning">
-                                <strong><?php echo $_SESSION['GLOBAL_MESSAGE'] ?></strong>
-                            </div>
-                        <?php }?></div>
 
                 </div>
 
@@ -321,12 +315,10 @@
 
                                             <?php
                                             //gets the document ids and their
-                                            $query = "SELECT d.documentId, dv.title, ds.statusName, rdlrq.REQ_TYPE
+                                            $query = "SELECT d.documentId, d.title, ds.statusName, rdlrq.REQ_TYPE
                                              from ref_document_loans rdl
                                              join documents d 
                                              ON rdl.DOC_ID = d.documentId
-                                             join doc_versions dv
-                                             on d.documentId = dv.documentId
                                              join doc_status ds
                                              on d.statusId = ds.id
                                              join ref_document_loans_req_type rdlrq
@@ -342,7 +334,7 @@
                                                     <td align='center'> <?php echo $row['statusName'] ?></td>
                                                     <td align='center'> <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>">
 
-                                                            <button type="button" class="btn btn-success"><i class="fa fa-search" aria-hidden="true"></i></button></a></td>
+                                                            <button type="button" class="btn btn-success" ><i class="fa fa-search" aria-hidden="true"></i> </button></a></td>
                                                 </tr>
                                             <?php }?>
 
@@ -412,12 +404,10 @@
                                         <div class="panel-body">
                                             <?php
                                             //gets the document ids and their
-                                            $query = "SELECT d.documentId, dv.title, ds.statusName
+                                            $query = "SELECT d.documentId, d.title, ds.statusName
                                                  from ref_document_loans rdl
                                                  join documents d 
                                                  ON rdl.DOC_ID = d.documentId
-                                                 join doc_versions dv
-                                                 on d.documentId = dv.documentId
                                                  join doc_status ds
                                                  on d.statusId = ds.id
                                                  WHERE rdl.LOAN_ID = {$ans['LOAN_ID']}
@@ -431,7 +421,7 @@
                                                     <div class="col-lg-2"></div>
                                                     <div class="col-lg-8" align="center">
                                                         <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>">
-                                                            <button type="button" class="btn btn-success"></button></a>
+                                                            <button type="button" class="btn btn-success">Receipt for FALP</button></a>
                                                         <br>
                                                         <br>
                                                     </div>

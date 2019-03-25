@@ -99,12 +99,10 @@ include 'FRAP_USER_SIDEBAR.php';
 
                                     <?php
                                     //gets the document ids and their
-                                    $query = "SELECT d.documentId, dv.title, ds.statusName
+                                    $query = "SELECT  d.documentId,d.title, ds.statusName
                                          from ref_document_healthaid rdh
                                          join documents d 
                                          ON rdh.DOC_ID = d.documentId
-                                         join doc_versions dv
-                                         on d.documentId = dv.documentId
                                          join doc_status ds
                                          on d.statusId = ds.id
                                          WHERE rdh.RECORD_ID = {$checkForHealthAidApplication['RECORD_ID']}
