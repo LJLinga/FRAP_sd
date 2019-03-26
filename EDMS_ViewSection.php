@@ -450,23 +450,5 @@ include 'EDMS_SIDEBAR.php';
     });
 
 
-    // function preview(timeCreated){
-    //
-    //     var options = {
-    //         modal : true,
-    //         height : 300,
-    //         width : 500
-    //     };
-    //     $('#previewModal.modal-body').load('EDMS_SectionPreview.php?timeCreated='+timeCreated,
-    //         function() {
-    //             $('#previewModal').modal({
-    //                 show : true
-    //             });
-    //         });
-    //     //alert(timeCreated);
-    // }
-
-
-
 </script>
 <?php include 'GLOBAL_FOOTER.php' ?>

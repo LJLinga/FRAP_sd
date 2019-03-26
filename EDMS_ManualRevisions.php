@@ -173,11 +173,11 @@ include 'EDMS_SIDEBAR.php';
                             foreach((array)$rows AS $key => $row){
                                 echo '<div class="card">';
                                 echo '<div class="card-body">';
-                                echo $row['processName'].' -> Step '.$row['stepNo'].' '.$row['name'].'<br>';
+                                echo $row['processName'].' <i class="fa fa-arrow-right"></i> Step '.$row['stepNo'].' - '.$row['name'].'<br>';
                                 echo '</div></div>';
                             }
                         }else{
-                            echo 'You have no workflows.';
+                            echo 'You have no workflows but is still able to submit documents to their respective workflows.';
                         }
                         ?>
                     </div>

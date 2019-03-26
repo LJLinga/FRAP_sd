@@ -313,9 +313,9 @@ include 'EDMS_SIDEBAR.php';
                     </div>
                 </div>
                 <?php
-                    $query = "SELECT v.timeCreated, v.versionNo, v.title, v.filePath, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
+                    $query = "SELECT v.timeCreated, v.versionId as vid, v.versionNo, v.title, v.filePath, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
                               FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
-                              WHERE v.documentId = '$documentId' AND v.timeCreated < '$timeUpdated' ORDER BY v.timeCreated DESC;";
+                              WHERE v.documentId = '$documentId' AND v.versionNo < '$versionNo' ORDER BY v.timeCreated DESC;";
                     $rows = $crud->getData($query);
                     if (!empty($rows)) {
 

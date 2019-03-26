@@ -83,7 +83,7 @@ $userName = $rows[0]['name'];
             <div class="col-lg-4">
                 <div class="panel panel-green">
                     <div class="panel-heading">
-                        Your <b>
+                        <b>
                         <?php
                             $rows = $crud->getData("SELECT roleName FROM edms_roles WHERE id = ".$_SESSION['EDMS_ROLE']." LIMIT 1;");
                             echo $rows[0]['roleName'];
@@ -92,7 +92,7 @@ $userName = $rows[0]['name'];
                     </div>
                     <div class="panel-body">
                         <?php
-                            $rows = $crud->getData("SELECT  pr.processName, s.stepNo, s.stepName AS name 
+                        $rows = $crud->getData("SELECT  pr.processName, s.stepNo, s.stepName AS name 
                                                 FROM employee e 
                                                 JOIN edms_roles er ON e.EDMS_ROLE = er.id 
                                                 JOIN step_roles sr ON sr.roleId = er.id
@@ -100,12 +100,16 @@ $userName = $rows[0]['name'];
                                                 JOIN process pr ON pr.id = s.processId
                                                 WHERE e.EMP_ID = '$userId'
                                                 ORDER BY pr.processName, s.stepNo");
+                        if(!empty($rows)){
                             foreach((array)$rows AS $key => $row){
                                 echo '<div class="card">';
                                 echo '<div class="card-body">';
-                                echo $row['processName'].' -> Step '.$row['stepNo'].' '.$row['name'].'<br>';
+                                echo $row['processName'].' <i class="fa fa-arrow-right"></i> Step '.$row['stepNo'].' - '.$row['name'].'<br>';
                                 echo '</div></div>';
                             }
+                        }else{
+                            echo 'You have no workflows but is still able to submit documents to their respective workflows.';
+                        }
                         ?>
                     </div>
                 </div>
