@@ -152,7 +152,7 @@ include 'EDMS_SIDEBAR.php';
             <div class="col-lg-4">
                 <div class="panel panel-green">
                     <div class="panel-heading">
-                        Your <b>
+                        <b>
                             <?php
                             $rows = $crud->getData("SELECT roleName FROM edms_roles WHERE id = ".$_SESSION['EDMS_ROLE']." LIMIT 1;");
                             echo $rows[0]['roleName'];
