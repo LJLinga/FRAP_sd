@@ -184,6 +184,8 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
     $(document.getElementById("cpass")).keyup(function(){
          var pass = document.getElementById("pass").value;
          var cpass = document.getElementById("cpass").value;
+         var format = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+         var format2 = /[0-9]+/;
          if(pass.length <8){
             document.getElementById("chk").innerHTML = '<font  color = "red">Password is less than 8 characters</font>';
             return;
