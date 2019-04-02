@@ -74,7 +74,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
-                           New Deductions
+                           New Deductions 
                         </h1>
                     
                     </div>
@@ -94,10 +94,10 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                             <div class="panel-heading">
 
-                                <b>View Report for <?php if(isset($yearStart)){echo date('d F', mktime(0, 0, 0, $monthStart, $dayStart)).' '.$yearStart;
+                                <b>View Report for <?php if(isset($yearStart)){echo date('F Y', mktime(0, 0, 0, $monthStart+1, $dayStart,$yearStart));
                                 if(isset($yearEnd)){
 
-                                    echo ' - '.date('d F', mktime(0, 0, 0, $monthEnd, $dayEnd)).' '.$yearEnd;
+                                    echo ' - '.date('F Y', mktime(0, 0, 0, $monthEnd, $dayEnd,$yearEnd));
 
                                 }}else{
                                     echo "Latest Date";
