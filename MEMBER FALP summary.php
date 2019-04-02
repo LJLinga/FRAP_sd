@@ -18,7 +18,7 @@
     include 'GLOBAL_HEADER.php';
     include 'FRAP_USER_SIDEBAR.php';
 
-    $query = "SELECT * FROM LOANS where MEMBER_ID = {$_SESSION['idnum']} && APP_STATUS != 3 && PICKUP_STATUS != 4 ORDER BY LOAN_ID DESC LIMIT 1 ";
+    $query = "SELECT * FROM LOANS where MEMBER_ID = {$_SESSION['idnum']}  ORDER BY LOAN_ID DESC LIMIT 1 ";
     $result = mysqli_query($dbc,$query);
     $ans = mysqli_fetch_assoc($result);
 

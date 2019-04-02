@@ -47,7 +47,7 @@ if(isset($_POST['reject'])){
 
         $userId = $_SESSION['idnum'];
         $title = $_FILES['upload_file']['name'][$key];
-        $typeId = 99; // check the db for what type is needed for this. 99 is for misc
+        $typeId = 6; // check the db for what type is needed for this. 99 is for misc
 
         $file_name = $_FILES['upload_file']['name'][$key];
         $file_size =$_FILES['upload_file']['size'][$key];

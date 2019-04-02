@@ -17,9 +17,15 @@ if(isset($_POST['btnPublish'])){
 
     $manualId = $crud->executeGetKey("INSERT INTO faculty_manual (year, title, publishedById) VALUES ('$year','$title','$publishedById');");
 
-    $rows = $crud->execute("SELECT v.timeCreated, v.sectionId FROM facultyassocnew.section_versions v 
+//    $rows = $crud->execute("SELECT v.timeCreated, v.sectionId FROM facultyassocnew.section_versions v
+//                                    WHERE v.timeCreated = (SELECT MAX(v2.timeCreated) FROM section_versions v2 WHERE v.sectionId = v2.sectionId)
+//                                    AND v.statusId = 2");
+
+    $rows = $crud->execute("SELECT v.timeCreated, v.sectionId
+                                    FROM facultyassocnew.section_versions v 
+                                    JOIN sections s ON s.id = v.sectionId
                                     WHERE v.timeCreated = (SELECT MAX(v2.timeCreated) FROM section_versions v2 WHERE v.sectionId = v2.sectionId)
-                                    AND v.statusId = 2");
+                                    AND s.statusId = 2");
 
     foreach((array)$rows AS $key=>$row){
         $sectionId = $row['sectionId'];

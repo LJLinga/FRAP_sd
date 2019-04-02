@@ -42,7 +42,6 @@
 
 session_start();
 require_once("mysql_connect_FA.php");
-include 'GLOBAL_USER_TYPE_CHECKING.php';
 
 
 
@@ -54,12 +53,13 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
 
     if (isset($_POST['submit'])) {
 
-            $query = "UPDATE MEMBER_ACCOUNT SET password = password({$_POST['pass']}), FIRST_CHANGE_PW = 2 WHERE MEMBER_ID = {$_SESSION['idnum']}";
+            $query = "UPDATE employee SET pass_word = password('{$_POST['pass']}'), FIRST_CHANGE_PW = 2 WHERE MEMBER_ID = {$_SESSION['idnum']}";
             mysqli_query($dbc,$query);
             session_destroy();
-             header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/FA_Change_PW.php");
+            header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
     
-  }
+    }
+
  $page_title = 'Profile ';
 
 
@@ -103,7 +103,7 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
                         
                         <!--Insert success page--> 
                         
-                        <form method="POST" action="FA_Change_PW.php" id="addAccount" onSubmit="return checkform()">
+                        <form method="POST" action="FA_Change_PW.php" onSubmit="return checkform()">
 
                             <div class="panel panel-green" name = "personalInfo">
 
@@ -120,11 +120,11 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
 
                                         <div class="col-lg-12">
                                                 <span class="labelspan"><b>New Password </b><big class="req"> *</big></span>
-                                                <input type="password"  class="form-control memname" placeholder="new password" name="pass" id = "pass" font size = 9>
+                                                <input type="password"  class="form-control memname" placeholder="new password" name="pass" id = "pass" font size = 9 required>
                                                 </label>
 
                                                 <span class="labelspan"><b>Confirm Password </b><big class="req"> *</big></span>
-                                                <input type="password"  class="form-control memname" placeholder="new password" name="cpass" id = "cpass" font size = 9>
+                                                <input type="password"  class="form-control memname" placeholder="new password" name="cpass" id = "cpass" font size = 9 required>
                                                 </label>
                                                 <div id = "chk"></div>
 
@@ -137,7 +137,7 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
                                   </div>
                             
 
-                            <input id = "submit"  type="submit" name="submit" value="Sumbit" disabled></p>
+                            <input id = "submit"  type="submit" name="submit" value="Sumbit" disabled></div>
 
                        </form>
 

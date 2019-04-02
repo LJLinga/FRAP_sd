@@ -39,7 +39,7 @@
 </head>
 
 <?php
-
+error_reporting(0);
 session_start();
 require_once("mysql_connect_FA.php");
 
@@ -251,10 +251,7 @@ $success = null;
 
                     $result = mysqli_query($dbc,$query1); 
 
-                    $pw = "password";
 
-                    $query2 = "INSERT INTO MEMBER_ACCOUNT (MEMBER_ID, PASSWORD, FIRST_CHANGE_PW) VALUES ('{$idNum}', PASSWORD('{$pw}'), '0');";
-                    $result2 = mysqli_query($dbc, $query2);
                 if(isset($_POST['hasFALP'])){
                     $falpPaid = '0';
                     
@@ -298,6 +295,8 @@ $success = null;
                 if(!empty($row)){
                   $success = "yes";
                 }
+
+
 
             }
 
@@ -370,7 +369,7 @@ $success = null;
                                                 <input type="text" minlength = "8" maxlength="8" class="form-control memname" id = "idNum" placeholder="e.g. 09000000" name="idNum" <?php if(isset($_POST['idNum'])){
                                                     echo "value = '{$_POST['idNum']}'";
                                                 } ?>
-                                                > 
+                                                       required>
                                                 </label>
                                                 <label ><div  id="chk"></div></label>
                                                     <br>
@@ -378,14 +377,14 @@ $success = null;
                                                 <span class="labelspan">Last Name<big class="req"> *</big>
                                                 <input type="text" class="form-control memname" placeholder="Last Name" name="lName" <?php if(isset($_POST['lName'])){
                                                   echo "value = '{$_POST['lName']}'";
-                                                } ?>>
+                                                } ?> required>
                                                 </label>
 
                                                 <label>
                                                 <span class="labelspan">First Name<big class="req"> *</big></span>
                                                 <input type="text" class="form-control memname" placeholder="First Name" name="fName"  <?php if(isset($_POST['fName'])){
                                                     echo "value = '{$_POST['fName']}'";
-                                                } ?>>
+                                                } ?> required>
                                                 </label>
 
                                                 <label>
@@ -399,7 +398,7 @@ $success = null;
                                                 <span class="labelspan">DLSU Email<big class="req"> *</big>
                                                 <input type="text" class="form-control memname" placeholder="Email" name="email" <?php if(isset($_POST['email'])){
                                                   echo "value = '{$_POST['email']}'";
-                                                } ?>>
+                                                } ?> required>
                                                 </label>
 
                                                
@@ -415,7 +414,7 @@ $success = null;
                                         <div class="col-lg-2">
 
                                                 <label class="memfieldlabel">Civil Status</label>
-                                                <select class="form-control" name ="civStat">
+                                                <select class="form-control" name ="civStat" required>
 
                                                     <?php foreach($resultCiv as $civstatusArray) { ?>
 
@@ -433,10 +432,10 @@ $success = null;
 
                                         <div class="col-lg-12">
 
-                                                <p id="dbirthlabel"><b>Date of Birth</b><big class="req"> *</big></p>
+                                                <p id="dbirthlabel"><b>Date of Birth</b><big class="req" > *</big></p>
 
                                                 <label class="memfieldlabel">Year</label>
-                                                <select class="form-control datedropdown"  name =  "bYear">
+                                                <select class="form-control datedropdown"  name =  "bYear" required>
 
                                                     <?php for($y = date("Y"); $y >= 1900; $y--) { ?>
 
@@ -448,7 +447,7 @@ $success = null;
 
 
                                                 <label class="memfieldlabel">Month</label>
-                                                <select class="form-control datedropdown" name =  "bMonth">
+                                                <select class="form-control datedropdown" name =  "bMonth" required>
 
                                                    <option value = 1>January</option>
                                                     <option value = 2>February</option>
@@ -466,7 +465,7 @@ $success = null;
                                                 </select>
 
                                                 <label class="memfieldlabel">Day</label>
-                                                <select class="form-control datedropdown"  name =  "bDay">
+                                                <select class="form-control datedropdown"  name =  "bDay" required>
 
                                                     <?php for($x = 1; $x <= 31; $x++) { ?>
 
@@ -488,7 +487,7 @@ $success = null;
 
                                             <p id="glabel"><b>Sex</b></p>
                                             <div class="radio">
-                                                <label><input type="radio" name="sex" value = "male">Male</label>
+                                                <label><input type="radio" name="sex" value = "male" required>Male</label>
                                             </div>
 
                                             <div class="radio" >
@@ -635,7 +634,7 @@ $success = null;
                                         <div class="col-lg-2">
 
                                                 <label class="memfieldlabel">Employment Status</label>
-                                                <select class="form-control" name ="empStat">
+                                                <select class="form-control" name ="empStat" >
 
                                                     
                                                         <option>Probationary</option>

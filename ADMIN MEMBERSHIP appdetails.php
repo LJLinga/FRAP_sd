@@ -174,7 +174,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                         <div class="panel-heading">
 
-                                            <b>Personal Information <?php echo $query ;?><p></b>
+                                            <b>Personal Information <?php  ;?><p></b>
 
                                         </div>
 

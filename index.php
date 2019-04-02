@@ -124,7 +124,7 @@
                     $_SESSION['FRAP_ROLE'] =  $result['FRAP_ROLE'];
                     $_SESSION['CMS_ROLE'] =  $result['CMS_ROLE'];
                     $_SESSION['EDMS_ROLE'] =  $result['EDMS_ROLE'];
-                    //$_SESSION['SYS_ROLE'] =  $result['SYS_ROLE'];
+                    $_SESSION['SYS_ROLE'] =  $result['SYS_ROLE'];
 
                  header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/FA_Change_PW.php");
 

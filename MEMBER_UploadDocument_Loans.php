@@ -33,7 +33,7 @@ if(!empty($_FILES['upload_file'])){
 
         $userId = $_SESSION['idnum'];
         $title = $_FILES['upload_file']['name'][$key];
-        $typeId = 6; // check the db for what type is needed for this. 5 is for Health aid
+        $typeId = 2; // check the db for what type is needed for this. 5 is for Health aid
 
         $file_name = $_FILES['upload_file']['name'][$key];
         $file_size =$_FILES['upload_file']['size'][$key];

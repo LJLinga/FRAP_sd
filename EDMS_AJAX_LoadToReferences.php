@@ -32,7 +32,7 @@ $crud = new GLOBAL_CLASS_CRUD();
                 JOIN steps s ON s.id = d.stepId
                 JOIN process pr ON pr.id = s.processId
                 WHERE v.versionId = (SELECT MAX(v2.versionId) FROM doc_versions v2 WHERE v2.documentId = d.documentId)
-                AND (t.id = 4 OR t.id = 5)
+                AND (t.id = 1 OR t.id = 5 OR t.id = 8)
                 AND stat.id = 2
                 $append");
 

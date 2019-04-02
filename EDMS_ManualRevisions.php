@@ -122,10 +122,10 @@ include 'EDMS_SIDEBAR.php';
                         <div class="btn-group">
                         <a type="button" class="btn btn-default" id="btnAll" onclick="searchTable('')">All</a>
                         <?php
-                        $rows = $crud->getData("SELECT status FROM facultyassocnew.section_status;");
+                        $rows = $crud->getData("SELECT status FROM facultyassocnew.section_status WHERE id!= 4;");
                         if(!empty($rows)){
                             foreach((array) $rows as $key => $row){
-                                echo '<a type="button" class="btn btn-default" onclick="searchTable(&quot;'.$row['status'].'&quot;)">'.$row['status'].'</a>';
+                                echo '<a type="button" class="btn btn-default" onclick="searchTable(&quot;'.$row['status'].'&quot;,&quot;3&quot;)">'.$row['status'].'</a>';
                             }
                         }
                         ?>
@@ -256,21 +256,21 @@ include 'EDMS_SIDEBAR.php';
 </div>
 <script>
 
-    $('table.table').DataTable( {
-        "ajax": {
-            "url":"EDMS_AJAX_FetchSections.php",
-            "type":"POST",
-            "data":{ role: '<?php echo $edmsRole;?>'},
-            "dataSrc": ''
-        },
-        columns: [
-            { data: "section_no" },
-            { data: "title" },
-            { data: "modified_by" },
-            { data: "status" },
-            { data: "action" },
-        ]
-    } );
+//    $('table.table').DataTable( {
+//        "ajax": {
+//            "url":"EDMS_AJAX_FetchSections.php",
+//            "type":"POST",
+//            "data":{ role: '<?php //echo $edmsRole;?>//'},
+//            "dataSrc": ''
+//        },
+//        columns: [
+//            { data: "section_no" },
+//            { data: "title" },
+//            { data: "modified_by" },
+//            { data: "status" },
+//            { data: "action" },
+//        ]
+//    } );
 
     $(document).ready(function(){
         $('#datetimepicker1').datetimepicker( {
@@ -280,6 +280,36 @@ include 'EDMS_SIDEBAR.php';
             format: 'YYYY'
         });
     });
+
+    searchTable('',3);
+
+    function searchTable(searchText, col){
+        let table = $('table.table').DataTable( {
+            bSort: false,
+            destroy: true,
+            pageLength: 5,
+            "ajax": {
+                "url":"EDMS_AJAX_FetchSections.php",
+                "type":"POST",
+                "data":{ role: '<?php echo $edmsRole;?>'},
+                "dataSrc": ''
+            },
+            columns: [
+                { data: "section_no" },
+                { data: "title" },
+                { data: "modified_by" },
+                { data: "status" },
+                { data: "action" },
+            ]
+        });
+        if(searchText === 'All'){
+            searchText = '';
+        }
+        table.column(col).search(searchText).draw();
+        // setInterval(function(){
+        //     table.ajax.reload();
+        // },1000)
+    }
 </script>
 
 <?php include 'GLOBAL_FOOTER.php';?>

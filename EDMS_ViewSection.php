@@ -226,7 +226,7 @@ include 'EDMS_SIDEBAR.php';
 
                         if(!empty($rows)) {
                             echo '<div class="card" style="margin-top: 1rem;">
-                                        <div class="card-header"><b>Referenced Minutes</b></div>
+                                        <div class="card-header"><b>Referenced Minutes and Appendices</b></div>
                                         <div class="card-body">';
                             foreach ((array)$rows as $key => $row) {
                                 $title = $row['title'];
