@@ -134,12 +134,11 @@ $middle = $row['Middle'];
 $pdf->Cell(45);
 $pdf->Cell(20,5,$row['ID']	,'L,B,R',0,'C');
 $pdf->Cell(50	,5,"$last, $first $middle"	,'L,B,R',0,'L');
-if($row['Ref']=="1"){
+
     $pdf->Cell(30   ,5,"FALP Loan"   ,'L,B,R',0,'C');
 
-}
-else
-    $pdf->Cell(30   ,5,"Bank Loan" ,'L,B,R',0,'C');
+
+
 
 $total= 0.00;	
 
