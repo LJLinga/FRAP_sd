@@ -15,13 +15,20 @@ if(isset($_POST['role'])){
 
     $role = $_POST['role'];
 
+//    $query = "SELECT s.*, CONCAT(e.LASTNAME, ', ',e.FIRSTNAME) AS authorName, st.stepNo, st.stepName, stat.status
+//                FROM sections s
+//                JOIN employee e ON e.EMP_ID = s.authorId
+//                JOIN section_status stat ON stat.id = s.statusId
+//                JOIN steps st ON st.id = s.stepId
+//                JOIN step_roles sr ON sr.stepId = st.id
+//                WHERE sr.roleId = '$role' AND sr.read = 2 ORDER BY s.sectionNo;
+//                ";
+
     $query = "SELECT s.*, CONCAT(e.LASTNAME, ', ',e.FIRSTNAME) AS authorName, st.stepNo, st.stepName, stat.status 
                 FROM sections s 
                 JOIN employee e ON e.EMP_ID = s.authorId
                 JOIN section_status stat ON stat.id = s.statusId
-                JOIN steps st ON st.id = s.stepId 
-                JOIN step_roles sr ON sr.stepId = st.id
-                WHERE sr.roleId = '$role' AND sr.read = 2 ORDER BY s.sectionNo;
+                JOIN steps st ON st.id = s.stepId ORDER BY s.sectionNo;
                 ";
 
     $rows = $crud->getData($query);
@@ -31,7 +38,7 @@ if(isset($_POST['role'])){
             'section_no' => $row['sectionNo'],
             'title' => $row['title'],
             'modified_by' => $row['authorName'],
-            'status' => $row['status'],
+            'status' => $row['status'].' <br>('.$row['stepName'].')',
             'action' => '<a type="button" class="btn btn-primary" href="http://localhost/FRAP_sd/EDMS_ViewSection.php?secId='.$row['id'].'"> View </a>'
             );
 

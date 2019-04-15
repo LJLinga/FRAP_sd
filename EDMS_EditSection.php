@@ -144,7 +144,7 @@ include 'EDMS_SIDEBAR.php';
                     <div class="column col-lg-7">
                         <!-- Text input-->
                         <div class="form-group">
-                            <label for="section_number">Section Number</label>
+                            <label for="section_number">Section Marker</label>
                             <input id="section_number" name="section_number" type="text" class="form-control input-md" value="<?php echo $sectionNo;?>"required>
                         </div>
                         <div class="form-group">

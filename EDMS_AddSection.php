@@ -4,7 +4,7 @@ $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
-include('GLOBAL_CMS_ADMIN_CHECKING.php');
+//include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 /**
  * Created by PhpStorm.
@@ -77,7 +77,7 @@ include 'EDMS_SIDEBAR.php';
                     <div class="column col-lg-7">
                         <!-- Text input-->
                         <div class="form-group">
-                            <label for="section_number">Section Number</label>
+                            <label for="section_number">Section Marker</label>
                             <input id="section_number" name="section_number" type="text" placeholder="Put your section number here..." class="form-control input-md"  required>
                         </div>
                         <div class="form-group">

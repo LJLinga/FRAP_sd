@@ -1,20 +1,20 @@
  <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
+<!--                    <li id="top">-->
+<!--                        <a href="ADMIN%20dashboard.php"> <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard </a>-->
+<!--                    </li>-->
+                   
+                   
                     <li id="top">
-                        <a href="ADMIN%20dashboard.php"> <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard </a>
-                    </li>
-                   
-                   
-                    <li>
                         <a href="javascript:" data-toggle="collapse" data-target="#members"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;Members<i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="members" class="collapse">
                             <li>
                         <a href="ADMIN MEMBERS viewmembers.php"><i class="fa fa-group" aria-hidden="true"></i>&nbsp;&nbsp;View All Registered Members</a>
                     </li>
-                    <li>
-                        <a href="ADMIN MEMBER roles.php"><i class="fa fa-group" aria-hidden="true"></i> Member Roles </a>
-                    </li>
+<!--                    <li>-->
+<!--                        <a href="ADMIN MEMBER roles.php"><i class="fa fa-group" aria-hidden="true"></i> Member Roles </a>-->
+<!--                    </li>-->
                         </ul>
                     </li>
                    

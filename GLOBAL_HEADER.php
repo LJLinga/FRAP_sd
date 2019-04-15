@@ -108,7 +108,7 @@
                     if($_SESSION['FRAP_ROLE'] > 1 || $_SESSION['EDMS_ROLE'] > 1 || $_SESSION['CMS_ROLE'] > 1) {
                         echo '<li class="dropdown sideicons"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> Admin Tools <b class="caret"></b></a><ul class="dropdown-menu alert-dropdown">';
                         if($_SESSION['FRAP_ROLE'] > 1) {
-                            echo '<li><a href="ADMIN%20dashboard.php"> <i class="fa fa-money" aria-hidden="true"></i> Loans </a></li>';
+                            echo '<li><a href="ADMIN%20Deductions.php"> <i class="fa fa-money" aria-hidden="true"></i> Loans </a></li>';
                         }
                         if($_SESSION['CMS_ROLE'] > 1) {
                             echo '<li><a href="CMS_PostsDashboard.php"> <i class="fa fa-newspaper-o" aria-hidden="true"></i> Santinig Content </a></li>';

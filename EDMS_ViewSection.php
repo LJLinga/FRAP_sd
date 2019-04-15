@@ -193,7 +193,7 @@ include 'EDMS_SIDEBAR.php';
                         <!-- Text input-->
                         <div class="card" style="margin-top: 1rem;">
                             <div class="card-body">
-                                <h3 class="card-title"><b>Section <?php echo $sectionNo.' '.$title; ?></b></h3>
+                                <h3 class="card-title"><b>Section <?php echo $sectionNo.' - '.$title; ?></b></h3>
                                 <p class="card-text" style="text-align: justify;"><?php echo $content; ?></p>
                             </div>
                         </div>
@@ -259,7 +259,7 @@ include 'EDMS_SIDEBAR.php';
                                 <b>Section Actions</b>
                             </div>
                             <div class="card-body">
-                                Status: <b><?php echo $statusName;?></b> (by <?php echo $approvedByName;?>)<br>
+                                Status: <b><?php echo $statusName;?></b> <?php if(isset($approvedByName)) echo '(by '.$approvedByName.')';?><br>
                                 Stage: <b><?php echo $stepName; ?></b><br>
                                 Created by: <b><?php echo $firstAuthorName ?></b><br>
                                 Modified by: <b><?php echo $authorName ?></b><br>
