@@ -6,7 +6,12 @@
     include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
 if(date('d')==30 || (date('m') == 2 && date('d')==28)){
-    $queryDed = "SELECT m.MEMBER_ID as 'MEMBER_ID', count(t.txn_id),max(TXN_DATE) from member m  left join txn_reference t on m.MEMBER_ID = t.MEMBER_ID where m.membership_status = 2 and m.user_status = 1  group by m.MEMBER_ID having date(max(txn_date)) != date(now());";
+    $queryDed = "SELECT m.MEMBER_ID, count(t.txn_id) from member m  
+left join (SELECT m.MEMBER_ID as 'Member_ID',t.txn_id from member m right join txn_reference t on m.MEMBER_ID=t.MEMBER_ID where date(txn_date) = date(now())) t 
+on m.MEMBER_ID = t.MEMBER_ID 
+where m.membership_status = 2 and m.user_status = 1  
+group by m.MEMBER_ID
+having count(TXN_ID)=0;";
     $result = mysqli_query($dbc,$queryDed);
     while($row = mysqli_fetch_assoc($result)){
         $queryMemDed = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE,TXN_DESC,AMOUNT,TXN_DATE,SERVICE_ID) VALUES({$row['MEMBER_ID']},2,'Deduction for membership',100,date(now()),1);";
