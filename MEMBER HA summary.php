@@ -32,14 +32,24 @@ include 'FRAP_USER_SIDEBAR.php';
 
                     <div class="col-lg-12">
 
-                        <h1 class="page-header"><i class="fa fa-plus fa-border"></i> Health Aid Application Summary</h1>
-
+                        <h1 class="page-header"> Health Aid Application Summary</h1>
+                        <ol class="breadcrumb">
+                            <li>
+                                Application
+                            </li>
+                            <li>
+                                In-Process Summary
+                            </li>
+                            <li class="active">
+                                Final Summary
+                            </li>
+                        </ol>
                     </div>
 
-                    <div class = "col-lg-12">
-
-                        <label> Below are your details that will be reviewed by the Committee and President.  </label>
-
+                    <div class = "col-lg-8">
+                        <div class ="alert alert-info">
+                            Below are your details that will be reviewed by the Committee and President.
+                        </div>
                     </div>
 
                 </div>
@@ -48,7 +58,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                     <div class="col-lg-8">
 
-                        <div class="panel panel-green">
+                        <div class="panel panel-default">
 
                             <div class="panel-heading">
 
@@ -87,7 +97,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                     <div class= "col-lg-4">
 
-                        <div class="panel panel-green">
+                        <div class="panel panel-default">
 
                             <div class="panel-heading">
 
@@ -114,7 +124,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                                         <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>">
 
-                                            <button type="button" class="btn btn-success"><?php echo $row['title'] ?></button></a>
+                                            <button type="button" class="btn btn-info"><?php echo $row['title'] ?></button></a>
 
                                         <?php echo $row['statusName'] ?>
 
@@ -134,11 +144,11 @@ include 'FRAP_USER_SIDEBAR.php';
                 <div class="col-lg-12">
                 <?php if($checkForHealthAidApplication['APP_STATUS'] == 2){?>
 
-                    <h3 class="page-header"><i class="fa fa-reply fa-border"></i> Response from Administration - Accepted </h3>
+                    <h3 class="page-header"> Response from Administration - Accepted </h3>
 
                 <?php }else if($checkForHealthAidApplication['APP_STATUS'] == 3){ ?>
 
-                    <h3 class="page-header"><i class="fa fa-reply fa-border"></i> Response from Administration - Rejected</h3>
+                    <h3 class="page-header"> Response from Administration - Rejected</h3>
 
                 <?php }?>
 
@@ -155,7 +165,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                     <div class="col-lg-8">
 
-                        <div class="panel panel-primary">
+                        <div class="panel panel-default">
 
                             <div class="panel-heading">
 
@@ -194,7 +204,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                     <div class= "col-lg-4">
 
-                        <div class="panel panel-primary">
+                        <div class="panel panel-default">
 
                             <div class="panel-heading">
 
@@ -227,7 +237,7 @@ include 'FRAP_USER_SIDEBAR.php';
                         </div>
 
                             <?php if($rows['APP_STATUS'] = 1){?>
-                                <div class="panel panel-primary">
+                                <div class="panel panel-default" style="margin-top: 1rem;">
 
                                     <div class="panel-heading">
 
@@ -262,7 +272,7 @@ include 'FRAP_USER_SIDEBAR.php';
                                                         <div class="col-lg-2"></div>
                                                         <div class="col-lg-8" align="center">
                                                             <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>">
-                                                                <button type="button" class="btn btn-success"><?php echo $row['title'] ?></button></a>
+                                                                <button type="button" class="btn btn-info"><?php echo $row['title'] ?></button></a>
                                                             <br>
                                                             <br>
                                                         </div>

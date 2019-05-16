@@ -341,7 +341,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                         
                         <form method="POST" action="ADMIN FALP manual.php" id="addAccount" onSubmit="return checkform()">
 
-                            <div class="panel panel-green" name = "personalInfo">
+                            <div class="panel panel-info" name = "personalInfo">
 
                                 <div class="panel-heading">
 
@@ -608,7 +608,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                             </div>
 
-                            <div class="panel panel-green" name = "emplymentInfo">
+                            <div class="panel panel-info" name = "emplymentInfo">
 
                                 <div class="panel-heading">
 
@@ -621,7 +621,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                         <div class="col-lg-2">
 
-                                                <label class="memfieldlabel">Employment Status</label>
+                                                <label class="memfieldlabel">Employment Category</label>
                                                 <select class="form-control" name ="empStat">
 
                                                     
@@ -719,7 +719,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                             </div>
 
-                            <div class="panel panel-green">
+                            <div class="panel panel-info">
 
                                 <div class="panel-heading">
 
@@ -787,7 +787,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                             </div>
 
                             
-                            <div class="panel panel-green" id = "lifetimeInfo">
+                            <div class="panel panel-info" id = "lifetimeInfo">
 
                                 <div class="panel-heading">
 

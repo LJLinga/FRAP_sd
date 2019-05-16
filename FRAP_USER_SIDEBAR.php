@@ -100,13 +100,13 @@
                 </ul>
 
             </li>
-
+            <!--
             <li>
 
                 <a href="MEMBER AUDITRAIL.php"><i class="fa fa-backward" aria-hidden="true"></i> Audit Trail</a>
 
             </li>
-
+            -->
         </ul>
 
     </div>

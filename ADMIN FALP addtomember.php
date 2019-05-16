@@ -43,7 +43,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                         <!--Insert success page-->
 
 
-                            <div class="panel panel-green">
+                            <div class="panel panel-default">
 
                                 <div class="panel-heading">
 
@@ -99,7 +99,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                         <td align="center"><?php echo $row2['DEPT_NAME'];?></td>
                                                         <td align="center"><?php echo $row2['STATUS'];?></td>
                                                         <td align="center"><?php echo $row2['PART_TIME_LOANED'];?></td>
-                                                        <td align="center"><?php echo $row2['DATE_APPROVED'];?></td>
+                                                        <td align="center"><?php echo date('Y, M d', strtotime($row2['DATE_APPROVED']));?></td>
                                                         <td align="center"><button type="submit" name="memDetails" class="btn-xs btn-success" value=<?php echo $row2['MEMBER_ID'];?>>Add</button></td>
 
                                                     </tr>

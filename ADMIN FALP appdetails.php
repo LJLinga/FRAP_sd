@@ -52,7 +52,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
             <div class="col-lg-12">
 
-                <h1 class="page-header"><i class="fa fa-border fa-dollar"></i> FALP Loan Summary of <?php echo $memName['LASTNAME'].", ".$memName['FIRSTNAME'] ?></h1>
+                <h1 class="page-header">FALP Loan Summary of <?php echo $memName['LASTNAME'].", ".$memName['FIRSTNAME'] ?></h1>
 
             </div>
 
@@ -92,14 +92,14 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                 <tr>
 
                                     <td>Amount to Borrow</td>
-                                    <td>₱ <?php echo $ans['AMOUNT'];?></td>
+                                    <td>₱ <?php echo number_format($ans['AMOUNT'],2)."<br>";?></td>
 
                                 </tr>
 
                                 <tr>
 
                                     <td>Amount Payable</td>
-                                    <td>₱ <?php echo $ans['PAYABLE'];?></td>
+                                    <td>₱ <?php echo number_format($ans['PAYABLE'],2)."<br>";?></td>
 
                                 </tr>
 
@@ -113,7 +113,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                 <tr>
 
                                     <td>Monthly Deduction</td>
-                                    <td>₱ <?php echo sprintf("%.2f",(float)$ans['PER_PAYMENT']*2);?></td>
+                                    <td>₱ <?php echo number_format($ans['PER_PAYMENT']*2,2)."<br>";?></td>
 
                                 </tr>
 
@@ -127,7 +127,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                 <tr>
 
                                     <td>Per Payment Deduction</td>
-                                    <td>₱ <?php echo $ans['PER_PAYMENT'] ;?></td>
+                                    <td>₱ <?php echo number_format($ans['PER_PAYMENT'],2)."<br>";?></td>
 
                                 </tr>
 
@@ -190,14 +190,14 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                 <tr>
 
                                     <td>Total Amount Paid</td>
-                                    <td>₱ <?php echo sprintf("%.2f",(float)$ans['AMOUNT_PAID']);?></td>
+                                    <td>₱ <?php echo number_format($ans['AMOUNT_PAID'],2)."<br>";?></td>
 
                                 </tr>
 
                                 <tr>
 
                                     <td>Outstanding Balance</td>
-                                    <td>₱ <?php echo sprintf("%.2f",$ans['PAYABLE']-$ans['AMOUNT_PAID']);?></td>
+                                    <td>₱ <?php echo number_format($ans['PAYABLE']-$ans['AMOUNT_PAID'],2)."<br>";?></td>
 
                                 </tr>
 
@@ -260,7 +260,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                         <div class="col-lg-12">
 
-                            <h1 class="page-header"><i class="fa fa-border fa-reply"></i> Your Reply </h1>
+                            <h1 class="page-header"> Your Reply </h1>
 
                         </div>
 

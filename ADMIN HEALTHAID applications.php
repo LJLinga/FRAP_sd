@@ -140,21 +140,21 @@ $page_title = 'Loans - Health Applications';
                                                 if ($resultRow['APP_STATUS'] != 3 && $resultRow['PICKED_UP_STATUS'] != 3) {
                                                     echo "
                                                     <tr>
-                                                        <td align='center'>" . $resultRow['DATE_APPLIED'] . "</td>
+                                                        <td align='center'>" . date('Y, M d', strtotime($resultRow['DATE_APPLIED'])) . "</td>
                                                         <td align='center'>" . $resultRow['MEMBER_ID'] . "</td>
                                                         <td align='center'>" . $resultRow['FIRSTNAME'] . " " . $resultRow['LASTNAME'] . "</td>
                                                         <td align='center'>" . $resultRow['DEPT_NAME'] . "</td>
-                                                        <td align='center'>" . $resultRow['AMOUNT_TO_BORROW'] . "</td>
+                                                        <td align='center'>₱ " . number_format($resultRow['AMOUNT_TO_BORROW'],2)."<br>" . "</td>
                                                         <td align='center'>" . $resultRow['MESSAGE'] . "</td>";
 
                                                     if ($resultRow['APP_STATUS'] == 1 && $resultRow['PICKED_UP_STATUS'] == 1) {
                                                         echo "
-                                                        <td align='center'><button type='submit' class='btn-xs btn-success' name='details' value='" . $resultRow['RECORD_ID'] . "'>App Details</button>&nbsp;&nbsp;&nbsp; ";
+                                                        <td align='center'><button type='submit' class='btn-xs btn-info' name='details' value='" . $resultRow['RECORD_ID'] . "'>View</button>&nbsp;&nbsp;&nbsp; ";
                                                     } else if ($resultRow['APP_STATUS'] == 2 && $resultRow['PICKED_UP_STATUS'] == 1) {
-                                                        echo "<td align='center'>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn-xs btn-success' name='details' value='" . $resultRow['RECORD_ID'] . "'>App Details</button>&nbsp;&nbsp;&nbsp;
+                                                        echo "<td align='center'>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn-xs btn-info' name='details' value='" . $resultRow['RECORD_ID'] . "'>View</button>&nbsp;&nbsp;&nbsp;
                                                     <button type='submit' class='btn-xs btn-success' name='pickup' value='" . $resultRow['RECORD_ID'] . "'>Ready To Pickup</button></td>";
                                                     } else if ($resultRow['APP_STATUS'] == 2 && $resultRow['PICKED_UP_STATUS'] == 2) {
-                                                        echo "<td align='center'>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn-xs btn-success' name='details' value='" . $resultRow['RECORD_ID'] . "'>App Details</button>&nbsp;&nbsp;&nbsp;
+                                                        echo "<td align='center'>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn-xs btn-info' name='details' value='" . $resultRow['RECORD_ID'] . "'>View</button>&nbsp;&nbsp;&nbsp;
                                                     <button type='submit' class='btn-xs btn-success' name='pickedup' value='" . $resultRow['RECORD_ID'] . "'>Picked Up</button></td>";
                                                     }
 

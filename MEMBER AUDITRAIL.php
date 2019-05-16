@@ -49,9 +49,9 @@
 
                     <div class="col-lg-12">
 
-                        <div class="panel panel-green">
+                        <div class="card">
 
-                            <div class="panel-heading">
+                            <div class="card-header">
 
                                 Audit Table
 
@@ -72,7 +72,7 @@
 
                             ?>
 
-                            <div class="panel-body">
+                            <div class="card-body">
 
                                 <table id="table" class="table table-bordered">
                                     

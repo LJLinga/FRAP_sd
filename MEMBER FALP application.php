@@ -68,7 +68,17 @@
                     <div class="col-lg-12">
 
                         <h1 class="page-header">FALP Application</h1>
-                    
+                        <ol class="breadcrumb">
+                            <li class="active">
+                                Application
+                            </li>
+                            <li>
+                                In-Process Summary
+                            </li>
+                            <li>
+                                Final Summary
+                            </li>
+                        </ol>
                     </div>
 
                 </div>
@@ -77,9 +87,9 @@
 
                     <div class="col-lg-3 col-1">
 
-                        <div class="panel panel-success" align="center">
+                        <div class="card" align="center">
 
-                            <div class="panel-heading">
+                            <div class="card-header">
 
                             <b>Loan Amount Range</b>
 
@@ -87,7 +97,7 @@
 
 
 
-                            <div class="panel-body">
+                            <div class="card-body">
 
                                 <?php
                                     $userStatus = "SELECT USER_STATUS from member where MEMBER_ID = {$_SESSION['idnum']}";
@@ -112,7 +122,7 @@
 
                     <div class="col-lg-3 col-2">
 
-                        <div class="panel panel-success" align="center">
+                        <div class="panel panel-default" align="center">
 
                             <div class="panel-heading">
 
@@ -132,7 +142,7 @@
 
                     <div class="col-lg-3 col-3">
 
-                        <div class="panel panel-success" align="center">
+                        <div class="panel panel-default" align="center">
 
                             <div class="panel-heading">
 
@@ -158,11 +168,11 @@
 
                     <div class="col-lg-3 col-3">
 
-                        <div class="panel panel-success" align="center">
+                        <div class="panel panel-default" align="center">
 
                             <div class="panel-heading">
 
-                                <b>Payment Terms </b>
+                                <b>Employment Category </b>
 
                             </div>
 
@@ -191,19 +201,9 @@
 
                     <div class="col-lg-12">
 
-                        <div class="panel panel-primary">
+                        <div class="alert alert-info">
 
-                            <div class="panel-heading">
-
-                                <b>APPLICATION REQUIREMENTS</b>
-
-                            </div>
-
-                            <div class="panel-body">
-
-                            Requirements, upload on next page
-
-                            </div>
+                            Please prepare the requirements for the next page
 
                         </div>
 
@@ -221,7 +221,7 @@
 
                     <div class="col-lg-8 col-2">
 
-                        <div class="panel panel-green">
+                        <div class="panel panel-default">
 
                             <div class="panel-heading">
 
@@ -286,7 +286,7 @@
 
                                     <div class="col-lg-2 col-3">
 
-                                        <input type="button" name="compute" class="btn btn-success" value="Compute" id="falpcompute">
+                                        <input type="button" name="compute" class="btn btn-primary" value="Compute" id="falpcompute">
 
                                     </div>
 

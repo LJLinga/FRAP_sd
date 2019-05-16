@@ -71,7 +71,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                             
                                             while($ans = mysqli_fetch_assoc($result1)){
                                             $dt = new DateTime($ans['TXN_DATE']);
-                                            $date = $dt->format('d/m/Y');
+                                            $date = $dt->format('M d, Y');
                                             $amount = $ans['AMOUNT'];
 
                                             
@@ -79,7 +79,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                             <tr>
                                             
                                             <td align="center"><?php echo $date;?></td>
-                                            <td align="center">₱ <?php echo $amount;?></td>
+                                            <td align="center">₱ <?php echo number_format($amount,2)."<br>";?></td>
                                             <td align="center">Completed</td>
                                             
                                             </tr>

@@ -78,24 +78,29 @@
 
                     <div class="col-lg-12">
 
-                        <h1 class="page-header"><i class="fa fa-border fa-dollar"></i> FALP Loan Summary</h1>
-                    
+                        <h1 class="page-header">FALP Loan Summary</h1>
+                        <ol class="breadcrumb">
+                            <li>
+                                Application
+                            </li>
+                            <li>
+                                In-Process Summary
+                            </li>
+                            <li class="active">
+                                Final Summary
+                            </li>
+                        </ol>
                     </div>
 
                 </div>
 
                 <div class="row">
 
-
-                </div>
-
-                    <div class="row">
-
                         <div class="col-lg-8">
 
                             <div class="col-lg-6">
 
-                                <div class="panel panel-green">
+                                <div class="panel panel-default">
 
                                     <div class="panel-heading">
 
@@ -172,7 +177,7 @@
 
                             <div class="col-lg-6">
 
-                                <div class="panel panel-green">
+                                <div class="panel panel-default">
 
                                     <div class="panel-heading">
 
@@ -287,7 +292,7 @@
                             <div class="row">
                                 <div class="col-lg-12">
 
-                                    <div class="panel panel-green">
+                                    <div class="panel panel-default">
 
                                         <div class="panel-heading">
 
@@ -305,7 +310,7 @@
 
                                                     <td align="center"><b>Document Name</b></td>
                                                     <td align="center"><b>Status</b></td>
-                                                    <td align="center"><b>Link to Doc</b></td>
+                                                    <td align="center"><b>View Doc</b></td>
 
                                                 </tr>
 
@@ -334,7 +339,7 @@
                                                     <td align='center'> <?php echo $row['statusName'] ?></td>
                                                     <td align='center'> <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>">
 
-                                                            <button type="button" class="btn btn-success" ><i class="fa fa-search" aria-hidden="true"></i> </button></a></td>
+                                                            <button type="button" class="btn btn-info" ><i class="fa fa-file" aria-hidden="true"></i> </button></a></td>
                                                 </tr>
                                             <?php }?>
 
@@ -354,9 +359,9 @@
                             <?php if($ans['APP_STATUS'] == 2){ ?>
 <!--                                this is where we track the pickup status-->
 
-                                <div class="row">
+                                <div class="row" style="margin-top:1rem;">
                                     <div class="col-lg-12">
-                                        <div class="panel panel-primary">
+                                        <div class="panel panel-default">
 
                                             <div class="panel-heading">
 
@@ -389,11 +394,11 @@
 
                                 </div>
                                 </div>
-                            <div class="row">
+                            <div class="row" style="margin-top:1rem;">
                                 <div class="col-lg-12">
 
 
-                                    <div class="panel panel-primary">
+                                    <div class="panel panel-default">
 
                                         <div class="panel-heading">
 
@@ -421,7 +426,7 @@
                                                     <div class="col-lg-2"></div>
                                                     <div class="col-lg-8" align="center">
                                                         <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>">
-                                                            <button type="button" class="btn btn-success">Receipt for FALP</button></a>
+                                                            <button type="button" class="btn btn-info">View Receipt</button></a>
                                                         <br>
                                                         <br>
                                                     </div>

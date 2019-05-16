@@ -185,7 +185,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                             <b>Last Name: </b><?php echo $rowMem['LASTNAME']; ?> <p>
                                             <b>Middle Name: </b><?php echo $rowMem['MIDDLENAME']; ?> <p>
                                             <b>Civil Status: </b><?php echo $rowMem['STATUS']; ?> <p>
-                                            <b>Date of Birth: </b><?php echo $rowMem['BIRTHDATE']; ?> <p>
+                                            <b>Date of Birth: </b><?php echo date('Y, M d', strtotime($rowMem['BIRTHDATE'])); ?> <p>
                                             <b>Sex: </b><?php echo $sex; ?> <p>
                                             
                                         </div>
@@ -202,7 +202,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                         <div class="panel-body"><p>
 
-                                            <b>Date of Hiring: </b><?php echo $rowMem['DATE_HIRED']; ?> <p>
+                                            <b>Date of Hiring: </b><?php echo date('Y, M d', strtotime($rowMem['DATE_HIRED'])); ?> <p>
                                             <b>Department: </b><?php echo $rowMem['DEPT_NAME']; ?> <p>
 
                                         </div>

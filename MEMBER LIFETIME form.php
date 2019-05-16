@@ -78,9 +78,9 @@ include 'FRAP_USER_SIDEBAR.php';
 
                             <p class="text-center">
 
-                            <h3> 
+                            <h4>
                                 You can download the Lifetime application form here once you are Eligible, at least 10 years of being a member of the Faculty Association.
-                            </h3>
+                            </h4>
 
                             </p>
                         </div>
@@ -110,7 +110,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                         <img class="pdficon10" src="images/pdficon.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-                         <input type = "submit" class="btn btn-success  btn-lg" name="download" value = "Download Lifetime Application Form">
+                         <input type = "submit" class="btn btn-info  btn-md" name="download" value = "Download Lifetime Application Form">
 
                          </form>
 
@@ -129,7 +129,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                         <div align="center">
 
-                            <a href="MEMBER dashboard.php" class="btn btn-success" role="button">Return to Dashboard</a>
+                            <a href="MEMBER dashboard.php" class="btn btn-light btn-md" role="button">Return to Dashboard</a>
 
                         </div>
 

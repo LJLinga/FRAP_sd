@@ -67,7 +67,17 @@
                     <div class="col-lg-12">
 
                         <h1 class="page-header">FALP Application</h1>
-                    
+                        <ol class="breadcrumb">
+                            <li class="active">
+                                Application
+                            </li>
+                            <li>
+                                In-Process Summary
+                            </li>
+                            <li>
+                                Final Summary
+                            </li>
+                        </ol>
                     </div>
 
                 </div>
@@ -75,20 +85,9 @@
                 <div class="row">
 
                     <div class="col-lg-12">
+                        <div class="alert alert-info">
 
-                        <div class="panel panel-primary">
-
-                            <div class="panel-heading">
-
-                                <b>APPLICATION REQUIREMENTS</b>
-
-                            </div>
-
-                            <div class="panel-body">
-
-                            These are the current requirements for getting a FALP loan. You may upload a scanned PDF version or other.
-
-                            </div>
+                        These are the current requirements for getting a FALP loan. You may upload a scanned PDF version or other.
 
                         </div>
 
@@ -102,7 +101,7 @@
 
                         <div class="col-lg-3 col-1">
 
-                            <div class="panel panel-green" align="center">
+                            <div class="panel panel-info" align="center">
 
                                 <div class="panel-heading">
 
@@ -134,7 +133,7 @@
 
                         <div class="col-lg-3 col-2">
 
-                            <div class="panel panel-green" align="center">
+                            <div class="panel panel-info" align="center">
 
                                 <div class="panel-heading">
 
@@ -166,7 +165,7 @@
 
                         <div class="col-lg-3 col-3">
 
-                            <div class="panel panel-green" align="center">
+                            <div class="panel panel-info" align="center">
 
                                 <div class="panel-heading">
 
@@ -198,7 +197,7 @@
 
                         <div class="col-lg-3 col-4">
 
-                            <div class="panel panel-green" align="center">
+                            <div class="panel panel-info" align="center">
 
                                 <div class="panel-heading">
 

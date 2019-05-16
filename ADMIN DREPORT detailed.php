@@ -121,7 +121,7 @@ $result2=mysqli_query($dbc,$query2);
                 <!-- alert -->
                 <div class="row">
 
-                    <div class="col-lg-12">
+                    <div class="col-lg-6">
 
                         <div class="panel panel-green">
 
@@ -140,7 +140,7 @@ $result2=mysqli_query($dbc,$query2);
 
                                 <div class="row">
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-12">
 
                                     <form action="ADMIN DREPORT detailed.php" method="POST">
 
@@ -227,10 +227,10 @@ $result2=mysqli_query($dbc,$query2);
 
                                         <td align="center"><b><?php echo $ans['ID'];?></b></td>
                                         <td align="center" width="250px"><b><?php echo $ans['FIRST']." ".$ans['MIDDLE']." ".$ans['LAST'];?></b></td>
-                                        <td align="center"><b><?php echo sprintf("%.2f",(float)$ans['MFee']);?></b></td>
-                                        <td align="center"><b><?php echo sprintf("%.2f",(float)$ans['HAFee']);?></b></td>
-                                        <td align="center"><b><?php echo sprintf("%.2f",(float)$ans['FFee']);?></b></td>
-                                        <td align="center"><b><?php echo sprintf("%.2f",(float)$total);?></b></td>
+                                        <td align="center"><b>₱ <?php echo number_format($ans['MFee'],2)."<br>";?></b></td>
+                                        <td align="center"><b>₱ <?php echo number_format($ans['HAFee'],2)."<br>";?></b></td>
+                                        <td align="center"><b>₱ <?php echo number_format($ans['FFee'],2)."<br>";?></b></td>
+                                        <td align="center"><b>₱ <?php echo number_format($total,2)."<br>";?></b></td>
 
                                         </tr>
                                         <?php } ?>
@@ -272,13 +272,13 @@ $result2=mysqli_query($dbc,$query2);
             $('#datetimepicker1').datetimepicker( {
                 locale: moment().local('ph'),
                 maxDate: moment(),
-                format: 'DD-MM- YYYY'
+                format: 'DD MMM YYYY'
             });
             $('#datetimepicker2').datetimepicker( {
                 locale: moment().local('ph'),
                 
                 
-                format: 'DD-MM- YYYY'
+                format: 'DD MMM YYYY'
             });
 
         

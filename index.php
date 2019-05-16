@@ -226,7 +226,7 @@
 
             <div class="navbar-header">
 
-                <img src="images/I-FA Logo Edited.png" id="ifalogo">
+                <img src="images/iafedlogo normal Edited.png" id="ifalogo">
 
             </div>
 
@@ -244,7 +244,7 @@
 
                     <div class="col-lg-6 col-2"> <!-- The center of the page -->
 
-                        <img src="images/ifalogo normal.png" id="falogonorm">
+                        <img src="images/iafedlogo normal.png" id="falogonorm">
 
                     </div>
 

@@ -68,6 +68,16 @@
         background-color: #FAFAFA;
     }
 
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        /* display: none; <- Crashes Chrome on hover */
+        -webkit-appearance: none;
+        margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+    }
+
+    input[type=number] {
+        -moz-appearance:textfield; /* Firefox */
+    }
 </style>
 
 <body>
@@ -75,7 +85,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="navbar-header"> <!-- Logo -->
 
-            <img src="images/I-FA Logo Edited.png" id="ifalogo">
+            <img src="images/iafedlogo normal Edited.png" id="ifalogo">
 
             <ul class="nav navbar-right top-nav"> <!-- Top Menu Items / Notifications area -->
                 <li>

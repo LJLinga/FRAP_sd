@@ -111,7 +111,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                 <div class="row">
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-12">
 
                                        <form action="ADMIN PREPORT completed.php" method="POST">
 
@@ -142,13 +142,11 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     
 
                                     <div class="col-lg-3" align="left">
-
                                         <input onclick="$('form').attr('target', '')"  type="submit" class="btn btn-success" name="select_date" value="Generate Report">
+                                    </div>
+                                    <div class="col-lg-3" align="left">
                                         <input onclick="$('form').attr('target', '_blank')"  type="submit" class="btn btn-default" name="print" value="Print Report">
                                     </div>
-
-                                    
-
                                         
                                     </form>
                                     </div>
@@ -238,13 +236,13 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                 locale: moment().local('ph'),
                 maxDate: moment(),
                 
-                format: 'YYYY-MM'
+                format: 'YYYY MMM'
             });
             $('#datetimepicker2').datetimepicker( {
                 locale: moment().local('ph'),
                 
                 
-                format: 'YYYY-MM'
+                format: 'YYYY MMM'
             });
 
         

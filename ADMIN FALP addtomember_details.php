@@ -238,7 +238,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                     <div class="col-lg-6">
 
-                        <div class="panel panel-primary">
+                        <div class="panel panel-info">
 
                             <div class="panel-heading">
 
@@ -320,7 +320,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                     <div class="col-lg-6">
 
-                        <div class="panel panel-green">
+                        <div class="panel panel-success">
 
                             <div class="panel-heading">
 
@@ -403,7 +403,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                     </div>
                     <div class = "col-lg-4">
-                        <div class="panel panel-primary">
+                        <div class="panel panel-warning">
 
                             <div class="panel-heading">
 
@@ -556,7 +556,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                 locale: moment().local('ph'),
                 maxDate: moment(),
 
-                format: 'YYYY-MM-DD'
+                format: 'YYYY MMM DD'
             });
 
 
@@ -564,7 +564,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                 locale: moment().local('ph'),
                 maxDate: moment(),
 
-                format: 'YYYY-MM-DD'
+                format: 'YYYY MMM DD'
             });
 
 

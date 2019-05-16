@@ -46,7 +46,7 @@
 
                     <div class="col-lg-4 col-1">
 
-                        <div class="panel panel-green" align="center">
+                        <div class="panel panel-default" align="center">
 
                             <div class="panel-heading">
 
@@ -68,7 +68,7 @@
 
                     <div class="col-lg-4 col-2">
 
-                        <div class="panel panel-green" align="center">
+                        <div class="panel panel-default" align="center">
 
                             <div class="panel-heading">
 
@@ -93,7 +93,7 @@
 
                     <div class="col-lg-4 col-3">
 
-                        <div class="panel panel-green" align="center">
+                        <div class="panel panel-default" align="center">
 
                             <div class="panel-heading">
 
@@ -168,7 +168,7 @@
 
                                 </div>
 
-                                <input type="submit" class="btn btn-success" value="View As" name="viewas" style="margin-top: 25px;">
+                                <input type="submit" class="btn btn-info" value="View As" name="viewas" style="margin-top: 25px;">
 
                             </form>
 

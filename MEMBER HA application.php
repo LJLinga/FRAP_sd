@@ -101,13 +101,24 @@ include 'FRAP_USER_SIDEBAR.php';
 
                         <?php }?>
 
-                        <h1 class="page-header"><i class="fa fa-plus fa-border"></i> Health Aid Application Form</h1>
+                        <h1 class="page-header">Health Aid Application Form</h1>
+                        <ol class="breadcrumb">
+                            <li class="active">
+                                Application
+                            </li>
+                            <li>
+                                In-Process Summary
+                            </li>
+                            <li>
+                                Final Summary
+                            </li>
+                        </ol>
 
                     </div>
 
                     <div class = "col-lg-12">
 
-                        <label>Please fill out the necessary fields below in order for the Committee to process your request. Upload the Receipts as proof of your situation.</label>
+                        <label>Please fill out the necessary fields below in order for the committee to process your request. Upload the receipts as proof of your situation.</label>
 
                     </div>
                 </div>
@@ -116,7 +127,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                     <div class="col-lg-8">
 
-                        <div class="panel panel-green">
+                        <div class="panel panel-default">
 
                             <div class="panel-heading">
 
@@ -139,7 +150,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                                     <label>Reason for the Health Aid Application: </label>
 
-                                    <textarea placeholder="Place your Plea for Aid here" id="noresize" name="message" class="form-control" rows="5" cols="125" required></textarea>
+                                    <textarea placeholder="Place your plea for aid here" id="noresize" name="message" class="form-control" rows="5" cols="125" required></textarea>
 
 
                                 </div>
@@ -156,7 +167,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                     <div class= "col-lg-4">
 
-                        <div class="panel panel-green">
+                        <div class="panel panel-default">
 
                             <div class="panel-heading">
 

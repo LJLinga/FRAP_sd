@@ -77,9 +77,9 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                         <td align="center"><?php echo $ans['FIRSTNAME'].' '.$ans['LASTNAME'];?></td>
                                         <td align="center"><?php echo $ans['DEPT_NAME'];?></td>
-                                        <td align="center"><?php echo $ans['AMOUNT_PAID'];?></td>
-                                        <td align="center"><?php echo $ans['PAYABLE'];?></td>
-                                        <td align="center">&nbsp;&nbsp;&nbsp;<button type="submit" name="details" class="btn btn-success" value=<?php echo $ans['LOAN_ID'];?>>Details</button>&nbsp;&nbsp;&nbsp;</td>
+                                        <td align="center">₱ <?php echo number_format($ans['AMOUNT_PAID'],2)."<br>";?></td>
+                                        <td align="center">₱ <?php echo number_format($ans['PAYABLE'],2)."<br>";?></td>
+                                        <td align="center">&nbsp;&nbsp;&nbsp;<button type="submit" name="details" class="btn btn-info" value=<?php echo $ans['LOAN_ID'];?>>View</button>&nbsp;&nbsp;&nbsp;</td>
 
                                         </tr>
 										<?php } ?>

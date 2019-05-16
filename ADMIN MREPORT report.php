@@ -75,7 +75,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                 <div class="row">
 
-                    <div class="col-lg-4">
+                    <div class="col-lg-6">
 
                         <div class="panel panel-green">
 
@@ -116,7 +116,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                        
                         
 
-                                    <div class="col-lg-5" align="left">
+                                    <div class="col-lg-12" align="left">
 
                                         <input type="submit" class="btn btn-success" name="select_date" value="Generate Report">
                                         </form>
@@ -136,7 +136,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                     <div class="col-lg-12">
 
-                        <div class="panel panel-primary">
+                        <div class="panel panel-info">
 
                             <div class="panel-heading">
 
@@ -175,7 +175,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                 }
                                 else echo "0"?></b> <p>
                                 <b>Total Amount Collected:₱ <?php if(!empty($row1)){
-                                    echo $row1['Amount'];
+                                    echo number_format($row1['Amount'],2)."<br>";
 
                                 }
                                 else echo "0.00";?></b> <p>
@@ -192,7 +192,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                     <div class="col-lg-12">
 
-                        <div class="panel panel-primary">
+                        <div class="panel panel-info">
 
                             <div class="panel-heading">
 
@@ -230,7 +230,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                 }
                                 else echo "0"?></b> <p>
                                 <b>Total Amount Collected:₱ <?php if(!empty($row1)){
-                                    echo $row1['Amount'];
+                                    echo number_format($row1['Amount'],2)."<br>";
 
                                 }
                                 else echo "0.00";?></b> <p>
@@ -247,7 +247,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                     <div class="col-lg-12">
 
-                        <div class="panel panel-primary">
+                        <div class="panel panel-info">
 
                             <div class="panel-heading">
 
@@ -287,7 +287,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                 }
                                 else echo "0"?></b> <p>
                                 <b>Total Amount Collected:₱ <?php if(!empty($row1)){
-                                    echo $row1['Amount'];
+                                    echo number_format($row1['Amount'],2)."<br>";
 
                                 }
                                 else echo "0.00";?></b> <p>
@@ -317,13 +317,13 @@ include 'FRAP_ADMIN_SIDEBAR.php';
             $('#datetimepicker1').datetimepicker( {
                 locale: moment().local('ph'),
                 maxDate: moment(),
-                format: 'YYYY-MM'
+                format: 'YYYY MMM'
             });
             $('#datetimepicker2').datetimepicker( {
                 locale: moment().local('ph'),
                 
                 
-                format: 'YYYY-MM'
+                format: 'YYYY MMM'
             });
 
         

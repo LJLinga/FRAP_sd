@@ -105,7 +105,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                 <div class="row">
 
-                    <div class="col-lg-12">
+                    <div class="col-lg-6">
 
                         <div class="panel panel-green">
 
@@ -124,7 +124,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                 <div class="row">
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-12">
 
                                     <form action="ADMIN DREPORT general.php" method="POST">
 
@@ -136,7 +136,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     <input id="event_start" name="event_start" type="text" class="form-control">
                                     <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -210,7 +210,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <td align="center"><?php echo $ans['ID'];?></td>
                                         <td align="center"><?php echo $ans['First']." ".$ans['Middle']." ".$ans['Last'];?></td>
                                         <td align="center"><?php echo $ans['DEPT_NAME'];?></td>
-                                        <td align="center"><?php echo $ans['Total'];?></td>
+                                        <td align="center">₱ <?php echo number_format($ans['Total'],2)."<br>";?></td>
 
                                         </tr>
                                         <?php } ?>
@@ -256,13 +256,13 @@ include 'FRAP_ADMIN_SIDEBAR.php';
             $('#datetimepicker1').datetimepicker( {
                 locale: moment().local('ph'),
                 maxDate: moment(),
-                format: 'DD-MM- YYYY'
+                format: 'DD MMM YYYY'
             });
             $('#datetimepicker2').datetimepicker( {
                 locale: moment().local('ph'),
                 
                 
-                format: 'DD-MM- YYYY'
+                format: 'DD MMM YYYY'
             });
 
         

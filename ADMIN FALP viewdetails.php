@@ -279,14 +279,14 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                             <tr>
 
                                 <td>Amount to Borrow</td>
-                                <td>₱ <?php echo $updated['AMOUNT'];?></td>
+                                <td>₱ <?php echo number_format($updated['AMOUNT'],2)."<br>";?></td>
 
                             </tr>
 
                             <tr>
 
                                 <td>Amount Payable</td>
-                                <td>₱ <?php echo $updated['PAYABLE'];?></td>
+                                <td>₱ <?php echo number_format($updated['PAYABLE'],2)."<br>";?></td>
 
                             </tr>
 
@@ -300,7 +300,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                             <tr>
 
                                 <td>Monthly Deduction</td>
-                                <td>₱ <?php echo sprintf("%.2f",(float)$updated['PER_PAYMENT']*2);?></td>
+                                <td>₱ <?php echo number_format($updated['PER_PAYMENT']*2,2)."<br>";?></td>
 
                             </tr>
 
@@ -314,7 +314,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                             <tr>
 
                                 <td>Per Payment Deduction</td>
-                                <td>₱ <?php echo $updated['PER_PAYMENT'] ;?></td>
+                                <td>₱ <?php echo number_format($updated['PER_PAYMENT'],2)."<br>";?></td>
 
                             </tr>
 
@@ -358,7 +358,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                             <tr>
 
                                 <td>Date Approved</td>
-                                <td><?php echo $updated['DATE_APPROVED'];?></td>
+                                <td><?php echo date('Y, M d', strtotime($updated['DATE_APPROVED']));?></td>
 
                             </tr>
 
@@ -379,14 +379,14 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                             <tr>
 
                                 <td>Total Amount Paid</td>
-                                <td>₱ <?php echo sprintf("%.2f",(float)$updated['AMOUNT_PAID']);?></td>
+                                <td>₱ <?php echo number_format($updated['AMOUNT_PAID'],2)."<br>";?></td>
 
                             </tr>
 
                             <tr>
 
                                 <td>Outstanding Balance</td>
-                                <td>₱ <?php echo sprintf("%.2f",$updated['PAYABLE']-$updated['AMOUNT_PAID']);?></td>
+                                <td>₱ <?php echo number_format($updated['PAYABLE']-$updated['AMOUNT_PAID'],2)."<br>";?></td>
 
                             </tr>
 
@@ -466,7 +466,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                     <form action = "ADMIN FALP viewactivity.php" method = "POST">
                         <button type = "submit" class="btn btn-success" role="button" value = <?php echo $_SESSION['details']?> name = "details" >View Payment Activity</button>
 
-                        <a href="ADMIN dashboard.php" class="btn btn-default" role="button">Go Back</a>
+                        <a href="OLD ADMIN FALP/ADMIN dashboard.php" class="btn btn-default" role="button">Go Back</a>
                     </form>
                 </div>
 

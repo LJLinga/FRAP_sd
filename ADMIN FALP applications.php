@@ -223,10 +223,10 @@ $crud = new GLOBAL_CLASS_CRUD();
 
                                         <tr>
 
-                                        <td align="center"><?php echo $resultRow['DATE_APPLIED']; ?></td>
+                                        <td align="center"><?php echo date('Y, M d', strtotime($resultRow['DATE_APPLIED'])); ?></td>
                                         <td align="center"><?php echo $resultRow['FIRSTNAME'] ." ". $resultRow['LASTNAME']; ?></td>
                                         <td align="center"><?php echo $resultRow['DEPT_NAME']; ?></td>
-                                        <td align="center"><?php echo $resultRow['AMOUNT']; ?></td>
+                                        <td align="center">₱ <?php echo number_format($resultRow['AMOUNT'],2)."<br>"; ?></td>
                                             <?php if($resultRow['APP_STATUS'] == 2 && $resultRow['PICKUP_STATUS'] == 1){ ?>
                                                 <td align="center">&nbsp;&nbsp;&nbsp;<button type='submit' class='btn-xs btn-success' name='Fdetails' value='<?php echo $resultRow['LOAN_ID']; ?>'>Details</button>&nbsp;&nbsp;&nbsp;
                                                     <button type='submit' class='btn-xs btn-success' name='pickup'  value='<?php echo $resultRow['LOAN_ID']; ?>'>Ready For Pick Up</button></td>
@@ -234,7 +234,7 @@ $crud = new GLOBAL_CLASS_CRUD();
                                                 <td align="center">&nbsp;&nbsp;&nbsp;<button type='submit' class='btn-xs btn-success' name='Fdetails' value='<?php echo $resultRow['LOAN_ID']; ?>'>Details</button>&nbsp;&nbsp;&nbsp;
                                                     <button type='submit' class='btn-xs btn-success' name='pickedup'  value='<?php echo $resultRow['LOAN_ID']; ?>'>Picked Up By Member</button></td>
                                             <?php }else{?>
-                                                <td align="center">&nbsp;&nbsp;&nbsp;<button type='submit' class='btn-xs btn-success' name='Fdetails' value='<?php echo $resultRow['LOAN_ID']; ?>'>Details</button>&nbsp;&nbsp;&nbsp;</td>
+                                                <td align="center">&nbsp;&nbsp;&nbsp;<button type='submit' class='btn-xs btn-info' name='Fdetails' value='<?php echo $resultRow['LOAN_ID']; ?>'>View</button>&nbsp;&nbsp;&nbsp;</td>
 
                                             <?php }?>
                                         </tr>
