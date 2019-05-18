@@ -7,7 +7,6 @@
  * Time: 9:27 AM
  */
 
-
 require 'GLOBAL_CLASS_CRUD.php';
 $crud = new GLOBAL_CLASS_CRUD();
 
@@ -46,9 +45,6 @@ if(!empty($_POST['documentId']) && !empty($_POST['newVersionNo']) && !empty($_PO
     if ($fileSize > 25000000) {
         $errors[] = "This file is more than 25MB. Sorry, it has to be less than or equal to 25MB";
     }
-
-
-
 
     if (empty($errors)) {
         $didUpload = move_uploaded_file($fileTmpName, $uploadPath);

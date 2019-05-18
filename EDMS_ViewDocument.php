@@ -277,12 +277,12 @@ include 'EDMS_SIDEBAR.php';
                                 }else if(isset($route) && $route=='2' && $availability=='2') {
                                     if($isFinal == '2'){
                                         if($statusId == 1){
-                                            echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
-                                            echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$documentId.'">Reject</button>';
+                                            echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#approveModal">Approve</button>';
+                                            echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#rejectsModal">Reject</button>';
                                         }else if($statusId == 2){
-                                            echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="submit" name="btnReject" value="'.$documentId.'">Reject</button>';
+                                            echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#rejectModal">Reject</button>';
                                         }else if($statusId == 3){
-                                            echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="submit" name="btnAccept" value="'.$documentId.'">Accept</button>';
+                                            echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#approveModal">Approve</button>';
                                         }
                                     }
                                     $query = "SELECT nextStepId, routeName FROM step_routes WHERE currentStepId ='$currentStepId';";
@@ -308,7 +308,6 @@ include 'EDMS_SIDEBAR.php';
                                 <a href="<?php echo $filePath?>" download><button type="button" class="btn btn-default" style="text-align: left; width: 100%;">Download</button></a>
                                 <button type="button" name="btnArchive" class="btn btn-default" style="text-align: left; width: 100%;">Archive</button>
                             </form>
-
                         </div>
                     </div>
                 </div>
@@ -346,6 +345,50 @@ include 'EDMS_SIDEBAR.php';
     </div>
 </div>
 
+    <div id="approveModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
+            <div class="modal-content">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="remarks">Approval Remarks</label>
+                        <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" name="btnAccept" class="btn btn-primary"  value="<?php echo $documentId;?>">Confirm Approve</button>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="rejectModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="remarks">Rejection Remarks</label>
+                        <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" name="btnReject" class="btn btn-primary" value="<?php echo $documentId;?>">Confirm Reject</button>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+
+
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
@@ -375,14 +418,18 @@ include 'EDMS_SIDEBAR.php';
 
     </div>
 </div>
+
+
     <div id="uploadModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
-
             <form method="POST" id="documentUploadForm">
-
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-body">
+                        <div class="form-group">
+                            <label for="file">Upload File</label>
+                            <input type="file" class="form-control-file" id="file" name="file" required>
+                        </div>
                         <div class="form-group">
                             <label for="documentTitle">Title</label>
                             <input type="text" name="versionTitle" id="versionTitle" class="form-control" placeholder="Title" required value="<?php echo $title; ?>">
@@ -395,10 +442,6 @@ include 'EDMS_SIDEBAR.php';
                             <div class="radio">
                                 <label><input type="radio" name="newVersionNo" value="<?php echo ceil(floatval($versionNo) + 0.1); ?>"><?php echo ceil(floatval($versionNo) + 0.1); ?> (Major Update)</label>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="file">Upload</label>
-                            <input type="file" class="form-control-file" id="file" name="file" required>
                         </div>
                         <span id="err"></span>
                     </div>
