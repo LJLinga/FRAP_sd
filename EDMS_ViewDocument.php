@@ -236,7 +236,6 @@ include 'EDMS_SIDEBAR.php';
                     }
                 ?>
 
-
                 <div class="card" style="margin-top: 1rem;">
                     <div class="card-header"><b>Comments</b></div>
                     <div class="card-body">
@@ -250,17 +249,45 @@ include 'EDMS_SIDEBAR.php';
 
                 <div class="card">
                     <div class="card-header">
-                        Title: <b><?php echo $title; ?></b><br>
-                        Version No.: <b><?php echo $versionNo; ?></b>
+                        <b>Document Details</b>
                     </div>
-                    <div class="card-body" >
-                        Process: <b><?php echo $processName; ?></b><br>
-                        Stage: <b><?php echo $stepName; ?></b><br>
-                        Status: <b><?php echo $statusName; ?></b><br>
-                        Created by <b><?php echo $originalAuthor; ?></b><br>
-                        <i>on <b><?php echo date("F j, Y g:i:s A ", strtotime($timeFirstPosted)); ?></b></i><br>
-                        Modified by <b><?php echo $currentAuthor; ?></b><br>
-                        <i>on <b><?php echo date("F j, Y g:i:s A ", strtotime($timeUpdated)); ?></b></i>
+                    <div class="card-body">
+                        <table class="table table-condensed table-responsive table-bordered">
+                            <tbody>
+                            <tr>
+                                <th>Title</th>
+                                <td><?php echo $title; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Version No.</th>
+                                <td><?php echo $versionNo; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Process</th>
+                                <td><?php echo $processName; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Stage</th>
+                                <td><?php echo $stepName; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Created by</th>
+                                <td><?php echo $originalAuthor; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Created on</th>
+                                <td><?php echo date("F j, Y g:i:s A ", strtotime($timeFirstPosted)); ?></td>
+                            </tr>
+                            <tr>
+                                <th>Last modified by</th>
+                                <td><?php echo $currentAuthor; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Last modified on</th>
+                                <td><?php echo date("F j, Y g:i:s A ", strtotime($timeUpdated));?></td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="card" style="margin-top: 1rem;">
@@ -288,9 +315,8 @@ include 'EDMS_SIDEBAR.php';
                                     $query = "SELECT nextStepId, routeName FROM step_routes WHERE currentStepId ='$currentStepId';";
                                     $rows = $crud->getData($query);
                                     if (!empty($rows)) {
-                                        echo '<input type="hidden" name="documentId" value="'.$documentId.'">';
                                         foreach ((array)$rows as $key => $row) {
-                                            echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="submit" name="btnRoute" value="'.$row['nextStepId'].'">'.$row['routeName'].'</button>';
+                                            echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#'.$row['nextStepId'].'Modal">'.$row['routeName'].'</button>';
                                         }
                                     }
                                 }
@@ -349,17 +375,19 @@ include 'EDMS_SIDEBAR.php';
         <div class="modal-dialog">
             <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
             <div class="modal-content">
+                <div class="modal-header">
+                   <h5 class="modal-title"><b>Confirm Approve?</b></h5>
+                </div>
                 <div class="modal-body">
-
                     <div class="form-group">
-                        <label for="remarks">Approval Remarks</label>
+                        <p>Please provide remarks before confirming.</p>
                         <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <div class="form-group">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" name="btnAccept" class="btn btn-primary"  value="<?php echo $documentId;?>">Confirm Approve</button>
+                        <button type="submit" name="btnAccept" class="btn btn-primary"  value="<?php echo $documentId;?>">Confirm</button>
                     </div>
                 </div>
             </div>
@@ -371,10 +399,13 @@ include 'EDMS_SIDEBAR.php';
         <div class="modal-dialog">
             <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
             <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><b>Confirm Reject?</b></h5>
+                </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="remarks">Rejection Remarks</label>
-                        <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
+                        <p>Please provide remarks before confirming.</p>
+                        <textarea name="remarks" id="remarks" class="form-control" placeholder="Required remarks here..." rows="10" required></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -387,6 +418,42 @@ include 'EDMS_SIDEBAR.php';
             </form>
         </div>
     </div>
+
+    <?php
+
+        $query = "SELECT nextStepId, routeName FROM step_routes WHERE currentStepId ='$currentStepId';";
+        $rows = $crud->getData($query);
+        if (!empty($rows)) {
+            foreach ((array)$rows as $key => $row) {
+                ?>
+                <div id="<?php echo $row['nextStepId'];?>Modal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
+                            <input type="hidden" name="documentId" value="<?php echo $documentId; ?>">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title"><b>Confirm '<?php echo $row['routeName'];?>'?</b></h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <p>Please provide remarks before confirming.</p>
+                                        <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <button class="btn btn-primary" type="submit" name="btnRoute" value="<?php echo $row['nextStepId'];?>">Confirm</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <?php
+            }
+        }
+    ?>
 
 
 <div id="myModal" class="modal fade" role="dialog">
