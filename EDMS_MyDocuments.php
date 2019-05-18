@@ -22,7 +22,7 @@ $rows = $crud->getData("SELECT CONCAT(e.FIRSTNAME, ,e.LASTNAME) AS name FROM emp
 $userName = $rows[0]['name'];
 ?>
 
-<div id="content-wrapper">
+<div class="content-wrapper">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
@@ -38,11 +38,11 @@ $userName = $rows[0]['name'];
                         <div class="row">
                             <div class="col-lg-7">
                                 <div class="btn-group">
-                                    <a type="button" class="btn btn-default" id="btnAll" onclick="searchTable('',1)">All</a>
+                                    <a type="button" class="btn btn-default" id="btnAll" onclick="filterStatus('');">All</a>
                                     <?php
                                     $rows = $crud->getData("SELECT statusName FROM facultyassocnew.doc_status;");
                                     foreach((array) $rows as $key => $row){
-                                        echo '<a type="button" class="btn btn-default" onclick="searchTable(&quot;'.$row['statusName'].'&quot;,1)">'.$row['statusName'].'</a>';
+                                        echo '<a type="button" class="btn btn-default" onclick="filterStatus(&quot;'.$row['statusName'].'&quot;);">'.$row['statusName'].'</a>';
                                     }
                                     ?>
                                 </div>
@@ -50,8 +50,8 @@ $userName = $rows[0]['name'];
                             <div class="col-lg-5">
                                 <div class="form-inline">
                                     <label for="sel1">Type</label>
-                                    <select class="form-control" onchange="searchTable(this.value,0)">
-                                        <option value="All">All</option>
+                                    <select class="form-control" onchange="filterType(this.value);">
+                                        <option value="All" selected>All</option>
                                         <?php
                                         $rows = $crud->getData("SELECT t.type FROM facultyassocnew.doc_type t WHERE isActive = 2;");
                                         foreach((array)$rows as $key => $row){
@@ -202,10 +202,12 @@ $userName = $rows[0]['name'];
     } );
 
     let mode = '<?php echo $userId; ?>';
+    let type = '';
+    let status = '';
 
-    searchTable('',1);
+    searchTable(status,type);
 
-    function searchTable(searchText, col){
+    function searchTable(status, type){
         let table = $('table.table').DataTable( {
             bSort: false,
             destroy: true,
@@ -222,13 +224,21 @@ $userName = $rows[0]['name'];
                 { data: "actions"}
             ]
         });
-        if(searchText === 'All'){
-            searchText = '';
-        }
-        table.column(col).search(searchText).draw();
+        table.column(1).search(status).draw();
+        table.column(0).search(type).draw();
         // setInterval(function(){
         //     table.ajax.reload();
         // },1000)
+
+    }
+
+    function filterStatus(s){
+        status = s;
+        searchTable(s,type);
+    }
+    function filterType(t){
+        type = t;
+        searchTable(status,t);
     }
 
 </script>
