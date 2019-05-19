@@ -337,6 +337,7 @@ include 'EDMS_SIDEBAR.php';
                         </div>
                     </div>
                 </div>
+               
                 <?php
                     $query = "SELECT v.timeCreated, v.versionId as vid, v.versionNo, v.title, v.filePath, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
                               FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
@@ -454,8 +455,32 @@ include 'EDMS_SIDEBAR.php';
             }
         }
     ?>
-
-
+<div class="card">
+    <div class="card-header">
+        Status Details
+    </div>
+</div>
+    <div class="card">
+        <div class="card-header">
+            Status History
+        </div>
+        <div class="card-body">
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">Approved</span> by Alderite, Christian Nicole<br>
+                    on January 1, 2019<br>
+                    Remarks: LOOONGGGGGGGGGGGGGGTEEEEEEEEEEEEEEEEEEEEEEXT
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="card">
+    <div class="card-body">
+        Approved
+        Statused by: Xtian
+        Remarks: Text
+    </div>
+</div>
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 

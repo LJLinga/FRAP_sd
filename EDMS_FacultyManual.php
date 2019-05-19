@@ -17,6 +17,19 @@ include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
 
 $edmsRole = $_SESSION['EDMS_ROLE'];
+
+function getSection($crud, $parentId = 0, $marginLeft = 0, $parentNo = ''){
+    if($parentNo == ''){ $dot = '';} else { $dot = '.';};
+    $query = "SELECT * FROM sections WHERE parentSectionId = '$parentId'";
+    $rows = $crud->getData($query);
+    foreach($rows as $key => $row){
+        echo '<div style="margin-left:'.$marginLeft.'px">';
+        echo '<h3>'.$parentNo.''.$dot.''.$row['sectionNo'].' - '.$row['title'].'</h3>';
+        echo '<p>'.$row['content'].'</p>';
+        echo '</div>';
+        getSection($crud, $row['id'], $marginLeft + 5, $row['sectionNo']);
+    }
+}
 ?>
 
 <style>
