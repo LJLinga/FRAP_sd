@@ -344,7 +344,7 @@ $success = null;
 
                         <p><i>Fields with <big class="req">*</big> are required to be filled out and those without are optional.</i></p>
                        
-                        <a href="ADMIN FALP manual.php#lifetimeInfo">Jump to Lifetime</a>
+                        <a href="#lifetimeInfo">Jump to Lifetime</a>
                         <!--Insert success page--> 
                         
                         <form method="POST" action="FA membership.php" id="addAccount" onSubmit="return checkform()">
@@ -633,15 +633,15 @@ $success = null;
 
                                         <div class="col-lg-2">
 
-                                                <label class="memfieldlabel">Employment Status</label>
+                                                <label class="memfieldlabel">Employment Category</label>
                                                 <select class="form-control" name ="empStat" >
 
                                                     
-                                                        <option>Probationary</option>
-                                                        <option>Permanent</option>
-                                                        <option>Part-time</option>
-                                                        <option>Faculty</option>
-                                                        <option>ASF</option>
+                                                        <option value = 1>Probationary</option>
+                                                        <option value = 2>Permanent</option>
+                                                        <option value = 3>Part-time</option>
+                                                        <option value = 4>Faculty</option>
+                                                        <option value = 5>ASF</option>
 
                                                   
 
@@ -990,10 +990,12 @@ $success = null;
                                 </div>
 
                             </div>
-                            
-
+                            <div align = "center" style = "font-size: 20px;">
+                                Please check your Email for more instructions
+                            </div>
+<div style = "position:relative;top:30px;">
                             <input id = "submit"  type="submit" name="submit" value="Sumbit"></p>
-
+</div>
                        </form>
 
                     </div>

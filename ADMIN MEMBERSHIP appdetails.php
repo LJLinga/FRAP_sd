@@ -85,7 +85,7 @@ $mail->Username = "duminacc@gmail.com";
 $mail->Password = "rewq/4321";
 $mail->SetFrom("duminacc@gmail.com");
 $mail->Subject = "RE: Membership account for Faculty Association";
-$mail->Body = 'THIS IS AN AUTO-GENERATED MESSAGE PLEASE DO NOT REPLY.<br>------------<br>Your account has been approved and now able to use the system.<br> To login use the password 1234 when login to change your password<br>';
+$mail->Body = 'THIS IS AN AUTO-GENERATED MESSAGE PLEASE DO NOT REPLY.<br>------------<br>Your account has been approved and now able to use the system.<br> To login use the password 1234 to change your password<br>';
 $mail->AddAddress($rowMem['email']);
 
  if(!$mail->Send()) {

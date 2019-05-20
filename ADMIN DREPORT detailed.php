@@ -132,7 +132,17 @@ $result2=mysqli_query($dbc,$query2);
 
                                     echo ' - '.date('d F', mktime(0, 0, 0, $monthEnd, $dayEnd)).' '.$yearEnd;
 
-                                }} else{ echo $date;}?></b>
+                                }
+                            } else{
+                                    $latestQuery = "SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2";
+                                    $resultLatest = mysqli_query($dbc,$latestQuery);
+
+                                    if(!empty($resultLatest)){
+                                    $latest = mysqli_fetch_assoc($resultLatest);
+                                    $date = $latest['Date'];
+                                    
+                                    echo date('d F Y', strtotime($date));
+                                }}?></b>
 
                             </div>
 
@@ -149,9 +159,7 @@ $result2=mysqli_query($dbc,$query2);
                                 <label for="event_start">Start Date</label>
                                 <div class="input-group date" id="datetimepicker1">
                                     <input id="event_start" name="event_start" type="text" class="form-control">
-                                    <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -160,9 +168,7 @@ $result2=mysqli_query($dbc,$query2);
                                 <label for="event_start">End Date</label>
                                 <div class="input-group date" id="datetimepicker2">
                                     <input id="event_end" name="event_end" type="text" class="form-control">
-                                    <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -218,10 +224,14 @@ $result2=mysqli_query($dbc,$query2);
 
                                      
 
-                                        <?php 
+                                        <?php
+                                        $totals = 0.00;
+                                      
+
+                                            
                                         while($ans = mysqli_fetch_assoc($result2)){
                                             $total  =(float)$ans['MFee']+(float)$ans['HAFee']+(float)$ans['FFee'];
-
+                                            $totals+=$total; 
                                         ?>
                                         <tr>
 
@@ -264,21 +274,27 @@ $result2=mysqli_query($dbc,$query2);
 
         $(document).ready(function(){
     
-            $('#table').DataTable();
-
+            $('#table').DataTable({
+        "dom": '<lf<t><<"#total">ip>>'
+    });
+             document.getElementById("total").align = "right";
+             document.getElementById("total").style = "position:relative;right:25px;font-size: 20px;";
+            document.getElementById("total").innerHTML="Total amount to be collected: P"+<?php echo $totals;?>;
         });
         $(function () {
                 
-            $('#datetimepicker1').datetimepicker( {
+             $('#event_start').datetimepicker( {
                 locale: moment().local('ph'),
                 maxDate: moment(),
-                format: 'DD MMM YYYY'
+                
+                format: 'DD-MM- YYYY'
+
             });
-            $('#datetimepicker2').datetimepicker( {
+            $('#event_end').datetimepicker( {
                 locale: moment().local('ph'),
                 
                 
-                format: 'DD MMM YYYY'
+                format: 'DD-MM- YYYY'
             });
 
         

@@ -29,7 +29,7 @@ if(isset($_POST['print'])){
 }
 if(!isset($_POST['event_start'])){
    
-        $query2="SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',DEPT_NAME,sum(t.amount) as 'Total'
+        $query2="SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',DEPT_NAME,sum(t.amount) as 'Total',t.TXN_DATE
         from member m
         join ref_department d
         on m.dept_id = d.dept_id
@@ -105,7 +105,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                 <div class="row">
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-12">
 
                         <div class="panel panel-green">
 
@@ -116,7 +116,16 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                     echo ' - '.date('d F', mktime(0, 0, 0, $monthEnd, $dayEnd)).' '.$yearEnd;
 
-                                }} else{ echo "Latest date";}?></b>
+                                }} else{ 
+                                    $latestQuery = "SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2";
+                                    $resultLatest = mysqli_query($dbc,$latestQuery);
+
+                                    if(!empty($resultLatest)){
+                                    $latest = mysqli_fetch_assoc($resultLatest);
+                                    $date = $latest['Date'];
+                                    
+                                    echo date('d F Y', strtotime($date));}
+                                }?></b>
 
                             </div>
 
@@ -124,19 +133,18 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                 <div class="row">
 
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-6">
 
                                     <form action="ADMIN DREPORT general.php" method="POST">
 
                                        
                                           <div class="col-lg-12lg-4">
+
                             <div class="form-group">
                                 <label for="event_start">Start Date</label>
                                 <div class="input-group date" id="datetimepicker1">
-                                    <input id="event_start" name="event_start" type="text" class="form-control">
-                                    <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
+                                    <input id="event_start" name="event_start" type="text" class="form-control" >
+                                    
                                 </div>
                             </div>
                         </div>
@@ -144,10 +152,8 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                             <div class="form-group">
                                 <label for="event_start">End Date</label>
                                 <div class="input-group date" id="datetimepicker2">
-                                    <input id="event_end" name="event_end" type="text" class="form-control">
-                                    <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
+                                    <input id="event_end" name="event_end" type="text" class="form-control" >
+                                   
                                 </div>
                             </div>
                         </div>
@@ -201,16 +207,17 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                     <tbody>
                                         <?php 
+                                        $total = 0.00;
                                         while($ans = mysqli_fetch_assoc($result2)){
 
-
+                                            $total+=$ans['Total'];
                                         ?>
                                         <tr>
 
                                         <td align="center"><?php echo $ans['ID'];?></td>
                                         <td align="center"><?php echo $ans['First']." ".$ans['Middle']." ".$ans['Last'];?></td>
                                         <td align="center"><?php echo $ans['DEPT_NAME'];?></td>
-                                        <td align="center">₱ <?php echo number_format($ans['Total'],2)."<br>";?></td>
+                                        <td align="center"><?php echo $ans['Total'];?></td>
 
                                         </tr>
                                         <?php } ?>
@@ -218,9 +225,9 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                      
 
                                     </tbody>
-
+                                    
                                 </table>
-
+                                
                                 </form>
 
                             </div>
@@ -241,28 +248,38 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
     
     <!-- Bootstrap Core JavaScript -->
-    
+<script>
+function myFunction() {
+  document.getElementById('event_start').maxDate = $("#event_end").data("datetimepicker").getDate();;
+}
+</script>
 
     <script type="text/javascript" src="DataTables/datatables.min.js"></script>
     <script>
 
         $(document).ready(function(){
     
-            $('#table').DataTable();
-
+            $('#table').DataTable({
+        "dom": '<lf<t><<"#total">ip>>'
+    });
+             document.getElementById("total").align = "right";
+             document.getElementById("total").style = "position:relative;right:95px;font-size: 20px;";
+            document.getElementById("total").innerHTML="Total amount to be collected: P"+<?php echo $total;?>;
         });
         $(function () {
                 
-            $('#datetimepicker1').datetimepicker( {
+            $('#event_start').datetimepicker( {
                 locale: moment().local('ph'),
                 maxDate: moment(),
-                format: 'DD MMM YYYY'
+                
+                format: 'DD-MM- YYYY'
+
             });
-            $('#datetimepicker2').datetimepicker( {
+            $('#event_end').datetimepicker( {
                 locale: moment().local('ph'),
                 
                 
-                format: 'DD MMM YYYY'
+                format: 'DD-MM- YYYY'
             });
 
         

@@ -120,9 +120,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                 <label for="event_start">Start Date</label>
                                 <div class="input-group date" id="datetimepicker1">
                                     <input id="event_start" name="event_start" type="text" class="form-control">
-                                    <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
+                                 
                                 </div>
                             </div>
                         </div>
@@ -131,9 +129,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                 <label for="event_start">End Date</label>
                                 <div class="input-group date" id="datetimepicker2">
                                     <input id="event_end" name="event_end" type="text" class="form-control">
-                                    <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
+                                    <
                                 </div>
                             </div>
                         </div>
@@ -232,13 +228,13 @@ include 'FRAP_ADMIN_SIDEBAR.php';
             $('#table').DataTable();
 
                 
-            $('#datetimepicker1').datetimepicker( {
+            $('#event_start').datetimepicker( {
                 locale: moment().local('ph'),
                 maxDate: moment(),
                 
                 format: 'YYYY MMM'
             });
-            $('#datetimepicker2').datetimepicker( {
+            $('#event_end').datetimepicker( {
                 locale: moment().local('ph'),
                 
                 

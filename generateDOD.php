@@ -203,6 +203,8 @@ $pdf->ln();
 
 
 }
+$pdf->Cell(230   ,5,"$total" ,'L,B,R',0,'R');
+$pdf->ln();
 
 $pdf->SetFont('Times','B',12);
 
