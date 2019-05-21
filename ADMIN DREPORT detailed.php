@@ -152,22 +152,22 @@ $result2=mysqli_query($dbc,$query2);
 
                                     <div class="col-lg-12">
 
-                                    <form action="ADMIN DREPORT detailed.php" method="POST">
+                                    <form action="ADMIN DREPORT detailed.php" method="POST" autocomplete="off">
 
                                          <div class="col-lg-12lg-4">
                             <div class="form-group">
                                 <label for="event_start">Start Date</label>
                                 <div class="input-group date" id="datetimepicker1">
                                     <input id="event_start" name="event_start" type="text" class="form-control">
-                                    
+                                  
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-12lg-4">
                             <div class="form-group">
-                                <label for="event_start">End Date</label>
+                                <label for="event_end">End Date</label>
                                 <div class="input-group date" id="datetimepicker2">
-                                    <input id="event_end" name="event_end" type="text" class="form-control">
+                                    <input id="event_end" name="event_end" type="text" class="form-control" onClick = "myFunction()">
                                     
                                 </div>
                             </div>
@@ -268,7 +268,18 @@ $result2=mysqli_query($dbc,$query2);
 
     </div>
     <!-- /#wrapper -->
+    <script>
+function myFunction() {
+    $('#event_start').datepicker('destroy');
+     $('#event_start').attr('value', '');
+  $('#event_start').datetimepicker( {
+                locale: moment().local('ph'),
+                maxDate: $("#event_end").data("datetimepicker").getDate();,
+                
+                format: 'DD-MM- YYYY'
 
+            });
+}</script>
     <script type="text/javascript" src="DataTables/datatables.min.js"></script>
     <script>
 
