@@ -69,7 +69,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                     <td align="center" width="300px"><b>Name</b></td>
                                                     <td align="center"><b>Department</b></td>
                                                     <td align="center"><b>Full-Time/Part-Time?</b></td>
-                                                    <td align="center"><b>Has this Person Loaned? (For Part-Time)</b></td>
+                                                    <td align="center"><b>Has Loaned for the Term?</b></td>
                                                     <td align="center"><b>Member Since</b></td>
                                                     <td align="center"><b>Action</b></td>
 
