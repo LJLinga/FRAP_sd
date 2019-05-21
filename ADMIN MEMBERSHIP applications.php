@@ -78,7 +78,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <td align="center"><?php echo $resultRow['MEMBER_ID']; ?></td>
                                         <td align="center"><?php echo $resultRow['FIRSTNAME'] . " " . $resultRow['LASTNAME']; ?></td>
                                         <td align="center"><?php echo $resultRow['DEPT_NAME']; ?></td>
-                                        <td align="center"><?php echo date('Y, M d', strtotime($resultRow['DATE_APPLIED'])); ?></td>
+                                        <td align="center"><?php echo date(' M d, Y', strtotime($resultRow['DATE_APPLIED'])); ?></td>
                                         <td align="center">&nbsp;&nbsp;&nbsp;<button type="submit" name="submit" class="btn btn-info" value="<?php echo $resultRow['MEMBER_ID']; ?>">View</button>&nbsp;&nbsp;&nbsp;</td>
 
                                         </tr>

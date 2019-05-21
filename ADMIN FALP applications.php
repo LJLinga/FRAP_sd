@@ -198,8 +198,8 @@ $crud = new GLOBAL_CLASS_CRUD();
                                         <td align="center"><b>Name</b></td>
                                         <td align="center"><b>Department</b></td>
                                         <td align="center"><b>Amount</b></td>
+                                        <td align="center"><b>Document Statuses</b></td>
                                         <td align="center"><b>Actions</b></td>
-
                                         </tr>
 
                                     </thead>
@@ -208,14 +208,21 @@ $crud = new GLOBAL_CLASS_CRUD();
 
                                         <?php 
 
-                                            $query = "SELECT L.DATE_APPLIED, M.MEMBER_ID, M.FIRSTNAME, M.LASTNAME, RD.DEPT_NAME, L.AMOUNT, L.LOAN_ID , L.APP_STATUS, L.PICKUP_STATUS
+                                            $query = "SELECT L.DATE_APPLIED, M.MEMBER_ID, M.FIRSTNAME, M.LASTNAME, RD.DEPT_NAME, L.AMOUNT, L.LOAN_ID , L.APP_STATUS, L.PICKUP_STATUS, S.stepName
                                                       FROM MEMBER M 
                                                       JOIN LOANS L 
                                                       ON M.MEMBER_ID = L.MEMBER_ID 
                                                       JOIN REF_DEPARTMENT RD 
                                                       ON M.DEPT_ID = RD.DEPT_ID 
+                                                      JOIN ref_document_loans RDL
+                                                      ON L.LOAN_ID = RDL.LOAN_ID
+                                                      JOIN documents D
+                                                      ON RDL.DOC_ID = D.documentId
+                                                      JOIN steps S
+                                                      ON D.stepId = S.id
                                                       WHERE L.APP_STATUS != 3
-                                                      AND L.PICKUP_STATUS != 3 ;";
+                                                      AND L.PICKUP_STATUS != 3
+                                                      AND RDL.DOC_REQ_TYPE = 1;";
                                             $result = mysqli_query($dbc, $query);
                                             
                                             foreach ($result as $resultRow) {
@@ -223,10 +230,11 @@ $crud = new GLOBAL_CLASS_CRUD();
 
                                         <tr>
 
-                                        <td align="center"><?php echo date('Y, M d', strtotime($resultRow['DATE_APPLIED'])); ?></td>
+                                        <td align="center"><?php echo date(' M d, Y', strtotime($resultRow['DATE_APPLIED'])); ?></td>
                                         <td align="center"><?php echo $resultRow['FIRSTNAME'] ." ". $resultRow['LASTNAME']; ?></td>
                                         <td align="center"><?php echo $resultRow['DEPT_NAME']; ?></td>
                                         <td align="center">₱ <?php echo number_format($resultRow['AMOUNT'],2)."<br>"; ?></td>
+                                            <td align="center"><?php echo $resultRow['stepName']; ?></td>
                                             <?php if($resultRow['APP_STATUS'] == 2 && $resultRow['PICKUP_STATUS'] == 1){ ?>
                                                 <td align="center">&nbsp;&nbsp;&nbsp;<button type='submit' class='btn-xs btn-success' name='Fdetails' value='<?php echo $resultRow['LOAN_ID']; ?>'>Details</button>&nbsp;&nbsp;&nbsp;
                                                     <button type='submit' class='btn-xs btn-success' name='pickup'  value='<?php echo $resultRow['LOAN_ID']; ?>'>Ready For Pick Up</button></td>

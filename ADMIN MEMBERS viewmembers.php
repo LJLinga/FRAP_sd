@@ -61,7 +61,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                             <td align="center" width="300px"><b>Name</b></td>
                                             <td align="center"><b>Department</b></td>
                                             <td align="center"><b>Member Since</b></td>
-                                            <td align="center"><b>Full/Part Time?</b></td>
+                                            <td align="center"><b>Employee Type</b></td>
                                             <td align="center"><b>Actions</b></td>
 
                                         </tr>
@@ -77,7 +77,8 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         on m.dept_id = d.dept_id 
                                         join user_status us 
                                         on m.USER_STATUS = us.STATUS_ID
-                                        where m.membership_status = 2";
+                                        where m.membership_status = 2
+                                        ORDER BY m.DATE_APPROVED DESC";
 
                                         $result = mysqli_query($dbc,$query);
 
@@ -90,7 +91,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                             <td align="center"><?php echo $rows['MEMBER_ID'];?></td>
                                             <td align="center"><?php echo $rows['FIRSTNAME']." ".$rows['LASTNAME'];?> </td>
                                             <td align="center"><?php echo $rows['DEPT_NAME'];?></td>
-                                            <td align="center"><?php echo date('Y, M d', strtotime($rows['DATE_APPROVED']));?></td>
+                                            <td align="center"><?php echo date(' M d, Y', strtotime($rows['DATE_APPROVED']));?></td>
                                             <td align="center"><?php echo $rows['STATUS'];?></td>
                                             <td align="center"><button type="submit" name="details" class="btn btn-info" value=<?php echo $rows['MEMBER_ID'];?>>View</button>&nbsp;&nbsp;&nbsp;</td>
 

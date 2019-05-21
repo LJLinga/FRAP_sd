@@ -150,7 +150,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                                     <label>Reason for the Health Aid Application: </label>
 
-                                    <textarea placeholder="Place your plea for aid here" id="noresize" name="message" class="form-control" rows="5" cols="125" required></textarea>
+                                    <textarea placeholder="Place your reason here" id="noresize" name="message" class="form-control" rows="5" cols="125" required></textarea>
 
 
                                 </div>
