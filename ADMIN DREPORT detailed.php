@@ -6,6 +6,15 @@ session_start();
 include 'GLOBAL_USER_TYPE_CHECKING.php';
 include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
 
+if(date('d')==30 || (date('m') == 2 && date('d')==28)){
+    $queryDed = "SELECT m.MEMBER_ID as 'MEMBER_ID', count(t.txn_id),max(TXN_DATE) from member m  left join txn_reference t on m.MEMBER_ID = t.MEMBER_ID where m.membership_status = 2 and m.user_status = 1  group by m.MEMBER_ID having date(max(txn_date)) != date(now());";
+    $result = mysqli_query($dbc,$queryDed);
+    while($row = mysqli_fetch_assoc($result)){
+        $queryMemDed = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE,TXN_DESC,AMOUNT,TXN_DATE,SERVICE_ID) VALUES({$row['MEMBER_ID']},2,'Deduction for membership',100,date(now()),1);";
+        mysqli_query($dbc,$queryMemDed);
+    }
+}
+
 $flag=0;
 if(isset($_POST['print'])){
     $_SESSION['event_start'] = null;
@@ -97,7 +106,7 @@ $result2=mysqli_query($dbc,$query2);
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
-                            Detailed Deductions Report
+                            Detailed Deductions Report 
                             
                         </h1>
                     
