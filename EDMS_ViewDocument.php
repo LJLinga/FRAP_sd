@@ -27,7 +27,7 @@ if(isset($_GET['docId'])){
 
     // Load Process and Steps assigned to current document
     $query = "SELECT d.stepId, p.processName, s.stepName, s.isFinal,
-              d.availabilityId, d.lockedById, d.statusId, st.statusName
+              d.availabilityId, d.lockedById, d.statusId
               FROM documents d 
               JOIN steps s ON d.stepId = s.id 
               JOIN doc_status st ON st.id = d.statusId 
@@ -41,7 +41,6 @@ if(isset($_GET['docId'])){
         $availability = $row['availabilityId'];
         $lockedById = $row['lockedById'];
         $statusId = $row['statusId'];
-        $statusName = $row['statusName'];
         $isFinal = $row['isFinal'];
     }
 
@@ -127,28 +126,30 @@ if(isset($_POST['btnUnlock'])){
 
 if(isset($_POST['btnAccept'])){
     //Clickable only when unlocked. Thesis 2.
-    $documentId = $_POST['btnAccept'];
+    $documentId = $_POST['documentId'];
+    //echo '<script> alert('.$documentId.')</script>';
     $rows = $crud->getData("SELECT availabilityId FROM documents WHERE documentId = '$documentId'");
     foreach((array) $rows as $key => $row){
         $availability = $row['availabilityId'];
     }
     if($availability == '2'){
         $userId = $_POST['userId'];
-        $crud->execute("UPDATE documents SET statusId='2' WHERE documentId='$documentId'");
+        $remarks = $_POST['remarks'];
+        $crud->execute("UPDATE documents SET statusId='2', statusedById='$userId', remarks='$remarks' WHERE documentId='$documentId'");
     }
     //$crud->execute("UPDATE documents SET statusId='2', availabilityId='2', lockedById=NULL WHERE documentId='$documentId'");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
 }
 
 if(isset($_POST['btnReject'])){
-    $documentId= $_POST['btnReject'];
+    $documentId= $_POST['documentId'];
     $rows = $crud->getData("SELECT availabilityId FROM documents WHERE documentId = '$documentId'");
     foreach((array) $rows as $key => $row){
         $availability = $row['availabilityId'];
     }
     if($availability == '2'){
         $userId = $_POST['userId'];
-        $crud->execute("UPDATE documents SET statusId='3' WHERE documentId='$documentId'");
+        $crud->execute("UPDATE documents SET statusId='3', statusedById='$userId' WHERE documentId='$documentId'");
     }
     //$crud->execute("UPDATE documents SET statusId='3', availabilityId='2', lockedById=NULL WHERE documentId='$documentId'");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
@@ -290,9 +291,40 @@ include 'EDMS_SIDEBAR.php';
                         </table>
                     </div>
                 </div>
+                <?php
+                    $query = "SELECT a.timeStamp, s.statusName, a.remarks, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) as statusAuthor, a.versionNo 
+                                FROM doc_status_audit a 
+                                JOIN doc_status s ON a.statusId = s.id
+                                JOIN employee e ON a.statusedById = e.EMP_ID 
+                                WHERE documentId='$documentId'
+                                ORDER BY a.timeStamp DESC";
+                    $rows = $crud->getData($query);
+                if (!empty($rows)) { ?>
+                    <div class="card" style="margin-top: 1rem; max-height: 25rem;">
+                        <div class="card-header">
+                            <b>Status History</b>
+                        </div>
+                        <div class="card-body" style="overflow-y: auto;">
+                    <?php foreach ((array)$rows as $key => $row) { ?>
+                        <div class="card">
+                            <div class="card-body">
+                                <span class="badge"><?php echo $row['statusName'];?></span> by <b><?php echo $row['statusAuthor'];?></b><br>
+                                <i>on <?php echo date("F j, Y g:i:s A ", strtotime($row['timeStamp']));?></i><br>
+                                "<?php echo $row['remarks']?>"
+                            </div>
+                        </div>
+                    <?php } ?>
+                        </div>
+                    </div>
+                <?php
+                }
+                ?>
+
+
                 <div class="card" style="margin-top: 1rem;">
                     <div class="card-header">
                         <b>Document Actions</b>
+                        <b><?php echo $userId; ?></b>
                     </div>
                     <div class="card-body">
                         <div class="btn-group btn-group-vertical" style="width: 100%;">
@@ -345,9 +377,9 @@ include 'EDMS_SIDEBAR.php';
                     $rows = $crud->getData($query);
                     if (!empty($rows)) {
 
-                        echo '<div class="card" style="margin-top: 1rem;">';
+                        echo '<div class="card" style="margin-top: 1rem; max-height: 20rem; ">';
                         echo '<div class="card-header"><b>Version History</b></div>';
-                        echo '<div class="card-body">';
+                        echo '<div class="card-body" style="overflow-y: auto;">';
                         if(!empty($rows)) {
                             foreach ((array)$rows as $key => $row) {
                                 echo '<div class="card" style="position: relative;">';
@@ -388,7 +420,8 @@ include 'EDMS_SIDEBAR.php';
                 <div class="modal-footer">
                     <div class="form-group">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" name="btnAccept" class="btn btn-primary"  value="<?php echo $documentId;?>">Confirm</button>
+                        <input type="hidden" name="documentId" value="<?php echo $documentId; ?>">
+                        <button type="submit" name="btnAccept" class="btn btn-primary">Confirm Approve</button>
                     </div>
                 </div>
             </div>
@@ -398,7 +431,7 @@ include 'EDMS_SIDEBAR.php';
 
     <div id="rejectModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
-            <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
+            <form method="POST" action="<?php echo $_SERVER["PHP_SELF"];?>">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"><b>Confirm Reject?</b></h5>
@@ -412,7 +445,8 @@ include 'EDMS_SIDEBAR.php';
                 <div class="modal-footer">
                     <div class="form-group">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" name="btnReject" class="btn btn-primary" value="<?php echo $documentId;?>">Confirm Reject</button>
+                        <input type="hidden" name="documentId" value="<?php echo $documentId; ?>">
+                        <button type="submit" name="btnReject" class="btn btn-primary">Confirm Reject</button>
                     </div>
                 </div>
             </div>
@@ -455,32 +489,6 @@ include 'EDMS_SIDEBAR.php';
             }
         }
     ?>
-<div class="card">
-    <div class="card-header">
-        Status Details
-    </div>
-</div>
-    <div class="card">
-        <div class="card-header">
-            Status History
-        </div>
-        <div class="card-body">
-            <div class="card">
-                <div class="card-body">
-                    <span class="badge">Approved</span> by Alderite, Christian Nicole<br>
-                    on January 1, 2019<br>
-                    Remarks: LOOONGGGGGGGGGGGGGGTEEEEEEEEEEEEEEEEEEEEEEXT
-                </div>
-            </div>
-        </div>
-    </div>
-<div class="card">
-    <div class="card-body">
-        Approved
-        Statused by: Xtian
-        Remarks: Text
-    </div>
-</div>
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
