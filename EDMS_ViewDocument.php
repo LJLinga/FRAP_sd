@@ -126,8 +126,7 @@ if(isset($_POST['btnUnlock'])){
 
 if(isset($_POST['btnAccept'])){
     //Clickable only when unlocked. Thesis 2.
-    $documentId = $_POST['documentId'];
-    //echo '<script> alert('.$documentId.')</script>';
+    $documentId = $_POST['btnAccept'];
     $rows = $crud->getData("SELECT availabilityId FROM documents WHERE documentId = '$documentId'");
     foreach((array) $rows as $key => $row){
         $availability = $row['availabilityId'];
@@ -142,7 +141,7 @@ if(isset($_POST['btnAccept'])){
 }
 
 if(isset($_POST['btnReject'])){
-    $documentId= $_POST['documentId'];
+    $documentId= $_POST['btnReject'];
     $rows = $crud->getData("SELECT availabilityId FROM documents WHERE documentId = '$documentId'");
     foreach((array) $rows as $key => $row){
         $availability = $row['availabilityId'];
@@ -435,8 +434,7 @@ include 'EDMS_SIDEBAR.php';
                 <div class="modal-footer">
                     <div class="form-group">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <input type="hidden" name="documentId" value="<?php echo $documentId; ?>">
-                        <button type="submit" name="btnAccept" class="btn btn-primary">Confirm Approve</button>
+                        <button type="submit" name="btnAccept" class="btn btn-primary" value="<?php echo $documentId; ?>">Confirm Approve</button>
                     </div>
                 </div>
             </div>
@@ -460,8 +458,7 @@ include 'EDMS_SIDEBAR.php';
                 <div class="modal-footer">
                     <div class="form-group">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <input type="hidden" name="documentId" value="<?php echo $documentId; ?>">
-                        <button type="submit" name="btnReject" class="btn btn-primary">Confirm Reject</button>
+                        <button type="submit" name="btnReject" class="btn btn-primary" value="<?php echo $documentId; ?>">Confirm Reject</button>
                     </div>
                 </div>
             </div>

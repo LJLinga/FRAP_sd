@@ -327,22 +327,40 @@ include 'EDMS_SIDEBAR.php';
                             $count= 0;
                             echo '<div class="card" style="margin-top: 1rem;">';
                             echo '<div class="card-header"><b>Version History</b></div>';
-                            echo '<div class="card-body" style="max-height: 50vh; overflow-y: auto;">';
+                            echo '<div class="card-body" style="max-height: 25rem; overflow-y: auto;">';
                                 foreach ((array)$rows as $key => $row) {
                                     $count++;
                                     echo '<div class="card" style="margin-bottom: 1rem;">';
                                     echo '<div class="card-body">';
                                     echo '<span class="badge">Version ' . $row['timeCreated'] . '</span> ';
-                                    echo '<button type="button" id="btnPreview" class="btn btn-default btn-sm" data-toggle="collapse" data-target="#collapse'.$count.'" aria-expanded="false" aria-controls="collapse'.$count.'">Read</button><br>';
-                                    echo '<b>Section '.$row['sectionNo'].': '. $row['title'] . ' </b><br>';
-                                    echo 'Created by: ' . $row['versionAuthor'] . '<br>';
-                                    echo 'on: <i>' . date("F j, Y g:i:s A ", strtotime($row['timeCreated'])) . '</i><br>';
-                                    echo '<div id="collapse'.$count.'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
-                                    echo '<div class="card-body">';
-                                    echo $row['content'];
+                                    echo '<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#preview'.$count.'">Read</button><br>';
                                     echo '</div>';
                                     echo '</div>';
-                                    echo '</div></div>';
+                                    ?>
+                                    <div id="preview<?php echo $count;?>" class="modal fade" role="dialog">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                    <b><p class="modal-title">Section <?php echo $row['sectionNo']?>: <?php echo $row['title'];?></p></b>
+                                                    Author: <?php echo $row['versionAuthor']?><br>
+                                                    Created on: <i><?php echo date("F j, Y g:i:s A ", strtotime($row['timeCreated']));?></i>
+                                                </div>
+                                                <div class="modal-body" style="overflow-y: auto; max-height: 50rem;">
+                                                    <p><?php echo $row['content'];?></p>
+                                                </div>
+                                                <div class="modal-header">
+                                                   <b>Remarks</b>
+                                                </div>
+                                                <div class="modal-body" style="overflow-y: auto; max-height: 50rem;">
+                                                    <p><?php echo $row['content'];?></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php
                                 }
 
                             echo '</div></div>';

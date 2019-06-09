@@ -15,7 +15,7 @@ if(isset($_POST['role'])){
 
     $role = $_POST['role'];
 
-    $query = "SELECT d.documentId, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName, 
+    $query = "SELECT d.documentId, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName,
                 d.filePath, d.title, d.versionNo, d.timeCreated, d.lastUpdated,
                 stat.statusName, s.stepNo, s.stepName, t.type, pr.processName,
                 (SELECT CONCAT(e.FIRSTNAME,', ',e.LASTNAME) FROM employee e2 WHERE e2.EMP_ID = d.firstAuthorId) AS firstAuthorName 
@@ -27,7 +27,7 @@ if(isset($_POST['role'])){
                 JOIN step_roles sr ON sr.stepId = s.id
                 JOIN process pr ON pr.id = s.processId
                 WHERE t.isActive = 2 AND sr.roleId = '$role' 
-                AND sr.read = 2 ORDER BY d.lastUpdated DESC;";
+                AND sr.read = 2 AND d.firstAuthorId !='$userId' ORDER BY d.lastUpdated DESC;";
 
 
     $rows = $crud->getData($query);
