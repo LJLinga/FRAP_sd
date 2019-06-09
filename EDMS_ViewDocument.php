@@ -305,15 +305,30 @@ include 'EDMS_SIDEBAR.php';
                             <b>Status History</b>
                         </div>
                         <div class="card-body" style="overflow-y: auto;">
-                    <?php foreach ((array)$rows as $key => $row) { ?>
-                        <div class="card">
-                            <div class="card-body">
-                                <span class="badge"><?php echo $row['statusName'];?></span> by <b><?php echo $row['statusAuthor'];?></b><br>
-                                <i>on <?php echo date("F j, Y g:i:s A ", strtotime($row['timeStamp']));?></i><br>
-                                "<?php echo $row['remarks']?>"
-                            </div>
-                        </div>
-                    <?php } ?>
+                    <?php
+                        $ctr = 0;
+                        foreach ((array)$rows as $key => $row) {
+                            if($ctr == 0){ ?>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <b>Currently</b> </b><span class="badge"><?php echo $row['statusName'];?></span> by <b><?php echo $row['statusAuthor'];?></b><br>
+                                        <i>since <?php echo date("F j, Y g:i:s A ", strtotime($row['timeStamp']));?></i><br>
+                                        "<?php echo $row['remarks']?>"
+                                    </div>
+                                </div>
+                    <?php }else{ ?>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <a style="text-align: left;" data-toggle="collapse" data-target="#collapse<?php echo $ctr;?>" aria-expanded="true" aria-controls="collapse<?php echo $ctr;?>"><span class="badge"><?php echo $row['statusName'];?></span> by <b><?php echo $row['statusAuthor'];?></b></a>
+                                        <div id="collapse<?php echo $ctr;?>" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                                            <i>on <?php echo date("F j, Y g:i:s A ", strtotime($row['timeStamp']));?></i><br>
+                                            "<?php echo $row['remarks']?>"
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php }
+                            $ctr=$ctr+1;
+                        } ?>
                         </div>
                     </div>
                 <?php
