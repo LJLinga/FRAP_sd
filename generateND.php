@@ -62,8 +62,8 @@ if(!isset($_SESSION['event_start'])){
 else {
    $dateStart = $_SESSION['event_start'];
             
-            $yearStart = substr($dateStart,0,strpos($dateStart,"-"));
-            $monthStart = substr($dateStart,strpos($dateStart,"-")+1);
+            $yearStart = substr($dateStart,0,strpos($dateStart," "));
+            $monthStart = substr($dateStart,strpos($dateStart,"  ")+1);
             if(isset($_SESSION['event_end'])){
                 $dateEnd = $_SESSION['event_end'];
                 $yearEnd = substr($dateEnd,0,strpos($dateEnd,"-"));
