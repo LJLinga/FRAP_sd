@@ -197,6 +197,13 @@ include 'EDMS_SIDEBAR.php';
                                 <p class="card-text" style="text-align: justify;"><?php echo $content; ?></p>
                             </div>
                         </div>
+                        <?php $query="SELECT v.title, v.sectionNo, v.";?>
+                        <div class="card" style="margin-top: 1rem;">
+                            <div class="card-body">
+                                <h3 class="card-title"><b>Section <?php echo $sectionNo.' - '.$title; ?></b></h3>
+                                <p class="card-text" style="text-align: justify;"><?php echo $content; ?></p>
+                            </div>
+                        </div>
                         <div class="card" style="margin-top: 1rem;">
                             <div class="card-header"><b>Comments</b></div>
                             <div class="card-body">
@@ -229,26 +236,18 @@ include 'EDMS_SIDEBAR.php';
                                         <div class="card-header"><b>Referenced Minutes and Appendices</b></div>
                                         <div class="card-body">';
                             foreach ((array)$rows as $key => $row) {
-                                $title = $row['title'];
-                                $versionNo = $row['versionNo'];
-                                $originalAuthor = $row['firstAuthorName'];
-                                $currentAuthor = $row['authorName'];
-                                $processName = $row['processName'];
-                                $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
-                                $filePath = $row['filePath'];
-                                $fileName = $title.'_ver'.$versionNo.'_'.basename($filePath);
                                 echo '<div class="card" style="position: relative;">';
                                 echo '<input type="hidden" class="refDocuments" value="'.$row['vid'].'">';
-                                echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
+                                echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $row['versionNo'] . '</span></a>';
                                 echo '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >';
-                                echo '<a class="btn fa fa-download"  href="'.$filePath.'" download="'.$fileName.'"></a>';
+                                echo '<a class="btn fa fa-download"  href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"></a>';
                                 echo '</div>';
                                 echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
                                 echo '<div class="card-body">';
-                                echo 'Process: ' . $processName . '<br>';
-                                echo 'Created by: ' . $originalAuthor . '<br>';
-                                echo 'Modified by: ' . $currentAuthor . '<br>';
-                                echo 'on: <i>' . $updatedOn . '</i><br>';
+                                echo 'Process: ' . $row['processName'] . '<br>';
+                                echo 'Created by: ' . $row['firstAuthorName'] . '<br>';
+                                echo 'Modified by: ' . $row['authorName'] . '<br>';
+                                echo 'on: <i>' . date("F j, Y g:i:s A ", strtotime($row['timeCreated'])) . '</i><br>';
                                 echo '</div></div></div>';
                             }
                             echo '</div></div>';
@@ -262,7 +261,7 @@ include 'EDMS_SIDEBAR.php';
                                 Status: <b><?php echo $statusName;?></b> <?php if(isset($approvedByName)) echo '(by '.$approvedByName.')';?><br>
                                 Stage: <b><?php echo $stepName; ?></b><br>
                                 Created by: <b><?php echo $firstAuthorName ?></b><br>
-                                Modified by: <b><?php echo $authorName ?></b><br>
+                                Last modified by: <b><?php echo $authorName ?></b><br>
                                 on <i><b><?php  echo date("F j, Y g:i:s A ", strtotime($lastUpdated));?></b></i>
                             </div>
                             <div class="card-body">

@@ -24,6 +24,7 @@ if(!empty($_POST['documentId']) && !empty($_POST['newVersionNo']) && !empty($_PO
     $title = $_POST['versionTitle'];
     $versionNo = $_POST['newVersionNo'];
     $documentId = $_POST['documentId'];
+    $remarks = $_POST['remarks'];
 
     $fileName = $_FILES['file']['name'];
     $fileSize = $_FILES['file']['size'];
@@ -50,11 +51,11 @@ if(!empty($_POST['documentId']) && !empty($_POST['newVersionNo']) && !empty($_PO
         $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
 
         if ($didUpload) {
-            $crud->execute("UPDATE documents SET availabilityId='2', 
+            $crud->execute("UPDATE documents SET availabilityId='2', remarks='$remarks',
                                     authorId='$userId', versionNo='$versionNo', title='$title',filePath='$uploadPath',
                                     lockedById=NULL WHERE documentId='$documentId'");
             //echo $documentId;
-            echo 'http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId='.$documentId;
+            echo 'success';
         } else {
             echo "An error occurred somewhere. Try again or contact the admin";
         }

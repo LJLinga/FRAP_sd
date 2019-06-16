@@ -136,7 +136,6 @@ if(isset($_POST['btnAccept'])){
         $remarks = $_POST['remarks'];
         $crud->execute("UPDATE documents SET statusId='2', statusedById='$userId', remarks='$remarks' WHERE documentId='$documentId'");
     }
-    //$crud->execute("UPDATE documents SET statusId='2', availabilityId='2', lockedById=NULL WHERE documentId='$documentId'");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
 }
 
@@ -148,9 +147,9 @@ if(isset($_POST['btnReject'])){
     }
     if($availability == '2'){
         $userId = $_POST['userId'];
-        $crud->execute("UPDATE documents SET statusId='3', statusedById='$userId' WHERE documentId='$documentId'");
+        $remarks = $_POST['remarks'];
+        $crud->execute("UPDATE documents SET statusId='3', statusedById='$userId', remarks='$remarks' WHERE documentId='$documentId'");
     }
-    //$crud->execute("UPDATE documents SET statusId='3', availabilityId='2', lockedById=NULL WHERE documentId='$documentId'");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
 }
 
@@ -192,7 +191,7 @@ if(isset($_POST['btnRoute'])){
     }
     if($availability == '2'){
         $userId = $_POST['userId'];
-        $crud->execute("UPDATE documents SET statusId = '1', stepId='$nextStepId' WHERE documentId='$documentId'");
+        $crud->execute("UPDATE documents SET statusId = '1', stepId='$nextStepId', statusedById='$userId' WHERE documentId='$documentId'");
     }
     //$crud->execute("UPDATE documents SET statusId = '1', availabilityId='2', stepId='$nextStepId', lockedById=NULL WHERE documentId='$documentId'");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
@@ -203,8 +202,8 @@ include 'EDMS_SIDEBAR.php';
 ?>
 <div id="content-wrapper" xmlns="http://www.w3.org/1999/html">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-12" style="margin-top: 2rem;">
+        <div class="row" style="margin-top: 2rem;">
+            <div class="col-lg-8">
                 <ol class="breadcrumb">
                     <li>
                         <a href="http://localhost/FRAP_sd/EDMS_Workspace.php">Workspace</a>
@@ -216,11 +215,6 @@ include 'EDMS_SIDEBAR.php';
                         <?php echo $title; ?>
                     </li>
                 </ol>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-8">
-
                 <?php
                     $ext = pathinfo($filePath, PATHINFO_EXTENSION);
                     if($ext == 'pdf' || $ext == 'jpg'){
@@ -235,6 +229,23 @@ include 'EDMS_SIDEBAR.php';
                             </div>';
                     }
                 ?>
+
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-header">
+                        <div class="form-inline">
+                            <label for="sel1">Document History</label>
+                            <select id="sel1" class="form-control" id="selectedType" name="selectedType" onchange="searchTable(this.value);">
+                                <option value="0" selected>All</option>
+                                <option value="1">Version</option>
+                                <option value="2">Status</option>
+                                <option value="3">Stage</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table id="tblHistory" cellspacing="0" width="100%"></table>
+                    </div>
+                </div>
 
                 <div class="card" style="margin-top: 1rem;">
                     <div class="card-header"><b>Comments</b></div>
@@ -252,7 +263,7 @@ include 'EDMS_SIDEBAR.php';
                         <b>Document Details</b>
                     </div>
                     <div class="card-body">
-                        <table class="table table-condensed table-responsive table-bordered">
+                        <table class="table table-condensed table-responsive table-bordered table-sm">
                             <tbody>
                             <tr>
                                 <th>Title</th>
@@ -290,51 +301,6 @@ include 'EDMS_SIDEBAR.php';
                         </table>
                     </div>
                 </div>
-                <?php
-                    $query = "SELECT a.timeStamp, s.statusName, a.remarks, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) as statusAuthor, a.versionNo 
-                                FROM doc_status_audit a 
-                                JOIN doc_status s ON a.statusId = s.id
-                                JOIN employee e ON a.statusedById = e.EMP_ID 
-                                WHERE documentId='$documentId'
-                                ORDER BY a.timeStamp DESC";
-                    $rows = $crud->getData($query);
-                if (!empty($rows)) { ?>
-                    <div class="card" style="margin-top: 1rem; max-height: 25rem;">
-                        <div class="card-header">
-                            <b>Status History</b>
-                        </div>
-                        <div class="card-body" style="overflow-y: auto;">
-                    <?php
-                        $ctr = 0;
-                        foreach ((array)$rows as $key => $row) {
-                            if($ctr == 0){ ?>
-                                <div class="card">
-                                    <div class="card-body">
-                                        <b>Currently</b> </b><span class="badge"><?php echo $row['statusName'];?></span> by <b><?php echo $row['statusAuthor'];?></b><br>
-                                        <i>since <?php echo date("F j, Y g:i:s A ", strtotime($row['timeStamp']));?></i><br>
-                                        "<?php echo $row['remarks']?>"
-                                    </div>
-                                </div>
-                    <?php }else{ ?>
-                                <div class="card">
-                                    <div class="card-body">
-                                        <a style="text-align: left;" data-toggle="collapse" data-target="#collapse<?php echo $ctr;?>" aria-expanded="true" aria-controls="collapse<?php echo $ctr;?>"><span class="badge"><?php echo $row['statusName'];?></span> by <b><?php echo $row['statusAuthor'];?></b></a>
-                                        <div id="collapse<?php echo $ctr;?>" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                                            <i>on <?php echo date("F j, Y g:i:s A ", strtotime($row['timeStamp']));?></i><br>
-                                            "<?php echo $row['remarks']?>"
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php }
-                            $ctr=$ctr+1;
-                        } ?>
-                        </div>
-                    </div>
-                <?php
-                }
-                ?>
-
-
                 <div class="card" style="margin-top: 1rem;">
                     <div class="card-header">
                         <b>Document Actions</b>
@@ -385,13 +351,13 @@ include 'EDMS_SIDEBAR.php';
                 </div>
                
                 <?php
-                    $query = "SELECT v.timeCreated, v.versionId as vid, v.versionNo, v.title, v.filePath, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
+                    $query = "SELECT v.lastUpdated, v.versionId as vid, v.versionNo, v.title, v.filePath, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
                               FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
-                              WHERE v.documentId = '$documentId' AND v.versionNo < '$versionNo' ORDER BY v.timeCreated DESC;";
+                              WHERE v.documentId = '$documentId' AND v.versionNo < '$versionNo' AND v.changeTypeId <= 2 ORDER BY v.lastUpdated DESC;";
                     $rows = $crud->getData($query);
                     if (!empty($rows)) {
 
-                        echo '<div class="card" style="margin-top: 1rem; max-height: 20rem; ">';
+                        echo '<div class="card" style="margin-top: 1rem; ">';
                         echo '<div class="card-header"><b>Version History</b></div>';
                         echo '<div class="card-body" style="overflow-y: auto;">';
                         if(!empty($rows)) {
@@ -404,14 +370,12 @@ include 'EDMS_SIDEBAR.php';
                                 echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
                                 echo '<div class="card-body">';
                                 echo 'Created by: ' . $row['versionAuthor'] . '<br>';
-                                echo 'on: <i>' . date("F j, Y g:i:s A ", strtotime($row['timeCreated'])) . '</i><br>';
+                                echo 'on: <i>' . date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])) . '</i><br>';
                                 echo '</div></div></div>';
                             }
                         }
                         echo '</div></div>';
                     }
-
-
                 ?>
             </div>
         </div>
@@ -555,6 +519,10 @@ include 'EDMS_SIDEBAR.php';
                                 <label><input type="radio" name="newVersionNo" value="<?php echo ceil(floatval($versionNo) + 0.1); ?>"><?php echo ceil(floatval($versionNo) + 0.1); ?> (Major Update)</label>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="remarks"> Please provide remarks before confirming </label>
+                            <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="5" required></textarea>
+                        </div>
                         <span id="err"></span>
                     </div>
                     <div class="modal-footer">
@@ -590,10 +558,10 @@ include 'EDMS_SIDEBAR.php';
                 success: function(response){
                     $("#err").html(response);
                     $("#contact-modal").modal('hide');
-                    if(response !== 'error') location.href = response;
+                    if(response == 'success') location.reload();
                 },
                 error: function(){
-                    alert("Error");
+                    alert("Something went wrong :(");
                 }
             });
             return false;
@@ -631,7 +599,26 @@ include 'EDMS_SIDEBAR.php';
             load_comment(documentId);
         }, 1000);
 
+        let typeId = '';
 
+        searchTable(documentId, typeId);
+
+        function searchTable(documentId, typeId){
+            let table = $('#tblHistory').DataTable( {
+                bSort: false,
+                destroy: true,
+                pageLength: 5,
+                "ajax": {
+                    "url":"EDMS_AJAX_DocumentActivityStream.php",
+                    "type":"POST",
+                    "data":{ documentId: documentId, typeId: typeId },
+                    "dataSrc": ''
+                },
+                columns: [
+                    { data: "card_content" }
+                ]
+            });
+        }
     });
 
     function load_comment(documentId)
@@ -645,6 +632,10 @@ include 'EDMS_SIDEBAR.php';
                 $('#display_comment').html(data);
             }
         })
+    }
+
+    function versionPreview(versionId){
+        // creates a modal displaying the former contents
     }
 </script>
 <?php include 'GLOBAL_FOOTER.php';?>
