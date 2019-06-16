@@ -137,7 +137,7 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
                                   </div>
                             
 
-                            <input id = "submit"  type="submit" name="submit" value="Sumbit" disabled></div>
+                            <input id = "submit"  type="submit" name="submit" value="Submit" disabled></div>
 
                        </form>
 
@@ -255,7 +255,14 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
          }
         document.getElementById("submit").disabled = true;
               
-           
+    $('#blogLink').click (function (e) {
+        e.preventDefault(); //will stop the link href to call the blog page
+
+        setTimeout(function () {
+            window.location.href = "index.php"; //will redirect to your blog page (an ex: blog.html)
+            }, 2000); //will call the function after 2 secs.
+
+});
          
   
 }

@@ -14,7 +14,7 @@ class PDF extends FPDF
 function Header()
 {
     // Logo
-    $this->Image('FA Logo.jpg',0,10,20);
+    $this->Image('images/I-FA Logo Edited.png',0,10,20);
     // Arial bold 15
     $this->SetFont('Arial','B',10);
     // Move to the right
@@ -62,8 +62,8 @@ if(!isset($_SESSION['event_start'])){
 else {
    $dateStart = $_SESSION['event_start'];
             
-            $yearStart = substr($dateStart,0,strpos($dateStart,"-"));
-            $monthStart = substr($dateStart,strpos($dateStart,"-")+1);
+            $yearStart = substr($dateStart,0,strpos($dateStart," "));
+            $monthStart = substr($dateStart,strpos($dateStart,"  ")+1);
             if(isset($_SESSION['event_end'])){
                 $dateEnd = $_SESSION['event_end'];
                 $yearEnd = substr($dateEnd,0,strpos($dateEnd,"-"));
