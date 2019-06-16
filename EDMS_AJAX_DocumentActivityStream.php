@@ -22,29 +22,31 @@ if(isset($_POST['typeId']) && isset($_POST['documentId']) ){
     $rows = $crud->getData($query);
     $data = [];
 
-    $card_start = '<div class="card" style="margin-top: 1rem;"><div class="card-body">';
-    $card_end = '</div></div>';
-
     foreach ((array) $rows as $key => $row) {
-        $timestamp = '<i>'.date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])).'</i>';
-        $remarks = '';
+
+        $content = '<div class="card" style="margin-top: 1rem;"><div class="card-body row"><div class="col-lg-10">';
+        $buttons='<a class="btn btn-sm fa fa-download"  href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"></a>';
+        $buttons.='<a class="btn btn-sm fa fa-info-circle"></a>';
+
         if($row['changeTypeId'] == '1'){
-            $title = '<b>'.$row['authorName'].'</b> created the document <span class="badge">Version '.$row['versionNo'].'</span><br>';
+            $content.= '<b>'.$row['authorName'].'</b> created the document <span class="badge">Version '.$row['versionNo'].'</span>';
+
         }else if($row['changeTypeId'] == '2'){
-            $title = '<b>'.$row['authorName'].'</b> modified the document <span class="badge">Version '.$row['versionNo'].'</span><br>';
-            $remarks = '<br>'.$row['remarks'];
+            $content.= '<b>'.$row['authorName'].'</b> modified the document <span class="badge">Version '.$row['versionNo'].'</span>';
         }else if($row['changeTypeId'] == '3'){
-            $title = '<b>'.$row['statusAuthorName'].'</b> <span class="badge">'.$row['statusname'].'S</span> the document.<br>';
-            $remarks = '<br>'.$row['remarks'];
+            $content.= '<b>'.$row['statusAuthorName'].'</b> <span class="badge">'.$row['statusname'].'S</span> the document';
         }else if($row['changeTypeId'] == '4'){
-            $title = '<b>'.$row['authorName'].'</b> submits the document for <span class="badge">'.$row['stepName'].'</span><br>';
-            $timestamp = '<i>'.date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])).'</i>';
-            $remarks = '<br>'.$row['remarks'];
+            $content.= '<b>'.$row['authorName'].'</b> submits the document for <span class="badge">'.$row['stepName'].'</span>';
         }
 
+        $content.= '<i> on '.date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])).'</i>';
+        if($row['remarks'] != ''){
+            $content.='<blockquote><p>'.$row['remarks'].'</p></blockquote>';
+        }
+        $content.= '</div><div class="col-lg-2">'.$buttons.'</div></div></div>';
 
         $data[] =  array(
-            'card_content' => $card_start.$title.$timestamp.$remarks.$card_end
+            'card_content' => $content
         );
 
     }

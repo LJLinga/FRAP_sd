@@ -242,7 +242,7 @@ include 'EDMS_SIDEBAR.php';
                             </select>
                         </div>
                     </div>
-                    <div class="card-body" id="activity_card_body">
+                    <div class="card-body">
                         <table id="tblHistory" cellspacing="0" width="100%"></table>
                     </div>
                 </div>
@@ -519,6 +519,10 @@ include 'EDMS_SIDEBAR.php';
                                 <label><input type="radio" name="newVersionNo" value="<?php echo ceil(floatval($versionNo) + 0.1); ?>"><?php echo ceil(floatval($versionNo) + 0.1); ?> (Major Update)</label>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="remarks"> Please provide remarks before confirming </label>
+                            <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="5" required></textarea>
+                        </div>
                         <span id="err"></span>
                     </div>
                     <div class="modal-footer">
@@ -554,10 +558,10 @@ include 'EDMS_SIDEBAR.php';
                 success: function(response){
                     $("#err").html(response);
                     $("#contact-modal").modal('hide');
-                    if(response !== 'error') location.href = response;
+                    if(response == 'success') location.reload();
                 },
                 error: function(){
-                    alert("Error");
+                    alert("Something went wrong :(");
                 }
             });
             return false;
