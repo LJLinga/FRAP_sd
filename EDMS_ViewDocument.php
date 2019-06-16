@@ -232,31 +232,20 @@ include 'EDMS_SIDEBAR.php';
 
                 <div class="card" style="margin-top: 1rem;">
                     <div class="card-header">
-
-
-                        <div class="row">
-                            <div class="col-lg-8">
-                                <b>Document History</b>
-                            </div>
-                            <div class="col-lg-4">
-                                <select class="form-control" id="selectedType" name="selectedType" onchange="searchTable(this.value);">
-                                    <option value="0" selected>All</option>
-                                    <option value="1">Version</option>
-                                    <option value="2">Status</option>
-                                    <option value="3">Stage</option>
-                                </select>
-                            </div>
+                        <div class="form-inline">
+                            <label for="sel1">Document History</label>
+                            <select id="sel1" class="form-control" id="selectedType" name="selectedType" onchange="searchTable(this.value);">
+                                <option value="0" selected>All</option>
+                                <option value="1">Version</option>
+                                <option value="2">Status</option>
+                                <option value="3">Stage</option>
+                            </select>
                         </div>
                     </div>
-
                     <div class="card-body" id="activity_card_body">
-                        <table class="table table-striped table-bordered" cellspacing="0" width="100%">
-
-                        </table>
+                        <table id="tblHistory" cellspacing="0" width="100%"></table>
                     </div>
                 </div>
-
-
 
                 <div class="card" style="margin-top: 1rem;">
                     <div class="card-header"><b>Comments</b></div>
@@ -312,51 +301,6 @@ include 'EDMS_SIDEBAR.php';
                         </table>
                     </div>
                 </div>
-                <?php
-                    $query = "SELECT a.timeStamp, s.statusName, a.remarks, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) as statusAuthor, a.versionNo 
-                                FROM doc_status_audit a 
-                                JOIN doc_status s ON a.statusId = s.id
-                                JOIN employee e ON a.statusedById = e.EMP_ID 
-                                WHERE documentId='$documentId'
-                                ORDER BY a.timeStamp DESC";
-                    $rows = $crud->getData($query);
-                if (!empty($rows)) { ?>
-                    <div class="card" style="margin-top: 1rem; max-height: 25rem;">
-                        <div class="card-header">
-                            <b>Status History</b>
-                        </div>
-                        <div class="card-body" style="overflow-y: auto;">
-                    <?php
-                        $ctr = 0;
-                        foreach ((array)$rows as $key => $row) {
-                            if($ctr == 0){ ?>
-                                <div class="card">
-                                    <div class="card-body">
-                                        <b>Currently</b> </b><span class="badge"><?php echo $row['statusName'];?></span> by <b><?php echo $row['statusAuthor'];?></b><br>
-                                        <i>since <?php echo date("F j, Y g:i:s A ", strtotime($row['timeStamp']));?></i><br>
-                                        "<?php echo $row['remarks']?>"
-                                    </div>
-                                </div>
-                    <?php }else{ ?>
-                                <div class="card">
-                                    <div class="card-body">
-                                        <a style="text-align: left;" data-toggle="collapse" data-target="#collapse<?php echo $ctr;?>" aria-expanded="true" aria-controls="collapse<?php echo $ctr;?>"><span class="badge"><?php echo $row['statusName'];?></span> by <b><?php echo $row['statusAuthor'];?></b></a>
-                                        <div id="collapse<?php echo $ctr;?>" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                                            <i>on <?php echo date("F j, Y g:i:s A ", strtotime($row['timeStamp']));?></i><br>
-                                            "<?php echo $row['remarks']?>"
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php }
-                            $ctr=$ctr+1;
-                        } ?>
-                        </div>
-                    </div>
-                <?php
-                }
-                ?>
-
-
                 <div class="card" style="margin-top: 1rem;">
                     <div class="card-header">
                         <b>Document Actions</b>
@@ -653,10 +597,10 @@ include 'EDMS_SIDEBAR.php';
 
         let typeId = '';
 
-        searchTable(typeId);
+        searchTable(documentId, typeId);
 
-        function searchTable(typeId){
-            let table = $('table.table').DataTable( {
+        function searchTable(documentId, typeId){
+            let table = $('#tblHistory').DataTable( {
                 bSort: false,
                 destroy: true,
                 pageLength: 5,
