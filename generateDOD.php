@@ -14,17 +14,17 @@ class PDF extends FPDF
 function Header()
 {
     // Logo
-    $this->Image('images/I-FA Logo Edited.png',20,10,20);
+    $this->Image('images/AFED Logo - Copy.jpg',20,10,20);
     // Arial bold 15
     $this->SetFont('Arial','B',10);
     // Move to the right
 	$this->Cell(15);
 
-	 $this->Cell(80,10,'Faculty Association,Inc.',0,0,'C');
+	 $this->Cell(55,10,'Faculty Association,Inc.',0,0,'C');
 	 $this->Ln(5);
 	 $this->Cell(19);
 	 $this->SetFont('Arial','',10);
-	$this->Cell(80,10,'De La Salle University - Manila',0,0,'C');
+	$this->Cell(55,10,'De La Salle University - Manila',0,0,'C');
     $this->Cell(80);
     // Title
    
