@@ -26,51 +26,86 @@ if(isset($_GET['docId'])){
     $documentId = $_GET['docId'];
 
     // Load Process and Steps assigned to current document
-    $query = "SELECT d.stepId, p.processName, s.stepName, s.isFinal,
-              d.availabilityId, d.lockedById, d.statusId
-              FROM documents d 
-              JOIN steps s ON d.stepId = s.id 
-              JOIN doc_status st ON st.id = d.statusId 
-              JOIN process p ON s.processId = p.id 
-              WHERE d.documentId='$documentId';";
+    $query = "SELECT 
+                d.firstAuthorId, d.timeCreated, d.availabilityId, d.versionNo, d.authorId, d.title, d.filePath,
+		        CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS originalAuthor,
+                (SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) FROM employee e WHERE e.EMP_ID = d.authorId) AS currentAuthor,
+		        d.stepId,  p.processName, s.stepName, s.isFinal, d.availabilityId, d.lockedById, d.statusId
+                FROM documents d 
+                JOIN employee e ON d.firstAuthorId = e.EMP_ID
+                JOIN steps s ON d.stepId = s.id 
+                JOIN doc_status st ON st.id = d.statusId 
+                JOIN process p ON s.processId = p.id 
+                WHERE d.documentId='$documentId' 
+                LIMIT 1;";
     $rows = $crud->getData($query);
-    foreach((array) $rows as $key => $row){
-        $currentStepId= $row['stepId'];
-        $processName = $row['processName'];
-        $stepName = $row['stepName'];
-        $availability = $row['availabilityId'];
-        $lockedById = $row['lockedById'];
-        $statusId = $row['statusId'];
-        $isFinal = $row['isFinal'];
+    if(!empty($rows)){
+        foreach((array) $rows as $key => $row){
+            $firstAuthorId = $row['firstAuthorId'];
+            $originalAuthor = $row['originalAuthor'];
+            $timeFirstPosted = $row['timeCreated'];
+            $timeUpdated = $row['timeCreated'];
+            $versionNo = $row['versionNo'];
+            $currentAuthorId = $row['authorId'];
+            $currentAuthor = $row['currentAuthor'];
+            $title = $row['title'];
+            $filePath = $row['filePath'];
+            $availability = $row['availabilityId'];
+            $currentStepId= $row['stepId'];
+            $processName = $row['processName'];
+            $stepName = $row['stepName'];
+            $availability = $row['availabilityId'];
+            $lockedById = $row['lockedById'];
+            $statusId = $row['statusId'];
+            $isFinal = $row['isFinal'];
+
+            if($userId == $firstAuthorId){
+                $query = "SELECT su.read, su.write, su.route, su.comment FROM step_author su WHERE su.stepId='$currentStepId' LIMIT 1;";
+                $rows = $crud->getData($query);
+                if(!empty($rows)){
+                    foreach((array) $rows as $key => $row){
+                        $read= $row['read'];
+                        $write= $row['write'];
+                        $route= $row['route'];
+                        $comment = $row['comment'];
+                    }
+                }else{
+                    $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
+                    $rows = $crud->getData($query);
+                    if(!empty($rows)){
+                        foreach((array) $rows as $key => $row){
+                            $read= $row['read'];
+                            $write= $row['write'];
+                            $route= $row['route'];
+                            $comment = $row['comment'];
+                        }
+                    }else{
+                        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
+                    }
+                }
+            }else{
+                $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
+                $rows = $crud->getData($query);
+                if(!empty($rows)){
+                    foreach((array) $rows as $key => $row){
+                        $read= $row['read'];
+                        $write= $row['write'];
+                        $route= $row['route'];
+                        $comment = $row['comment'];
+                    }
+                }else{
+                    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
+                }
+            }
+        }
+    }else{
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
     }
+
 
     // Load Current User Permissions
-
-    //Get the rest of the document.
-    $query = "SELECT d.firstAuthorId, d.timeCreated, d.availabilityId,  d.versionNo, d.authorId, d.title, d.filePath, 
-              CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS originalAuthor,
-              (SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) FROM employee e WHERE e.EMP_ID = d.authorId) AS currentAuthor
-              FROM documents d
-              JOIN employee e ON d.firstAuthorId = e.EMP_ID WHERE d.documentId='$documentId';";
-
-    $rows = $crud->getData($query);
-    foreach((array) $rows as $key => $row){
-        $firstAuthorId = $row['firstAuthorId'];
-        $originalAuthor = $row['originalAuthor'];
-        $timeFirstPosted = $row['timeCreated'];
-        $timeUpdated = $row['timeCreated'];
-        //$versionId = $row['versionId'];
-        $versionNo = $row['versionNo'];
-        $currentAuthorId = $row['authorId'];
-        $currentAuthor = $row['currentAuthor'];
-        $title = $row['title'];
-        $filePath = $row['filePath'];
-        $availability = $row['availabilityId'];
-    }
-
     if($userId == $firstAuthorId){
-        $query = "SELECT su.read, su.write, su.route, su.comment FROM step_author su
-                WHERE su.stepId='$currentStepId' LIMIT 1;";
+        $query = "SELECT su.read, su.write, su.route, su.comment FROM step_author su WHERE su.stepId='$currentStepId' LIMIT 1;";
         $rows = $crud->getData($query);
         if(!empty($rows)){
             foreach((array) $rows as $key => $row){
@@ -84,28 +119,32 @@ if(isset($_GET['docId'])){
                 WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
             $rows = $crud->getData($query);
             if(!empty($rows)){
-                //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
                 foreach((array) $rows as $key => $row){
                     $read= $row['read'];
                     $write= $row['write'];
                     $route= $row['route'];
                     $comment = $row['comment'];
                 }
+            }else{
+                header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
             }
+
         }
     }else{
         $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su
                 WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
         $rows = $crud->getData($query);
         if(!empty($rows)){
-            //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
             foreach((array) $rows as $key => $row){
                 $read= $row['read'];
                 $write= $row['write'];
                 $route= $row['route'];
                 $comment = $row['comment'];
             }
+        }else{
+            header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
         }
+
     }
 
     if($availability == '1'){
@@ -240,12 +279,127 @@ include 'EDMS_SIDEBAR.php';
                                 <option value="2">Status</option>
                                 <option value="3">Stage</option>
                             </select>
+                            <label for="sel1">Search</label>
+                            <input type="text" id="searchField" class="form-control">
+                        </div>
+                        <div class="form-inline">
+
                         </div>
                     </div>
                     <div class="card-body">
                         <table id="tblHistory" cellspacing="0" width="100%"></table>
                     </div>
                 </div>
+
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-header">
+                        <div class="form-inline">
+                            <label for="sel1">Document History</label>
+                            <select id="sel1" class="form-control" id="selectedType" name="selectedType" onchange="searchTable(this.value);">
+                                <option value="0" selected>All</option>
+                                <option value="1">Version</option>
+                                <option value="2">Status</option>
+                                <option value="3">Stage</option>
+                            </select>
+                            <label for="sel1">Search</label>
+                            <input type="text" id="searchField" class="form-control">
+                        </div>
+                        <div class="form-inline">
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table id="tblHistory2" class="table" cellspacing="0" width="100%">
+                            <?php
+                                $query = "SELECT v.changeTypeId, v.lastUpdated, v.versionNo, v.title, v.filePath, v.remarks, s.statusname, st.stepName,
+                                            CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName, 
+                                            CONCAT(e2.LASTNAME,', ',e2.FIRSTNAME) AS statusAuthorName
+                                            FROM doc_versions v 
+                                            LEFT JOIN doc_status s ON v.statusId= s.id
+                                            LEFT JOIN steps st ON v.stepId = st.id
+                                            LEFT JOIN employee e ON v.authorId = e.EMP_ID
+                                            LEFT JOIN employee e2 ON v.statusedById = e2.EMP_ID
+                                            WHERE v.documentId = $documentId AND v.changeTypeId < 5 
+                                            ORDER BY v.lastUpdated DESC;";
+
+                                $rows = $crud->getData($query);
+
+                                if(!empty($rows)) {
+                                    foreach ((array)$rows as $key => $row) {
+
+                                        $content = '';
+                                        $content2 = '';
+                                        $buttons='<a class="btn btn-sm fa fa-download"  href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"></a>';
+                                        $buttons.='<a class="btn btn-sm fa fa-info-circle"></a>';
+
+                                        if($row['changeTypeId'] == '1'){
+                                            $content.= '<b>'.$row['authorName'].'</b> created the document <span class="badge">Version '.$row['versionNo'].'</span>';
+                                        }else if($row['changeTypeId'] == '2'){
+                                            $content.= '<b>'.$row['authorName'].'</b> saved the document as <span class="badge">Version '.$row['versionNo'].'</span>';
+                                        }else if($row['changeTypeId'] == '3'){
+                                            $content.= '<b>'.$row['statusAuthorName'].'</b> <span class="badge">'.$row['statusname'].'S</span> the document';
+                                        }else if($row['changeTypeId'] == '4'){
+                                            $content.= '<b>'.$row['authorName'].'</b> submits the document for <span class="badge">'.$row['stepName'].'</span>';
+                                        }
+
+                                        $content.= '<i> on '.date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])).'</i>';
+                                        //$content.= $buttons;
+                                        if($row['remarks'] != ''){
+                                            $content2='<div class="card"><div class="card-body"> Remarks: <i>"'.$row['remarks'].'"</i></div></div>';
+                                        }
+
+                                        ?>
+                                        <tr>
+                                            <div class="card" style="margin-top: 1rem;">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-lg-10">
+                                                            <?php echo $content; ?>
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            <?php echo $buttons; ?>
+                                                        </div>
+                                                    </div>
+                                                    <?php echo $content2; ?>
+                                                </div>
+                                            </div>
+                                        </tr>
+                                        <div id="preview" class="modal fade" role="dialog">
+                                            <div class="modal-dialog">
+
+                                                <form method="POST" id="comment_form">
+
+                                                    <!-- Modal content-->
+                                                    <div class="modal-content">
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <input type="hidden" name="comment_name" id="comment_name" class="form-control" placeholder="Enter Name" value="<?php echo $userId; ?>"/>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <textarea name="comment_content" id="comment_content" class="form-control" placeholder="Enter Comment" rows="5"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <div class="form-group">
+                                                                <input type="hidden" name="comment_id" id="comment_id" value="0" />
+                                                                <input type="hidden" name="documentId" id="documentId" value="<?php echo $documentId; ?>" />
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    <?php }
+                                }?>
+                        </table>
+                    </div>
+                </div>
+
+
 
                 <div class="card" style="margin-top: 1rem;">
                     <div class="card-header"><b>Comments</b></div>
@@ -255,6 +409,9 @@ include 'EDMS_SIDEBAR.php';
                         <div id="display_comment"></div>
                     </div>
                 </div>
+
+
+
             </div>
             <div class="col-lg-4">
 
@@ -348,35 +505,12 @@ include 'EDMS_SIDEBAR.php';
                             </form>
                         </div>
                     </div>
-                </div>
-               
-                <?php
-                    $query = "SELECT v.lastUpdated, v.versionId as vid, v.versionNo, v.title, v.filePath, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS versionAuthor 
-                              FROM doc_versions v JOIN employee e ON v.authorId = e.EMP_ID 
-                              WHERE v.documentId = '$documentId' AND v.versionNo < '$versionNo' AND v.changeTypeId <= 2 ORDER BY v.lastUpdated DESC;";
-                    $rows = $crud->getData($query);
-                    if (!empty($rows)) {
 
-                        echo '<div class="card" style="margin-top: 1rem; ">';
-                        echo '<div class="card-header"><b>Version History</b></div>';
-                        echo '<div class="card-body" style="overflow-y: auto;">';
-                        if(!empty($rows)) {
-                            foreach ((array)$rows as $key => $row) {
-                                echo '<div class="card" style="position: relative;">';
-                                echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><span class="badge">Version ' . $row['versionNo'] . '</span> <b>' . $row['title'] . ' </b></a>';
-                                echo '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >';
-                                echo '<a class="btn fa fa-download"  href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"></a>';
-                                echo '</div>';
-                                echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
-                                echo '<div class="card-body">';
-                                echo 'Created by: ' . $row['versionAuthor'] . '<br>';
-                                echo 'on: <i>' . date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])) . '</i><br>';
-                                echo '</div></div></div>';
-                            }
-                        }
-                        echo '</div></div>';
-                    }
-                ?>
+                </div>
+
+
+
+
             </div>
         </div>
     </div>
@@ -601,12 +735,19 @@ include 'EDMS_SIDEBAR.php';
 
         let typeId = '';
 
-        searchTable(documentId, typeId);
 
-        function searchTable(documentId, typeId){
+        searchTable(typeId);
+
+        $('#tblHistory2').DataTable({
+            pageLength: 5,
+            bSort: false
+        });
+
+        function searchTable(typeId){
             let table = $('#tblHistory').DataTable( {
                 bSort: false,
                 destroy: true,
+                bLengthChange: false,
                 pageLength: 5,
                 "ajax": {
                     "url":"EDMS_AJAX_DocumentActivityStream.php",
@@ -618,7 +759,13 @@ include 'EDMS_SIDEBAR.php';
                     { data: "card_content" }
                 ]
             });
+            $(".dataTables_filter").hide();
+            $('#searchField').keyup(function(){
+                table.search($('#searchField').val()).draw();
+            });
         }
+
+
     });
 
     function load_comment(documentId)

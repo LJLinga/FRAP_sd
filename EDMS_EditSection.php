@@ -410,25 +410,6 @@ include 'EDMS_SIDEBAR.php';
             $('#comment_name').focus();
         });
 
-        // $('.userinfo').click(function(){
-        //     var id = this.id;
-        //     var splitid = id.split('_');
-        //     var userid = splitid[1];
-        //
-        //     // AJAX request
-        //     $.ajax({
-        //         url: 'ajaxfile.php',
-        //         type: 'post',
-        //         data: {userid: userid},
-        //         success: function(response){
-        //             // Add response in Modal body
-        //             $('.modal-body').html(response);
-        //
-        //             // Display Modal
-        //             $('#empModal').modal('show');
-        //         }
-        //     });
-        // });
 
         function reloadDataTable(){
             let loadedRefs = [];

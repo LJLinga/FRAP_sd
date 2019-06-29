@@ -24,15 +24,14 @@ if(isset($_POST['typeId']) && isset($_POST['documentId']) ){
 
     foreach ((array) $rows as $key => $row) {
 
-        $content = '<div class="card" style="margin-top: 1rem;"><div class="card-body row"><div class="col-lg-10">';
+        $content = '<div class="card" style="margin-top: 1rem;"><div class="card-body">';
         $buttons='<a class="btn btn-sm fa fa-download"  href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"></a>';
         $buttons.='<a class="btn btn-sm fa fa-info-circle"></a>';
 
         if($row['changeTypeId'] == '1'){
             $content.= '<b>'.$row['authorName'].'</b> created the document <span class="badge">Version '.$row['versionNo'].'</span>';
-
         }else if($row['changeTypeId'] == '2'){
-            $content.= '<b>'.$row['authorName'].'</b> modified the document <span class="badge">Version '.$row['versionNo'].'</span>';
+            $content.= '<b>'.$row['authorName'].'</b> saved the document as <span class="badge">Version '.$row['versionNo'].'</span>';
         }else if($row['changeTypeId'] == '3'){
             $content.= '<b>'.$row['statusAuthorName'].'</b> <span class="badge">'.$row['statusname'].'S</span> the document';
         }else if($row['changeTypeId'] == '4'){
@@ -40,10 +39,11 @@ if(isset($_POST['typeId']) && isset($_POST['documentId']) ){
         }
 
         $content.= '<i> on '.date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])).'</i>';
+        $content.= $buttons;
         if($row['remarks'] != ''){
-            $content.='<blockquote><p>'.$row['remarks'].'</p></blockquote>';
+            $content.='<br><div class="card"><div class="card-body">'.$row['remarks'].'</div></div>';
         }
-        $content.= '</div><div class="col-lg-2">'.$buttons.'</div></div></div>';
+        $content.= '</div></div>';
 
         $data[] =  array(
             'card_content' => $content
@@ -54,3 +54,24 @@ if(isset($_POST['typeId']) && isset($_POST['documentId']) ){
     exit;
 }
 ?>
+<div id="preview<?php echo $count;?>" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <b><p class="modal-title">Section <?php echo $row['sectionNo']?>: <?php echo $row['title'];?></p></b>
+                Author: <?php echo $row['versionAuthor']?><br>
+                Created on: <i><?php echo date("F j, Y g:i:s A ", strtotime($row['timeCreated']));?></i>
+            </div>
+            <div class="modal-body" style="overflow-y: auto; max-height: 50rem;">
+                <p><?php echo $row['content'];?></p>
+            </div>
+            <div class="modal-header">
+                <b>Remarks</b>
+            </div>
+            <div class="modal-body" style="overflow-y: auto; max-height: 50rem;">
+                <p><?php echo $row['content'];?></p>
+            </div>
+        </div>
+    </div>
+</div>
