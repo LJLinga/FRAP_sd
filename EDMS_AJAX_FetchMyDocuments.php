@@ -32,18 +32,20 @@ if(isset($_POST['userId'])){
                 WHERE t.isActive = 2 AND (d.firstAuthorId = '$userId' OR d.authorId = '$userId')
                 ORDER BY d.lastUpdated DESC;";
 
-
     $rows = $crud->getData($query);
     $data = [];
     foreach ((array) $rows as $key => $row) {
+        $domain = $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']);
+        $buttons = '<a class="btn btn-info" data-toggle="tooltip" title="View document" name="documentId" href="http://'.$domain.'/EDMS_ViewDocument.php?docId='.$row['documentId'].'"><i class="fa fa-eye"></i></a>';
+        $buttons .= ' <a class="btn btn-success" data-toggle="tooltip" title="Download document" href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"><i class="fa fa-download"></i></a>';
+
         $data[] =  array(
-            'title_version' => '<span class="badge badge-success">'.$row['type'].'</span> <b>'.$row['title'].'</b> 
-                                <span class="badge">'.$row['versionNo'].'</span><br>
-                                Author: '.$row['firstAuthorName'].'<br>
-                                Modified by: '.$row['authorName'].'<br>
-                                on : <i>'.date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])).'</i><br>',
-            'currentProcess' => '<span><b>' . $row['processName'] . '</b></span><br><span class="badge">Step ' . $row['stepNo'] . ' '. $row['stepName'].'</span><br><span class="badge">'.$row['statusName'].'</span>',
-            'actions'=> '<a class="btn btn-default" name="documentId" href="http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId='.$row['documentId'].'">View</a>'
+            'title' => $row['title'],
+            'type' => $row['type'],
+            'vers' => $row['versionNo'],
+            'status' => $row['statusName'],
+            'timestamp' => date("m/d/Y g:i:s A ", strtotime($row['lastUpdated'])),
+            'actions' => $buttons
         );
 
     }

@@ -28,11 +28,12 @@ $userName = $rows[0]['name'];
             <div class="col-lg-12">
                 <h3 class="page-header"> My Documents
                     <button name="btnAddDocument" id="btnAddDocument" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Add Document</button>
+                    <button name="btnMyWorkflows" id="btnMyWorkflows" data-toggle="modal" data-target="#myWorkflowsModal" class="btn btn-info">My Workflows</button>
                 </h3>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="row">
@@ -65,34 +66,40 @@ $userName = $rows[0]['name'];
                     </div>
 
                     <div class="panel-body">
-                        <table id="myTable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <table id="myTable1" class="table table-striped" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th width="500px;">Title</th>
-                                <th width="300px;">Process</th>
-                                <th width="100px;">Action</th>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Version</th>
+                                <th>Status</th>
+                                <th>Last modified on</th>
+                                <th>Action</th>
                             </tr>
                             </thead>
                         </table>
                     </div>
-                    <div class="panel-footer">
-                        <span>Last Updated on....</span>
-                    </div>
                 </div>
+
             </div>
-            <div class="col-lg-4">
-                <div class="panel panel-green">
-                    <div class="panel-heading">
-                        <b>
-                            <?php
-                            $rows = $crud->getData("SELECT roleName FROM edms_roles WHERE id = ".$_SESSION['EDMS_ROLE']." LIMIT 1;");
-                            echo $rows[0]['roleName'];
-                            ?>
-                        </b> Workflows
-                    </div>
-                    <div class="panel-body">
-                        <?php
-                        $rows = $crud->getData("SELECT  pr.processName, s.stepNo, s.stepName AS name 
+        </div>
+    </div>
+</div>
+
+<div id="myWorkflowsModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <b> As
+                    <?php
+                    $rows = $crud->getData("SELECT roleName FROM edms_roles WHERE id = ".$_SESSION['EDMS_ROLE']." LIMIT 1;");
+                    echo $rows[0]['roleName'];
+                    ?>
+                </b> your workflows are
+            </div>
+            <div class="panel-body">
+                <?php
+                $rows = $crud->getData("SELECT  pr.processName, s.stepNo, s.stepName AS name 
                                                 FROM employee e 
                                                 JOIN edms_roles er ON e.EDMS_ROLE = er.id 
                                                 JOIN step_roles sr ON sr.roleId = er.id
@@ -100,33 +107,24 @@ $userName = $rows[0]['name'];
                                                 JOIN process pr ON pr.id = s.processId
                                                 WHERE e.EMP_ID = '$userId'
                                                 ORDER BY pr.processName, s.stepNo");
-                        if(!empty($rows)){
-                            foreach((array)$rows AS $key => $row){
-                                echo '<div class="card">';
-                                echo '<div class="card-body">';
-                                echo $row['processName'].' <i class="fa fa-arrow-right"></i> Step '.$row['stepNo'].' - '.$row['name'].'<br>';
-                                echo '</div></div>';
-                            }
-                        }else{
-                            echo 'You have no workflows but is still able to submit documents to their respective workflows.';
-                        }
-                        ?>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        My Activities
-                    </div>
-                    <div class="panel-body">
-                        <div class="col-lg-2">All <b class="caret"></b></div>
-                        <div class="col-lg-7"></div>
-                        <div class="col-lg-3"><i class="fa fa-fw fa-plus-circle"></i>Create Groups</div>
-                    </div>
-                </div>
+                if(!empty($rows)){
+                    foreach((array)$rows AS $key => $row){
+                        echo '<div class="card" style="margin-top: 1rem;">';
+                        echo '<div class="card-body">';
+                        echo $row['processName'].' <i class="fa fa-arrow-right"></i> Step '.$row['stepNo'].' - '.$row['name'].'<br>';
+                        echo '</div></div>';
+                    }
+                }else{
+                    echo 'You have no workflows but is still able to submit documents to their respective workflows.';
+                }
+                ?>
             </div>
-
+            <div class="panel-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+            </div>
         </div>
     </div>
+
 </div>
 
 <div id="myModal" class="modal fade" role="dialog">
@@ -178,6 +176,8 @@ $userName = $rows[0]['name'];
 <script>
     $(document).ready(function() {
 
+        $('[data-toggle="tooltip"]').tooltip();
+
         $("#documentUploadForm").on('submit', function(e){
             e.preventDefault();
             $.ajax({
@@ -208,8 +208,8 @@ $userName = $rows[0]['name'];
     searchTable(status,type);
 
     function searchTable(status, type){
-        let table = $('table.table').DataTable( {
-            bSort: false,
+        let table = $('#myTable1').DataTable( {
+            bSort: true,
             destroy: true,
             pageLength: 5,
             "ajax": {
@@ -219,8 +219,11 @@ $userName = $rows[0]['name'];
                 "dataSrc": ''
             },
             columns: [
-                { data: "title_version" },
-                { data: "currentProcess" },
+                { data: "title" },
+                { data: "type" },
+                { data: "vers"},
+                { data: "status"},
+                { data: "timestamp"},
                 { data: "actions"}
             ]
         });

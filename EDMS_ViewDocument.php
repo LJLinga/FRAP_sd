@@ -25,7 +25,7 @@ if(isset($_GET['docId'])){
 
     $documentId = $_GET['docId'];
 
-    // Load Process and Steps assigned to current document
+    // Load document
     $query = "SELECT 
                 d.firstAuthorId, d.timeCreated, d.availabilityId, d.versionNo, d.authorId, d.title, d.filePath,
 		        CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS originalAuthor,
@@ -507,10 +507,6 @@ include 'EDMS_SIDEBAR.php';
                     </div>
 
                 </div>
-
-
-
-
             </div>
         </div>
     </div>
