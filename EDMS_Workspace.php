@@ -41,7 +41,7 @@ $userName = $rows[0]['name'];
                                 <div class="form-inline">
                                     <label for="sel1">Category</label>
                                     <select class="form-control" onchange="filterType(this.value)">
-                                        <option value="All" selected>All</option>
+                                        <option value="" selected>All</option>
                                         <?php
                                             $rows = $crud->getData("SELECT t.type FROM facultyassocnew.doc_type t WHERE isActive = 2;");
                                             foreach((array)$rows as $key => $row){
@@ -55,7 +55,7 @@ $userName = $rows[0]['name'];
                                 <div class="form-inline">
                                     <label for="sel1">Status</label>
                                     <select class="form-control" onchange="filterType(this.value)">
-                                        <option value="All" selected>All</option>
+                                        <option value="" selected>All</option>
                                         <?php
                                             $rows = $crud->getData("SELECT statusName FROM facultyassocnew.doc_status;");
                                             foreach((array)$rows as $key => $row){
@@ -63,6 +63,12 @@ $userName = $rows[0]['name'];
                                             }
                                         ?>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-inline">
+                                    <label for="sel1">Search</label>
+                                    <input type="text" id="searchField" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -206,35 +212,44 @@ $userName = $rows[0]['name'];
     let type = '';
     let status = '';
 
+    let table = $('#myTable1').DataTable( {
+        bSort: true,
+        bLengthChange: false,
+        destroy: true,
+        pageResize: true,
+        pageLength: 10,
+        "ajax": {
+            "url":"EDMS_AJAX_FetchDocuments.php",
+            "type":"POST",
+            "data":{ role : mode },
+            "dataSrc": ''
+        },
+        columns: [
+            { data: "title" },
+            { data: "type" },
+            { data: "vers"},
+            { data: "submitted_by"},
+            { data: "submitted_on"},
+            { data: "status"},
+            { data: "timestamp"},
+            { data: "actions"}
+        ]
+    });
+
     searchTable(status,type);
 
     function searchTable(status,type){
-        let table = $('#myTable1').DataTable( {
-            destroy: true,
-            pageLength: 10,
-            "ajax": {
-                "url":"EDMS_AJAX_FetchDocuments.php",
-                "type":"POST",
-                "data":{ role : mode },
-                "dataSrc": ''
-            },
-            columns: [
-                { data: "title" },
-                { data: "type" },
-                { data: "vers"},
-                { data: "submitted_by"},
-                { data: "submitted_on"},
-                { data: "status"},
-                { data: "timestamp"},
-                { data: "actions"}
-            ]
-        });
 
-        table.column(1).search(status).draw();
-        table.column(0).search(type).draw();
+        table.column(5).search(status).draw();
+        table.column(1).search(type).draw();
         // setInterval(function(){
         //     table.ajax.reload();
         // },1000)
+
+        $(".dataTables_filter").hide();
+        $('#searchField').keyup(function(){
+            table.search($('#searchField').val()).draw();
+        });
     }
 
     function filterStatus(s){

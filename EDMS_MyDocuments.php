@@ -210,6 +210,8 @@ $userName = $rows[0]['name'];
         let table = $('#myTable1').DataTable( {
             bSort: true,
             destroy: true,
+            bLengthChange: false,
+            pageResize: true,
             pageLength: 10,
             "ajax": {
                 "url":"EDMS_AJAX_FetchMyDocuments.php",
