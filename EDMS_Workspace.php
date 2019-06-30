@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Serus Caligo
+ * User: Christian Alderite
  * Date: 10/4/2018
  * Time: 3:48 PM
  */
@@ -28,35 +28,39 @@ $userName = $rows[0]['name'];
             <div class="col-lg-12">
                 <h3 class="page-header"> Workspace
                     <button name="btnAddDocument" id="btnAddDocument" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Add Document</button>
+                    <button name="btnMyWorkflows" id="btnMyWorkflows" data-toggle="modal" data-target="#myWorkflowsModal" class="btn btn-info">My Workflows</button>
                 </h3>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="row">
-                            <div class="col-lg-8">
-                                <div class="btn-group">
-                                    <a type="button" class="btn btn-default" id="btnAll" onclick="filterStatus('');">All</a>
-                                    <?php
-                                    $rows = $crud->getData("SELECT statusName FROM facultyassocnew.doc_status;");
-                                    foreach((array) $rows as $key => $row){
-                                        echo '<a type="button" class="btn btn-default" onclick="filterStatus(&quot;'.$row['statusName'].'&quot;)">'.$row['statusName'].'</a>';
-                                    }
-                                    ?>
+                            <div class="col-lg-4">
+                                <div class="form-inline">
+                                    <label for="sel1">Category</label>
+                                    <select class="form-control" onchange="filterType(this.value)">
+                                        <option value="All" selected>All</option>
+                                        <?php
+                                            $rows = $crud->getData("SELECT t.type FROM facultyassocnew.doc_type t WHERE isActive = 2;");
+                                            foreach((array)$rows as $key => $row){
+                                                echo '<option value="'.$row['type'].'">'.$row['type'].'</option>';
+                                            }
+                                        ?>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="form-inline">
-                                    <label for="sel1">Type</label>
+                                    <label for="sel1">Status</label>
                                     <select class="form-control" onchange="filterType(this.value)">
                                         <option value="All" selected>All</option>
                                         <?php
-                                        $rows = $crud->getData("SELECT t.type FROM facultyassocnew.doc_type t WHERE isActive = 2;");
-                                        foreach((array)$rows as $key => $row){
-                                            echo '<option value="'.$row['type'].'">'.$row['type'].'</option>';
-                                        }
+                                            $rows = $crud->getData("SELECT statusName FROM facultyassocnew.doc_status;");
+                                            foreach((array)$rows as $key => $row){
+                                                echo '<option value="'.$row['statusName'].'">'.$row['statusName'].'</option>';
+                                            }
                                         ?>
                                     </select>
                                 </div>
@@ -64,66 +68,23 @@ $userName = $rows[0]['name'];
                         </div>
                     </div>
                     <div class="panel-body">
-                        <table id="myTable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <table id="myTable1" class="table table-striped" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th width="500px;">Title</th>
-                                <th width="300px;">Process</th>
-                                <th width="100px;">Action</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Version</th>
+                                <th>Submitted by</th>
+                                <th>Submitted on</th>
+                                <th>Status</th>
+                                <th>Last modified on</th>
+                                <th>Action</th>
                             </tr>
                             </thead>
                         </table>
                     </div>
-                    <div class="panel-footer">
-                        <span>Last Updated on....</span>
-                    </div>
                 </div>
             </div>
-            <div class="col-lg-4">
-                <div class="panel panel-green">
-                    <div class="panel-heading">
-                        <b>
-                        <?php
-                            $rows = $crud->getData("SELECT roleName FROM edms_roles WHERE id = ".$_SESSION['EDMS_ROLE']." LIMIT 1;");
-                            echo $rows[0]['roleName'];
-                        ?>
-                        </b> Workflows
-                    </div>
-                    <div class="panel-body">
-                        <?php
-                        $rows = $crud->getData("SELECT  pr.processName, s.stepNo, s.stepName AS name 
-                                                FROM employee e 
-                                                JOIN edms_roles er ON e.EDMS_ROLE = er.id 
-                                                JOIN step_roles sr ON sr.roleId = er.id
-                                                JOIN steps s ON s.id = sr.stepId
-                                                JOIN process pr ON pr.id = s.processId
-                                                WHERE e.EMP_ID = '$userId'
-                                                ORDER BY pr.processName, s.stepNo");
-                        if(!empty($rows)){
-                            foreach((array)$rows AS $key => $row){
-                                echo '<div class="card">';
-                                echo '<div class="card-body">';
-                                echo $row['processName'].' <i class="fa fa-arrow-right"></i> Step '.$row['stepNo'].' - '.$row['name'].'<br>';
-                                echo '</div></div>';
-                            }
-                        }else{
-                            echo 'You have no workflows but is still able to submit documents to their respective workflows.';
-                        }
-                        ?>
-                    </div>
-                </div>
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        My Activities
-                    </div>
-                    <div class="panel-body">
-                        <div class="col-lg-2">All <b class="caret"></b></div>
-                        <div class="col-lg-7"></div>
-                        <div class="col-lg-3"><i class="fa fa-fw fa-plus-circle"></i>Create Groups</div>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 </div>
@@ -140,7 +101,7 @@ $userName = $rows[0]['name'];
                         <label for="documentTitle">Document</label>
                         <input type="text" name="documentTitle" id="documentTitle" class="form-control" placeholder="Document Title" required>
                     </div>
-                    <label for="documentTitle">Document Type</label>
+                    <label for="selectedType">Category</label>
                     <div class="form-group">
                         <select class="form-control" id="selectedType" name="selectedType">
                             <?php
@@ -173,9 +134,50 @@ $userName = $rows[0]['name'];
     </div>
 </div>
 
+<div id="myWorkflowsModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <b> As
+                    <?php
+                    $rows = $crud->getData("SELECT roleName FROM edms_roles WHERE id = ".$_SESSION['EDMS_ROLE']." LIMIT 1;");
+                    echo $rows[0]['roleName'];
+                    ?>
+                </b> your workflows are
+            </div>
+            <div class="panel-body">
+                <?php
+                $rows = $crud->getData("SELECT  pr.processName, s.stepNo, s.stepName AS name 
+                                                    FROM employee e 
+                                                    JOIN edms_roles er ON e.EDMS_ROLE = er.id 
+                                                    JOIN step_roles sr ON sr.roleId = er.id
+                                                    JOIN steps s ON s.id = sr.stepId
+                                                    JOIN process pr ON pr.id = s.processId
+                                                    WHERE e.EMP_ID = '$userId'
+                                                    ORDER BY pr.processName, s.stepNo");
+                if(!empty($rows)){
+                    foreach((array)$rows AS $key => $row){
+                        echo '<div class="card" style="margin-top: 1rem;">';
+                        echo '<div class="card-body">';
+                        echo $row['processName'].' <i class="fa fa-arrow-right"></i> Step '.$row['stepNo'].' - '.$row['name'].'<br>';
+                        echo '</div></div>';
+                    }
+                }else{
+                    echo 'You have no workflows but is still able to submit documents to their respective workflows.';
+                }
+                ?>
+            </div>
+            <div class="panel-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function() {
+
+        $('[data-toggle="tooltip"]').tooltip();
 
         $("#documentUploadForm").on('submit', function(e){
             e.preventDefault();
@@ -207,10 +209,9 @@ $userName = $rows[0]['name'];
     searchTable(status,type);
 
     function searchTable(status,type){
-        let table = $('table.table').DataTable( {
-            bSort: false,
+        let table = $('#myTable1').DataTable( {
             destroy: true,
-            pageLength: 5,
+            pageLength: 10,
             "ajax": {
                 "url":"EDMS_AJAX_FetchDocuments.php",
                 "type":"POST",
@@ -218,8 +219,13 @@ $userName = $rows[0]['name'];
                 "dataSrc": ''
             },
             columns: [
-                { data: "title_version" },
-                { data: "currentProcess" },
+                { data: "title" },
+                { data: "type" },
+                { data: "vers"},
+                { data: "submitted_by"},
+                { data: "submitted_on"},
+                { data: "status"},
+                { data: "timestamp"},
                 { data: "actions"}
             ]
         });

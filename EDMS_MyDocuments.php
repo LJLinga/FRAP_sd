@@ -1,4 +1,4 @@
-0<?php
+<?php
 /**
  * Created by PhpStorm.
  * User: Christian Alderite
@@ -37,18 +37,18 @@ $userName = $rows[0]['name'];
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="row">
-                            <div class="col-lg-7">
+                            <div class="col-lg-8">
                                 <div class="btn-group">
                                     <a type="button" class="btn btn-default" id="btnAll" onclick="filterStatus('');">All</a>
                                     <?php
-                                    $rows = $crud->getData("SELECT statusName FROM facultyassocnew.doc_status;");
-                                    foreach((array) $rows as $key => $row){
-                                        echo '<a type="button" class="btn btn-default" onclick="filterStatus(&quot;'.$row['statusName'].'&quot;);">'.$row['statusName'].'</a>';
-                                    }
+                                        $rows = $crud->getData("SELECT statusName FROM facultyassocnew.doc_status;");
+                                        foreach((array) $rows as $key => $row){
+                                            echo '<a type="button" class="btn btn-default" onclick="filterStatus(&quot;'.$row['statusName'].'&quot;);">'.$row['statusName'].'</a>';
+                                        }
                                     ?>
                                 </div>
                             </div>
-                            <div class="col-lg-5">
+                            <div class="col-lg-4">
                                 <div class="form-inline">
                                     <label for="sel1">Type</label>
                                     <select class="form-control" onchange="filterType(this.value);">
@@ -70,7 +70,7 @@ $userName = $rows[0]['name'];
                             <thead>
                             <tr>
                                 <th>Title</th>
-                                <th>Type</th>
+                                <th>Category</th>
                                 <th>Version</th>
                                 <th>Status</th>
                                 <th>Last modified on</th>
@@ -99,24 +99,24 @@ $userName = $rows[0]['name'];
             </div>
             <div class="panel-body">
                 <?php
-                $rows = $crud->getData("SELECT  pr.processName, s.stepNo, s.stepName AS name 
-                                                FROM employee e 
-                                                JOIN edms_roles er ON e.EDMS_ROLE = er.id 
-                                                JOIN step_roles sr ON sr.roleId = er.id
-                                                JOIN steps s ON s.id = sr.stepId
-                                                JOIN process pr ON pr.id = s.processId
-                                                WHERE e.EMP_ID = '$userId'
-                                                ORDER BY pr.processName, s.stepNo");
-                if(!empty($rows)){
-                    foreach((array)$rows AS $key => $row){
-                        echo '<div class="card" style="margin-top: 1rem;">';
-                        echo '<div class="card-body">';
-                        echo $row['processName'].' <i class="fa fa-arrow-right"></i> Step '.$row['stepNo'].' - '.$row['name'].'<br>';
-                        echo '</div></div>';
+                    $rows = $crud->getData("SELECT  pr.processName, s.stepNo, s.stepName AS name 
+                                                    FROM employee e 
+                                                    JOIN edms_roles er ON e.EDMS_ROLE = er.id 
+                                                    JOIN step_roles sr ON sr.roleId = er.id
+                                                    JOIN steps s ON s.id = sr.stepId
+                                                    JOIN process pr ON pr.id = s.processId
+                                                    WHERE e.EMP_ID = '$userId'
+                                                    ORDER BY pr.processName, s.stepNo");
+                    if(!empty($rows)){
+                        foreach((array)$rows AS $key => $row){
+                            echo '<div class="card" style="margin-top: 1rem;">';
+                            echo '<div class="card-body">';
+                            echo $row['processName'].' <i class="fa fa-arrow-right"></i> Step '.$row['stepNo'].' - '.$row['name'].'<br>';
+                            echo '</div></div>';
+                        }
+                    }else{
+                        echo 'You have no workflows but is still able to submit documents to their respective workflows.';
                     }
-                }else{
-                    echo 'You have no workflows but is still able to submit documents to their respective workflows.';
-                }
                 ?>
             </div>
             <div class="panel-footer">
@@ -124,7 +124,6 @@ $userName = $rows[0]['name'];
             </div>
         </div>
     </div>
-
 </div>
 
 <div id="myModal" class="modal fade" role="dialog">
@@ -139,7 +138,7 @@ $userName = $rows[0]['name'];
                         <label for="documentTitle">Document</label>
                         <input type="text" name="documentTitle" id="documentTitle" class="form-control" placeholder="Document Title" required>
                     </div>
-                    <label for="documentTitle">Type</label>
+                    <label for="selectedType">Category</label>
                     <div class="form-group">
                         <select class="form-control" id="selectedType" name="selectedType">
                             <?php
@@ -211,7 +210,7 @@ $userName = $rows[0]['name'];
         let table = $('#myTable1').DataTable( {
             bSort: true,
             destroy: true,
-            pageLength: 5,
+            pageLength: 10,
             "ajax": {
                 "url":"EDMS_AJAX_FetchMyDocuments.php",
                 "type":"POST",
@@ -229,9 +228,9 @@ $userName = $rows[0]['name'];
         });
         table.column(1).search(status).draw();
         table.column(0).search(type).draw();
-        // setInterval(function(){
-        //     table.ajax.reload();
-        // },1000)
+        setInterval(function(){
+            table.ajax.reload();
+        },1000)
 
     }
 
