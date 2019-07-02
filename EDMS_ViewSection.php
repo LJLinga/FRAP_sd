@@ -120,6 +120,7 @@ if(isset($_GET['secId'])){
                                     FROM facultyassocnew.sections s
                                     JOIN employee e ON e.EMP_ID = s.firstAuthorId
                                     WHERE s.id = '$sectionId';");
+
     if(!empty($rows)){
         foreach((array) $rows as $key => $row){
             $authorId = $row['authorId'];
@@ -142,30 +143,22 @@ if(isset($_GET['secId'])){
         }
     }
 
+    $read = 2;
+    $comment = 2;
+
     $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su
                 WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
     $rows = $crud->getData($query);
     if(!empty($rows)){
         foreach((array) $rows as $key => $row){
-            $read = $row['read'];
             $write = $row['write'];
             $route = $row['route'];
-            $comment = $row['comment'];
         }
-    }else{
-        //need to add a read permission in the db if user wants to access files continiously
-        //$read = 2;
-        //$write = 1;
-        //$route = 1;
-        //$comment = 2;
-        //header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
     }
 
     if($revisions=='closed'){
-        $read = 2;
         $write = 1;
         $route = 1;
-        $comment = 2;
     }
 
 }else{

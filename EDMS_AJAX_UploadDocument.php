@@ -45,10 +45,8 @@ if(!empty($_POST['documentTitle']) && !empty($_POST['selectedType']) && !empty($
         $errors[] = "This file is more than 25MB. Sorry, it has to be less than or equal to 25MB";
     }
 
-
-
-
     if (empty($errors)) {
+
         $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
 
         if ($didUpload) {
@@ -56,7 +54,7 @@ if(!empty($_POST['documentTitle']) && !empty($_POST['selectedType']) && !empty($
             $stepId = '999'; $statusId = '99';
             $rows = $crud->getData("SELECT s.id FROM steps s 
                                   JOIN process pr ON s.processId = pr.id JOIN doc_type t ON t.processId = pr.id 
-                                  WHERE t.id = '$typeId' AND s.stepNo = 1 LIMIT 1;");
+                                  WHERE t.id = '$typeId' AND s.stepNo = 0 LIMIT 1;");
             if(!empty($rows)) {
                 foreach ((array)$rows as $key => $row) {
                     $stepId = $row['id'];
@@ -66,11 +64,16 @@ if(!empty($_POST['documentTitle']) && !empty($_POST['selectedType']) && !empty($
                 }
             }
 
-            $insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, authorId, stepId, typeId, statusId, versionNo, filePath, title) VALUES ('$userId','$userId','$stepId','$typeId','$statusId','1.0','$uploadPath','$title')");
-            echo $insertDocument;
+            if($insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, authorId, stepId, typeId, statusId, versionNo, filePath, title) VALUES ('$userId','$userId','$stepId','$typeId','$statusId','1.0','$uploadPath','$title')")){
+               $msg = array(
+                   'success' => '1',
+                   'id' => $insertDocument
+               );
+               echo json_encode($msg);
+            }
 
         } else {
-            echo "An error occurred somewhere. Try again or contact the admin";
+            echo "File did not upload.";
         }
 
     } else {
@@ -80,5 +83,5 @@ if(!empty($_POST['documentTitle']) && !empty($_POST['selectedType']) && !empty($
     }
 
 }else{
-    echo 'error';
+    echo 'Form error.';
 }

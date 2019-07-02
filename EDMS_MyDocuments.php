@@ -187,9 +187,8 @@ $userName = $rows[0]['name'];
                 contentType: false,
                 data: new FormData(this),
                 success: function(response){
-                    $("#err").html(response);
-                    $("#contact-modal").modal('hide');
-                    if(response !== 'error') location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+response;
+                    if(JSON.parse(response).success == '1'){ location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+JSON.parse(response).id }
+                    else { $("#err").html('<div class="alert alert-info">'+response+'</div>'); };
                 },
                 error: function(){
                     alert("Error");

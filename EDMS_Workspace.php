@@ -54,7 +54,7 @@ $userName = $rows[0]['name'];
                             <div class="col-lg-4">
                                 <div class="form-inline">
                                     <label for="sel1">Status</label>
-                                    <select class="form-control" onchange="filterType(this.value)">
+                                    <select class="form-control" onchange="filterStatus(this.value)">
                                         <option value="" selected>All</option>
                                         <?php
                                             $rows = $crud->getData("SELECT statusName FROM facultyassocnew.doc_status;");
@@ -195,9 +195,8 @@ $userName = $rows[0]['name'];
                 contentType: false,
                 data: new FormData(this),
                 success: function(response){
-                    $("#err").html(response);
-                    $("#contact-modal").modal('hide');
-                    if(response !== 'error') location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+response;
+                    if(JSON.parse(response).success == '1'){ location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+JSON.parse(response).id }
+                    else { $("#err").html('<div class="alert alert-info">'+response+'</div>'); };
                 },
                 error: function(){
                     alert("Error");
@@ -209,8 +208,6 @@ $userName = $rows[0]['name'];
     } );
 
     let mode = '<?php echo $edmsRole; ?>';
-    let type = '';
-    let status = '';
 
     let table = $('#myTable1').DataTable( {
         bSort: true,
@@ -236,30 +233,21 @@ $userName = $rows[0]['name'];
         ]
     });
 
-    searchTable(status,type);
+    $(".dataTables_filter").hide();
+    $('#searchField').keyup(function(){
+        table.search($('#searchField').val()).draw();
+    });
 
-    function searchTable(status,type){
-
+    function filterStatus(status){
         table.column(5).search(status).draw();
+    }
+    function filterType(type){
         table.column(1).search(type).draw();
-        // setInterval(function(){
-        //     table.ajax.reload();
-        // },1000)
-
-        $(".dataTables_filter").hide();
-        $('#searchField').keyup(function(){
-            table.search($('#searchField').val()).draw();
-        });
     }
 
-    function filterStatus(s){
-        status = s;
-        searchTable(s,type);
-    }
-    function filterType(t){
-        type = t;
-        searchTable(status,t);
-    }
+    setInterval(function(){
+        table.ajax.reload();
+    },1000)
 </script>
 
 <?php include 'GLOBAL_FOOTER.php';?>

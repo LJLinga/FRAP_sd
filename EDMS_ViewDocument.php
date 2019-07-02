@@ -30,7 +30,7 @@ if(isset($_GET['docId'])){
                 d.firstAuthorId, d.timeCreated, d.availabilityId, d.versionNo, d.authorId, d.title, d.filePath,
 		        CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS originalAuthor,
                 (SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) FROM employee e WHERE e.EMP_ID = d.authorId) AS currentAuthor,
-		        d.stepId,  p.processName, s.stepName, s.isFinal, d.availabilityId, d.lockedById, d.statusId
+		        d.stepId,  p.processName, s.stepName, s.isFinal, d.availabilityId, d.availabilityById, d.statusId
                 FROM documents d 
                 JOIN employee e ON d.firstAuthorId = e.EMP_ID
                 JOIN steps s ON d.stepId = s.id 
@@ -56,7 +56,7 @@ if(isset($_GET['docId'])){
             $processName = $row['processName'];
             $stepName = $row['stepName'];
             $availability = $row['availabilityId'];
-            $lockedById = $row['lockedById'];
+            $availabilityById = $row['availabilityById'];
             $statusId = $row['statusId'];
             $isFinal = $row['isFinal'];
 
@@ -96,7 +96,7 @@ if(isset($_GET['docId'])){
 
             if($availability == '1'){
                 $route = '1';
-                if($lockedById == $userId) $write = '2';
+                if($availabilityById == $userId) $write = '2';
                 else $write = '1';
             }
         }
@@ -149,7 +149,7 @@ if(isset($_POST['btnLock'])){
     }
     if($availability == '2'){
         $userId = $_POST['userId'];
-        $crud->execute("UPDATE documents SET availabilityId='1', lockedById='$userId' WHERE documentId='$documentId'");
+        $crud->execute("UPDATE documents SET availabilityId='1', availabilityById='$userId' WHERE documentId='$documentId'");
     }
     header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewDocument.php?docId=".$documentId);
 }
@@ -180,7 +180,7 @@ if(isset($_POST['btnRoute'])){
     if($availability == '2'){
         $crud->execute("UPDATE documents SET statusId = '1', stepId='$nextStepId', statusedById='$userId' WHERE documentId='$documentId'");
     }
-    //$crud->execute("UPDATE documents SET statusId = '1', availabilityId='2', stepId='$nextStepId', lockedById=NULL WHERE documentId='$documentId'");
+    //$crud->execute("UPDATE documents SET statusId = '1', availabilityId='2', stepId='$nextStepId', availabilityById=NULL WHERE documentId='$documentId'");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
 }
 
@@ -261,26 +261,27 @@ include 'EDMS_SIDEBAR.php';
                     <div class="card-body">
                         <table id="tblHistory2" class="table" cellspacing="0" width="100%">
                             <?php
-                                $query = "SELECT v.audit_modified, 
+                                $query = "SELECT v.audit_action_type, 
                                                 v.audit_timestamp, 
                                                 v.lastUpdated, 
                                                 v.versionNo, 
                                                 v.title, 
                                                 v.filePath, 
-                                                v.remarks, 
-                                                v.availabilityId, 
+                                                v.remarks,
+                                                v.lifecycleStateId,
                                                 s.statusname, 
                                                 st.stepName, 
-                                            CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName, 
-                                            CONCAT(e2.LASTNAME,', ',e2.FIRSTNAME) AS statusAuthorName,
-                                            CONCAT(e3.LASTNAME,', ',e3.FIRSTNAME) AS lockAuthorName
+                                            CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS updatedByName, 
+                                            CONCAT(e2.LASTNAME,', ',e2.FIRSTNAME) AS statusedByName,
+                                            CONCAT(e3.LASTNAME,', ',e3.FIRSTNAME) AS steppedByName
                                             
                                             FROM doc_versions v 
                                             JOIN doc_status s ON v.statusId= s.id
                                             JOIN steps st ON v.stepId = st.id
                                             JOIN employee e ON v.authorId = e.EMP_ID
                                             LEFT JOIN employee e2 ON v.statusedById = e2.EMP_ID
-                                            LEFT JOIN employee e3 ON v.lockedById = e3.EMP_ID
+                                            LEFT JOIN employee e3 ON v.steppedById = e3.EMP_ID
+                                            LEFT JOIN employee e4 ON v.lifecycleStatedById = e4.EMP_ID
                                             WHERE v.documentId = $documentId
                                             ORDER BY v.audit_timestamp DESC;";
 
@@ -294,27 +295,29 @@ include 'EDMS_SIDEBAR.php';
                                         $buttons='<a class="btn btn-sm fa fa-download"  href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"></a>';
                                         $buttons.='<a class="btn btn-sm fa fa-info-circle"></a>';
 
-                                        if($row['audit_modified'] == 'CREATED'){
-                                            $content.= '<b>'.$row['authorName'].'</b> created the document <span class="badge">Version '.$row['versionNo'].'</span>';
-                                        }else if($row['audit_modified'] == 'CONTENT'){
-                                            $content.= '<b>'.$row['authorName'].'</b> updated the document as <span class="badge">Version '.$row['versionNo'].'</span>';
-                                        }else if($row['audit_modified'] == 'STATUS'){
-                                            $content.= '<b>'.$row['statusAuthorName'].'</b> <span class="badge">'.$row['statusname'].'</span> the document';
-                                        }else if($row['audit_modified'] == 'STAGE'){
-                                            $content.= '<b>'.$row['statusAuthorName'].'</b> submitted the document for <span class="badge">'.$row['stepName'].'</span>';
-                                        }else if($row['audit_modified'] == 'AVAILABILITY'){
-                                            $checkin = "CHECKED IN";
-                                            if ($row['availabilityId'] == '2'){
-                                                $checkin = "CHECKED OUT";
+
+
+                                        if($row['audit_action_type'] == 'CREATED'){
+                                            $content.= '<b>'.$row['updatedByName'].'</b> created the document <span class="badge">Version '.$row['versionNo'].'</span>';
+                                        }else if($row['audit_action_type'] == 'UPDATE CONTENT'){
+                                            $content.= '<b>'.$row['updatedByName'].'</b> updated the document as <span class="badge">Version '.$row['versionNo'].'</span>';
+                                        }else if($row['audit_action_type'] == 'UPDATE STATUS'){
+                                            $content.= '<b>'.$row['statusedByName'].'</b> <span class="badge">'.$row['statusname'].'</span> the document';
+                                        }else if($row['audit_action_type'] == 'UPDATE STAGE'){
+                                            $content.= '<b>'.$row['steppedByName'].'</b> submitted the document for <span class="badge">'.$row['stepName'].'</span>';
+                                        }else if($row['audit_action_type'] == 'UPDATE STATE'){
+                                            $extra = 'ARCHIVED';
+                                            if($row['lifecycleStateId'] == '1'){
+                                                $extra = 'ACTIVE';
+                                            }else if($row['lifecycleStateId'] == '3'){
+                                                $extra = 'RESTORED';
                                             }
-                                            $content.= '<b>'.$row['lockAuthorName'].'</b> <span class="badge">'.$checkin.'</span> the document.';
+                                            $content.= '<b>'.$row['lifecycleStatedByName'].'</b> has <span class="badge">'.$extra.'</span>';
                                         }
 
                                         $content.= '<i> on '.date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])).'</i>';
                                         //$content.= $buttons;
-                                        if($row['remarks'] != '' && $row['audit_modified'] != 'AVAILABILITY'){
-                                            $content2='<div class="card"><div class="card-body"> Remarks: <i>"'.$row['remarks'].'"</i></div></div>';
-                                        }
+                                        $content2='<div class="card"><div class="card-body"> Remarks: <i>"'.$row['remarks'].'"</i></div></div>';
 
                                         ?>
                                         <tr>
@@ -462,8 +465,8 @@ include 'EDMS_SIDEBAR.php';
                                     echo '<input type="hidden" name="userId" value="'.$userId.'">';
                                     echo '<button class="btn btn-default" type="submit" name="btnLock" value="'.$documentId.'" style="text-align: left; width:100%;">Lock and Edit</button>';
                                 }else if(isset($write) && $write=='2' && $availability=='1'){
-                                    echo '<button class="btn btn-default" type="submit" name="btnUnlock" id="btnUnlock" value="'.$documentId.'" style="text-align: left; width: 100%;">Finish Editing</button>';
-                                    echo '<button type="button" class="btn btn-default" id="btnUpload" data-toggle="modal" data-target="#uploadModal" style="text-align: left; width: 100%;">Upload New Version</button>';
+                                    echo '<button class="btn btn-default" type="submit" name="btnUnlock" id="btnUnlock" value="'.$documentId.'" style="text-align: left; width: 100%;">Cancel Editing</button>';
+                                    echo '<button type="button" class="btn btn-default" id="btnUpload" data-toggle="modal" data-target="#uploadModal" style="text-align: left; width: 100%;">Finish Editing</button>';
                                 }
 
                                 //echo $edmsRole.','.$read.','.$write.','.$route;
@@ -654,9 +657,11 @@ include 'EDMS_SIDEBAR.php';
                 contentType: false,
                 data: new FormData(this),
                 success: function(response){
-                    $("#err").html(response);
-                    $("#contact-modal").modal('hide');
-                    if(response == 'success') location.reload();
+                    if(response != 'Upload success!'){
+                        $("#err").html('<div class="alert alert-warning">'+response+'</div>');
+                    }else{
+                        location.reload();
+                    }
                 },
                 error: function(){
                     alert("Something went wrong :(");
@@ -700,34 +705,38 @@ include 'EDMS_SIDEBAR.php';
         let typeId = '';
 
 
-        searchTable(typeId);
-
         $('#tblHistory2').DataTable({
             pageLength: 5,
             bSort: false
         });
 
-        function searchTable(typeId){
-            let table = $('#tblHistory').DataTable( {
-                bSort: false,
-                destroy: true,
-                bLengthChange: false,
-                pageLength: 5,
-                "ajax": {
-                    "url":"EDMS_AJAX_DocumentActivityStream.php",
-                    "type":"POST",
-                    "data":{ documentId: documentId, typeId: typeId },
-                    "dataSrc": ''
-                },
-                columns: [
-                    { data: "card_content" }
-                ]
-            });
-            $(".dataTables_filter").hide();
-            $('#searchField').keyup(function(){
-                table.search($('#searchField').val()).draw();
-            });
+        let table = $('#tblHistory').DataTable( {
+            bSort: true,
+            destroy: true,
+            bLengthChange: false,
+            pageLength: 5,
+            "ajax": {
+                "url":"EDMS_AJAX_DocumentActivityStream.php",
+                "type":"POST",
+                "data":{ documentId: documentId, typeId: typeId },
+                "dataSrc": ''
+            },
+            columns: [
+                { data: "card_content" }
+            ]
+        });
+        $(".dataTables_filter").hide();
+        $('#searchField').keyup(function(){
+            table.search($('#searchField').val()).draw();
+        });
+
+        function filterType(type){
+            table.column(1).search(type).draw();
         }
+
+        setInterval(function(){
+            table.ajax.reload();
+        },1000)
 
 
     });
@@ -745,8 +754,5 @@ include 'EDMS_SIDEBAR.php';
         })
     }
 
-    function versionPreview(versionId){
-        // creates a modal displaying the former contents
-    }
 </script>
 <?php include 'GLOBAL_FOOTER.php';?>

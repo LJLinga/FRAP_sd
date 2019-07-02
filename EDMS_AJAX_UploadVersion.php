@@ -51,21 +51,18 @@ if(!empty($_POST['documentId']) && !empty($_POST['newVersionNo']) && !empty($_PO
         $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
 
         if ($didUpload) {
-            $crud->execute("UPDATE documents SET availabilityId='2', remarks='$remarks',
-                                    authorId='$userId', versionNo='$versionNo', title='$title',filePath='$uploadPath',
-                                    lockedById=NULL WHERE documentId='$documentId'");
-            //echo $documentId;
-            echo 'success';
+            if($crud->execute("UPDATE documents SET authorId='$userId', availabilityId='2', availabilityById='$userId', remarks='$remarks',
+                                    versionNo='$versionNo', title='$title',filePath='$uploadPath' WHERE documentId='$documentId';")){
+                echo 'Upload success!';
+            }
         } else {
-            echo "An error occurred somewhere. Try again or contact the admin";
+            echo 'File did not upload.';
         }
 
     } else {
-        foreach ($errors as $error) {
-            echo $error . "These are the errors" . "\n";
-        }
+        echo $errors;
     }
 
 }else{
-    echo 'PHP Error.'.$_POST['userId'].' '.$_POST['documentTitle'].' '.$_POST['selectedTask'].' '.$_FILES['file'];
+    echo 'error';
 }
