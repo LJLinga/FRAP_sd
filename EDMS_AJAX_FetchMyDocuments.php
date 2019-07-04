@@ -13,10 +13,7 @@ session_start();
 
 if(isset($_POST['userId'])){
 
-
-
     $userId = $_POST['userId'];
-
 
     $query = "SELECT d.documentId, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName, 
                 d.filePath, d.title, d.versionNo, d.timeCreated, d.lastUpdated,

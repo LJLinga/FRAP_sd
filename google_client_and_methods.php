@@ -168,8 +168,7 @@
 		//then put in the database what did he do, in this case uploaded.
 		// desc example shoud be : Melton Jo added  _______ - blank is the file type 
 		//getname
-		
-		
+
 		$now  = date("Y-m-d h:i:sa");
 		$name = getName($_SESSION['idnum']);
 		$desc = $name." uploaded".$fileName. "to AFED File Repository";

@@ -15,6 +15,7 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 
 $userId = $_SESSION['idnum'];
 $edmsRole = $_SESSION['EDMS_ROLE'];
+$panelRole = $_SESSION['PANEL_ROLE'];
 $revisions = 'closed';
 
 if($_SESSION['EDMS_ROLE'] != 3 && $_SESSION['EDMS_ROLE'] != 4 && $_SESSION['EDMS_ROLE'] != 5 && $_SESSION['EDMS_ROLE'] != 6){

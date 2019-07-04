@@ -301,23 +301,26 @@ include 'EDMS_SIDEBAR.php';
                                             $content.= '<b>'.$row['updatedByName'].'</b> created the document <span class="badge">Version '.$row['versionNo'].'</span>';
                                         }else if($row['audit_action_type'] == 'UPDATE CONTENT'){
                                             $content.= '<b>'.$row['updatedByName'].'</b> updated the document as <span class="badge">Version '.$row['versionNo'].'</span>';
+                                            $content2='<div class="card"><div class="card-body"> Remarks: <i>"'.$row['remarks'].'"</i></div></div>';
                                         }else if($row['audit_action_type'] == 'UPDATE STATUS'){
                                             $content.= '<b>'.$row['statusedByName'].'</b> <span class="badge">'.$row['statusname'].'</span> the document';
+                                            $content2='<div class="card"><div class="card-body"> Remarks: <i>"'.$row['remarks'].'"</i></div></div>';
                                         }else if($row['audit_action_type'] == 'UPDATE STAGE'){
                                             $content.= '<b>'.$row['steppedByName'].'</b> submitted the document for <span class="badge">'.$row['stepName'].'</span>';
+                                            $content2='<div class="card"><div class="card-body"> Remarks: <i>"'.$row['remarks'].'"</i></div></div>';
                                         }else if($row['audit_action_type'] == 'UPDATE STATE'){
-                                            $extra = 'ARCHIVED';
-                                            if($row['lifecycleStateId'] == '1'){
-                                                $extra = 'ACTIVE';
+                                            $extra = 'ACTIVE';
+                                            if($row['lifecycleStateId'] == '2'){
+                                                $extra = 'ARCHIVED';
+                                                $content2='<div class="card"><div class="card-body"> Remarks: <i>"'.$row['remarks'].'"</i></div></div>';
                                             }else if($row['lifecycleStateId'] == '3'){
                                                 $extra = 'RESTORED';
+                                                $content2='<div class="card"><div class="card-body"> Remarks: <i>"'.$row['remarks'].'"</i></div></div>';
                                             }
                                             $content.= '<b>'.$row['lifecycleStatedByName'].'</b> has <span class="badge">'.$extra.'</span>';
                                         }
 
                                         $content.= '<i> on '.date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])).'</i>';
-                                        //$content.= $buttons;
-                                        $content2='<div class="card"><div class="card-body"> Remarks: <i>"'.$row['remarks'].'"</i></div></div>';
 
                                         ?>
                                         <tr>
@@ -490,7 +493,7 @@ include 'EDMS_SIDEBAR.php';
                 <div class="modal-header">
                    <h5 class="modal-title"><b>Confirm Approve?</b></h5>
                 </div>
-                <div class="modal-body">
+                <div class="moda l-body">
                     <div class="form-group">
                         <p>Please provide remarks before confirming.</p>
                         <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>

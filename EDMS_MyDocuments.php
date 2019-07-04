@@ -35,24 +35,14 @@ $userName = $rows[0]['name'];
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
+
                     <div class="panel-heading">
                         <div class="row">
-                            <div class="col-lg-8">
-                                <div class="btn-group">
-                                    <a type="button" class="btn btn-default" id="btnAll" onclick="filterStatus('');">All</a>
-                                    <?php
-                                        $rows = $crud->getData("SELECT statusName FROM facultyassocnew.doc_status;");
-                                        foreach((array) $rows as $key => $row){
-                                            echo '<a type="button" class="btn btn-default" onclick="filterStatus(&quot;'.$row['statusName'].'&quot;);">'.$row['statusName'].'</a>';
-                                        }
-                                    ?>
-                                </div>
-                            </div>
                             <div class="col-lg-4">
                                 <div class="form-inline">
-                                    <label for="sel1">Type</label>
-                                    <select class="form-control" onchange="filterType(this.value);">
-                                        <option value="All" selected>All</option>
+                                    <label for="sel1">Category</label>
+                                    <select class="form-control" onchange="filterType(this.value)">
+                                        <option value="" selected>All</option>
                                         <?php
                                         $rows = $crud->getData("SELECT t.type FROM facultyassocnew.doc_type t WHERE isActive = 2;");
                                         foreach((array)$rows as $key => $row){
@@ -62,9 +52,28 @@ $userName = $rows[0]['name'];
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-lg-4">
+                                <div class="form-inline">
+                                    <label for="sel1">Status</label>
+                                    <select class="form-control" onchange="filterStatus(this.value)">
+                                        <option value="" selected>All</option>
+                                        <?php
+                                        $rows = $crud->getData("SELECT statusName FROM facultyassocnew.doc_status;");
+                                        foreach((array)$rows as $key => $row){
+                                            echo '<option value="'.$row['statusName'].'">'.$row['statusName'].'</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-inline">
+                                    <label for="sel1">Search</label>
+                                    <input type="text" id="searchField" class="form-control">
+                                </div>
+                            </div>
                         </div>
                     </div>
-
                     <div class="panel-body">
                         <table id="myTable1" class="table table-striped" cellspacing="0" width="100%">
                             <thead>
@@ -200,49 +209,44 @@ $userName = $rows[0]['name'];
     } );
 
     let mode = '<?php echo $userId; ?>';
-    let type = '';
-    let status = '';
 
-    searchTable(status,type);
+    let table = $('#myTable1').DataTable( {
+        bSort: true,
+        bLengthChange: false,
+        destroy: true,
+        pageResize: true,
+        pageLength: 10,
+        "ajax": {
+            "url":"EDMS_AJAX_FetchMyDocuments.php",
+            "type":"POST",
+            "data":{ userId : mode },
+            "dataSrc": ''
+        },
+        columns: [
+            { data: "title" },
+            { data: "type" },
+            { data: "vers"},
+            { data: "status"},
+            { data: "timestamp"},
+            { data: "actions"}
+        ]
+    });
 
-    function searchTable(status, type){
-        let table = $('#myTable1').DataTable( {
-            bSort: true,
-            destroy: true,
-            bLengthChange: false,
-            pageResize: true,
-            pageLength: 10,
-            "ajax": {
-                "url":"EDMS_AJAX_FetchMyDocuments.php",
-                "type":"POST",
-                "data":{ userId : mode },
-                "dataSrc": ''
-            },
-            columns: [
-                { data: "title" },
-                { data: "type" },
-                { data: "vers"},
-                { data: "status"},
-                { data: "timestamp"},
-                { data: "actions"}
-            ]
-        });
-        table.column(1).search(status).draw();
-        table.column(0).search(type).draw();
-        setInterval(function(){
-            table.ajax.reload();
-        },1000)
+    $(".dataTables_filter").hide();
+    $('#searchField').keyup(function(){
+        table.search($('#searchField').val()).draw();
+    });
 
+    function filterStatus(status){
+        table.column(5).search(status).draw();
+    }
+    function filterType(type){
+        table.column(1).search(type).draw();
     }
 
-    function filterStatus(s){
-        status = s;
-        searchTable(s,type);
-    }
-    function filterType(t){
-        type = t;
-        searchTable(status,t);
-    }
+    setInterval(function(){
+        table.ajax.reload();
+    },1000)
 
 </script>
 

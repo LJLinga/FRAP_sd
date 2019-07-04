@@ -60,9 +60,41 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         }
     }
 
+    //Added functions for ease of use, put here because its going to be used over and over.
+    public function getUserGroups($userId){
+        $query = "SELECT * FROM groups g JOIN user_groups ug 
+                    ON g.id = ug.groupId
+                    WHERE ug.userId='$userId' ORDER BY g.groupName;";
+        return $this->getData($query);
+    }
+
+    public function isUserInGroup($userId, $groupId){
+        $query = "SELECT g.id FROM groups g 
+                    JOIN user_groups ug ON g.id = ug.groupId
+                    WHERE ug.userId='$userId' AND ug.groupId = '$groupId' 
+                    LIMIT 1;";
+        $rows = getData($query);
+        if(!empty($rows)){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public function addUserToGroup($userId, $groupId){
+        $query = "INSERT INTO user_groups(userId, groupId) VALUES ('$userId','$groupId');";
+        return $this->execute($query);
+    }
+
+    public function removeUserFromGroup($userId, $groupId){
+        $query = "DELETE FROM user_groups WHERE userId = '$userId' AND groupId = '$groupId';";
+        return $this->execute($query);
+    }
+
     public function escape_string($value){
         return $this->connection->real_escape_string($value);
     }
+
 }
 
 ?>

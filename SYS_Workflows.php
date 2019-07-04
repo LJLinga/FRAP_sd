@@ -21,9 +21,7 @@ $userId = $_SESSION['idnum'];
 
 ?>
 <script>
-    $(document).ready(function() {
-        $('#dataTable').DataTable();
-    });
+
 </script>
 
 <div class="content-wrapper" >
@@ -36,21 +34,107 @@ $userId = $_SESSION['idnum'];
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-5">
-                <div class="card">
-                    <div class="card-body">
-                        <table class="table table-bordered" align="center" id="dataTable">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="position:relative;">
+                        <div class="row">
+                            <div class="col-lg-10">
+                                <b>Documents</b>
+                            </div>
+                            <div class="col-lg-2">
+                                <button id="addWorkflow" class="btn btn-primary" data-toggle="modal" data-target="#modalAddWorkflow">New Document Workflow</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-striped table-responsive" align="center" id="dataTable">
                             <thead>
                             <tr>
                                 <th>Workflow</th>
-                                <th>Action</th>
+                                <th width="200px;">Action</th>
                             </tr>
                             </thead>
                             <tbody>
 
                             <?php
 
-                            $rows = $crud->getData("SELECT pr.id, pr.processName FROM facultyassocnew.process pr WHERE pr.id != 1;");
+                            $rows = $crud->getData("SELECT pr.id, pr.processName FROM facultyassocnew.process pr 
+                                                        WHERE pr.processForId=1 AND pr.editableId=1 ORDER BY pr.id ASC;");
+                            if(!empty($rows)){
+                                foreach((array) $rows as $key => $row){
+
+                                    ?>
+                                    <tr>
+                                        <th>
+                                            <?php echo $row['processName']; ?>
+                                        </th>
+                                        <td>
+                                            <a href="SYS_Process.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default">Edit</a>
+                                        </td>
+                                    </tr>
+                            <?php
+                                }
+                            }
+                            ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <b>Manual Revisions</b>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-striped table-responsive" align="center" id="dataTable">
+                            <thead>
+                            <tr>
+                                <th>Workflow</th>
+                                <th width="200px;">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <?php
+
+                            $rows = $crud->getData("SELECT pr.id, pr.processName FROM facultyassocnew.process pr 
+                                                        WHERE pr.processForId=2 AND pr.editableId=1 ORDER BY pr.id ASC LIMIT 1;");
+                            if(!empty($rows)){
+                                foreach((array) $rows as $key => $row){
+                                    echo '<tr>';
+                                    echo '<td>';
+                                    echo '<input type="hidden" class="process_id" value="'.$row['id'].'">';
+                                    echo '<input type="text" class="form-control process_name" value="'.$row['processName'].'">';
+                                    echo '</td>';
+                                    echo '<td>';
+                                    echo '<button type="button" onclick="saveProcess(this)" class="btn btn-primary">Save</button> ';
+                                    echo '<a href="SYS_Process.php?id='.$row['id'].'" id="btnEdit" class="btn btn-default">Edit</a>';
+                                    echo '</td>';
+                                    echo '</tr>';
+                                }
+                            }
+                            ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <b>Posts</b>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-striped table-responsive" align="center" id="dataTable">
+                            <thead>
+                            <tr>
+                                <th>Workflow</th>
+                                <th width="200px;">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <?php
+
+                            $rows = $crud->getData("SELECT pr.id, pr.processName FROM facultyassocnew.process pr 
+                                                        WHERE pr.processForId=3 AND pr.editableId=1 ORDER BY pr.id ASC LIMIT 1;");
                             if(!empty($rows)){
                                 foreach((array) $rows as $key => $row){
                                     echo '<tr>';
@@ -74,13 +158,38 @@ $userId = $_SESSION['idnum'];
         </div>
     </div>
     <!-- /.container-fluid -->
-
-
 </div>
 <!-- /.content-wrapper -->
 
 </div>
 <!-- /#wrapper -->
+
+<div class="modal fade" id="modalAddWorkflow" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    New Document Workflow
+                </h5>
+            </div>
+            <div class="modal-body">
+                <form action="" method="POST">
+                    <div class="form-group">
+                        <label for="title">
+                            Name
+                        </label>
+                        <input type="text" name="title" id="title" class="form-control" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Proceed</button>
+            </div>
+        </div>
+    </div>
+
+</div>
 
 <script>
     function saveProcess(element){

@@ -11,15 +11,17 @@ $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
-//include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
-include 'GLOBAL_HEADER.php';
-include 'EDMS_SIDEBAR.php';
+include_once 'GLOBAL_HEADER.php';
+include_once 'EDMS_SIDEBAR.php';
 
 $edmsRole = $_SESSION['EDMS_ROLE'];
+
 $userId = $_SESSION['idnum'];
 $rows = $crud->getData("SELECT CONCAT(e.FIRSTNAME, ,e.LASTNAME) AS name FROM employee e WHERE e.EMP_ID ='$userId' LIMIT 1;");
 $userName = $rows[0]['name'];
+
+$groups = $crud->getUserGroups($userId);
 ?>
 
 <div class="content-wrapper">
@@ -74,7 +76,7 @@ $userName = $rows[0]['name'];
                         </div>
                     </div>
                     <div class="panel-body">
-                        <table id="myTable1" class="table table-striped" cellspacing="0" width="100%">
+                        <table id="myTable1" class="table table-striped table-responsive" cellspacing="0" width="100%">
                             <thead>
                             <tr>
                                 <th>Title</th>
@@ -171,6 +173,7 @@ $userName = $rows[0]['name'];
                 }else{
                     echo 'You have no workflows but is still able to submit documents to their respective workflows.';
                 }
+
                 ?>
             </div>
             <div class="panel-footer">

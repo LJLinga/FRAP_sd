@@ -130,7 +130,9 @@
                             echo '<li><a href="SYS_UserRoles.php"> <i class="fa fa-wrench" aria-hidden="true"></i> Configurations </a></li>';
                         }
                         echo '</ul></li>';
-                    }?>
+                    }
+
+                    ?>
                 <li class="dropdown sideicons">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-money"><span class="badge count"></span></i></a>
