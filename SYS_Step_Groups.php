@@ -16,38 +16,48 @@ include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 $userId = $_SESSION['idnum'];
 
-if(isset($_POST['btnUpdateRoute'])){
+if(isset($_POST['btnUpdateGroup'])){
     $stepId = $_POST['stepId'];
-    $routeId = $_POST['routeId'];
-    $routeName = $crud->esc($_POST['routeName']);
-    $nextStepId = $_POST['nextStepId'];
-    if($crud->execute("UPDATE step_routes SET routeName = '$routeName', nextStepId = '$nextStepId' WHERE id = '$routeId';")){
+    $groupId = $_POST['groupId'];
+    $read = $_POST['read'];
+    $write = $_POST['write'];
+    $route = $_POST['route'];
+    $comment = $_POST['comment'];
+
+    if($crud->execute("UPDATE step_groups SET read = '$read', write='$write', route='$route', comment='$comment' WHERE stepId = '$stepId' AND groupId = '$groupId';")){
         echo 'success1';
     }else{
         echo 'Database error.';
     }
-    header("Location: http://". $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/SYS_Step_Routes.php?id=".$stepId);
+    header("Location: http://". $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/SYS_Step_Groups.php?id=".$stepId);
 }
-if(isset($_POST['btnAddRoute'])){
+if(isset($_POST['btnAddGroup'])){
     $stepId = $_POST['stepId'];
-    $nextStepId = $_POST['nextStepId'];
-    $routeName = $crud->esc($_POST['routeName']);
-    if($crud->execute("INSERT INTO step_routes (routeName, currentStepId, nextStepId) VALUES ('$routeName','$stepId','$nextStepId');")){
+    $groupId = $_POST['groupId'];
+    $read = $_POST['read'];
+    $write = $_POST['write'];
+    $route = $_POST['route'];
+    $comment = $_POST['comment'];
+    if($crud->execute("INSERT INTO step_groups (groupId, stepId, read, write, route, comment) VALUES ('$read','$write','$route','$comment');")){
         echo 'success2';
     }else{
         echo 'Database error.';
     }
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Step_Routes.php?id=".$stepId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Step_Groups.php?id=".$stepId);
 }
-if(isset($_POST['btnDeleteRoute'])){
-    $routeId = $_POST['routeId'];
+if(isset($_POST['btnDeleteGroup'])){
     $stepId = $_POST['stepId'];
-    if($crud->execute("DELETE FROM step_routes WHERE id = '$routeId';")){
+    $groupId = $_POST['groupId'];
+    $read = $_POST['read'];
+    $write = $_POST['write'];
+    $route = $_POST['route'];
+    $comment = $_POST['comment'];
+    if($crud->execute("DELETE FROM groups WHERE stepId = '$stepId',")){
         echo 'success3';
     }else{
         echo 'Database error.';
     }
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Step_Routes.php?id=".$stepId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Step_Groups.php?id=".$stepId);
 }
 
 if(isset($_GET['id'])){
@@ -68,35 +78,6 @@ if(isset($_GET['id'])){
         header("Location: http://" . $_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF'])."/SYS_Workflows.php");
     }
 }
-
-function canApproveString($num){
-    $string = 'Error';
-    if($num == 1){
-        $string ='NO';
-    }else if($num == 2){
-        $string = 'REJECT ONLY';
-    }else if($num == 3){
-        $string = 'APPROVE ONLY';
-    }else if($num == 4){
-        $string = 'APPROVE AND REJECT';
-    }
-    return $string;
-}
-
-function stepTypeString($num){
-    $string = 'Error';
-    if($num == 1){
-        $string = 'START (First step)';
-    }else if($num == 2){
-        $string = 'NORMAL (In-between steps)';
-    }else if($num == 3){
-        $string = 'COMPLETE (Last step after approve/reject)';
-    }else if($num == 4){
-        $string = 'RESTART (Routes only to start)';
-    }
-    return $string;
-}
-
 
 $page_title = 'Configuration - Process - Step Routes';
 include 'GLOBAL_HEADER.php';
@@ -194,26 +175,26 @@ include 'SYS_SIDEBAR.php';
                                                         <div class="form-group form-inline">
                                                             <label>Going to (Step No.: Step Name [Type, Can Approve?])</label>
                                                             <select class="form-control" name="nextStepId">
-                                                               <?php
-                                                                    if(!empty($rows2)){
-                                                                        foreach((array)$rows2 AS $key2 => $row2){
-                                                                            $selected = '';
-                                                                            $row2canApprove = canApproveString($row2['isFinal']);
-                                                                            $row2stepType = stepTypeString($row2['stepTypeId']);
+                                                                <?php
+                                                                if(!empty($rows2)){
+                                                                    foreach((array)$rows2 AS $key2 => $row2){
+                                                                        $selected = '';
+                                                                        $row2canApprove = canApproveString($row2['isFinal']);
+                                                                        $row2stepType = stepTypeString($row2['stepTypeId']);
 
-                                                                            if($row2['id'] == $row['nextStepId']){
-                                                                                $selected = 'selected';
-                                                                            }
-                                                                        ?>
-                                                                            <option value="<?php echo $row2['id'];?>" <?php echo $selected;?>>
-                                                                                <?php echo 'Step '.$row2['stepNo'].': '.$row2['stepName'].' ['.$row2stepType.', '.$row2canApprove.']'?>
-                                                                            </option>
-                                                                        <?php
+                                                                        if($row2['id'] == $row['nextStepId']){
+                                                                            $selected = 'selected';
                                                                         }
-                                                                    }else{
-                                                                        echo 'No steps to route to.';
+                                                                        ?>
+                                                                        <option value="<?php echo $row2['id'];?>" <?php echo $selected;?>>
+                                                                            <?php echo 'Step '.$row2['stepNo'].': '.$row2['stepName'].' ['.$row2stepType.', '.$row2canApprove.']'?>
+                                                                        </option>
+                                                                        <?php
                                                                     }
-                                                               ?>
+                                                                }else{
+                                                                    echo 'No steps to route to.';
+                                                                }
+                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>

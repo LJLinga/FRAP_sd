@@ -20,50 +20,54 @@ $userId = $_SESSION['idnum'];
 if(isset($_GET['id'])){
     $processId = $_GET['id'];
     $rows = $crud->getData("SELECT processName, editableId, processForId FROM process WHERE id = '$processId' LIMIT 1");
-    foreach((array)$rows AS $key => $row){
-        $processName = $row['processName'];
-        $editableId = $row['editableId'];
-        $processForId = $row['processForId'];
+    if(!empty($rows)){
+        foreach((array)$rows AS $key => $row){
+            $processName = $row['processName'];
+            $editableId = $row['editableId'];
+            $processForId = $row['processForId'];
+        }
+    }else{
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflows.php");
     }
+
 }
 
 if(isset($_POST['btnUpdateStep'])){
     $processId = $_POST['processId'];
     $stepId = $_POST['stepId'];
-    $stepNo = $_POST['stepNo'];
-    $stepName = $_POST['stepName'];
-    $canApprove = $_POST['isFinal'];
+    $stepNo = $crud->esc($_POST['stepNo']);
+    $stepName = $crud->esc($_POST['stepName']);
+    $canApprove = $crud->esc($_POST['isFinal']);
     if($crud->execute("UPDATE steps SET stepName = '$stepName', stepNo = '$stepNo', isFinal = '$canApprove' WHERE id = '$stepId'")){
         echo 'success';
     }else{
-        alert('Database error.');
+        echo 'Database error.';
     }
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Process_Steps.php?id=".$processId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Process.php?id=".$processId);
 }
 
 if(isset($_POST['btnAddStep'])){
-    $processId = $_POST['processId'];
-    $stepId = $_POST['stepId'];
-    $stepNo = $_POST['stepNo'];
-    $stepName = $_POST['stepName'];
-    $canApprove = $_POST['isFinal'];
-    if($crud->execute("INSERT INTO steps (stepNo, stepName, isFinal) VALUES ('$stepNo','$stepName','$canApprove');")){
+    $processId = $crud->esc($_POST['processId']);
+    $stepNo = $crud->esc($_POST['stepNo']);
+    $stepName = $crud->esc($_POST['stepName']);
+    $canApprove = $crud->esc($_POST['isFinal']);
+    if($crud->execute("INSERT INTO steps (processId, stepNo, stepName, isFinal) VALUES ('$processId','$stepNo','$stepName','$canApprove');")){
         echo 'success';
     }else{
-        alert('Database error.');
+        echo 'Database error.';
     }
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Process_Steps.php?id=".$processId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Process.php?id=".$processId);
 }
 
 if(isset($_POST['btnDeleteStep'])){
     $processId = $_POST['processId'];
     $stepId = $_POST['stepId'];
     if($crud->execute("DELETE FROM steps WHERE id = '$stepId';")){
-        echo "<script type='text/javascript'> alert('Deleted step successfully.'); </script>";
+        echo 'success';
     }else{
-        echo "<script type='text/javascript'> alert('Some items or routes are in this is step as of the moment. Thus, preventing it from getting deleted.'); </script>";
+        echo 'Cannot delete steps currently in use by items or routes.';
     }
-    //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Process_Steps.php?id=".$processId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Process.php?id=".$processId);
 }
 
 $page_title = 'Configuration - Process';
@@ -135,7 +139,7 @@ include 'SYS_SIDEBAR.php';
                                 foreach ((array)$rows as $key => $row) {
                                     ?>
                                     <tr>
-                                        <th>
+                                        <th class="displayStepNo">
                                             <?php echo $row['stepNo']; ?>
                                         </th>
                                         <td>
@@ -174,92 +178,52 @@ include 'SYS_SIDEBAR.php';
                                                 <button type="button" name="btnEditStep" id="btnEditStep" data-toggle="modal" data-target="#modalEditStep<?php echo $row['id'];?>"
                                                     class="btn btn-default"><i class="fa fa-edit"></i>Step
                                                 </button>
-                                                <button type="button" class="btn btn-default" name="btnEditRoutes"
-                                                        id="btnEditRoutes" data-toggle="modal" data-target="#modalEditRoutes<?php echo $row['id'];?>"><i class="fa fa-road"></i>
+                                                <a class="btn btn-default"  href="SYS_Step_Routes.php?id=<?php echo $row['id'];?>"><i class="fa fa-road"></i>
                                                     Routes
-                                                </button>
-                                                <button type="button" class="btn btn-default" name="btnEditGroups"
-                                                        id="btnEditGroups" data-toggle="modal" data-target="#modalEditGroups<?php echo $row['id'];?>"><i class="fa fa-group"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-default"  href="SYS_Step_Groups.php?id=<?php echo $row['id'];?>"><i class="fa fa-road"></i>
                                                     Groups
                                                 </button>
                                                 <button type="submit" class="btn btn-danger" name="btnDeleteStep"><i class="fa fa-trash"></i> Delete</button>
                                             </form>
                                         </td>
-                                    </tr>
-
-                                    <div class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog" id="modalEditStep<?php echo $row['id'];?>">
-                                        <div class="modal-dialog">
-                                            <form name="updateStep" id="updateStep" method="POST" action="">
-                                                <input type="hidden" name="processId" value="<?php echo $processId;?>"/>
-                                                <input type="hidden" name="stepId" value="<?php echo $row['id'];?>"/>
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Update Step: <?php echo $row['stepName'];?></h4>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="form-group form-inline">
-                                                            <label>No. </label>
-                                                            <input type="number" class="form-control" name="stepNo" min="0" max="97" value="<?php echo $row['stepNo'];?>" required>
-                                                            <label>Name </label>
-                                                            <input type="text" class="form-control" name="stepName" value="<?php echo $row['stepName'];?>" required>
+                                        <div class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog" id="modalEditStep<?php echo $row['id'];?>">
+                                            <div class="modal-dialog">
+                                                <form name="updateStep" id="updateStep" method="POST" >
+                                                    <input type="hidden" name="requestType" value="updateStep"/>
+                                                    <input type="hidden" name="processId" value="<?php echo $processId;?>"/>
+                                                    <input type="hidden" name="stepId" value="<?php echo $row['id'];?>"/>
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Update Step: <?php echo $row['stepName'];?></h4>
                                                         </div>
-                                                        <div class="form-group form-inline">
-                                                            <label>Can approve/reject? </label>
-                                                            <select class="form-control" name="isFinal">
-                                                                <option value="1" <?php if($row['isFinal'] == 1) echo 'selected';?>>NO</option>
-                                                                <option value="2" <?php if($row['isFinal'] == 2) echo 'selected';?>>REJECT ONLY</option>
-                                                                <option value="3" <?php if($row['isFinal'] == 3) echo 'selected';?>>APPROVE ONLY</option>
-                                                                <option value="4" <?php if($row['isFinal'] == 4) echo 'selected';?>>APPROVE AND REJECT</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                        <button type="submit" name="btnUpdateStep" class="btn btn-primary">Save</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog" id="modalEditRoutes<?php echo $row['id'];?>">
-                                        <div class="modal-dialog">
-                                            <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                    <h4><?php echo $row['stepName'];?> Routes</h4>
-                                                </div>
-                                                <div class="panel-body" style="max-height: 25rem; overflow-y: auto;">
-                                                <?php
-                                                    $tempStepId = $row['id'];
-                                                    $query = "SELECT r.routeName, r.currentStepId, s.stepName, r.nextStepId, s2.stepName FROM steps s
-                                                                JOIN step_routes r ON s.id = r.currentStepId
-                                                                JOIN steps s2 ON r.nextStepId = s2.id
-                                                                ;";
-
-                                                    $rows2 = $crud->getData($query);
-
-                                                    if(!empty($rows2)){
-                                                        foreach((array)$rows2 AS $key2 => $row2){
-                                                            ?>
-                                                            <div class="card card-body" style="margin-top: 1rem;">
-
-                                                                <?php echo $row2['routeName'];?>
+                                                        <div class="modal-body">
+                                                            <div class="form-group form-inline">
+                                                                <label>No. </label>
+                                                                <input type="number" class="form-control" name="stepNo" min="0" max="97" value="<?php echo $row['stepNo'];?>" required>
+                                                                <label>Name </label>
+                                                                <input type="text" class="form-control" name="stepName" value="<?php echo $row['stepName'];?>" required>
                                                             </div>
-                                                            <?php
-                                                        }
-                                                    }else{
-                                                        ?>
-                                                        No routes to show.
-                                                        <?php
-                                                    }
-                                                ?>
-                                                </div>
-                                                <div class="panel-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                    <button type="submit" name="btnUpdateRoutes" class="btn btn-primary">Save</button>
-                                                </div>
+                                                            <div class="form-group form-inline">
+                                                                <label>Can approve/reject? </label>
+                                                                <select class="form-control" name="isFinal">
+                                                                    <option value="1" <?php if($row['isFinal'] == 1) echo 'selected';?>>NO</option>
+                                                                    <option value="2" <?php if($row['isFinal'] == 2) echo 'selected';?>>REJECT ONLY</option>
+                                                                    <option value="3" <?php if($row['isFinal'] == 3) echo 'selected';?>>APPROVE ONLY</option>
+                                                                    <option value="4" <?php if($row['isFinal'] == 4) echo 'selected';?>>APPROVE AND REJECT</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <button type="submit" name="btnUpdateStep" class="btn btn-primary">Save</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
-                                    </div>
+                                    </tr>
+
                                 <?php }
                             }?>
                             </tbody>
@@ -282,8 +246,7 @@ include 'SYS_SIDEBAR.php';
 <div class="modal fade" role="dialog" id="modalAddStep" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form name="formAddStep" id="formAddStep" method="POST" action="">
-                <input type="hidden" name="requestType" value="insertStep">
+            <form name="formAddStep" method="POST" action="">
             <div class="modal-header">
                 <h4 class="modal-title">Add New Step</h4>
             </div>
@@ -307,7 +270,7 @@ include 'SYS_SIDEBAR.php';
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="submit" id="btnAddStep" class="btn btn-primary">Save</button>
+                <button type="submit" name="btnAddStep" class="btn btn-primary">Save</button>
             </div>
             </form>
         </div>
@@ -318,10 +281,12 @@ include 'SYS_SIDEBAR.php';
 
     let processId = "<?php echo $processId;?>";
 
-    $('#editName').hide();
+    $(document).ready(function(){
+        $('#editName').hide();
+        $('#btnEditName').on('click', function() { editName(); });
+        $('#btnCancelEditName').on('click',function() { displayName(); });
 
-    $('#btnEditName').on('click', function() { editName(); });
-    $('#btnCancelEditName').on('click',function() { displayName(); });
+    });
 
     function editName(){
         $('#displayName').fadeOut("fast", function(){
@@ -331,23 +296,6 @@ include 'SYS_SIDEBAR.php';
     function displayName(){
         $('#editName').fadeOut("fast", function(){
             $('#displayName').fadeIn("fast");
-        });
-    }
-
-    function saveStep(element){
-        let stepId = $(element).closest('tr').find('.step_id').val();
-        let stepNo = $(element).closest('tr').find('.step_no').val();
-        let stepName = $(element).closest('tr').find('.step_name').val();
-        let isFinal = $(element).closest('tr').find('.is_final').val();
-        $(element).closest('tr').children('td, th').css('background-color','#5CB85C');
-        $.ajax({
-            url:"SYS_AJAX_SaveStep.php",
-            method:"POST",
-            data:{ requestType: 'updateStep', stepId: stepId, stepNo: stepNo, stepName:stepName, canApprove: isFinal},
-            dataType:"JSON",
-            success:function(data){
-
-            }
         });
     }
 

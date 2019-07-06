@@ -13,8 +13,14 @@ session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_SYS_ADMIN_CHECKING.php');
 
-if(isset($_POST['processId'])){
-
+if(isset($_POST['btnAddProcess'])){
+    $processName = $crud->esc($_POST['processName']);
+    if($processId = $crud->executeGetKey("INSERT INTO process (processName) VALUES ('$processName');")){
+        echo 'success';
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Step_Routes.php?id=".$processId);
+    }else{
+        echo 'Database error.';
+    }
 }
 
 $page_title = 'Configuration - Workflow';
@@ -73,7 +79,7 @@ $userId = $_SESSION['idnum'];
                                             <?php echo $row['processName']; ?>
                                         </th>
                                         <td>
-                                            <a href="SYS_Process_Steps.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default">Edit</a>
+                                            <a href="SYS_Process.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default">Edit</a>
                                         </td>
                                     </tr>
                             <?php
@@ -111,7 +117,7 @@ $userId = $_SESSION['idnum'];
                                     echo '</td>';
                                     echo '<td>';
                                     echo '<button type="button" onclick="saveProcess(this)" class="btn btn-primary">Save</button> ';
-                                    echo '<a href="SYS_Process_Steps.php?id='.$row['id'].'" id="btnEdit" class="btn btn-default">Edit</a>';
+                                    echo '<a href="SYS_Process.php?id='.$row['id'].'" id="btnEdit" class="btn btn-default">Edit</a>';
                                     echo '</td>';
                                     echo '</tr>';
                                 }
@@ -148,7 +154,7 @@ $userId = $_SESSION['idnum'];
                                     echo '</td>';
                                     echo '<td>';
                                     echo '<button type="button" onclick="saveProcess(this)" class="btn btn-primary">Save</button> ';
-                                    echo '<a href="SYS_Process_Steps.php?id='.$row['id'].'" id="btnEdit" class="btn btn-default">Edit</a>';
+                                    echo '<a href="SYS_Process.php?id='.$row['id'].'" id="btnEdit" class="btn btn-default">Edit</a>';
                                     echo '</td>';
                                     echo '</tr>';
                                 }
@@ -171,47 +177,27 @@ $userId = $_SESSION['idnum'];
 <div class="modal fade" id="modalAddWorkflow" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
+            <form method="POST" action="">
             <div class="modal-header">
                 <h5 class="modal-title">
                     New Document Workflow
                 </h5>
             </div>
             <div class="modal-body">
-                <form name="addProcess" action="" method="POST">
-                    <div class="form-group">
-                        <label for="title">
-                            Name
-                        </label>
-                        <input type="text" name="processName" id="processName" class="form-control" required>
-                    </div>
-                </form>
+                <div class="form-group">
+                    <label for="title">
+                        Name
+                    </label>
+                    <input type="text" name="processName" id="processName" class="form-control" required>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="submit" name="btnAddProcess" class="btn btn-primary" data-dismiss="modal">Save</button>
             </div>
+            </form>
         </div>
     </div>
-
 </div>
-
-<script>
-    function saveProcess(element){
-        var processId = $(element).closest('tr').find('.process_id').val();
-        var processName = $(element).closest('tr').find('.process_name').val();
-        $(element).closest('tr').children('td, th').css('background-color','#5CB85C');
-        $.ajax({
-            url:"SYS_AJAX_SaveProcess.php",
-            method:"POST",
-            data:{processId: processId, processName: processName},
-            dataType:"JSON",
-            success:function(data)
-            {
-            }
-        });
-    }
-
-
-</script>
 
 

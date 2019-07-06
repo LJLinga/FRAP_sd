@@ -95,6 +95,10 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         return $this->connection->real_escape_string($value);
     }
 
+    public function esc($value){
+        return $this->connection->real_escape_string($value);
+    }
+
 }
 
 ?>
