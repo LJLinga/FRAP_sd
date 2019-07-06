@@ -16,27 +16,20 @@
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 
-$stepNo = $_POST['stepNo'];
-$stepName = $_POST['stepName'];
-$canApprove = $_POST['isFinal'];
-$stepType = $_POST['stepType'];
 
-$requestType = $_POST['requestType'];
-
-if($requestType == 'insertStep'){
+if(isset($_POST['btnUpdateStep'])){
     $processId = $_POST['processId'];
-    if($crud->execute("INSERT INTO steps (stepNo, stepName, isFinal, processId) VALUES ('$stepNo','$stepName','$canApprove','$processId')")){
-        echo 'success';
-    }else{
-        echo 'failed';
-    }
-}else if($requestType == 'updateStep'){
     $stepId = $_POST['stepId'];
+    $stepNo = $_POST['stepNo'];
+    $stepName = $_POST['stepName'];
+    $canApprove = $_POST['isFinal'];
     if($crud->execute("UPDATE steps SET stepName = '$stepName', stepNo = '$stepNo', isFinal = '$canApprove' WHERE id = '$stepId'")){
         echo 'success';
     }else{
-        echo 'failed';
+        alert('Database errors.');
     }
+    exit;
+    //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Process_Steps.php?id=".$processId);
 }
 
 exit;

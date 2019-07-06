@@ -215,6 +215,7 @@ $groups = $crud->getUserGroups($userId);
     let table = $('#myTable1').DataTable( {
         bSort: true,
         bLengthChange: false,
+        scrollX: true,
         destroy: true,
         pageResize: true,
         pageLength: 10,

@@ -20,7 +20,6 @@ $userId = $_SESSION['idnum'];
 //$comment = 1;
 
 
-
 if(isset($_GET['docId'])){
 
     $documentId = $_GET['docId'];

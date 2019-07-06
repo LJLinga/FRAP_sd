@@ -13,6 +13,10 @@ session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_SYS_ADMIN_CHECKING.php');
 
+if(isset($_POST['processId'])){
+
+}
+
 $page_title = 'Configuration - Workflow';
 include 'GLOBAL_HEADER.php';
 include 'SYS_SIDEBAR.php';
@@ -50,7 +54,7 @@ $userId = $_SESSION['idnum'];
                         <table class="table table-striped table-responsive" align="center" id="dataTable">
                             <thead>
                             <tr>
-                                <th>Workflow</th>
+                                <th>Name</th>
                                 <th width="200px;">Action</th>
                             </tr>
                             </thead>
@@ -69,7 +73,7 @@ $userId = $_SESSION['idnum'];
                                             <?php echo $row['processName']; ?>
                                         </th>
                                         <td>
-                                            <a href="SYS_Process.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default">Edit</a>
+                                            <a href="SYS_Process_Steps.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default">Edit</a>
                                         </td>
                                     </tr>
                             <?php
@@ -88,7 +92,7 @@ $userId = $_SESSION['idnum'];
                         <table class="table table-striped table-responsive" align="center" id="dataTable">
                             <thead>
                             <tr>
-                                <th>Workflow</th>
+                                <th>Name</th>
                                 <th width="200px;">Action</th>
                             </tr>
                             </thead>
@@ -107,7 +111,7 @@ $userId = $_SESSION['idnum'];
                                     echo '</td>';
                                     echo '<td>';
                                     echo '<button type="button" onclick="saveProcess(this)" class="btn btn-primary">Save</button> ';
-                                    echo '<a href="SYS_Process.php?id='.$row['id'].'" id="btnEdit" class="btn btn-default">Edit</a>';
+                                    echo '<a href="SYS_Process_Steps.php?id='.$row['id'].'" id="btnEdit" class="btn btn-default">Edit</a>';
                                     echo '</td>';
                                     echo '</tr>';
                                 }
@@ -125,7 +129,7 @@ $userId = $_SESSION['idnum'];
                         <table class="table table-striped table-responsive" align="center" id="dataTable">
                             <thead>
                             <tr>
-                                <th>Workflow</th>
+                                <th>Name</th>
                                 <th width="200px;">Action</th>
                             </tr>
                             </thead>
@@ -144,7 +148,7 @@ $userId = $_SESSION['idnum'];
                                     echo '</td>';
                                     echo '<td>';
                                     echo '<button type="button" onclick="saveProcess(this)" class="btn btn-primary">Save</button> ';
-                                    echo '<a href="SYS_Process.php?id='.$row['id'].'" id="btnEdit" class="btn btn-default">Edit</a>';
+                                    echo '<a href="SYS_Process_Steps.php?id='.$row['id'].'" id="btnEdit" class="btn btn-default">Edit</a>';
                                     echo '</td>';
                                     echo '</tr>';
                                 }
@@ -173,18 +177,18 @@ $userId = $_SESSION['idnum'];
                 </h5>
             </div>
             <div class="modal-body">
-                <form action="" method="POST">
+                <form name="addProcess" action="" method="POST">
                     <div class="form-group">
                         <label for="title">
                             Name
                         </label>
-                        <input type="text" name="title" id="title" class="form-control" required>
+                        <input type="text" name="processName" id="processName" class="form-control" required>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Proceed</button>
+                <button type="submit" name="btnAddProcess" class="btn btn-primary" data-dismiss="modal">Save</button>
             </div>
         </div>
     </div>
@@ -207,9 +211,6 @@ $userId = $_SESSION['idnum'];
         });
     }
 
-    function editProcess(element, processId){
-
-    }
 
 </script>
 
