@@ -24,6 +24,36 @@ if(isset($_POST['btnAddProcess'])){
     header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflows.php");
 }
 
+function processForString($num){
+    if($num == '1'){
+        return 'DOCUMENTS';
+    }else if($num == '2'){
+        return 'MANUAL SECTIONS';
+    }else if($num == '3') {
+        return 'POSTS';
+    }
+}
+
+function editableString($num){
+    if($num == '1'){
+        return 'NOT EDITABLE';
+    }else if($num == '2'){
+        return 'SUPERADMIN';
+    }else if($num == '3') {
+        return 'ADMIN, SUPERADMIN';
+    }
+}
+
+function removableString($num){
+    if($num == '1'){
+        return 'NOT REMOVABLE';
+    }else if($num == '2'){
+        return 'SUPERADMIN';
+    }else if($num == '3') {
+        return 'ADMIN, SUPERADMIN';
+    }
+}
+
 $page_title = 'Configuration - Workflow';
 include 'GLOBAL_HEADER.php';
 include 'SYS_SIDEBAR.php';
@@ -50,7 +80,7 @@ $userId = $_SESSION['idnum'];
                     <div class="panel-heading" style="position:relative;">
                         <div class="row">
                             <div class="col-lg-10">
-                                <b>Documents</b>
+                                <b class="panel-title">Workflows</b>
                             </div>
                             <div class="col-lg-2">
                                 <button id="addWorkflow" class="btn btn-primary" data-toggle="modal" data-target="#modalAddWorkflow">New Document Workflow</button>
@@ -62,6 +92,9 @@ $userId = $_SESSION['idnum'];
                             <thead>
                             <tr>
                                 <th>Name</th>
+                                <th>Process for</th>
+                                <th>Editable by </th>
+                                <th>Removable by</th>
                                 <th width="200px;">Action</th>
                             </tr>
                             </thead>
@@ -69,91 +102,28 @@ $userId = $_SESSION['idnum'];
 
                             <?php
 
-                            $rows = $crud->getData("SELECT pr.id, pr.processName FROM facultyassocnew.process pr 
-                                                        WHERE pr.processForId=1 ORDER BY pr.id ASC;");
+                            $rows = $crud->getData("SELECT pr.id, pr.processForId, pr.processName, pr.editableId, pr.isRemovable FROM facultyassocnew.process pr;");
                             if(!empty($rows)){
                                 foreach((array) $rows as $key => $row){
-
-                                    ?>
+                                   ?>
                                     <tr>
-                                        <th>
-                                            <?php echo $row['processName']; ?>
-                                        </th>
                                         <td>
-                                            <a href="SYS_Process.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default">Edit</a>
+                                            <?php echo $row['processName']; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo processForString($row['processForId']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo editableString($row['editableId']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo removableString($row['isRemovable']); ?>
+                                        </td>
+                                        <td>
+                                            <a href="SYS_Process.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default"><i class="fa fa-edit"></i> Edit</a>
                                         </td>
                                     </tr>
-                            <?php
-                                }
-                            }
-                            ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <b>Manual Revisions</b>
-                    </div>
-                    <div class="panel-body">
-                        <table class="table table-striped table-responsive" align="center" id="dataTable">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th width="200px;">Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            <?php
-
-                            $rows = $crud->getData("SELECT pr.id, pr.processName FROM facultyassocnew.process pr 
-                                                        WHERE pr.processForId=2 AND pr.editableId=3 ORDER BY pr.id ASC LIMIT 1;");
-                            if(!empty($rows)){
-                                foreach((array) $rows as $key => $row){
-                                    echo '<tr>';
-                                    echo '<td>';
-                                    echo '<input type="text" class="form-control process_name" value="'.$row['processName'].'">';
-                                    echo '</td>';
-                                    echo '<td>';
-                                    echo '<a href="SYS_Process.php?id='.$row['id'].'" id="btnEdit" class="btn btn-default">Edit</a>';
-                                    echo '</td>';
-                                    echo '</tr>';
-                                }
-                            }
-                            ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <b>Posts</b>
-                    </div>
-                    <div class="panel-body">
-                        <table class="table table-striped table-responsive" align="center" id="dataTable">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th width="200px;">Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            <?php
-
-                            $rows = $crud->getData("SELECT pr.id, pr.processName FROM facultyassocnew.process pr 
-                                                        WHERE pr.processForId=3 AND pr.editableId=3 ORDER BY pr.id ASC LIMIT 1;");
-                            if(!empty($rows)){
-                                foreach((array) $rows as $key => $row){
-                                    echo '<tr>';
-                                    echo '<td>';
-                                    echo '<input type="text" class="form-control process_name" value="'.$row['processName'].'">';
-                                    echo '</td>';
-                                    echo '<td>';
-                                    echo '<a href="SYS_Process.php?id='.$row['id'].'" id="btnEdit" class="btn btn-default">Edit</a>';
-                                    echo '</td>';
-                                    echo '</tr>';
+                                    <?php
                                 }
                             }
                             ?>
@@ -196,5 +166,9 @@ $userId = $_SESSION['idnum'];
         </div>
     </div>
 </div>
+
+<script>
+    $('#dataTable').DataTable({});
+</script>
 
 

@@ -16,6 +16,9 @@
             <a href="SYS_UserRoles.php"><i class="fa fa-fw fa-user"></i> User Roles </a>
         </li>
         <li>
+            <a href="SYS_Groups.php"><i class="fa fa-fw fa-user"></i> Groups </a>
+        </li>
+        <li>
             <a href="SYS_Workflows.php"><i class="fa fa-fw fa-chain"></i> Workflows </a>
         </li>
         <li>

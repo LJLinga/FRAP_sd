@@ -141,12 +141,8 @@ include 'SYS_SIDEBAR.php';
                 <div class="panel panel-info">
                     <div class="panel-body">
                         <small>
-                            Note: The system enforces that there be one and only one START and COMPLETE steps per process; These can't be removed.
-                            The START step is always the first step, and the COMPLETE step is always the step the process goes to after approve/reject.
-                            All the custom steps to be added will be NORMAL steps that can have multiple routes to other steps.
-                            There are no preconfigured routes and group assignments.
-                            To get started, we preconfigured the START step to allow approve/reject to connect to the COMPLETE step.
-                            The step numbers and names are arbitrary and can be customized to your own liking.
+                            <strong>Routing: </strong> Routes enable the item to move from one step to another, as well as to change its status at the same time.
+                            It is recommended that you utilize the enforced COMPLETED stage to assign either reject or accept status.
                         </small>
                     </div>
                 </div>
@@ -257,6 +253,7 @@ include 'SYS_SIDEBAR.php';
                                                                 <option value="4" <?php if($row['assignStatus'] == 4){ echo 'selected'; };?>>REJECTED </option>
                                                             </select>
                                                         </div>
+                                                    </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                                         <button type="submit" name="btnUpdateRoute" class="btn btn-primary">Save</button>
