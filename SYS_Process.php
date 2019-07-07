@@ -37,8 +37,7 @@ if(isset($_POST['btnUpdateStep'])){
     $stepId = $_POST['stepId'];
     $stepNo = $crud->esc($_POST['stepNo']);
     $stepName = $crud->esc($_POST['stepName']);
-    $canApprove = $crud->esc($_POST['isFinal']);
-    if($crud->execute("UPDATE steps SET stepName = '$stepName', stepNo = '$stepNo', isFinal = '$canApprove' WHERE id = '$stepId'")){
+    if($crud->execute("UPDATE steps SET stepName = '$stepName', stepNo = '$stepNo' WHERE id = '$stepId'")){
         echo 'success';
     }else{
         echo 'Database error.';
@@ -50,8 +49,7 @@ if(isset($_POST['btnAddStep'])){
     $processId = $crud->esc($_POST['processId']);
     $stepNo = $crud->esc($_POST['stepNo']);
     $stepName = $crud->esc($_POST['stepName']);
-    $canApprove = $crud->esc($_POST['isFinal']);
-    if($crud->execute("INSERT INTO steps (processId, stepNo, stepName, isFinal) VALUES ('$processId','$stepNo','$stepName','$canApprove');")){
+    if($crud->execute("INSERT INTO steps (processId, stepNo, stepName) VALUES ('$processId','$stepNo','$stepName');")){
         echo 'success';
     }else{
         echo 'Database error.';
@@ -127,14 +125,13 @@ include 'SYS_SIDEBAR.php';
                                 <th width="100px;">No.</th>
                                 <th>Name</th>
                                 <th>Type</th>
-                                <th>Can approve/reject?</th>
                                 <th width="500px;">Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php
 
-                            $rows = $crud->getData("SELECT id, stepName, stepNo, isFinal, stepTypeId FROM steps s WHERE s.processId='$processId' ORDER BY stepNo;");
+                            $rows = $crud->getData("SELECT id, stepName, stepNo, stepTypeId FROM steps s WHERE s.processId='$processId' ORDER BY stepNo;");
                             if(!empty($rows)) {
                                 foreach ((array)$rows as $key => $row) {
                                     ?>
@@ -155,19 +152,6 @@ include 'SYS_SIDEBAR.php';
                                                     echo 'COMPLETE (Last step after approve/reject)';
                                                 }else if($row['stepTypeId'] == 4){
                                                     echo 'RESTART (Routes only to start)';
-                                                }
-                                            ?>
-                                        </td>
-                                        <td>
-                                            <?php
-                                                if($row['isFinal'] == 1){
-                                                    echo 'NO';
-                                                }else if($row['isFinal'] == 2){
-                                                    echo 'REJECT ONLY';
-                                                }else if($row['isFinal'] == 3){
-                                                    echo 'APPROVE ONLY';
-                                                }else if($row['isFinal'] == 4){
-                                                    echo 'APPROVE AND REJECT';
                                                 }
                                             ?>
                                         </td>
@@ -203,15 +187,6 @@ include 'SYS_SIDEBAR.php';
                                                                 <input type="number" class="form-control" name="stepNo" min="0" max="97" value="<?php echo $row['stepNo'];?>" required>
                                                                 <label>Name </label>
                                                                 <input type="text" class="form-control" name="stepName" value="<?php echo $row['stepName'];?>" required>
-                                                            </div>
-                                                            <div class="form-group form-inline">
-                                                                <label>Can approve/reject? </label>
-                                                                <select class="form-control" name="isFinal">
-                                                                    <option value="1" <?php if($row['isFinal'] == 1) echo 'selected';?>>NO</option>
-                                                                    <option value="2" <?php if($row['isFinal'] == 2) echo 'selected';?>>REJECT ONLY</option>
-                                                                    <option value="3" <?php if($row['isFinal'] == 3) echo 'selected';?>>APPROVE ONLY</option>
-                                                                    <option value="4" <?php if($row['isFinal'] == 4) echo 'selected';?>>APPROVE AND REJECT</option>
-                                                                </select>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -257,15 +232,6 @@ include 'SYS_SIDEBAR.php';
                     <input type="number" class="form-control" name="stepNo" min="0" max="97" required>
                     <label>Step Name </label>
                     <input type="text" class="form-control" name="stepName" placeholder="Step Name" required>
-                </div>
-                <div class="form-group form-inline">
-                    <label>Can approve/reject? </label>
-                    <select class="form-control" name="isFinal">
-                        <option value="1" selected>No</option>
-                        <option value="2">Reject Only</option>
-                        <option value="3">Approve Only</option>
-                        <option value="4">Approve and Reject</option>
-                    </select>
                 </div>
             </div>
             <div class="modal-footer">

@@ -21,6 +21,7 @@ if(isset($_POST['btnAddProcess'])){
     }else{
         echo 'Database error.';
     }
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflows.php");
 }
 
 $page_title = 'Configuration - Workflow';
@@ -69,7 +70,7 @@ $userId = $_SESSION['idnum'];
                             <?php
 
                             $rows = $crud->getData("SELECT pr.id, pr.processName FROM facultyassocnew.process pr 
-                                                        WHERE pr.processForId=1 AND pr.editableId=1 ORDER BY pr.id ASC;");
+                                                        WHERE pr.processForId=1 ORDER BY pr.id ASC;");
                             if(!empty($rows)){
                                 foreach((array) $rows as $key => $row){
 
@@ -107,16 +108,14 @@ $userId = $_SESSION['idnum'];
                             <?php
 
                             $rows = $crud->getData("SELECT pr.id, pr.processName FROM facultyassocnew.process pr 
-                                                        WHERE pr.processForId=2 AND pr.editableId=1 ORDER BY pr.id ASC LIMIT 1;");
+                                                        WHERE pr.processForId=2 AND pr.editableId=3 ORDER BY pr.id ASC LIMIT 1;");
                             if(!empty($rows)){
                                 foreach((array) $rows as $key => $row){
                                     echo '<tr>';
                                     echo '<td>';
-                                    echo '<input type="hidden" class="process_id" value="'.$row['id'].'">';
                                     echo '<input type="text" class="form-control process_name" value="'.$row['processName'].'">';
                                     echo '</td>';
                                     echo '<td>';
-                                    echo '<button type="button" onclick="saveProcess(this)" class="btn btn-primary">Save</button> ';
                                     echo '<a href="SYS_Process.php?id='.$row['id'].'" id="btnEdit" class="btn btn-default">Edit</a>';
                                     echo '</td>';
                                     echo '</tr>';
@@ -144,16 +143,14 @@ $userId = $_SESSION['idnum'];
                             <?php
 
                             $rows = $crud->getData("SELECT pr.id, pr.processName FROM facultyassocnew.process pr 
-                                                        WHERE pr.processForId=3 AND pr.editableId=1 ORDER BY pr.id ASC LIMIT 1;");
+                                                        WHERE pr.processForId=3 AND pr.editableId=3 ORDER BY pr.id ASC LIMIT 1;");
                             if(!empty($rows)){
                                 foreach((array) $rows as $key => $row){
                                     echo '<tr>';
                                     echo '<td>';
-                                    echo '<input type="hidden" class="process_id" value="'.$row['id'].'">';
                                     echo '<input type="text" class="form-control process_name" value="'.$row['processName'].'">';
                                     echo '</td>';
                                     echo '<td>';
-                                    echo '<button type="button" onclick="saveProcess(this)" class="btn btn-primary">Save</button> ';
                                     echo '<a href="SYS_Process.php?id='.$row['id'].'" id="btnEdit" class="btn btn-default">Edit</a>';
                                     echo '</td>';
                                     echo '</tr>';
@@ -188,12 +185,12 @@ $userId = $_SESSION['idnum'];
                     <label for="title">
                         Name
                     </label>
-                    <input type="text" name="processName" id="processName" class="form-control" required>
+                    <input type="text" name="processName" class="form-control" required>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" name="btnAddProcess" class="btn btn-primary" data-dismiss="modal">Save</button>
+                <button type="submit" name="btnAddProcess" class="btn btn-primary">Save</button>
             </div>
             </form>
         </div>

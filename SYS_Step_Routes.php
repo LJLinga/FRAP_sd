@@ -19,9 +19,11 @@ $userId = $_SESSION['idnum'];
 if(isset($_POST['btnUpdateRoute'])){
     $stepId = $_POST['stepId'];
     $routeId = $_POST['routeId'];
+    $orderNo = $_POST['orderNo'];
     $routeName = $crud->esc($_POST['routeName']);
     $nextStepId = $_POST['nextStepId'];
-    if($crud->execute("UPDATE step_routes SET routeName = '$routeName', nextStepId = '$nextStepId' WHERE id = '$routeId';")){
+    $assignStatus = $_POST['assignStatus'];
+    if($crud->execute("UPDATE step_routes SET orderNo = '$orderNo', routeName = '$routeName', nextStepId = '$nextStepId', assignStatus='$assignStatus' WHERE id = '$routeId';")){
         echo 'success1';
     }else{
         echo 'Database error.';
@@ -30,9 +32,11 @@ if(isset($_POST['btnUpdateRoute'])){
 }
 if(isset($_POST['btnAddRoute'])){
     $stepId = $_POST['stepId'];
-    $nextStepId = $_POST['nextStepId'];
+    $orderNo = $_POST['orderNo'];
     $routeName = $crud->esc($_POST['routeName']);
-    if($crud->execute("INSERT INTO step_routes (routeName, currentStepId, nextStepId) VALUES ('$routeName','$stepId','$nextStepId');")){
+    $nextStepId = $_POST['nextStepId'];
+    $assignStatus = $_POST['assignStatus'];
+    if($crud->execute("INSERT INTO step_routes (orderNo, routeName, currentStepId, nextStepId, assignStatus) VALUES ('$orderNo','$routeName','$stepId','$nextStepId','$assignStatus');")){
         echo 'success2';
     }else{
         echo 'Database error.';
@@ -97,6 +101,22 @@ function stepTypeString($num){
     return $string;
 }
 
+function assignStatusString($num){
+    $string = 'Error';
+    if($num == 5){
+        $string ='NO ASSIGNMENT';
+    }else if($num == 1){
+        $string = 'DRAFT';
+    }else if($num == 2){
+        $string = 'PENDING';
+    }else if($num == 3){
+        $string = 'APPROVED';
+    }else if($num == 4){
+        $string = 'REJECTED';
+    }
+    return $string;
+}
+
 
 $page_title = 'Configuration - Process - Step Routes';
 include 'GLOBAL_HEADER.php';
@@ -140,18 +160,20 @@ include 'SYS_SIDEBAR.php';
                     <div class="panel-body">
                         <?php
 
-                        $rows = $crud->getData("SELECT r.id, r.routeName, r.nextStepId, s.id AS stepId, s.stepName, s.stepNo, s.isFinal, s.stepTypeId
+                        $rows = $crud->getData("SELECT r.id, r.orderNo, r.routeName, r.nextStepId, r.assignStatus, s.id AS stepId, s.stepName, s.stepNo, s.isFinal, s.stepTypeId
                                                     FROM step_routes r JOIN steps s ON r.nextStepId = s.id
                                                     WHERE r.currentStepId = '$stepId';");
-
-                        $rows2 = $crud->getData("SELECT * FROM steps WHERE processId = '$processId' AND id != '$stepId';");
+                        $rows2 = $crud->getData("SELECT s.* FROM steps s
+                                                            WHERE s.processId = '$processId' AND s.id != '$stepId';");
 
                         if(!empty($rows)) { ?>
                             <table class="table table-responsive table-striped" align="center" id="dataTable">
                                 <thead>
                                 <tr>
+                                    <th>No.</th>
                                     <th>Name</th>
                                     <th>Going to (Step No.: Step Name [Type, Can Approve?])</th>
+                                    <th>Assign Status</th>
                                     <th width="250px;">Action</th>
                                 </tr>
                                 </thead>
@@ -160,11 +182,17 @@ include 'SYS_SIDEBAR.php';
                                 foreach ((array)$rows as $key => $row) {
                                     ?>
                                     <tr>
+                                        <th>
+                                            <?php echo $row['orderNo'];?>
+                                        </th>
                                         <td>
                                             <?php echo $row['routeName'];?>
                                         </td>
                                         <td>
                                             Step <?php echo $row['stepNo'].': '.$row['stepName'].' ['.stepTypeString($row['stepTypeId']).', '.canApproveString($row['isFinal']).']'?>
+                                        </td>
+                                        <td>
+                                            <?php echo assignStatusString($row['assignStatus']);?>
                                         </td>
                                         <td>
                                             <form action="" method="POST">
@@ -189,6 +217,8 @@ include 'SYS_SIDEBAR.php';
                                                     </div>
                                                     <div class="modal-body">
                                                         <div class="form-group form-inline">
+                                                            <label>No. </label>
+                                                            <input type="number" class="form-control" name="orderNo" value="<?php echo $row['orderNo'];?>" min="0" max="97"required>
                                                             <label>Name </label>
                                                             <input type="text" class="form-control" name="routeName" value="<?php echo $row['routeName'];?>" required>
                                                         </div>
@@ -217,7 +247,16 @@ include 'SYS_SIDEBAR.php';
                                                                 ?>
                                                             </select>
                                                         </div>
-                                                    </div>
+                                                        <div class="form-group form-inline">
+                                                            <label>Assign Status</label>
+                                                            <select class="form-control" name="assignStatus">
+                                                                <option value="5" selected>NO ASSIGNMENT </option>
+                                                                <option value="1" <?php if($row['assignStatus'] == 1){ echo 'selected'; };?>>DRAFT </option>
+                                                                <option value="2" <?php if($row['assignStatus'] == 2){ echo 'selected'; };?>>PENDING </option>
+                                                                <option value="3" <?php if($row['assignStatus'] == 3){ echo 'selected'; };?>>APPROVED </option>
+                                                                <option value="4" <?php if($row['assignStatus'] == 4){ echo 'selected'; };?>>REJECTED </option>
+                                                            </select>
+                                                        </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                                         <button type="submit" name="btnUpdateRoute" class="btn btn-primary">Save</button>
@@ -261,12 +300,11 @@ include 'SYS_SIDEBAR.php';
                 <div class="modal-body">
                     <?php
                     $btnAddRouteActive = '';
-                    $rows2 = $crud->getData("SELECT s.* FROM steps s
-                                                            WHERE s.processId = '2' AND s.id != '$stepId' 
-                                                            AND s.id NOT IN (SELECT r.nextStepId FROM step_routes r WHERE r.currentStepId = '$stepId');");
                     if(!empty($rows2)){ ?>
                         <div class="form-group form-inline">
                             <input type="hidden" name="stepId" value="<?php echo $stepId;?>">
+                            <label>No. </label>
+                            <input type="number" class="form-control" name="orderNo" min="0" max="97"required>
                             <label>Route Name </label>
                             <input type="text" class="form-control" name="routeName" placeholder="Route Name" required>
                         </div>
@@ -279,15 +317,22 @@ include 'SYS_SIDEBAR.php';
                                     $row2canApprove = canApproveString($row2['isFinal']);
                                     $row2stepType = stepTypeString($row2['stepTypeId']);
 
-                                    if($row2['id'] == $row['nextStepId']){
-                                        $selected = 'selected';
-                                    }
                                     ?>
                                     <option value="<?php echo $row2['id'];?>" <?php echo $selected;?>>
                                         <?php echo 'Step '.$row2['stepNo'].': '.$row2['stepName'].' ['.$row2stepType.', '.$row2canApprove.']'?>
                                     </option>
                                     <?php
                                 }?>
+                            </select>
+                        </div>
+                        <div class="form-group form-inline">
+                            <label>Assign Status</label>
+                            <select class="form-control" name="assignStatus">
+                                <option value="5" selected>NO ASSIGNMENT </option>
+                                <option value="1">DRAFT </option>
+                                <option value="2">PENDING </option>
+                                <option value="3">APPROVED </option>
+                                <option value="4">REJECTED </option>
                             </select>
                         </div>
                         <?php

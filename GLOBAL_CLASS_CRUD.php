@@ -99,6 +99,51 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         return $this->connection->real_escape_string($value);
     }
 
+    public function canApproveString($num){
+        $string = 'Error';
+        if($num == 1){
+            $string ='NO';
+        }else if($num == 2){
+            $string = 'REJECT ONLY';
+        }else if($num == 3){
+            $string = 'APPROVE ONLY';
+        }else if($num == 4){
+            $string = 'APPROVE AND REJECT';
+        }
+        return $string;
+    }
+
+    public function stepTypeString($num){
+        $string = 'Error';
+        if($num == 1){
+            $string = 'START (First step)';
+        }else if($num == 2){
+            $string = 'NORMAL (In-between steps)';
+        }else if($num == 3){
+            $string = 'COMPLETE (Last step after approve/reject)';
+        }else if($num == 4){
+            $string = 'RESTART (Routes only to start)';
+        }
+        return $string;
+    }
+
+    public function assignStatusString($num){
+        $string = 'Error';
+        if($num == 5){
+            $string ='NO ASSIGNMENT';
+        }else if($num == 1){
+            $string = 'DRAFT';
+        }else if($num == 2){
+            $string = 'PENDING';
+        }else if($num == 3){
+            $string = 'APPROVE';
+        }else if($num == 4){
+            $string = 'REJECT';
+        }
+        return $string;
+    }
+
+
 }
 
 ?>

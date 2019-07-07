@@ -52,7 +52,7 @@ if(isset($_POST['btnAddGroup'])){
     }else{
         echo 'Database error.';
     }
-    //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Step_Permissions.php?id=".$stepId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Step_Permissions.php?id=".$stepId);
 }
 if(isset($_POST['btnDeleteGroup'])){
     $stepId = $_POST['stepId'];
