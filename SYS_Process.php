@@ -181,9 +181,9 @@ include 'SYS_SIDEBAR.php';
                                                 <a class="btn btn-default"  href="SYS_Step_Routes.php?id=<?php echo $row['id'];?>"><i class="fa fa-road"></i>
                                                     Routes
                                                 </a>
-                                                <button type="button" class="btn btn-default"  href="SYS_Step_Groups.php?id=<?php echo $row['id'];?>"><i class="fa fa-road"></i>
-                                                    Groups
-                                                </button>
+                                                <a class="btn btn-default"  href="SYS_Step_Permissions.php?id=<?php echo $row['id'];?>"><i class="fa fa-group"></i>
+                                                    Permissions
+                                                </a>
                                                 <button type="submit" class="btn btn-danger" name="btnDeleteStep"><i class="fa fa-trash"></i> Delete</button>
                                             </form>
                                         </td>

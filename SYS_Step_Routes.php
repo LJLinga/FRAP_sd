@@ -138,24 +138,25 @@ include 'SYS_SIDEBAR.php';
                         </div>
                     </div>
                     <div class="panel-body">
-                        <table class="table table-responsive table-striped" align="center" id="dataTable">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Going to (Step No.: Step Name [Type, Can Approve?])</th>
-                                <th width="500px;">Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php
+                        <?php
 
-                            $rows = $crud->getData("SELECT r.id, r.routeName, r.nextStepId, s.id AS stepId, s.stepName, s.stepNo, s.isFinal, s.stepTypeId
+                        $rows = $crud->getData("SELECT r.id, r.routeName, r.nextStepId, s.id AS stepId, s.stepName, s.stepNo, s.isFinal, s.stepTypeId
                                                     FROM step_routes r JOIN steps s ON r.nextStepId = s.id
                                                     WHERE r.currentStepId = '$stepId';");
 
-                            $rows2 = $crud->getData("SELECT * FROM steps WHERE processId = '$processId' AND id != '$stepId';");
+                        $rows2 = $crud->getData("SELECT * FROM steps WHERE processId = '$processId' AND id != '$stepId';");
 
-                            if(!empty($rows)) {
+                        if(!empty($rows)) { ?>
+                            <table class="table table-responsive table-striped" align="center" id="dataTable">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Going to (Step No.: Step Name [Type, Can Approve?])</th>
+                                    <th width="250px;">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php
                                 foreach ((array)$rows as $key => $row) {
                                     ?>
                                     <tr>
@@ -194,26 +195,26 @@ include 'SYS_SIDEBAR.php';
                                                         <div class="form-group form-inline">
                                                             <label>Going to (Step No.: Step Name [Type, Can Approve?])</label>
                                                             <select class="form-control" name="nextStepId">
-                                                               <?php
-                                                                    if(!empty($rows2)){
-                                                                        foreach((array)$rows2 AS $key2 => $row2){
-                                                                            $selected = '';
-                                                                            $row2canApprove = canApproveString($row2['isFinal']);
-                                                                            $row2stepType = stepTypeString($row2['stepTypeId']);
+                                                                <?php
+                                                                if(!empty($rows2)){
+                                                                    foreach((array)$rows2 AS $key2 => $row2){
+                                                                        $selected = '';
+                                                                        $row2canApprove = canApproveString($row2['isFinal']);
+                                                                        $row2stepType = stepTypeString($row2['stepTypeId']);
 
-                                                                            if($row2['id'] == $row['nextStepId']){
-                                                                                $selected = 'selected';
-                                                                            }
-                                                                        ?>
-                                                                            <option value="<?php echo $row2['id'];?>" <?php echo $selected;?>>
-                                                                                <?php echo 'Step '.$row2['stepNo'].': '.$row2['stepName'].' ['.$row2stepType.', '.$row2canApprove.']'?>
-                                                                            </option>
-                                                                        <?php
+                                                                        if($row2['id'] == $row['nextStepId']){
+                                                                            $selected = 'selected';
                                                                         }
-                                                                    }else{
-                                                                        echo 'No steps to route to.';
+                                                                        ?>
+                                                                        <option value="<?php echo $row2['id'];?>" <?php echo $selected;?>>
+                                                                            <?php echo 'Step '.$row2['stepNo'].': '.$row2['stepName'].' ['.$row2stepType.', '.$row2canApprove.']'?>
+                                                                        </option>
+                                                                        <?php
                                                                     }
-                                                               ?>
+                                                                }else{
+                                                                    echo 'No steps to route to.';
+                                                                }
+                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -225,11 +226,16 @@ include 'SYS_SIDEBAR.php';
                                             </form>
                                         </div>
                                     </div>
-                                <?php }
-                            }
+                                <?php } ?>
+                                </tbody>
+                            </table>
+                            <?php
+                        }else{
                             ?>
-                            </tbody>
-                        </table>
+                            <b>No routes added so far.</b>
+                            <?php
+                        }
+                        ?>
                     </div>
                 </div>
 
@@ -253,18 +259,21 @@ include 'SYS_SIDEBAR.php';
                     <h4 class="modal-title">Add New Route</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group form-inline">
-                        <input type="hidden" name="stepId" value="<?php echo $stepId;?>">
-                        <label>Route Name </label>
-                        <input type="text" class="form-control" name="routeName" placeholder="Route Name" required>
-                    </div>
-                    <div class="form-group form-inline">
-                        <label>Going to  </label>
-                        <select class="form-control" name="nextStepId">
-                            <?php
-
-                            $rows2 = $crud->getData("SELECT * FROM steps WHERE processId = '$processId' AND id != '$stepId';");
-                            if(!empty($rows2)){
+                    <?php
+                    $btnAddRouteActive = '';
+                    $rows2 = $crud->getData("SELECT s.* FROM steps s
+                                                            WHERE s.processId = '2' AND s.id != '$stepId' 
+                                                            AND s.id NOT IN (SELECT r.nextStepId FROM step_routes r WHERE r.currentStepId = '$stepId');");
+                    if(!empty($rows2)){ ?>
+                        <div class="form-group form-inline">
+                            <input type="hidden" name="stepId" value="<?php echo $stepId;?>">
+                            <label>Route Name </label>
+                            <input type="text" class="form-control" name="routeName" placeholder="Route Name" required>
+                        </div>
+                        <div class="form-group form-inline">
+                            <label>Going to  </label>
+                            <select class="form-control" name="nextStepId" required>
+                                <?php
                                 foreach((array)$rows2 AS $key2 => $row2){
                                     $selected = '';
                                     $row2canApprove = canApproveString($row2['isFinal']);
@@ -278,17 +287,21 @@ include 'SYS_SIDEBAR.php';
                                         <?php echo 'Step '.$row2['stepNo'].': '.$row2['stepName'].' ['.$row2stepType.', '.$row2canApprove.']'?>
                                     </option>
                                     <?php
-                                }
-                            }else{
-                                echo 'No steps to route to.';
-                            }
-                            ?>
-                        </select>
-                    </div>
+                                }?>
+                            </select>
+                        </div>
+                        <?php
+                    }else{
+                        $btnAddRouteActive = 'style="display: none;"';
+                        ?>
+                        <b>All possible steps have been routed to.</b>
+                        <?php
+                    }
+                    ?>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" name="btnAddRoute" class="btn btn-primary">Save</button>
+                    <button type="submit" name="btnAddRoute" class="btn btn-primary" <?php echo $btnAddRouteActive;?>>Save</button>
                 </div>
             </form>
         </div>
