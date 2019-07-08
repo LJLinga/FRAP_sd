@@ -14,6 +14,8 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 
 $userId = $_SESSION['idnum'];
 
+
+
 if(isset($_POST['btnUpdateGroup'])){
     $groupId = $_POST['groupId'];
     $groupDesc = $_POST['groupName'];
@@ -95,7 +97,7 @@ if(isset($_GET['id'])){
 
 
 
-$page_title = 'Configuration - Process - Permissions';
+$page_title = 'Configuration - Group - Settings';
 include 'GLOBAL_HEADER.php';
 include 'SYS_SIDEBAR.php';
 
@@ -186,6 +188,95 @@ include 'SYS_SIDEBAR.php';
                         }else{
                             ?>
                             <b>No members in this group so far.</b>
+                            <?php
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <b>Group Workflow Involvement</b>
+                    </div>
+                    <div class="panel-body">
+                        <?php
+                        $rows = $crud->getGroupWorkflows($groupId);
+
+                        if(!empty($rows)) {?>
+                            <table class="table table-responsive table-striped" align="center" id="dataTable">
+                                <thead>
+                                <tr>
+                                    <th>Workflow for</th>
+                                    <th>Workflow Name</th>
+                                    <th>Step Name</th>
+                                    <th>Read</th>
+                                    <th>Comment</th>
+                                    <th>Write</th>
+                                    <th>Route</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php
+                                foreach ((array)$rows as $key => $row) {
+                                    ?>
+                                    <tr>
+                                        <td>
+                                            <?php
+                                                echo $crud->processForString($row['processForId']);
+                                                if($row['processForId'] == 1){
+                                                    $rows2 = $crud->getWorkflowDocTypes($row['processId']);
+                                                    if(!empty($rows2)){ ?>
+                                                        <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalListDocTypes<?php echo $row['id'];?>"><i class="fa fa-eye"></i></button>
+                                                    <div class="modal fade" role="dialog" id="modalListDocTypes<?php echo $row['id'];?>" data-backdrop="static" data-keyboard="false">
+                                                        <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                Document Types that undergo <?php echo $row['processName'];?>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                            <?php
+                                                            foreach((array)$rows2 AS $key2=> $row2){
+                                                               echo $row2['type'];
+                                                            }?>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                        <?php
+                                                    }
+                                                }
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $row['processName'];?>
+                                        </td>
+                                        <td>
+                                            <?php echo $row['stepName'];?>
+                                        </td>
+
+                                        <td>
+                                            <?php echo $crud->permissionString($row['read']);?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->permissionString($row['comment']);?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->permissionString($row['write']);?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->permissionString($row['route']);?>
+                                        </td>
+                                    </tr>
+
+                                <?php } ?>
+                                </tbody>
+                            </table>
+                            <?php
+                        }else{
+                            ?>
+                            <b>No workflow involvements so far.</b>
                             <?php
                         }
                         ?>

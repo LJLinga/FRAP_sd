@@ -24,39 +24,6 @@ if(isset($_POST['btnAddProcess'])){
     header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflows.php");
 }
 
-function processForString($num){
-    if($num == '1'){
-        return 'DOCUMENTS';
-    }else if($num == '2'){
-        return 'MANUAL SECTIONS';
-    }else if($num == '3') {
-        return 'POSTS';
-    }
-}
-
-function editableString($num){
-    if($num == '1'){
-        return 'NOT EDITABLE';
-    }else if($num == '2'){
-        return 'SUPERADMIN';
-    }else if($num == '3') {
-        return 'ADMIN, SUPERADMIN';
-    }else if($num == '4'){
-        return 'GROUP ADMIN, ADMIN, SUPERADMIN';
-    }
-}
-
-function removableString($num){
-    if($num == '1'){
-        return 'NOT REMOVABLE';
-    }else if($num == '2'){
-        return 'SUPERADMIN';
-    }else if($num == '3') {
-        return 'ADMIN, SUPERADMIN';
-    }else if($num == '4'){
-        return 'GROUP ADMIN, ADMIN, SUPERADMIN';
-    }
-}
 
 $page_title = 'Configuration - Workflow';
 include 'GLOBAL_HEADER.php';
@@ -115,13 +82,13 @@ $userId = $_SESSION['idnum'];
                                             <?php echo $row['processName']; ?>
                                         </td>
                                         <td>
-                                            <?php echo processForString($row['processForId']); ?>
+                                            <?php echo $crud->processForString($row['processForId']); ?>
                                         </td>
                                         <td>
-                                            <?php echo editableString($row['editableId']); ?>
+                                            <?php echo $crud->editableString($row['editableId']); ?>
                                         </td>
                                         <td>
-                                            <?php echo removableString($row['isRemovable']); ?>
+                                            <?php echo $crud->removableString($row['isRemovable']); ?>
                                         </td>
                                         <td>
                                             <a href="SYS_Workflow_Settings.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default"><i class="fa fa-edit"></i> Edit</a>

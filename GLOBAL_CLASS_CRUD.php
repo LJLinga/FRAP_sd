@@ -183,6 +183,41 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         }
     }
 
+    public function processForString($num){
+        if($num == '1'){
+            return 'DOCUMENTS';
+        }else if($num == '2'){
+            return 'MANUAL SECTIONS';
+        }else if($num == '3') {
+            return 'POSTS';
+        }
+    }
+
+    public function editableString($num){
+        if($num == '1'){
+            return 'NOT EDITABLE';
+        }else if($num == '2'){
+            return 'SUPERADMIN';
+        }else if($num == '3') {
+            return 'ADMIN, SUPERADMIN';
+        }else if($num == '4'){
+            return 'GROUP ADMIN, ADMIN, SUPERADMIN';
+        }
+    }
+
+    public function removableString($num){
+        if($num == '1'){
+            return 'NOT REMOVABLE';
+        }else if($num == '2'){
+            return 'SUPERADMIN';
+        }else if($num == '3') {
+            return 'ADMIN, SUPERADMIN';
+        }else if($num == '4'){
+            return 'GROUP ADMIN, ADMIN, SUPERADMIN';
+        }
+    }
+
+
     // GROUP MANAGEMENT FUNCTIONS
     public function generateGroupName($groupName){
         $rows = $this->getData("SELECT id FROM `groups` WHERE groupName LIKE '$groupName' LIMIT 1;");
@@ -240,6 +275,14 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                                 ORDER BY g.groupName ASC;");
     }
 
+    public function getSpecialGroups(){
+        return $this->getData("SELECT g.*, 
+                                (SELECT COUNT(ug.userId) FROM user_groups ug WHERE ug.groupId = g.id) AS member_count 
+                                FROM groups g 
+                                WHERE g.groupName NOT LIKE 'USR%' AND  g.groupName NOT LIKE 'GRP%'
+                                ORDER BY g.groupName ASC;");
+    }
+
     public function getGroupMembers($groupId){
         return $this->getData("SELECT e.EMP_ID, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS name, ug.* 
                                         FROM user_groups ug 
@@ -254,7 +297,30 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                                         AND e.ACC_STATUS = 2;");
     }
 
-    public function emailNotifications($emailTo, $emailFrom, $subject, $message){
+    public function getGroupWorkflows($groupId){
+        return $this->getData("SELECT p.*, sg.*, s.* FROM steps s 
+                                        JOIN process p on s.processId = p.id 
+                                        JOIN step_groups sg on s.id = sg.stepId
+                                        WHERE sg.groupId = '$groupId';");
+    }
+
+    public function getWorkflowDocTypes($processId){
+        return $this->getData("SELECT dt.*
+                                        FROM doc_type dt 
+                                        JOIN process p on dt.processId = p.id
+                                        WHERE p.id = '$processId' AND dt.isActive = 2;");
+
+    }
+
+    public function getDocTypes(){
+        return $this->getData("SELECT * FROM doc_types;");
+    }
+
+    public function getActiveDocTypes(){
+        return $this->getData("SELECT * FROM doc_types WHERE isActive = 2;");
+    }
+
+    public function emailNotification($emailTo, $emailFrom, $subject, $message){
         //Will be used for EDMS, CMS, Manual whenever someone moves a document/item to a step
         //Could also be used for literally any email notif purpose
         $headers = array(
@@ -264,6 +330,10 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         );
 
         mail($emailTo, $subject, $message, $headers);
+    }
+
+    public function addNotification($notification){
+
     }
 
     // TO DO: notificaTIONS thread
