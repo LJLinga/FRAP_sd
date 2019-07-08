@@ -60,6 +60,10 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         }
     }
 
+    public function getAllUsers(){
+        return $this->getData("SELECT e.EMP_ID, CONCAT(e.LASTNAME,', 'e.FIRSTNAME) AS name FROM employee e WHERE e.ACC_STATUS = 2;");
+    }
+
     //USER <-> GROUPS FUNCTIONS
     //Added functions for ease of use, put here because its going to be used over and over.
     public function getUserGroups($userId){
@@ -98,14 +102,14 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
 
     //Will be used in SYS_Groups to force add users to groups.
     //Will be used in INVITATION screen after user accepts JOIN group invite.
-    public function addUserToGroup($userId, $groupId){
+    public function addUserToGroup($groupId, $userId){
         $query = "INSERT INTO user_groups(userId, groupId) VALUES ('$userId','$groupId');";
         return $this->execute($query);
     }
 
     //Will be used in SYS_Groups to force remove people.
     //Will be used in GRP_Management to allow Group Admins to remove people.
-    public function removeUserFromGroup($userId, $groupId){
+    public function removeUserFromGroup($groupId, $userId){
         $query = "DELETE FROM user_groups WHERE userId = '$userId' AND groupId = '$groupId';";
         return $this->execute($query);
     }
@@ -171,6 +175,14 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         }
     }
 
+    public function groupRoleString($num){
+        if($num == 2){
+            return 'ADMIN';
+        }else{
+            return 'MEMBER';
+        }
+    }
+
     // GROUP MANAGEMENT FUNCTIONS
     public function generateGroupName($groupName){
         $rows = $this->getData("SELECT id FROM `groups` WHERE groupName LIKE '$groupName' LIMIT 1;");
@@ -205,11 +217,11 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function getGroupFromName($groupName){
-        return $this->execute("SELECT g.* FROM groups g WHERE g.groupName LIKE '$groupName' LIMIT 1;");
+        return $this->getData("SELECT g.* FROM groups g WHERE g.groupName LIKE '$groupName' LIMIT 1;");
     }
 
     public function getGroup($groupId){
-        return $this->execute("SELECT g.* FROM groups g WHERE g.id = '$groupId' LIMIT 1;");
+        return $this->getData("SELECT g.* FROM groups g WHERE g.id = '$groupId' LIMIT 1;");
     }
 
     public function getGroups(){
@@ -218,6 +230,28 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                                 FROM groups g 
                                 WHERE g.groupName NOT LIKE 'USR%' AND  g.groupName NOT LIKE 'ADM%'
                                 ORDER BY g.groupName ASC;");
+    }
+
+    public function getAdminGroups(){
+        return $this->getData("SELECT g.*, 
+                                (SELECT COUNT(ug.userId) FROM user_groups ug WHERE ug.groupId = g.id) AS member_count 
+                                FROM groups g 
+                                WHERE g.groupName NOT LIKE 'USR%' AND  g.groupName NOT LIKE 'GRP%'
+                                ORDER BY g.groupName ASC;");
+    }
+
+    public function getGroupMembers($groupId){
+        return $this->getData("SELECT e.EMP_ID, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS name, ug.* 
+                                        FROM user_groups ug 
+                                        JOIN employee e ON ug.userId = e.EMP_ID
+                                        WHERE ug.groupId = '$groupId'
+                                        ORDER BY ug.isAdmin DESC;");
+    }
+
+    public function getUsersNotInGroup($groupId){
+        return $this->getData("SELECT e.EMP_ID, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS name
+                                        FROM employee e WHERE e.EMP_ID NOT IN (SELECT ug.userId FROM user_groups ug WHERE ug.groupId = '$groupId')
+                                        AND e.ACC_STATUS = 2;");
     }
 
     public function emailNotifications($emailTo, $emailFrom, $subject, $message){

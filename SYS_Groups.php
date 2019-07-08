@@ -120,12 +120,7 @@ $userId = $_SESSION['idnum'];
 
                             <?php
 
-                            $rows = $crud->getData("SELECT g.*, 
-                                                            (SELECT COUNT(ug.userId) FROM user_groups ug WHERE ug.groupId = g.id) AS member_count 
-                                                            FROM groups g 
-                                                            WHERE g.groupName NOT LIKE 'USR%' 
-                                                            AND  g.groupName NOT LIKE 'GRP%'
-                                                            ORDER BY g.groupName ASC;");
+                            $rows = $crud->getAdminGroups();
                             if(!empty($rows)){
                                 foreach((array) $rows as $key => $row){
 
