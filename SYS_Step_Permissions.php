@@ -114,7 +114,7 @@ include 'SYS_SIDEBAR.php';
             <div class="col-lg-12">
                 <h3 class="page-header">
                     <div class="form-inline">
-                        <a class="btn btn-info" href="SYS_Process.php?id=<?php echo $processId;?>"><i class="fa fa-arrow-left"></i> <?php echo $processName;?></a>
+                        <a class="btn btn-info" href="SYS_Workflow_Settings.php?id=<?php echo $processId;?>"><i class="fa fa-arrow-left"></i> <?php echo $processName;?></a>
                         Step <?php echo $stepNo.': '.$stepName; ?>
                     </div>
                 </h3>

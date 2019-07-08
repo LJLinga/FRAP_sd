@@ -11,7 +11,6 @@ $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
-include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 
 $userId = $_SESSION['idnum'];
@@ -42,7 +41,7 @@ if(isset($_POST['btnUpdateStep'])){
     }else{
         echo 'Database error.';
     }
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Process.php?id=".$processId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflow_Settings.php?id=".$processId);
 }
 
 if(isset($_POST['btnAddStep'])){
@@ -54,7 +53,7 @@ if(isset($_POST['btnAddStep'])){
     }else{
         echo 'Database error.';
     }
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Process.php?id=".$processId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflow_Settings.php?id=".$processId);
 }
 
 if(isset($_POST['btnDeleteStep'])){
@@ -65,7 +64,7 @@ if(isset($_POST['btnDeleteStep'])){
     }else{
         echo 'Cannot delete steps currently in use by items or routes.';
     }
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Process.php?id=".$processId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflow_Settings.php?id=".$processId);
 }
 
 $page_title = 'Configuration - Process';
@@ -143,17 +142,7 @@ include 'SYS_SIDEBAR.php';
                                             <?php echo $row['stepName'];?>
                                         </td>
                                         <td>
-                                            <?php
-                                                if($row['stepTypeId'] == 1){
-                                                    echo 'START (First step)';
-                                                }else if($row['stepTypeId'] == 2){
-                                                    echo 'NORMAL (In-between steps)';
-                                                }else if($row['stepTypeId'] == 3){
-                                                    echo 'COMPLETE (Last step after approve/reject)';
-                                                }else if($row['stepTypeId'] == 4){
-                                                    echo 'RESTART (Routes only to start)';
-                                                }
-                                            ?>
+                                            <?php echo $crud->stepTypeString($row['stepTypeId']); ?>
                                         </td>
                                         <td>
                                             <form action="" method="POST">

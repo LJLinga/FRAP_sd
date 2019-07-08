@@ -41,6 +41,8 @@ function editableString($num){
         return 'SUPERADMIN';
     }else if($num == '3') {
         return 'ADMIN, SUPERADMIN';
+    }else if($num == '4'){
+        return 'GROUP ADMIN, ADMIN, SUPERADMIN';
     }
 }
 
@@ -51,6 +53,8 @@ function removableString($num){
         return 'SUPERADMIN';
     }else if($num == '3') {
         return 'ADMIN, SUPERADMIN';
+    }else if($num == '4'){
+        return 'GROUP ADMIN, ADMIN, SUPERADMIN';
     }
 }
 
@@ -120,7 +124,7 @@ $userId = $_SESSION['idnum'];
                                             <?php echo removableString($row['isRemovable']); ?>
                                         </td>
                                         <td>
-                                            <a href="SYS_Process.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default"><i class="fa fa-edit"></i> Edit</a>
+                                            <a href="SYS_Workflow_Settings.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default"><i class="fa fa-edit"></i> Edit</a>
                                         </td>
                                     </tr>
                                     <?php

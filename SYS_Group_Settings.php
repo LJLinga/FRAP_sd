@@ -15,13 +15,6 @@ include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 $userId = $_SESSION['idnum'];
 
-function permissionString($num){
-    if($num == '2'){
-        return 'YES';
-    }else{
-        return 'NO';
-    }
-}
 
 if(isset($_POST['btnUpdateGroup'])){
     $stepId = $_POST['stepId'];
@@ -114,7 +107,7 @@ include 'SYS_SIDEBAR.php';
             <div class="col-lg-12">
                 <h3 class="page-header">
                     <div class="form-inline">
-                        <a class="btn btn-info" href="SYS_Process.php?id=<?php echo $processId;?>"><i class="fa fa-arrow-left"></i> <?php echo $processName;?></a>
+                        <a class="btn btn-info" href="SYS_Workflow_Settings.php?id=<?php echo $processId;?>"><i class="fa fa-arrow-left"></i> <?php echo $processName;?></a>
                         Step <?php echo $stepNo.': '.$stepName; ?>
                     </div>
                 </h3>
@@ -169,16 +162,16 @@ include 'SYS_SIDEBAR.php';
                                             <?php echo $row['groupDesc'];?>
                                         </td>
                                         <td>
-                                            <?php echo permissionString($row['read']);?>
+                                            <?php echo $crud->permissionString($row['read']);?>
                                         </td>
                                         <td>
-                                            <?php echo permissionString($row['comment']);?>
+                                            <?php echo $crud->permissionString($row['comment']);?>
                                         </td>
                                         <td>
-                                            <?php echo permissionString($row['write']);?>
+                                            <?php echo $crud->permissionString($row['write']);?>
                                         </td>
                                         <td>
-                                            <?php echo permissionString($row['route']);?>
+                                            <?php echo $crud->permissionString($row['route']);?>
                                         </td>
                                         <td>
                                             <form action="" method="POST">

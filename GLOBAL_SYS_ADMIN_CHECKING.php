@@ -10,4 +10,6 @@
     if($sysRole == 1) { // 1 = Member in frap/cms/edms terms basically the most basic privilege.
         header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/MEMBER dashboard.php");
     }
+
+
 ?>
