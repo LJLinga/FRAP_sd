@@ -359,7 +359,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function getDocumentWorkflows(){
-        return $this->getData("SELECT pr.* FROM process pr WHERE pr.processForId = 1 ORDER BY pr.processName ASC;");
+        return $this->getData("SELECT pr.* FROM process pr WHERE pr.processForId = 1 ORDER BY pr.id ASC;");
     }
 
     public function getSpecialWorkflows(){
@@ -367,7 +367,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function getDocTypes(){
-        return $this->getData("SELECT dt.*, p.processName, p.id FROM doc_type dt JOIN process p ON dt.processId = p.id;");
+        return $this->getData("SELECT dt.*, p.processName, dt.id AS typeId, p.id AS processId FROM doc_type dt JOIN process p ON dt.processId = p.id;");
     }
 
     public function getActiveDocTypes(){

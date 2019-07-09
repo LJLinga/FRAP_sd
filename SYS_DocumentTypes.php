@@ -16,24 +16,24 @@ include('GLOBAL_SYS_ADMIN_CHECKING.php');
 if(isset($_POST['btnAddDocType'])){
     $typeName = $crud->esc($_POST['docTypeName']);
     $processId = $_POST['assignedProcess'];
-    if($crud->execute("INSERT INTO doc_type(type, processId) VALUES ('$typeName','$processId');")){
-        echo 'success';
-    }else{
-        echo 'Database error.';
-    }
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_DocumentTypes.php");
+    $crud->execute("INSERT INTO doc_type(type, processId) VALUES ('$typeName','$processId');");
 }
 
 if(isset($_POST['btnUpdateDocType'])){
     $typeName = $crud->esc($_POST['docTypeName']);
     $processId = $_POST['assignedProcess'];
     $docTypeId = $_POST['docTypeId'];
-    if($processId = $crud->executeGetKey("UPDATE doc_type SET processId = '$processId', type='$typeName' WHERE id = '$docTypeId';")){
-        echo 'success';
-    }else{
-        echo 'Database error.';
-    }
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_DocumentTypes.php");
+    $crud->execute("UPDATE doc_type SET processId = '$processId', type='$typeName' WHERE id = '$docTypeId';");
+}
+
+if(isset($_POST['btnActivate'])){
+    $docTypeId = $_POST['docTypeId'];
+    $crud->execute("UPDATE doc_type SET isActive = 2 WHERE id = '$docTypeId';");
+}
+
+if(isset($_POST['btnDeactivate'])){
+    $docTypeId = $_POST['docTypeId'];
+    $crud->execute("UPDATE doc_type SET isActive = 1 WHERE id = '$docTypeId';");
 }
 
 $page_title = 'Configuration - Workflow';
@@ -83,6 +83,7 @@ $userId = $_SESSION['idnum'];
                             <?php
 
                             $rows = $crud->getDocTypes();
+                            $rows2 = $crud->getDocumentWorkflows();
                             if(!empty($rows)){
                                 foreach((array) $rows as $key => $row){
                                     ?>
@@ -97,55 +98,64 @@ $userId = $_SESSION['idnum'];
                                             <?php echo $crud->activeString($row['isActive']);?>
                                         </td>
                                         <td>
-                                            <button class="btn btn-default" data-toggle="modal" data-target="#modalEditDocType"><i class="fa fa-edit"></i> Edit</button>
-                                            <div class="modal fade" role="dialog" id="modalEditDocType" data-backdrop="static" data-keyboard="false">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <form method="POST" action="">
-                                                            <div class="modal-header">
-                                                                <h4 class="modal-title">
-                                                                    New Document Type
-                                                                </h4>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="form-group">
-                                                                    <label>Name</label>
-                                                                    <input type="hidden" name="docTypeId" value="<?php echo $row['id']?>">
-                                                                    <input type="text" name="docTypeName" class="form-control" value="<?php echo $row['type']?>" required>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label>Assigned Process</label>
-                                                                    <?php
-                                                                    $rows = $crud->getWorkflows();
-                                                                    if(!empty($rows)){?>
-                                                                        <select name="assignedProcess" class="form-control">
-                                                                            <?php
-                                                                            foreach((array)$rows AS $key => $row){
-                                                                                ?>
-                                                                                <option value="<?php echo $row['id'];?>"><?php echo $row['processName'];?></option>
-                                                                                <?php
-                                                                            }?>
-                                                                        </select>
-                                                                        <?php
-                                                                    }else{?>
-                                                                        <select name="assignedProcess" class="form-control" disabled>
-                                                                            <option> No workflows to assign.</option>
-                                                                        </select>
-                                                                        <?php
-                                                                    }
-                                                                    ?>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                <button type="submit" name="btnAddDocType" class="btn btn-primary">Save</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <form action="" method="POST">
+                                                <input type="hidden" name="docTypeId" value="<?php echo $row['typeId'];?>">
+                                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalEditDocType<?php echo $row['typeId'];?>"><i class="fa fa-edit"></i> Edit</button>
+                                                <?php if($row['isActive'] == 2) { ?>
+                                                    <button class="btn btn-danger" type="submit" name="btnDeactivate"><i class="fa fa-power-off"></i> Deactivate</button>
+                                                <?php }else if($row['isActive'] == 1){ ?>
+                                                    <button class="btn btn-success" type="submit" name="btnActivate"><i class="fa fa-power-off"></i> Activate</button>
+                                                <?php } ;?>
+                                            </form>
                                         </td>
                                     </tr>
+                                    <div class="modal fade" role="dialog" id="modalEditDocType<?php echo $row['typeId'];?>" data-backdrop="static" data-keyboard="false">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form method="POST" action="">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">
+                                                            New Document Type
+                                                        </h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <label>Name</label>
+                                                            <input type="hidden" name="docTypeId" value="<?php echo $row['typeId'];?>">
+                                                            <input type="text" name="docTypeName" class="form-control" value="<?php echo $row['type'];?>" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Assigned Process</label>
+                                                            <?php
+                                                            if(!empty($rows2)){?>
+                                                                <select name="assignedProcess" class="form-control">
+                                                                    <?php
+                                                                    foreach((array)$rows2 AS $key2 => $row2){
+                                                                        $selected = '';
+                                                                        if($row['processId'] == $row2['id']) { $selected = 'selected'; }
+                                                                        ?>
+                                                                        <option value="<?php echo $row2['id'];?>" <?php echo $selected?>><?php echo $row2['processName'];?></option>
+                                                                        <?php
+                                                                    }?>
+                                                                </select>
+                                                                <?php
+                                                            }else{?>
+                                                                <select name="assignedProcess" class="form-control" disabled>
+                                                                    <option> No workflows to assign.</option>
+                                                                </select>
+                                                                <?php
+                                                            }
+                                                            ?>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <button type="submit" name="btnUpdateDocType" class="btn btn-primary">Save</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <?php
                                 }
                             }
@@ -181,7 +191,7 @@ $userId = $_SESSION['idnum'];
                     <div class="form-group">
                         <label>Assigned Process</label>
                         <?php
-                        $rows = $crud->getWorkflows();
+                        $rows = $crud->getDocumentWorkflows();
                         if(!empty($rows)){?>
                             <select name="assignedProcess" class="form-control" style="width: 100%">
                                 <?php
@@ -212,6 +222,9 @@ $userId = $_SESSION['idnum'];
 </div>
 
 <script>
-    $('#dataTable').DataTable({});
+    $(document).ready(function(){
+        //$('#dataTable').DataTable({});
+    });
+
     //$('select').select2({});
 </script>
