@@ -17,9 +17,9 @@ if(isset($_POST['btnAddGroup'])){
     $groupDesc = $crud->esc($_POST['groupDesc']);
     $groupId = $crud->addGroup($groupDesc);
     if($groupId != false){
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Group_Settings.php?id=".$groupId);
+        //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Group_Settings.php?id=".$groupId);
     }else{
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Groups.php");
+        //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Groups.php");
     }
 }
 
@@ -53,7 +53,7 @@ $userId = $_SESSION['idnum'];
                                 <b>User Groups</b>
                             </div>
                             <div class="col-lg-2">
-                                <button class="btn btn-primary" data-target="#modalAddGroup">Add Group</button>
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#modalAddGroup">Add Group</button>
                             </div>
                         </div>
                     </div>
@@ -63,15 +63,19 @@ $userId = $_SESSION['idnum'];
                             <tr>
                                 <th>Name</th>
                                 <th>Display Name</th>
+                                <th>Active Status</th>
                                 <th>Members</th>
-                                <th width="200px;">Action</th>
+                                <th>Editable by</th>
+                                <th>Activatable by</th>
+                                <th>Removable by</th>
+                                <th width="100px;">Action</th>
                             </tr>
                             </thead>
                             <tbody>
 
                             <?php
 
-                            $rows = $crud->getGroups();
+                            $rows = $crud->getNonAdminGroups();
                             if(!empty($rows)){
                                 foreach((array) $rows as $key => $row){
 
@@ -84,7 +88,19 @@ $userId = $_SESSION['idnum'];
                                             <?php echo $row['groupDesc']; ?>
                                         </td>
                                         <td>
+                                            <?php echo $crud->activeString($row['isActive']); ?>
+                                        </td>
+                                        <td>
                                             <?php echo $row['member_count']; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->editableString($row['isEditable']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->deactivatableString($row['isDeactivatable']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->removableString($row['isRemovable']); ?>
                                         </td>
                                         <td>
                                             <a href="SYS_Group_Settings.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default">Edit</a>
@@ -157,13 +173,13 @@ $userId = $_SESSION['idnum'];
 </div>
 <!-- /#wrapper -->
 
-<div class="modal fade" id="modalAddWorkflow" role="dialog">
+<div class="modal fade" id="modalAddGroup" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <form method="POST" action="">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        New Document Workflow
+                        Create Group
                     </h5>
                 </div>
                 <div class="modal-body">
@@ -171,12 +187,12 @@ $userId = $_SESSION['idnum'];
                         <label for="title">
                             Name
                         </label>
-                        <input type="text" name="processName" class="form-control" required>
+                        <input type="text" name="groupDesc" class="form-control" required>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" name="btnAddProcess" class="btn btn-primary">Save</button>
+                    <button type="submit" name="btnAddGroup" class="btn btn-primary">Save</button>
                 </div>
             </form>
         </div>

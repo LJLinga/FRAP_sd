@@ -49,9 +49,53 @@ $userId = $_SESSION['idnum'];
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading" style="position:relative;">
+                        <b class="panel-title">Special Workflows</b>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-striped table-responsive" align="center">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Editable by </th>
+                                <th>Removable by</th>
+                                <th width="200px;">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <?php
+
+                            $rows = $crud->getSpecialWorkflows();
+                            if(!empty($rows)){
+                                foreach((array) $rows as $key => $row){
+                                    ?>
+                                    <tr>
+                                        <td>
+                                            <?php echo $row['processName']; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->editableString($row['editableId']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->removableString($row['isRemovable']); ?>
+                                        </td>
+                                        <td>
+                                            <a href="SYS_Workflow_Settings.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default"><i class="fa fa-gear"></i> Settings</a>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                }
+                            }
+                            ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="position:relative;">
                         <div class="row">
                             <div class="col-lg-10">
-                                <b class="panel-title">Workflows</b>
+                                <b class="panel-title">Document Workflows</b>
                             </div>
                             <div class="col-lg-2">
                                 <button id="addWorkflow" class="btn btn-primary" data-toggle="modal" data-target="#modalAddWorkflow">New Document Workflow</button>
@@ -63,7 +107,6 @@ $userId = $_SESSION['idnum'];
                             <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Process for</th>
                                 <th>Editable by </th>
                                 <th>Removable by</th>
                                 <th width="200px;">Action</th>
@@ -73,7 +116,7 @@ $userId = $_SESSION['idnum'];
 
                             <?php
 
-                            $rows = $crud->getData("SELECT pr.id, pr.processForId, pr.processName, pr.editableId, pr.isRemovable FROM facultyassocnew.process pr;");
+                            $rows = $crud->getDocumentWorkflows();
                             if(!empty($rows)){
                                 foreach((array) $rows as $key => $row){
                                    ?>
@@ -82,16 +125,13 @@ $userId = $_SESSION['idnum'];
                                             <?php echo $row['processName']; ?>
                                         </td>
                                         <td>
-                                            <?php echo $crud->processForString($row['processForId']); ?>
-                                        </td>
-                                        <td>
                                             <?php echo $crud->editableString($row['editableId']); ?>
                                         </td>
                                         <td>
                                             <?php echo $crud->removableString($row['isRemovable']); ?>
                                         </td>
                                         <td>
-                                            <a href="SYS_Workflow_Settings.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default"><i class="fa fa-edit"></i> Edit</a>
+                                            <a href="SYS_Workflow_Settings.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default"><i class="fa fa-gear"></i> Settings</a>
                                         </td>
                                     </tr>
                                     <?php

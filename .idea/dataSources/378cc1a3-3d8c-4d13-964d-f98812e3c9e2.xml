@@ -2435,6 +2435,7 @@ MEMBER_ID</RefColNames>
     <column id="558" parent="259" name="groupName">
       <Position>2</Position>
       <DataType>varchar(200)|0s</DataType>
+      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="559" parent="259" name="groupDesc">
@@ -4891,25 +4892,25 @@ MEMBER_ID</RefColNames>
     <column id="999" parent="302" name="read">
       <Position>1</Position>
       <DataType>int(1)|0s</DataType>
-      <DefaultExpression>1</DefaultExpression>
+      <DefaultExpression>2</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="1000" parent="302" name="write">
       <Position>2</Position>
       <DataType>int(1)|0s</DataType>
-      <DefaultExpression>1</DefaultExpression>
+      <DefaultExpression>2</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="1001" parent="302" name="route">
       <Position>3</Position>
       <DataType>int(1)|0s</DataType>
-      <DefaultExpression>1</DefaultExpression>
+      <DefaultExpression>2</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="1002" parent="302" name="comment">
       <Position>4</Position>
       <DataType>int(1)|0s</DataType>
-      <DefaultExpression>1</DefaultExpression>
+      <DefaultExpression>2</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="1003" parent="302" name="stepId">

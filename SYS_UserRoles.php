@@ -131,7 +131,11 @@ include 'SYS_SIDEBAR.php';
 <script>
     $(document).ready(function(){
         $('#dataTable').DataTable();
+        $('select').select2({
+            placeholder: 'Select or search...'
+        });
     });
+</script>
 
     function saveRoles(element){
         var userId = $(element).closest('tr').find('.userId').val();

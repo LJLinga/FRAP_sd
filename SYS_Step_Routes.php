@@ -168,7 +168,7 @@ include 'SYS_SIDEBAR.php';
                                 <tr>
                                     <th>No.</th>
                                     <th>Name</th>
-                                    <th>Going to (Step No.: Step Name [Type, Can Approve?])</th>
+                                    <th>Going to (Step [Type])</th>
                                     <th>Assign Status</th>
                                     <th width="250px;">Action</th>
                                 </tr>
@@ -185,7 +185,7 @@ include 'SYS_SIDEBAR.php';
                                             <?php echo $row['routeName'];?>
                                         </td>
                                         <td>
-                                            Step <?php echo $row['stepNo'].': '.$row['stepName'].' ['.stepTypeString($row['stepTypeId']).', '.canApproveString($row['isFinal']).']'?>
+                                            Step <?php echo $row['stepNo'].': '.$row['stepName'].' ['.stepTypeString($row['stepTypeId']).']'?>
                                         </td>
                                         <td>
                                             <?php echo assignStatusString($row['assignStatus']);?>
@@ -219,7 +219,7 @@ include 'SYS_SIDEBAR.php';
                                                             <input type="text" class="form-control" name="routeName" value="<?php echo $row['routeName'];?>" required>
                                                         </div>
                                                         <div class="form-group form-inline">
-                                                            <label>Going to (Step No.: Step Name [Type, Can Approve?])</label>
+                                                            <label>Going to </label>
                                                             <select class="form-control" name="nextStepId">
                                                                 <?php
                                                                 if(!empty($rows2)){
@@ -233,7 +233,7 @@ include 'SYS_SIDEBAR.php';
                                                                         }
                                                                         ?>
                                                                         <option value="<?php echo $row2['id'];?>" <?php echo $selected;?>>
-                                                                            <?php echo 'Step '.$row2['stepNo'].': '.$row2['stepName'].' ['.$row2stepType.', '.$row2canApprove.']'?>
+                                                                            <?php echo 'Step '.$row2['stepNo'].': '.$row2['stepName'].' ['.$row2stepType.']'?>
                                                                         </option>
                                                                         <?php
                                                                     }
@@ -268,7 +268,9 @@ include 'SYS_SIDEBAR.php';
                             <?php
                         }else{
                             ?>
-                            <b>No routes added so far.</b>
+                            <div class="alert alert-info">
+                                No routes added so far.
+                            </div>
                             <?php
                         }
                         ?>
@@ -316,7 +318,7 @@ include 'SYS_SIDEBAR.php';
 
                                     ?>
                                     <option value="<?php echo $row2['id'];?>" <?php echo $selected;?>>
-                                        <?php echo 'Step '.$row2['stepNo'].': '.$row2['stepName'].' ['.$row2stepType.', '.$row2canApprove.']'?>
+                                        <?php echo 'Step '.$row2['stepNo'].': '.$row2['stepName'].' ['.$row2stepType.']'?>
                                     </option>
                                     <?php
                                 }?>
@@ -349,3 +351,10 @@ include 'SYS_SIDEBAR.php';
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function(){
+        $('select').select2({
+            placeholder: 'Select or search...'
+        });
+    });
+</script>

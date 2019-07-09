@@ -111,16 +111,25 @@ $groups = $crud->getUserGroups($userId);
                     </div>
                     <label for="selectedType">Category</label>
                     <div class="form-group">
-                        <select class="form-control" id="selectedType" name="selectedType">
+                        <?php
+                        $rows = $crud->getData("SELECT t.id, t.type FROM facultyassocnew.doc_type t WHERE isActive = 2;");
+                        if(!empty($rows)){?>
+                            <select class="form-control" id="selectedType" name="selectedType">
+                                <?php
+                                foreach ((array) $rows as $key => $row) {
+                                    echo '<option value="'.$row['id'].'">'.$row['type'].'</option>';
+                                }?>
+                            </select>
                             <?php
-                                $rows = $crud->getData("SELECT t.id, t.type FROM facultyassocnew.doc_type t WHERE isActive = 2;");
-                                if(!empty($rows)){
-                                    foreach ((array) $rows as $key => $row) {
-                                        echo '<option value="'.$row['id'].'">'.$row['type'].'</option>';
-                                    }
-                                }
+                        }else{
                             ?>
+                        <select class="form-control" id="selectedType" name="selectedType" disabled>
+                            <option>No active document types to choose from.</option>
                         </select>
+                            <?php
+                        }
+                        ?>
+
                     </div>
                     <div class="form-group">
                         <label for="file">Upload</label>
@@ -187,6 +196,8 @@ $groups = $crud->getUserGroups($userId);
     $(document).ready(function() {
 
         $('[data-toggle="tooltip"]').tooltip();
+        $('select').select2({
+        });
 
         $("#documentUploadForm").on('submit', function(e){
             e.preventDefault();

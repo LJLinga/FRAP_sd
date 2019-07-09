@@ -235,7 +235,9 @@ include 'SYS_SIDEBAR.php';
                             <?php
                         }else{
                             ?>
-                            <b>No groups given permissions so far.</b>
+                            <div class="alert alert-info">
+                                No group has been given permissions so far.
+                            </div>
                             <?php
                         }
                         ?>
@@ -327,7 +329,9 @@ include 'SYS_SIDEBAR.php';
                             <?php
                         }else{
                             ?>
-                            <b>No groups given permissions so far.</b>
+                            <div class="alert alert-info">
+                                No creator permissions, contact system administrator.
+                            </div>
                             <?php
                         }
                         ?>
@@ -402,3 +406,10 @@ include 'SYS_SIDEBAR.php';
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function(){
+        $('select').select2({
+            placeholder: 'Select or search...'
+        });
+    })
+</script>

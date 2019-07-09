@@ -60,8 +60,16 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         }
     }
 
-    public function getAllUsers(){
-        return $this->getData("SELECT e.EMP_ID, CONCAT(e.LASTNAME,', 'e.FIRSTNAME) AS name FROM employee e WHERE e.ACC_STATUS = 2;");
+    public function getActiveUsers(){
+        return $this->getData("SELECT e.*, CONCAT(e.LASTNAME,', 'e.FIRSTNAME) AS name FROM employee e WHERE e.ACC_STATUS = 2;");
+    }
+
+    public function getInactiveUsers(){
+        return $this->getData("SELECT e.*, CONCAT(e.LASTNAME,', 'e.FIRSTNAME) AS name FROM employee e WHERE e.ACC_STATUS = 1;");
+    }
+
+    public function getUsers(){
+        return $this->getData("SELECT e.*, CONCAT(e.LASTNAME,', 'e.FIRSTNAME) AS name FROM employee e;");
     }
 
     //USER <-> GROUPS FUNCTIONS
@@ -193,7 +201,27 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         }
     }
 
+    public function activeString($num){
+        if($num == '2'){
+            return 'ACTIVE';
+        }else{
+            return 'INACTIVE';
+        }
+    }
+
     public function editableString($num){
+        if($num == '1'){
+            return 'NOT EDITABLE';
+        }else if($num == '2'){
+            return 'SUPERADMIN';
+        }else if($num == '3') {
+            return 'ADMIN, SUPERADMIN';
+        }else if($num == '4'){
+            return 'GROUP ADMIN, ADMIN, SUPERADMIN';
+        }
+    }
+
+    public function deactivatableString($num){
         if($num == '1'){
             return 'NOT EDITABLE';
         }else if($num == '2'){
@@ -217,25 +245,23 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         }
     }
 
-
-    // GROUP MANAGEMENT FUNCTIONS
-    public function generateGroupName($groupName){
-        $rows = $this->getData("SELECT id FROM `groups` WHERE groupName LIKE '$groupName' LIMIT 1;");
-        if(empty($rows)){
-            return $groupName;
-        }else{
-            $groupName = substr($groupName, 0, strpos($groupName, "_%R"));
-            $groupName.='_%R'.substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 5);
-            return $this->generateGroupName($groupName);
-        }
-    }
-
     //Will be used in SYS_Groups to add groups.
     public function addGroup($groupDesc){
         $groupName = preg_replace('/\s+/', '_', $groupDesc);
         $groupName = 'GRP_'.strtoupper($groupName);
-        $groupName = $this->generateGroupName($groupName);
-        return $this->executeGetKey("INSERT INTO process (groupName, groupDesc) VALUES ('$groupName','$groupDesc');");
+        $bool = false;
+        $insertKey = false;
+        do {
+            $rows = $this->getData("SELECT id FROM groups WHERE groupName LIKE '$groupName' LIMIT 1;");
+            if(empty($rows)){
+                $bool = true;
+                $insertKey = $this->executeGetKey("INSERT INTO groups (groupName, groupDesc) VALUES ('$groupName','$groupDesc');");
+            }else{
+                $groupName = substr($groupName, 0, strpos($groupName, "_%"));
+                $groupName.='_%'.substr(str_shuffle("CHRISTAN"), 0,5);
+            }
+        } while ($bool == false);
+        return $insertKey;
     }
 
     //This will NOT change their initial name
@@ -263,6 +289,13 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         return $this->getData("SELECT g.*, 
                                 (SELECT COUNT(ug.userId) FROM user_groups ug WHERE ug.groupId = g.id) AS member_count 
                                 FROM groups g 
+                                ORDER BY g.groupName ASC;");
+    }
+
+    public function getNonAdminGroups(){
+        return $this->getData("SELECT g.*, 
+                                (SELECT COUNT(ug.userId) FROM user_groups ug WHERE ug.groupId = g.id) AS member_count 
+                                FROM groups g 
                                 WHERE g.groupName NOT LIKE 'USR%' AND  g.groupName NOT LIKE 'ADM%'
                                 ORDER BY g.groupName ASC;");
     }
@@ -275,20 +308,13 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                                 ORDER BY g.groupName ASC;");
     }
 
-    public function getSpecialGroups(){
-        return $this->getData("SELECT g.*, 
-                                (SELECT COUNT(ug.userId) FROM user_groups ug WHERE ug.groupId = g.id) AS member_count 
-                                FROM groups g 
-                                WHERE g.groupName NOT LIKE 'USR%' AND  g.groupName NOT LIKE 'GRP%'
-                                ORDER BY g.groupName ASC;");
-    }
 
     public function getGroupMembers($groupId){
-        return $this->getData("SELECT e.EMP_ID, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS name, ug.* 
+        return $this->getData("SELECT e.EMP_ID, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS name, ug.isAdmin
                                         FROM user_groups ug 
                                         JOIN employee e ON ug.userId = e.EMP_ID
                                         WHERE ug.groupId = '$groupId'
-                                        ORDER BY ug.isAdmin DESC;");
+                                        ORDER BY ug.isAdmin DESC, name ASC;");
     }
 
     public function getUsersNotInGroup($groupId){
@@ -301,23 +327,51 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         return $this->getData("SELECT p.*, sg.*, s.* FROM steps s 
                                         JOIN process p on s.processId = p.id 
                                         JOIN step_groups sg on s.id = sg.stepId
+                                        WHERE sg.groupId = '$groupId'
+                                        ORDER BY p.processForId, p.processName, s.stepNo ASC;");
+    }
+
+    public function getDistinctGroupWorkflows($groupId){
+        return $this->getData("SELECT DISTINCT p.* FROM steps s 
+                                        JOIN process p on s.processId = p.id 
+                                        JOIN step_groups sg on s.id = sg.stepId
                                         WHERE sg.groupId = '$groupId';");
     }
 
-    public function getWorkflowDocTypes($processId){
-        return $this->getData("SELECT dt.*
-                                        FROM doc_type dt 
-                                        JOIN process p on dt.processId = p.id
-                                        WHERE p.id = '$processId' AND dt.isActive = 2;");
+    public function getWorkflowSteps($processId){
+        return $this->getData("SELECT s.* FROM steps s JOIN process p ON s.processId = p.id WHERE p.id = '$processId';");
+    }
 
+    public function getStepRoutes($stepId){
+        return $this->getData("SELECT r.*, s.* FROM step_routes r JOIN steps s ON s.id = r.currentStepId WHERE s.id = '$stepId' ORDER BY r.orderNo;");
+    }
+
+    public function getStepGroupPermissions($groupId){
+        return $this->getData("SELECT sg.* FROM step_groups sg JOIN groups g ON sg.groupId = g.id WHERE g.id = '$groupId';");
+    }
+
+    public function getWorkflowDocTypes($processId){
+        return $this->getData("SELECT dt.* FROM doc_type dt JOIN process p on dt.processId = p.id WHERE p.id = '$processId';");
+    }
+
+    public function getWorkflows(){
+        return $this->getData("SELECT pr.* FROM process pr ORDER BY pr.processForId, pr.processName ASC;");
+    }
+
+    public function getDocumentWorkflows(){
+        return $this->getData("SELECT pr.* FROM process pr WHERE pr.processForId = 1 ORDER BY pr.processName ASC;");
+    }
+
+    public function getSpecialWorkflows(){
+        return $this->getData("SELECT pr.* FROM process pr WHERE pr.processForId != 1 ORDER BY pr.processName ASC;");
     }
 
     public function getDocTypes(){
-        return $this->getData("SELECT * FROM doc_types;");
+        return $this->getData("SELECT dt.*, p.processName, p.id FROM doc_type dt JOIN process p ON dt.processId = p.id;");
     }
 
     public function getActiveDocTypes(){
-        return $this->getData("SELECT * FROM doc_types WHERE isActive = 2;");
+        return $this->getData("SELECT * FROM doc_type WHERE isActive = 2;");
     }
 
     public function emailNotification($emailTo, $emailFrom, $subject, $message){

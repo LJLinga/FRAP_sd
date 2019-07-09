@@ -239,8 +239,7 @@ include 'SYS_SIDEBAR.php';
     $(document).ready(function(){
         $('#editName').hide();
         $('#btnEditName').on('click', function() { editName(); });
-        $('#btnCancelEditName').on('click',function() { displayName(); });
-
+        $('#btnCancelEditName').on('click',function() { displayName(); })
     });
 
     function editName(){

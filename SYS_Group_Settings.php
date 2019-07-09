@@ -50,7 +50,7 @@ if(isset($_POST['btnAddMember'])){
 if(isset($_POST['btnRemoveMember'])){
     $groupId = $_POST['groupId'];
     $memberId = $_POST['memberId'];
-
+    echo $groupId.$memberId;
     if($crud->removeUserFromGroup($groupId, $memberId)){
         echo 'success4';
     }
@@ -126,15 +126,7 @@ include 'SYS_SIDEBAR.php';
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <div class="panel panel-info">
-                    <div class="panel-body">
-                        <small>
-                            <strong>Author Permissions:</strong> If there are no groups assigned to a process, the creator/uploader of the item will have full (read, write, route, comment) permissions.
-                            If there are groups assigned to a step, then the creator will lose write and route permissions but will retain access to read and comment capabilities.
-                            It is recommended that the DRAFT stage contain no group permissions.
-                        </small>
-                    </div>
-                </div>
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="form-inline">
@@ -168,7 +160,7 @@ include 'SYS_SIDEBAR.php';
                                         </td>
                                         <td>
                                             <form action="" method="POST">
-                                                <input type="hidden" name="groupId" value="<?php echo $row['groupId'];?>"/>
+                                                <input type="hidden" name="groupId" value="<?php echo $groupId;?>"/>
                                                 <input type="hidden" name="memberId" value="<?php echo $row['EMP_ID'];?>"/>
                                                 <button type="submit" class="btn btn-danger" name="btnRemoveMember"><i class="fa fa-trash"></i> Remove</button>
 
@@ -187,7 +179,9 @@ include 'SYS_SIDEBAR.php';
                             <?php
                         }else{
                             ?>
-                            <b>No members in this group so far.</b>
+                            <div class="alert alert-info">
+                                No group members so far.
+                            </div>
                             <?php
                         }
                         ?>
@@ -207,7 +201,7 @@ include 'SYS_SIDEBAR.php';
                                 <tr>
                                     <th>Workflow for</th>
                                     <th>Workflow Name</th>
-                                    <th>Step Name</th>
+                                    <th>Step</th>
                                     <th>Read</th>
                                     <th>Comment</th>
                                     <th>Write</th>
@@ -221,39 +215,41 @@ include 'SYS_SIDEBAR.php';
                                     <tr>
                                         <td>
                                             <?php
-                                                echo $crud->processForString($row['processForId']);
-                                                if($row['processForId'] == 1){
-                                                    $rows2 = $crud->getWorkflowDocTypes($row['processId']);
-                                                    if(!empty($rows2)){ ?>
-                                                        <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalListDocTypes<?php echo $row['id'];?>"><i class="fa fa-eye"></i></button>
-                                                    <div class="modal fade" role="dialog" id="modalListDocTypes<?php echo $row['id'];?>" data-backdrop="static" data-keyboard="false">
-                                                        <div class="modal-dialog">
+                                            echo $crud->processForString($row['processForId']);
+                                            if($row['processForId'] == 1){?>
+                                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalListDocTypes<?php echo $row['id'];?>"><i class="fa fa-eye"></i></button>
+                                                <div class="modal fade" role="dialog" id="modalListDocTypes<?php echo $row['id'];?>" data-backdrop="static" data-keyboard="false">
+                                                    <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                Document Types that undergo <?php echo $row['processName'];?>
+                                                                <b class="modal-title">Document Types that undergo <?php echo $row['processName'];?></b>
                                                             </div>
                                                             <div class="modal-body">
-                                                            <?php
-                                                            foreach((array)$rows2 AS $key2=> $row2){
-                                                               echo $row2['type'];
-                                                            }?>
+                                                                <?php
+                                                                $rows2 = $crud->getWorkflowDocTypes($row['processId']);
+                                                                if(!empty($rows2)){
+                                                                    foreach((array)$rows2 AS $key2=> $row2){
+                                                                        echo $row2['type'];
+                                                                    }
+                                                                }else{ ?>
+                                                                    There are no documents using this workflow so far.
+                                                                <?php }?>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                             </div>
                                                         </div>
-                                                        </div>
                                                     </div>
-                                                        <?php
-                                                    }
-                                                }
+                                                </div>
+                                                <?php
+                                            }
                                             ?>
                                         </td>
                                         <td>
                                             <?php echo $row['processName'];?>
                                         </td>
                                         <td>
-                                            <?php echo $row['stepName'];?>
+                                            Step <?php echo $row['stepNo'].': '.$row['stepName'];?>
                                         </td>
 
                                         <td>
@@ -266,7 +262,63 @@ include 'SYS_SIDEBAR.php';
                                             <?php echo $crud->permissionString($row['write']);?>
                                         </td>
                                         <td>
-                                            <?php echo $crud->permissionString($row['route']);?>
+                                            <?php echo $crud->permissionString($row['route']);
+                                            if($row['route'] == 2){?>
+                                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalListRoutes<?php echo $row['id'];?>"><i class="fa fa-road"></i></button>
+                                                <div class="modal fade" role="dialog" id="modalListRoutes<?php echo $row['id'];?>" data-backdrop="static" data-keyboard="false">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title">Step <?php echo $row['stepNo'].': '.$row['stepName'];?> Routes</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <?php
+                                                                $rows2 = $crud->getStepRoutes($row['stepId']);
+                                                                if(!empty($rows2)){?>
+                                                                    <table class="table table-striped">
+                                                                        <thead>
+                                                                        <th>No.</th>
+                                                                        <th>Name</th>
+                                                                        <th>Going to </th>
+                                                                        <th>Assigned Status</th>
+                                                                        </thead>
+                                                                        <tbody>
+
+                                                                        <?php
+                                                                        foreach((array)$rows2 AS $key2=> $row2){ ?>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <?php echo $row2['orderNo'];?>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <?php echo $row2['routeName'];?>
+                                                                                </td>
+                                                                                <td>
+                                                                                    Step <?php echo $row2['stepNo'].': '.$row2['stepName'];?>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <?php echo $crud->assignStatusString($row2['assignStatus']);?>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <?php
+                                                                        }?>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                    <?php
+                                                                }else{ ?>
+                                                                    There are no documents using this workflow so far.
+                                                                <?php }?>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <?php
+                                            }
+                                            ?>
                                         </td>
                                     </tr>
 
@@ -276,7 +328,9 @@ include 'SYS_SIDEBAR.php';
                             <?php
                         }else{
                             ?>
-                            <b>No workflow involvements so far.</b>
+                            <div class="alert alert-info">
+                                No workflow involvements so far.
+                            </div>
                             <?php
                         }
                         ?>
@@ -305,7 +359,7 @@ include 'SYS_SIDEBAR.php';
                     <div class="form-group form-inline">
                         <input type="hidden" name="groupId" value="<?php echo $groupId;?>">
                         <label>User</label>
-                        <select class="form-control" name="memberId">
+                        <select class="form-control" name="memberId" style="width: 100%;">
                             <?php
 
                             $rows = $crud->getUsersNotInGroup($groupId);
@@ -345,7 +399,9 @@ include 'SYS_SIDEBAR.php';
         $('#editName').hide();
         $('#btnEditName').on('click', function() { editName(); });
         $('#btnCancelEditName').on('click',function() { displayName(); });
-
+        $('select').select2({
+            placeholder: 'Select or search...'
+        });
     });
 
     function editName(){
