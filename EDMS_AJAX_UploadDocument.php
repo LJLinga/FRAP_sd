@@ -6,16 +6,20 @@
  * Time: 9:27 AM
  */
 
-
 require 'GLOBAL_CLASS_CRUD.php';
 $crud = new GLOBAL_CLASS_CRUD();
 
-//$currentDir = getcwd();
-//$uploadDirectory = "/EDMS_Documents/";
+function passErrors($errors){
+
+    $msg = array(
+        'success' => 0,
+        'html' => $errors
+    );
+    return json_encode($msg);
+}
+
 $uploadDirectory = "EDMS_Documents/";
-
 $errors = []; // Store all foreseen and unforseen errors here
-
 $fileExtensions = ['jpeg','jpg','png','ppt','doc','docx','pptx','pdf']; // Get all the file extensions
 
 if(!empty($_POST['documentTitle']) && !empty($_POST['selectedType']) && !empty($_POST['userId']) ) {
@@ -51,37 +55,45 @@ if(!empty($_POST['documentTitle']) && !empty($_POST['selectedType']) && !empty($
 
         if ($didUpload) {
 
-            $stepId = '999'; $statusId = '99';
-            $rows = $crud->getData("SELECT s.id FROM steps s 
-                                  JOIN process pr ON s.processId = pr.id JOIN doc_type t ON t.processId = pr.id 
-                                  WHERE t.id = '$typeId' AND s.stepNo = 0 LIMIT 1;");
+            $stepId = '1';
+            $rows = $crud->getFirstStepIdOfDocType($typeId);
             if(!empty($rows)) {
                 foreach ((array)$rows as $key => $row) {
                     $stepId = $row['id'];
                 }
-                if($stepId != '999'){
-                    $statusId = '1';
-                }
-            }
 
-            if($insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, authorId, stepId, typeId, statusId, versionNo, filePath, title) VALUES ('$userId','$userId','$stepId','$typeId','$statusId','1.0','$uploadPath','$title')")){
-               $msg = array(
-                   'success' => '1',
-                   'id' => $insertDocument
-               );
-               echo json_encode($msg);
+                if($insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, authorId, stepId, typeId, filePath, title) VALUES ('$userId','$userId','$stepId','$typeId','$uploadPath','$title')")){
+                    $msg = array(
+                        'success' => '1',
+                        'id' => $insertDocument
+                    );
+                    echo json_encode($msg);
+                    exit;
+                }else{
+                    $errors[] = "Cannot insert to database.";
+                    echo passErrors($errors);
+                    exit;
+                }
+
+            }else{
+                $errors[] = "Invalid workflow or step.";
+                echo passErrors($errors);
             }
 
         } else {
-            echo "File did not upload.";
+            $errors[] = "File upload error.";
+            echo passErrors($errors);
+            exit;
         }
 
     } else {
-        foreach ($errors as $error) {
-            echo $error . "These are the errors" . "\n";
-        }
+        echo passErrors($errors);
+        exit;
     }
 
 }else{
-    echo 'Form error.';
+
+   $errors[] = "One of the variables is not set.";
+   echo passErrors($errors);
+   exit;
 }

@@ -10,8 +10,15 @@
 require 'GLOBAL_CLASS_CRUD.php';
 $crud = new GLOBAL_CLASS_CRUD();
 
-//$currentDir = getcwd();
-//$uploadDirectory = "/EDMS_Documents/";
+function passErrors($errors){
+
+    $msg = array(
+        'success' => 0,
+        'html' => $errors
+    );
+    return json_encode($msg);
+}
+
 $uploadDirectory = "EDMS_Documents/";
 
 $errors = []; // Store all foreseen and unforseen errors here
@@ -51,18 +58,31 @@ if(!empty($_POST['documentId']) && !empty($_POST['newVersionNo']) && !empty($_PO
         $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
 
         if ($didUpload) {
-            if($crud->execute("UPDATE documents SET authorId='$userId', availabilityId='2', availabilityById='$userId', remarks='$remarks',
+            if($crud->execute("UPDATE documents SET authorId='$userId', availabilityId='1', availabilityById='$userId', remarks='$remarks',
                                     versionNo='$versionNo', title='$title',filePath='$uploadPath' WHERE documentId='$documentId';")){
-                echo 'Upload success!';
+                $msg = array(
+                    'success' => 1
+                );
+                echo json_encode($msg);
+                exit;
+            }else{
+                $errors[] = "Cannot insert to database.";
+                echo passErrors($errors);
+                exit;
             }
         } else {
-            echo 'File did not upload.';
+            $errors[] = "File did not upload.";
+            echo passErrors($errors);
+            exit;
         }
 
     } else {
-        echo $errors;
+        echo passErrors($errors);
+        exit;
     }
 
 }else{
-    echo 'error';
+    $errors[] = "One of the variables is not set.";
+    echo passErrors($errors);
+    exit;
 }

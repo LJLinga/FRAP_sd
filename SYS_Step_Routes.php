@@ -56,7 +56,7 @@ if(isset($_POST['btnDeleteRoute'])){
 
 if(isset($_GET['id'])){
     $stepId = $_GET['id'];
-    $rows = $crud->getData("SELECT s.id, s.processId, s.stepName, s.stepNo, s.isFinal, s.stepTypeId, p.processName FROM steps s
+    $rows = $crud->getData("SELECT s.id, s.processId, s.stepName, s.stepNo, s.stepTypeId, p.processName FROM steps s
                                     JOIN process p ON s.processId = p.id WHERE s.id = ' $stepId'");
 
     if(!empty($rows)) {
@@ -65,26 +65,11 @@ if(isset($_GET['id'])){
             $processName = $row['processName'];
             $stepName = $row['stepName'];
             $stepNo = $row['stepNo'];
-            $canApprove = $row['isFinal'];
             $stepTypeId = $row['stepTypeId'];
         }
     }else{
         header("Location: http://" . $_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF'])."/SYS_Workflows.php");
     }
-}
-
-function canApproveString($num){
-    $string = 'Error';
-    if($num == 1){
-        $string ='NO';
-    }else if($num == 2){
-        $string = 'REJECT ONLY';
-    }else if($num == 3){
-        $string = 'APPROVE ONLY';
-    }else if($num == 4){
-        $string = 'APPROVE AND REJECT';
-    }
-    return $string;
 }
 
 function stepTypeString($num){
@@ -156,11 +141,10 @@ include 'SYS_SIDEBAR.php';
                     <div class="panel-body">
                         <?php
 
-                        $rows = $crud->getData("SELECT r.id, r.orderNo, r.routeName, r.nextStepId, r.assignStatus, s.id AS stepId, s.stepName, s.stepNo, s.isFinal, s.stepTypeId
+                        $rows = $crud->getData("SELECT r.id, r.orderNo, r.routeName, r.nextStepId, r.assignStatus, s.id AS stepId, s.stepName, s.stepNo, s.stepTypeId
                                                     FROM step_routes r JOIN steps s ON r.nextStepId = s.id
-                                                    WHERE r.currentStepId = '$stepId';");
-                        $rows2 = $crud->getData("SELECT s.* FROM steps s
-                                                            WHERE s.processId = '$processId' AND s.id != '$stepId';");
+                                                    WHERE r.currentStepId = '$stepId' ORDER BY r.orderNo;");
+                        $rows2 = $crud->getData("SELECT s.* FROM steps s WHERE s.processId = '$processId' ORDER BY s.stepNo;");
 
                         if(!empty($rows)) { ?>
                             <table class="table table-responsive table-striped" align="center" id="dataTable">
@@ -225,15 +209,19 @@ include 'SYS_SIDEBAR.php';
                                                                 if(!empty($rows2)){
                                                                     foreach((array)$rows2 AS $key2 => $row2){
                                                                         $selected = '';
-                                                                        $row2canApprove = canApproveString($row2['isFinal']);
                                                                         $row2stepType = stepTypeString($row2['stepTypeId']);
+                                                                        $self = '';
 
                                                                         if($row2['id'] == $row['nextStepId']){
                                                                             $selected = 'selected';
                                                                         }
+
+                                                                        if($row2['id'] == $stepId){
+                                                                            $self= '(Self) ';
+                                                                        }
                                                                         ?>
                                                                         <option value="<?php echo $row2['id'];?>" <?php echo $selected;?>>
-                                                                            <?php echo 'Step '.$row2['stepNo'].': '.$row2['stepName'].' ['.$row2stepType.']'?>
+                                                                            <?php echo $self.'Step '.$row2['stepNo'].': '.$row2['stepName'].' ['.$row2stepType.']'?>
                                                                         </option>
                                                                         <?php
                                                                     }
@@ -309,16 +297,19 @@ include 'SYS_SIDEBAR.php';
                         </div>
                         <div class="form-group form-inline">
                             <label>Going to  </label>
-                            <select class="form-control" name="nextStepId" required>
+                            <select class="form-control" name="nextStepId" style="width: 100%;"required>
                                 <?php
                                 foreach((array)$rows2 AS $key2 => $row2){
-                                    $selected = '';
-                                    $row2canApprove = canApproveString($row2['isFinal']);
                                     $row2stepType = stepTypeString($row2['stepTypeId']);
+                                    $self = '';
+
+                                    if($row2['id'] == $stepId){
+                                        $self= '(Self) ';
+                                    }
 
                                     ?>
-                                    <option value="<?php echo $row2['id'];?>" <?php echo $selected;?>>
-                                        <?php echo 'Step '.$row2['stepNo'].': '.$row2['stepName'].' ['.$row2stepType.']'?>
+                                    <option value="<?php echo $row2['id'];?>">
+                                        <?php echo $self.'Step '.$row2['stepNo'].': '.$row2['stepName'].' ['.$row2stepType.']'?>
                                     </option>
                                     <?php
                                 }?>

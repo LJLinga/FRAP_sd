@@ -83,7 +83,7 @@ if(isset($_POST['btnUpdateCreator'])){
 
 if(isset($_GET['id'])){
     $stepId = $_GET['id'];
-    $rows = $crud->getData("SELECT s.id, s.processId, s.stepName, s.stepNo, s.isFinal, s.stepTypeId, p.processName FROM steps s
+    $rows = $crud->getData("SELECT s.id, s.processId, s.stepName, s.stepNo, s.stepTypeId, p.processName FROM steps s
                                     JOIN process p ON s.processId = p.id WHERE s.id = ' $stepId'");
 
     if(!empty($rows)) {
@@ -92,11 +92,10 @@ if(isset($_GET['id'])){
             $processName = $row['processName'];
             $stepName = $row['stepName'];
             $stepNo = $row['stepNo'];
-            $canApprove = $row['isFinal'];
             $stepTypeId = $row['stepTypeId'];
         }
     }else{
-        header("Location: http://" . $_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF'])."/SYS_Workflows.php");
+        //header("Location: http://" . $_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF'])."/SYS_Workflows.php");
     }
 }
 
@@ -363,8 +362,7 @@ include 'SYS_SIDEBAR.php';
                         <select class="form-control" name="groupId">
                             <?php
 
-                            $rows = $crud->getData("SELECT g.id, g.groupName, g.groupDesc FROM groups g
-                                                            WHERE g.id NOT IN (SELECT sg.groupId FROM step_groups sg WHERE sg.stepId = '$stepId');");
+                            $rows = $crud->getWorkflowGroups($processId);
                             if(!empty($rows)){
                                 foreach((array)$rows AS $key => $row){
                                     ?>

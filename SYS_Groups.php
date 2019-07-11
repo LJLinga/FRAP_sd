@@ -16,11 +16,6 @@ include('GLOBAL_SYS_ADMIN_CHECKING.php');
 if(isset($_POST['btnAddGroup'])){
     $groupDesc = $crud->esc($_POST['groupDesc']);
     $groupId = $crud->addGroup($groupDesc);
-    if($groupId != false){
-        //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Group_Settings.php?id=".$groupId);
-    }else{
-        //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Groups.php");
-    }
 }
 
 

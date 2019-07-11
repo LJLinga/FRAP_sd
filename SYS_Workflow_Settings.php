@@ -67,6 +67,22 @@ if(isset($_POST['btnDeleteStep'])){
     header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflow_Settings.php?id=".$processId);
 }
 
+if(isset($_POST['btnAddGroup'])){
+    $processId = $_POST['processId'];
+    $groupId = $_POST['groupId'];
+    $read = 1; $write = 1; $route = 1; $comment = 1;
+    if(isset($_POST['read'])) { $read = 2; }
+    if(isset($_POST['write'])) { $write = 2; }
+    if(isset($_POST['route'])) { $route = 2; }
+    if(isset($_POST['comment'])) { $comment = 2; }
+    if($crud->execute("INSERT INTO `process_groups` (`groupId`, `processId`, `read`, `write`, `route`, `comment`) VALUES ('$groupId','$processId','$read','$write','$route','$comment');")){
+        echo 'success2';
+    }else{
+        echo 'Database error.';
+    }
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflow_Settings.php?id=".$processId);
+}
+
 $page_title = 'Configuration - Process';
 include 'GLOBAL_HEADER.php';
 include 'SYS_SIDEBAR.php';
@@ -101,7 +117,7 @@ include 'SYS_SIDEBAR.php';
                 <div class="panel panel-info">
                     <div class="panel-body">
                         <small>
-                            Note: The system enforces that there be one and only one START and COMPLETE steps per process; These can't be removed.
+                            <strong>Steps</strong>: The system enforces that there be one and only one START and COMPLETE steps per process; These can't be removed.
                             The START step is always the first step, and the COMPLETE step is always the step the process goes to after approve/reject.
                             All the custom steps to be added will be NORMAL steps that can have multiple routes to other steps.
                             There are no preconfigured routes and group assignments.
@@ -194,6 +210,126 @@ include 'SYS_SIDEBAR.php';
                         </table>
                     </div>
                 </div>
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        <small>
+                            <strong>Process Groups</strong>: The system enforces that the group be included in the process before they can be included in the process's individual steps.
+                            This is to ensure that they have process-wide permissions that would allow them to interact with the document (primarily read, write)
+                            even if they were not included in the step permissions.
+                        </small>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="form-inline">
+                            <b>Group Permissions</b>
+                            <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modalAddGroup">Add Group to Process</button>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <?php
+                        $rows = $crud->getWorkflowGroups($processId);
+
+
+                        if(!empty($rows)) {?>
+                            <table class="table table-responsive table-striped" align="center" id="dataTable">
+                                <thead>
+                                <tr>
+                                    <th>Group Name</th>
+                                    <th>Display Name</th>
+                                    <th>Read</th>
+                                    <th>Comment</th>
+                                    <th>Write</th>
+                                    <th>Route</th>
+                                    <th width="250px;">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php
+                                foreach ((array)$rows as $key => $row) {
+                                    ?>
+                                    <tr>
+                                        <td>
+                                            <?php echo $row['groupName'];?>
+                                        </td>
+                                        <td>
+                                            <?php echo $row['groupDesc'];?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->permissionString($row['read']);?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->permissionString($row['comment']);?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->permissionString($row['write']);?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->permissionString($row['route']);?>
+                                        </td>
+                                        <td>
+                                            <form action="" method="POST">
+                                                <input type="hidden" name="groupId" value="<?php echo $row['id'];?>"/>
+                                                <input type="hidden" name="processId" value="<?php echo $processId;?>"/>
+                                                <button type="button" data-toggle="modal" data-target="#modalEditGroup<?php echo $row['id'];?>"
+                                                        class="btn btn-default"><i class="fa fa-edit"></i>Group
+                                                </button>
+                                                <button type="submit" class="btn btn-danger" name="btnDeleteGroup"><i class="fa fa-trash"></i> Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+
+                                    <div class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog" id="modalEditGroup<?php echo $row['id'];?>">
+                                        <div class="modal-dialog">
+                                            <form method="POST" action="">
+                                                <input type="hidden" name="groupId" value="<?php echo $row['id'];?>"/>
+                                                <input type="hidden" name="processId" value="<?php echo $processId;?>"/>
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Update Permissions for: <?php echo $row['groupName'].' ('.$row['groupDesc'].')';?></h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <div class="form-check">
+                                                                <input type="checkbox" class="form-check-input" name="read" value="true" <?php if($row['read'] == '2') { echo 'checked'; } ?>>
+                                                                <label class="form-check-label" >Read</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input type="checkbox" class="form-check-input" name="comment" value="true" <?php if($row['comment'] == '2') { echo 'checked'; } ?>>
+                                                                <label class="form-check-label" >Comment</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input type="checkbox" class="form-check-input" name="write" value="true" <?php if($row['write'] == '2') { echo 'checked'; } ?>>
+                                                                <label class="form-check-label" >Write (Update content) </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input type="checkbox" class="form-check-input" name="route" value="true" <?php if($row['route'] == '2') { echo 'checked'; } ?>>
+                                                                <label class="form-check-label" >Route (Move to step, approve, reject) </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                        <button type="submit" name="btnUpdateGroup" class="btn btn-primary">Save</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                                </tbody>
+                            </table>
+                            <?php
+                        }else{
+                            ?>
+                            <div class="alert alert-info">
+                                No group has been given permissions so far.
+                            </div>
+                            <?php
+                        }
+                        ?>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -227,6 +363,64 @@ include 'SYS_SIDEBAR.php';
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <button type="submit" name="btnAddStep" class="btn btn-primary">Save</button>
             </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" role="dialog" id="modalAddGroup" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Group to Process</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group form-inline">
+                        <input type="hidden" name="processId" value="<?php echo $processId;?>">
+                        <label>Group</label>
+                        <select class="form-control" name="groupId">
+                            <?php
+
+                            $rows = $crud->getData("SELECT g.id, g.groupName, g.groupDesc FROM groups g
+                                                            WHERE g.id NOT IN (SELECT pg.groupId FROM process_groups pg WHERE pg.processId = '$processId');");
+                            if(!empty($rows)){
+                                foreach((array)$rows AS $key => $row){
+                                    ?>
+                                    <option value="<?php echo $row['id'];?>">
+                                        <?php echo $row['groupName'];?> (<?php echo $row['groupDesc'];?>)
+                                    </option>
+                                    <?php
+                                }
+                            }else{
+                                echo 'No group to add.';
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="read" value="true">
+                            <label class="form-check-label" >Read</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="comment" value="true">
+                            <label class="form-check-label" >Comment</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="write" value="true">
+                            <label class="form-check-label" >Write (Update content) </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="route" value="true">
+                            <label class="form-check-label" >Route (Move to step, approve, reject) </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" name="btnAddGroup" class="btn btn-primary">Save</button>
+                </div>
             </form>
         </div>
     </div>

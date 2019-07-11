@@ -39,7 +39,7 @@ if(isset($_POST['btnEdit'])){
     if($availabilityId == '2'){
         $crud->execute("UPDATE sections SET availabilityId='1', lockedById='$userId' WHERE id='$sectionId'");
     }
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_EditSection.php?secId=".$sectionId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/MANUAL_EditSection.php?secId=".$sectionId);
 }
 
 if(isset($_POST['btnAccept'])){
@@ -52,7 +52,7 @@ if(isset($_POST['btnAccept'])){
     if($availabilityId == '2'){
         $crud->execute("UPDATE sections SET statusId='2', approvedById='$userId' WHERE id='$sectionId'");
     }
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewSection.php?secId=".$sectionId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/MANUAL_ViewSection.php?secId=".$sectionId);
 }
 
 if(isset($_POST['btnReject'])){
@@ -65,7 +65,7 @@ if(isset($_POST['btnReject'])){
         $crud->execute("UPDATE sections SET statusId='3', approvedById='$userId' WHERE id='$sectionId'");
     }
 
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewSection.php?secId=".$sectionId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/MANUAL_ViewSection.php?secId=".$sectionId);
 }
 
 if(isset($_POST['btnRoute'])){
@@ -79,7 +79,7 @@ if(isset($_POST['btnRoute'])){
     if($availabilityId == '2'){
         $crud->execute("UPDATE sections SET statusId = '1', stepId='$nextStepId' WHERE id ='$sectionId'");
     }
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewSection.php?secId=".$sectionId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/MANUAL_ViewSection.php?secId=".$sectionId);
 }
 
 if(isset($_GET['secId'])){
@@ -162,7 +162,7 @@ if(isset($_GET['secId'])){
     }
 
 }else{
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_ManualRevisions.php");
     echo 'nothing found';
 }
 

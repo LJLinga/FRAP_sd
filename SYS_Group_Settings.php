@@ -227,7 +227,9 @@ include 'SYS_SIDEBAR.php';
                                                             <div class="modal-body">
                                                                 <?php
                                                                 $rows2 = $crud->getWorkflowDocTypes($row['processId']);
-                                                                if(!empty($rows2)){
+                                                                if(!empty($rows2)){ ?>
+                                                                    <div clas
+                                                                    <?php
                                                                     foreach((array)$rows2 AS $key2=> $row2){
                                                                         echo $row2['type'];
                                                                     }

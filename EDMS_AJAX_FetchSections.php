@@ -39,7 +39,7 @@ if(isset($_POST['role'])){
             'title' => $row['title'],
             'modified_by' => $row['authorName'],
             'status' => $row['status'].' <br>('.$row['stepName'].')',
-            'action' => '<a type="button" class="btn btn-primary" href="http://localhost/FRAP_sd/EDMS_ViewSection.php?secId='.$row['id'].'"> View </a>'
+            'action' => '<a type="button" class="btn btn-primary" href="http://localhost/FRAP_sd/MANUAL_ViewSection.php?secId='.$row['id'].'"> View </a>'
             );
 
     }

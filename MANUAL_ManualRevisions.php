@@ -24,7 +24,7 @@ if($_SESSION['EDMS_ROLE'] != 3 && $_SESSION['EDMS_ROLE'] != 4 && $_SESSION['EDMS
 
 if(isset($_POST['btnPrint'])){
     //$crud->execute("INSERT INTO revisions (initiatedById, statusId) VALUES ('$userId','2')");
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_PublishSections.php");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_PublishSections.php");
 }
 
 if(isset($_POST['btnPublish'])){
@@ -43,18 +43,18 @@ if(isset($_POST['btnPublish'])){
         $timeCreated = $row['timeCreated'];
         $crud->execute("INSERT INTO published_versions (manualId, sectionId, timeCreated) VALUES ('$manualId','$sectionId','$timeCreated')");
     }
-    //header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_PublishSections.php");
+    //header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_PublishSections.php");
 }
 
 if(isset($_POST['btnOpen'])){
     $crud->execute("INSERT INTO revisions (initiatedById, statusId) VALUES ('$userId','2')");
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_ManualRevisions.php");
 }
 
 if(isset($_POST['btnClose'])){
     $revisionsId = $_POST['btnClose'];
     $crud->execute("UPDATE revisions SET closedById = '$userId', statusId = 1 WHERE id = '$revisionsId' ");
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_ManualRevisions.php");
 }
 
 $query = "SELECT r.id, r.revisionsOpened FROM revisions r WHERE r.statusId = 2 ORDER BY r.id DESC LIMIT 1;";
@@ -87,7 +87,7 @@ include 'EDMS_SIDEBAR.php';
             <div class="col-lg-12">
                 <h3 class="page-header"> Manual Revisions
                     <?php
-                        if($revisions == 'open' && isset($write) && $write = '2') echo '<a class="btn btn-primary" href="EDMS_AddSection.php">Add Section</a>';
+                        if($revisions == 'open' && isset($write) && $write = '2') echo '<a class="btn btn-primary" href="MANUAL_AddSection.php">Add Section</a>';
                         ?>
                 </h3>
             </div>
@@ -196,7 +196,7 @@ include 'EDMS_SIDEBAR.php';
                                 echo '<div class="card" style="position: relative;">';
                                 echo '<div class="card-body">';
                                 echo $row['title'].' ('.$row['year'].')<br>';
-                                echo '<a href="EDMS_PublishSections.php?id='.$row['id'].'" target="_blank" class="btn btn-primary btn-sm" style="position: absolute; right: 2rem; top: 0.5rem;"><i class="fa fa-print"></i></a>';
+                                echo '<a href="MANUAL_PublishSections.php?id='.$row['id'].'" target="_blank" class="btn btn-primary btn-sm" style="position: absolute; right: 2rem; top: 0.5rem;"><i class="fa fa-print"></i></a>';
                                 echo '</div></div>';
                             }
                         }else{
