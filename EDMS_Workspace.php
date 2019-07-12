@@ -15,13 +15,12 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 include_once 'GLOBAL_HEADER.php';
 include_once 'EDMS_SIDEBAR.php';
 
-$edmsRole = $_SESSION['EDMS_ROLE'];
-
 $userId = $_SESSION['idnum'];
 $rows = $crud->getData("SELECT CONCAT(e.FIRSTNAME, ,e.LASTNAME) AS name FROM employee e WHERE e.EMP_ID ='$userId' LIMIT 1;");
 $userName = $rows[0]['name'];
 
 $groups = $crud->getUserGroups($userId);
+
 ?>
 
 <div class="content-wrapper">
@@ -36,16 +35,16 @@ $groups = $crud->getUserGroups($userId);
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <div class="panel panel-default">
+                <div class="panel panel-info">
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-lg-4">
                                 <div class="form-inline">
-                                    <label for="sel1">Category</label>
-                                    <select class="form-control" onchange="filterType(this.value)">
+                                    <label for="sel1">Document Type</label>
+                                    <select class="form-control" id="selectedType">
                                         <option value="" selected>All</option>
                                         <?php
-                                            $rows = $crud->getData("SELECT t.type FROM facultyassocnew.doc_type t WHERE isActive = 2;");
+                                            $rows = $crud->getUserDocTypes($userId);
                                             foreach((array)$rows as $key => $row){
                                                 echo '<option value="'.$row['type'].'">'.$row['type'].'</option>';
                                             }
@@ -56,7 +55,7 @@ $groups = $crud->getUserGroups($userId);
                             <div class="col-lg-4">
                                 <div class="form-inline">
                                     <label for="sel1">Status</label>
-                                    <select class="form-control" onchange="filterStatus(this.value)">
+                                    <select class="form-control" id="selectedStatus">
                                         <option value="" selected>All</option>
                                         <?php
                                             $rows = $crud->getData("SELECT statusName FROM facultyassocnew.doc_status;");
@@ -94,6 +93,10 @@ $groups = $crud->getUserGroups($userId);
                 </div>
             </div>
         </div>
+
+        <div class="row">
+
+        </div>
     </div>
 </div>
 
@@ -111,20 +114,29 @@ $groups = $crud->getUserGroups($userId);
                     </div>
                     <label for="selectedType">Category</label>
                     <div class="form-group">
-                        <select class="form-control" id="selectedType" name="selectedType">
+                        <?php
+                        $rows = $crud->getData("SELECT t.id, t.type FROM facultyassocnew.doc_type t WHERE isActive = 2;");
+                        if(!empty($rows)){?>
+                            <select class="form-control" id="selectedType" name="selectedType">
+                                <?php
+                                foreach ((array) $rows as $key => $row) {
+                                    echo '<option value="'.$row['id'].'">'.$row['type'].'</option>';
+                                }?>
+                            </select>
                             <?php
-                                $rows = $crud->getData("SELECT t.id, t.type FROM facultyassocnew.doc_type t WHERE isActive = 2;");
-                                if(!empty($rows)){
-                                    foreach ((array) $rows as $key => $row) {
-                                        echo '<option value="'.$row['id'].'">'.$row['type'].'</option>';
-                                    }
-                                }
+                        }else{
                             ?>
+                        <select class="form-control" id="selectedType" name="selectedType" disabled>
+                            <option>No active document types to choose from.</option>
                         </select>
+                            <?php
+                        }
+                        ?>
+
                     </div>
                     <div class="form-group">
                         <label for="file">Upload</label>
-                        <input type="file" class="form-control-file" id="file" name="file" required>
+                        <input type="file" class="form-control-file" id="inputFileUpload" name="file" required>
                     </div>
                 <span id="err"></span>
                 </div>
@@ -155,6 +167,7 @@ $groups = $crud->getUserGroups($userId);
             </div>
             <div class="panel-body">
                 <?php
+
                 $rows = $crud->getData("SELECT  pr.processName, s.stepNo, s.stepName AS name 
                                                     FROM employee e 
                                                     JOIN edms_roles er ON e.EDMS_ROLE = er.id 
@@ -182,9 +195,11 @@ $groups = $crud->getUserGroups($userId);
         </div>
     </div>
 </div>
-
+<?php include 'GLOBAL_FOOTER.php';?>
 <script>
     $(document).ready(function() {
+
+        $('#navSideItemWorkspace').addClass('active');
 
         $('[data-toggle="tooltip"]').tooltip();
 
@@ -198,8 +213,8 @@ $groups = $crud->getUserGroups($userId);
                 contentType: false,
                 data: new FormData(this),
                 success: function(response){
-                    if(JSON.parse(response).success == '1'){ location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+JSON.parse(response).id }
-                    else { $("#err").html('<div class="alert alert-info">'+response+'</div>'); };
+                    if(JSON.parse(response).success == '1'){ location.href = "EDMS_ViewDocument.php?docId="+JSON.parse(response).id }
+                    else { $("#err").html('<div class="alert alert-warning">'+JSON.parse(response).html+'</div>'); };
                 },
                 error: function(){
                     alert("Error");
@@ -208,9 +223,16 @@ $groups = $crud->getUserGroups($userId);
             return false;
         });
 
-    } );
+        $('#inputFileUpload').bind('change', function() {
+            if(this.files[0].size > 25000000){
+                $("#err").html('<div class="alert alert-warning">File size limit of 25 MB exceeded.</div>');
+            }else{
+                $("#err").html('');
+            }
 
-    let mode = '<?php echo $edmsRole; ?>';
+        });
+
+    } );
 
     let table = $('#myTable1').DataTable( {
         bSort: true,
@@ -219,11 +241,14 @@ $groups = $crud->getUserGroups($userId);
         destroy: true,
         pageResize: true,
         pageLength: 10,
+        order: [[4, 'desc']],
         "ajax": {
             "url":"EDMS_AJAX_FetchDocuments.php",
             "type":"POST",
-            "data":{ role : mode },
-            "dataSrc": ''
+            "dataSrc": '',
+            "data": {
+                requestType: 'WORKSPACE'
+            },
         },
         columns: [
             { data: "title" },
@@ -234,7 +259,19 @@ $groups = $crud->getUserGroups($userId);
             { data: "status"},
             { data: "timestamp"},
             { data: "actions"}
-        ]
+        ],
+        initComplete: function () {
+            var columnType = this.api().column(1);
+            var selectType = $('#selectedType').on( 'change', function () {
+                columnType.search($('#selectedType').val()).draw();
+            } );
+
+            var columnStatus = this.api().column(5);
+            var selectStatus = $('#selectedStatus').on( 'change', function () {
+                columnStatus.search($('#selectedStatus').val()).draw();
+            } );
+
+        }
     });
 
     $(".dataTables_filter").hide();
@@ -254,4 +291,4 @@ $groups = $crud->getUserGroups($userId);
     },1000)
 </script>
 
-<?php include 'GLOBAL_FOOTER.php';?>
+

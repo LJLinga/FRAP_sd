@@ -81,8 +81,10 @@ $userName = $rows[0]['name'];
                                 <th>Title</th>
                                 <th>Category</th>
                                 <th>Version</th>
+                                <th>Submitted on</th>
                                 <th>Status</th>
-                                <th>Last modified on</th>
+                                <th>Last updated by</th>
+                                <th>Last updated on</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -195,9 +197,10 @@ $userName = $rows[0]['name'];
                 processData: false,
                 contentType: false,
                 data: new FormData(this),
+                dataType: 'json',
                 success: function(response){
                     if(JSON.parse(response).success == '1'){ location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+JSON.parse(response).id }
-                    else { $("#err").html('<div class="alert alert-info">'+response+'</div>'); };
+                    else { $("#err").html('<div class="alert alert-info">'+JSON.parse(response).html+'</div>'); };
                 },
                 error: function(){
                     alert("Error");
@@ -216,18 +219,23 @@ $userName = $rows[0]['name'];
         destroy: true,
         pageResize: true,
         pageLength: 10,
+        order: [[3, 'desc']],
         "ajax": {
-            "url":"EDMS_AJAX_FetchMyDocuments.php",
+            "url":"EDMS_AJAX_FetchDocuments.php",
             "type":"POST",
-            "data":{ userId : mode },
-            "dataSrc": ''
+            "dataSrc": '',
+            "data": {
+                requestType: 'MYDOCUMENTS'
+            },
         },
         columns: [
             { data: "title" },
             { data: "type" },
             { data: "vers"},
+            { data: "timeCreated"},
             { data: "status"},
-            { data: "timestamp"},
+            { data: "modified_by"},
+            { data: "lastUpdated"},
             { data: "actions"}
         ]
     });
@@ -238,7 +246,7 @@ $userName = $rows[0]['name'];
     });
 
     function filterStatus(status){
-        table.column(5).search(status).draw();
+        table.column(4).search(status).draw();
     }
     function filterType(type){
         table.column(1).search(type).draw();

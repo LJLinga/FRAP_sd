@@ -24,7 +24,7 @@ if(!empty($rows)){
         $revisionsId = $row['id'];
     }
 }else{
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_ManualRevisions.php");
 }
 
 $rows = $crud->getData("SELECT sr.* FROM step_roles sr WHERE stepId = 9 AND roleId = '$edmsRole';");
@@ -36,7 +36,7 @@ if(!empty($rows)){
         //$comment = $row['comment'];
     }
 }else{
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_ManualRevisions.php");
 }
 
 if(isset($_POST['btnRoute'])){
@@ -54,7 +54,7 @@ if(isset($_POST['btnRoute'])){
         }
     }
     $sectionId = $crud->executeGetKey("INSERT INTO sections (authorId, firstAuthorId, sectionNo, stepId, title, content) VALUES ('$userId','$userId','$sectionNo','$nextStepId', '$title', '$content')");
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_EditSection.php?secId=".$sectionId);
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId);
 }
 
 $page_title = 'Faculty Manual - Add Section';

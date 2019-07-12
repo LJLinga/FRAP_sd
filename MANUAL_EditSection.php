@@ -28,7 +28,7 @@ if(!empty($rows)){
         $revisionsId = $row['id'];
     }
 }else{
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_ManualRevisions.php");
 }
 
 if(isset($_POST['btnSave'])){
@@ -62,7 +62,7 @@ if(isset($_POST['btnFinish'])){
     $sectionNo = $crud->escape_string($_POST['section_number']);
     $content = $crud->escape_string($_POST['section_content']);
     $crud->execute("UPDATE sections SET title = '$title', sectionNo = '$sectionNo', content = '$content', availabilityId='2', lockedById=NULL WHERE id = '$sectionId'");
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewSection.php?secId=".$sectionId);
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_ViewSection.php?secId=".$sectionId);
 }
 
 if(isset($_GET['secId'])){
@@ -89,7 +89,7 @@ if(isset($_GET['secId'])){
     }
 
     if($availabilityId == '1' && $lockedById != $userId){
-        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_ManualRevisions.php");
     }
 
     $rows = $crud->getData("SELECT s.authorId, s.firstAuthorId, s.approvedById, s.sectionNo, s.title, s.content, s.timeCreated, s.lastUpdated,
@@ -123,11 +123,11 @@ if(isset($_GET['secId'])){
             //$comment = $row['comment'];
         }
     }else{
-        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_ManualRevisions.php");
     }
 
 }else{
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ManualRevisions.php");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_ManualRevisions.php");
     echo 'nothing found';
 }
 

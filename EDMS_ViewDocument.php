@@ -10,14 +10,9 @@ $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
-//include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 $edmsRole = $_SESSION['EDMS_ROLE'];
 $userId = $_SESSION['idnum'];
-//$read = 2;
-//$write = 1;
-//$route = 1;
-//$comment = 1;
 
 
 if(isset($_GET['docId'])){
@@ -26,15 +21,16 @@ if(isset($_GET['docId'])){
 
     // Load document
     $query = "SELECT 
-                d.firstAuthorId, d.timeCreated, d.availabilityId, d.versionNo, d.authorId, d.title, d.filePath,
-		        CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS originalAuthor,
+                d.firstAuthorId, d.timeCreated, d.availabilityId, d.versionNo, d.authorId, d.title, d.filePath, d.lastUpdated,
+		        CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS originalAuthor, dt.type,
                 (SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) FROM employee e WHERE e.EMP_ID = d.authorId) AS currentAuthor,
-		        d.stepId,  p.processName, s.stepName, s.isFinal, d.availabilityId, d.availabilityById, d.statusId
+		        d.stepId,  p.processName, s.stepName, d.availabilityId, d.availabilityById, d.statusId
                 FROM documents d 
                 JOIN employee e ON d.firstAuthorId = e.EMP_ID
                 JOIN steps s ON d.stepId = s.id 
                 JOIN doc_status st ON st.id = d.statusId 
                 JOIN process p ON s.processId = p.id 
+                JOIN doc_type dt ON d.typeId = dt.id
                 WHERE d.documentId='$documentId' 
                 LIMIT 1;";
 
@@ -44,60 +40,39 @@ if(isset($_GET['docId'])){
             $firstAuthorId = $row['firstAuthorId'];
             $originalAuthor = $row['originalAuthor'];
             $timeFirstPosted = $row['timeCreated'];
-            $timeUpdated = $row['timeCreated'];
+            $timeUpdated = $row['lastUpdated'];
             $versionNo = $row['versionNo'];
             $currentAuthorId = $row['authorId'];
             $currentAuthor = $row['currentAuthor'];
             $title = $row['title'];
             $filePath = $row['filePath'];
-            $availability = $row['availabilityId'];
             $currentStepId= $row['stepId'];
             $processName = $row['processName'];
             $stepName = $row['stepName'];
             $availability = $row['availabilityId'];
             $availabilityById = $row['availabilityById'];
             $statusId = $row['statusId'];
-            $isFinal = $row['isFinal'];
+            $docType = $row['type'];
+            $statusName = $crud->assignStatusString($statusId);
+        }
 
-            if($userId == $firstAuthorId){
-                $query = "SELECT su.read, su.write, su.route, su.comment FROM step_author su WHERE su.stepId='$currentStepId' LIMIT 1;";
-                $rows = $crud->getData($query);
-                if(!empty($rows)){
-                    foreach((array) $rows as $key => $row){
-                        $write= $row['write'];
-                        $route= $row['route'];
-                        $comment = $row['comment'];
-                    }
-                }else{
-                    $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
-                    $rows = $crud->getData($query);
-                    if(!empty($rows)){
-                        foreach((array) $rows as $key => $row){
-                            $write= $row['write'];
-                            $route= $row['route'];
-                            $comment = $row['comment'];
-                        }
-                    }
-                }
-            }else{
-                $query = "SELECT su.read, su.write, su.route, su.comment FROM step_roles su WHERE su.stepId='$currentStepId' AND su.roleId='$edmsRole' LIMIT 1;";
-                $rows = $crud->getData($query);
-                if(!empty($rows)){
-                    foreach((array) $rows as $key => $row){
-                        $write= $row['write'];
-                        $route= $row['route'];
-                        $comment = $row['comment'];
-                    }
-                }
+        $rows = $crud->getStepUserPermissions($currentStepId, $firstAuthorId, $userId);
+        if(!empty($rows)){
+            foreach((array) $rows AS $key => $row){
+                $read = $row['read'];
+                $write = $row['write'];
+                $route = $row['route'];
+                $comment = $row['comment'];
             }
+        }else{
+            //Learn return to previous.
+            header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
+        }
 
-            $read = 2;
-
-            if($availability == '1'){
-                $route = '1';
-                if($availabilityById == $userId) $write = '2';
-                else $write = '1';
-            }
+        if($availability == '2'){
+            $route = '1';
+            if($availabilityById == $userId) $write = '2';
+            else $write = '1';
         }
     }else{
         header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
@@ -109,36 +84,10 @@ if(isset($_GET['docId'])){
 
 if(isset($_POST['btnUnlock'])){
     $documentId= $_POST['btnUnlock'];
-    $crud->execute("UPDATE documents SET availabilityId='2' WHERE documentId='$documentId'");
+    $crud->execute("UPDATE documents SET availabilityId='1' WHERE documentId='$documentId'");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
 }
 
-if(isset($_POST['btnAccept'])){
-    //Clickable only when unlocked. Thesis 2.
-    $documentId = $_POST['btnAccept'];
-    $rows = $crud->getData("SELECT availabilityId FROM documents WHERE documentId = '$documentId'");
-    foreach((array) $rows as $key => $row){
-        $availability = $row['availabilityId'];
-    }
-    if($availability == '2'){
-        $remarks = $_POST['remarks'];
-        $crud->execute("UPDATE documents SET statusId='2', statusedById='$userId', remarks='$remarks' WHERE documentId='$documentId'");
-    }
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
-}
-
-if(isset($_POST['btnReject'])){
-    $documentId= $_POST['btnReject'];
-    $rows = $crud->getData("SELECT availabilityId FROM documents WHERE documentId = '$documentId'");
-    foreach((array) $rows as $key => $row){
-        $availability = $row['availabilityId'];
-    }
-    if($availability == '2'){
-        $remarks = $_POST['remarks'];
-        $crud->execute("UPDATE documents SET statusId='3', statusedById='$userId', remarks='$remarks' WHERE documentId='$documentId'");
-    }
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
-}
 
 if(isset($_POST['btnLock'])){
     $documentId = $_POST['btnLock'];
@@ -146,9 +95,9 @@ if(isset($_POST['btnLock'])){
     foreach((array) $rows as $key => $row){
         $availability = $row['availabilityId'];
     }
-    if($availability == '2'){
+    if($availability == '1'){
         $userId = $_POST['userId'];
-        $crud->execute("UPDATE documents SET availabilityId='1', availabilityById='$userId' WHERE documentId='$documentId'");
+        $crud->execute("UPDATE documents SET availabilityId='2', availabilityById='$userId' WHERE documentId='$documentId'");
     }
     header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewDocument.php?docId=".$documentId);
 }
@@ -171,28 +120,37 @@ if(isset($_POST['btnDownload'])){
 
 if(isset($_POST['btnRoute'])){
     $documentId = $_POST['documentId'];
-    $nextStepId=$_POST['btnRoute'];
+    $nextStepId = $_POST['nextStepId'];
+    $statusId = $_POST['assignStatusId'];
+    $currentStatusId = $_POST['currentStatusId'];
+    $remarks = $_POST['remarks'];
     $rows = $crud->getData("SELECT availabilityId FROM documents WHERE documentId = '$documentId'");
     foreach((array) $rows as $key => $row){
         $availability = $row['availabilityId'];
     }
-    if($availability == '2'){
-        $crud->execute("UPDATE documents SET statusId = '1', stepId='$nextStepId', statusedById='$userId' WHERE documentId='$documentId'");
+    if($statusId >= 5){
+        $statusId = $currentStatusId;
     }
-    //$crud->execute("UPDATE documents SET statusId = '1', availabilityId='2', stepId='$nextStepId', availabilityById=NULL WHERE documentId='$documentId'");
+    if($availability == '1'){
+        if($statusId != $currentStatusId){
+           $crud->execute("UPDATE documents SET statusId = '$statusId', stepId='$nextStepId', statusedById='$userId', steppedById='$userId', remarks = '$remarks' WHERE documentId='$documentId'");
+        }else if($statusId == $currentStatusId){
+            $crud->execute("UPDATE documents SET stepId='$nextStepId', steppedById='$userId', remarks = '$remarks' WHERE documentId='$documentId'");
+        }
+    }
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
 }
 
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
 ?>
-<div id="content-wrapper" xmlns="http://www.w3.org/1999/html">
+<div id="content-wrapper">
     <div class="container-fluid">
         <div class="row" style="margin-top: 2rem;">
             <div class="col-lg-8">
                 <ol class="breadcrumb">
                     <li>
-                        <a href="http://localhost/FRAP_sd/EDMS_Workspace.php">Workspace</a>
+                        <a href="EDMS_Workspace.php">Workspace</a>
                     </li>
                     <li>
                         <?php echo $processName;?>
@@ -202,198 +160,28 @@ include 'EDMS_SIDEBAR.php';
                     </li>
                 </ol>
                 <?php
-                    $ext = pathinfo($filePath, PATHINFO_EXTENSION);
-                    if($ext == 'pdf' || $ext == 'jpg'){
-                        echo '<iframe src="/ViewerJS/../FRAP_sd/'.$filePath.'" width=\'850\' style="height:80vh;"; allowfullscreen webkitallowfullscreen></iframe>';
-                    }else{
-                        echo '<div class="card" style="margin-top: 1rem;">
-                                <div class="card-header"><b>Document File</b></div>
-                                <div class="card-body">
-                                    <p>Viewer does not support format : <b>'.$ext.'</b></p>
-                                    <a class="btn fa fa-download"  href="'.$filePath.'" download="'.$title.'_ver'.$versionNo.'_'.basename($filePath).'"> Download </a>
-                                </div>
-                            </div>';
-                    }
+                $ext = pathinfo($filePath, PATHINFO_EXTENSION);
+                if($ext == 'pdf' || $ext == 'jpg'){?>
+                    <iframe src="/ViewerJS/../FRAP_sd/<?php echo $filePath; ?>" width="850" style="height:80vh;" allowfullscreen webkitallowfullscreen></iframe>
+                <?php }else{ ?>
+                    <div class="card" style="margin-top: 1rem;">
+                        <div class="card-header"><b>Document File</b></div>
+                        <div class="card-body">
+                            <p>Viewer does not support format : <b><?php echo $ext;?></b></p>
+                            <a class="btn fa fa-download"  href="<?php echo $filePath; ?>" download="<?php echo $title.'_ver'.$versionNo.'_'.basename($filePath);?>"> Download </a>
+                        </div>
+                    </div>';
+                <?php }
                 ?>
-
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-header">
-                        <div class="form-inline">
-                            <label for="sel1">Document History</label>
-                            <select id="sel1" class="form-control" id="selectedType" name="selectedType" onchange="searchTable(this.value);">
-                                <option value="0" selected>All</option>
-                                <option value="1">Version</option>
-                                <option value="2">Check-in/Check-out</option>
-                                <option value="3">Stage</option>
-                                <option value="4">Status</option>
-                            </select>
-                            <label for="sel1">Search</label>
-                            <input type="text" id="searchField" class="form-control">
-                        </div>
-                        <div class="form-inline">
-
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <table id="tblHistory" cellspacing="0" width="100%"></table>
-                    </div>
-                </div>
-
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-header">
-                        <div class="form-inline">
-                            <label for="sel1">Document History</label>
-                            <select id="sel1" class="form-control" id="selectedType" name="selectedType" onchange="searchTable(this.value);">
-                                <option value="0" selected>All</option>
-                                <option value="1">Version</option>
-                                <option value="2">Check-in/Check-out</option>
-                                <option value="3">Stage</option>
-                                <option value="4">Status</option>
-                            </select>
-                            <label for="sel1">Search</label>
-                            <input type="text" id="searchField" class="form-control">
-                        </div>
-                        <div class="form-inline">
-
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <table id="tblHistory2" class="table" cellspacing="0" width="100%">
-                            <?php
-                                $query = "SELECT v.audit_action_type, 
-                                                v.audit_timestamp, 
-                                                v.lastUpdated, 
-                                                v.versionNo, 
-                                                v.title, 
-                                                v.filePath, 
-                                                v.remarks,
-                                                v.lifecycleStateId,
-                                                s.statusname, 
-                                                st.stepName, 
-                                            CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS updatedByName, 
-                                            CONCAT(e2.LASTNAME,', ',e2.FIRSTNAME) AS statusedByName,
-                                            CONCAT(e3.LASTNAME,', ',e3.FIRSTNAME) AS steppedByName
-                                            
-                                            FROM doc_versions v 
-                                            JOIN doc_status s ON v.statusId= s.id
-                                            JOIN steps st ON v.stepId = st.id
-                                            JOIN employee e ON v.authorId = e.EMP_ID
-                                            LEFT JOIN employee e2 ON v.statusedById = e2.EMP_ID
-                                            LEFT JOIN employee e3 ON v.steppedById = e3.EMP_ID
-                                            LEFT JOIN employee e4 ON v.lifecycleStatedById = e4.EMP_ID
-                                            WHERE v.documentId = $documentId
-                                            ORDER BY v.audit_timestamp DESC;";
-
-                                $rows = $crud->getData($query);
-
-                                if(!empty($rows)) {
-                                    foreach ((array)$rows as $key => $row) {
-
-                                        $content = '';
-                                        $content2 = '';
-                                        $buttons='<a class="btn btn-sm fa fa-download"  href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"></a>';
-                                        $buttons.='<a class="btn btn-sm fa fa-info-circle"></a>';
-
-
-
-                                        if($row['audit_action_type'] == 'CREATED'){
-                                            $content.= '<b>'.$row['updatedByName'].'</b> created the document <span class="badge">Version '.$row['versionNo'].'</span>';
-                                        }else if($row['audit_action_type'] == 'UPDATE CONTENT'){
-                                            $content.= '<b>'.$row['updatedByName'].'</b> updated the document as <span class="badge">Version '.$row['versionNo'].'</span>';
-                                            $content2='<div class="card"><div class="card-body"> Remarks: <i>"'.$row['remarks'].'"</i></div></div>';
-                                        }else if($row['audit_action_type'] == 'UPDATE STATUS'){
-                                            $content.= '<b>'.$row['statusedByName'].'</b> <span class="badge">'.$row['statusname'].'</span> the document';
-                                            $content2='<div class="card"><div class="card-body"> Remarks: <i>"'.$row['remarks'].'"</i></div></div>';
-                                        }else if($row['audit_action_type'] == 'UPDATE STAGE'){
-                                            $content.= '<b>'.$row['steppedByName'].'</b> submitted the document for <span class="badge">'.$row['stepName'].'</span>';
-                                            $content2='<div class="card"><div class="card-body"> Remarks: <i>"'.$row['remarks'].'"</i></div></div>';
-                                        }else if($row['audit_action_type'] == 'UPDATE STATE'){
-                                            $extra = 'ACTIVE';
-                                            if($row['lifecycleStateId'] == '2'){
-                                                $extra = 'ARCHIVED';
-                                                $content2='<div class="card"><div class="card-body"> Remarks: <i>"'.$row['remarks'].'"</i></div></div>';
-                                            }else if($row['lifecycleStateId'] == '3'){
-                                                $extra = 'RESTORED';
-                                                $content2='<div class="card"><div class="card-body"> Remarks: <i>"'.$row['remarks'].'"</i></div></div>';
-                                            }
-                                            $content.= '<b>'.$row['lifecycleStatedByName'].'</b> has <span class="badge">'.$extra.'</span>';
-                                        }
-
-                                        $content.= '<i> on '.date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])).'</i>';
-
-                                        ?>
-                                        <tr>
-                                            <div class="card" style="margin-top: 1rem;">
-                                                <div class="card-body">
-                                                    <div class="row">
-                                                        <div class="col-lg-10">
-                                                            <?php echo $content; ?>
-                                                        </div>
-                                                        <div class="col-lg-2">
-                                                            <?php echo $buttons; ?>
-                                                        </div>
-                                                    </div>
-                                                    <?php echo $content2; ?>
-                                                </div>
-                                            </div>
-                                        </tr>
-                                        <div id="preview" class="modal fade" role="dialog">
-                                            <div class="modal-dialog">
-
-                                                <form method="POST" id="comment_form">
-
-                                                    <!-- Modal content-->
-                                                    <div class="modal-content">
-                                                        <div class="modal-body">
-                                                            <div class="form-group">
-                                                                <input type="hidden" name="comment_name" id="comment_name" class="form-control" placeholder="Enter Name" value="<?php echo $userId; ?>"/>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <textarea name="comment_content" id="comment_content" class="form-control" placeholder="Enter Comment" rows="5"></textarea>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <div class="form-group">
-                                                                <input type="hidden" name="comment_id" id="comment_id" value="0" />
-                                                                <input type="hidden" name="documentId" id="documentId" value="<?php echo $documentId; ?>" />
-                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                                <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit"/>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </form>
-
-                                            </div>
-                                        </div>
-                                    <?php }
-                                }?>
-                        </table>
-                    </div>
-                </div>
-
-
-
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-header"><b>Comments</b></div>
-                    <div class="card-body">
-                        <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
-                        <span id="comment_message"></span>
-                        <div id="display_comment"></div>
-                    </div>
-                </div>
-
-
-
             </div>
             <div class="col-lg-4">
 
-                <div class="card">
-                    <div class="card-header">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
                         <b>Document Details</b>
                     </div>
-                    <div class="card-body">
-                        <table class="table table-condensed table-responsive table-bordered table-sm">
+                    <div class="panel-body">
+                        <table class="table table-responsive table-striped table-condensed table-sm">
                             <tbody>
                             <tr>
                                 <th>Title</th>
@@ -404,12 +192,20 @@ include 'EDMS_SIDEBAR.php';
                                 <td><?php echo $versionNo; ?></td>
                             </tr>
                             <tr>
+                                <th>Type</th>
+                                <td><?php echo $docType; ?></td>
+                            </tr>
+                            <tr>
                                 <th>Process</th>
                                 <td><?php echo $processName; ?></td>
                             </tr>
                             <tr>
                                 <th>Stage</th>
                                 <td><?php echo $stepName; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td><?php echo $statusName; ?></td>
                             </tr>
                             <tr>
                                 <th>Created by</th>
@@ -431,48 +227,71 @@ include 'EDMS_SIDEBAR.php';
                         </table>
                     </div>
                 </div>
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-header">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
                         <b>Document Actions</b>
-                        <b><?php echo $userId; ?></b>
                     </div>
-                    <div class="card-body">
+                    <div class="panel-body">
                         <div class="btn-group btn-group-vertical" style="width: 100%;">
-                            <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
                             <?php
-                                if($currentStepId == '999'){
-                                    //Later
-                                    //echo '<button class="btn btn-info" style="text-align: left; width: 100%;" type="button" id="btnAssignTask">Change Type</button>';
-                                }else if(isset($route) && $route=='2' && $availability=='2') {
-                                    if($isFinal == '2'){
-                                        if($statusId == 1){
-                                            echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#approveModal">Approve</button>';
-                                            echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#rejectsModal">Reject</button>';
-                                        }else if($statusId == 2){
-                                            echo '<button class="btn btn-danger" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#rejectModal">Reject</button>';
-                                        }else if($statusId == 3){
-                                            echo '<button class="btn btn-success" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#approveModal">Approve</button>';
+                            if($currentStepId == '1'){
+                                //ASSIGN PROCESS BUTTON WITH CONFIRM MODAL
+                            }else if($route=='2' && $availability=='1') {
+                                $rows = $crud->getStepRoutes($currentStepId);
+                                if (!empty($rows)) {
+                                    foreach ((array)$rows as $key => $row) {
+                                        $btnClass = 'btn btn-primary';
+                                        if($row['assignStatus'] == 3){
+                                            $btnClass = 'btn btn-success';
+                                        }else if($row['assignStatus'] == 4){
+                                            $btnClass = 'btn btn-danger';
                                         }
-                                    }
-                                    $query = "SELECT nextStepId, routeName FROM step_routes WHERE currentStepId ='$currentStepId';";
-                                    $rows = $crud->getData($query);
-                                    if (!empty($rows)) {
-                                        foreach ((array)$rows as $key => $row) {
-                                            echo '<button class="btn btn-primary" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#'.$row['nextStepId'].'Modal">'.$row['routeName'].'</button>';
-                                        }
-                                    }
-                                }
-                                if(isset($write) && $write=='2' && $availability=='2'){
-                                    echo '<input type="hidden" name="filePath" value="'.$filePath.'">';
-                                    echo '<input type="hidden" name="userId" value="'.$userId.'">';
-                                    echo '<button class="btn btn-default" type="submit" name="btnLock" value="'.$documentId.'" style="text-align: left; width:100%;">Lock and Edit</button>';
-                                }else if(isset($write) && $write=='2' && $availability=='1'){
-                                    echo '<button class="btn btn-default" type="submit" name="btnUnlock" id="btnUnlock" value="'.$documentId.'" style="text-align: left; width: 100%;">Cancel Editing</button>';
-                                    echo '<button type="button" class="btn btn-default" id="btnUpload" data-toggle="modal" data-target="#uploadModal" style="text-align: left; width: 100%;">Finish Editing</button>';
-                                }
 
-                                //echo $edmsRole.','.$read.','.$write.','.$route;
-                                ?>
+                                        ?>
+                                        <button class="<?php echo $btnClass;?>" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#modalRoute<?php echo $row['routeId'];?>">
+                                            <?php echo $row['routeName'];?>
+                                        </button>
+                                        <div id="modalRoute<?php echo $row['routeId'];?>" class="modal fade" role="dialog">
+                                            <div class="modal-dialog">
+                                                <form method="POST" action="">
+                                                    <input type="hidden" name="documentId" value="<?php echo $documentId; ?>">
+                                                    <input type="hidden" name="assignStatusId" value="<?php echo $row['assignStatus'];?>">
+                                                    <input type="hidden" name="nextStepId" value="<?php echo $row['nextStepId'];?>">
+                                                    <input type="hidden" name="currentStatusId" value="<?php echo $statusId;?>">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title"><b>Confirm '<?php echo $row['routeName'];?>'?</b></h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <p>Please provide remarks first.</p>
+                                                                <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <div class="form-group">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                <button class="btn btn-primary" type="submit" name="btnRoute">Confirm</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <?php
+                                    }
+                                }
+                            }
+                            ?>
+                            <form method="POST" action="">
+                                <?php if( $write=='2' && $availability=='1'){?>
+                                    <input type="hidden" name="filePath" value="<?php echo $filePath;?>">
+                                    <input type="hidden" name="userId" value="<?php echo $userId;?>">
+                                    <button class="btn btn-default" type="submit" name="btnLock" value="<?php echo $documentId;?>" style="text-align: left; width:100%;">Lock and Edit</button>
+                                <?php } else if($write=='2' && $availability=='2'){ ?>
+                                    <button type="button" class="btn btn-primary" id="btnUpload" data-toggle="modal" data-target="#uploadModal" style="text-align: left; width: 100%;">Finish Editing</button>
+                                    <button class="btn btn-warning" type="submit" name="btnUnlock" id="btnUnlock" value="<?php echo $documentId;?>" style="text-align: left; width: 100%;">Cancel Editing</button>
+                                <?php } ?>
                                 <a href="<?php echo $filePath?>" download><button type="button" class="btn btn-default" style="text-align: left; width: 100%;">Download</button></a>
                                 <button type="button" name="btnArchive" class="btn btn-default" style="text-align: left; width: 100%;">Archive</button>
                             </form>
@@ -482,92 +301,200 @@ include 'EDMS_SIDEBAR.php';
                 </div>
             </div>
         </div>
+        <div class="row" style="margin-top: 1rem;">
+            <div class="col-lg-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <b class="panel-title">Document History</b>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-inline">
+                                    <label for="sel1">User </label>
+                                    <select class="form-control" id="selectedUser" name="selectedUser">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-inline">
+                                    <label for="sel1">Action</label>
+                                    <select class="form-control" id="selectedAction" name="selectedAction">
+                                        <option value="" selected>All</option>
+                                        <option value="created">CREATED</option>
+                                        <option value="updated">UPDATED</option>
+                                        <option value="moved">MOVED</option>
+                                        <option value="locked">LOCKED</option>
+                                        <option value="unlocked">UNLOCKED</option>
+                                        <option value="draft">DRAFT</option>
+                                        <option value="pending">PENDING</option>
+                                        <option value="approved">APPROVED</option>
+                                        <option value="rejected">REJECTED</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-inline">
+                                    <label for="sel1">Search</label>
+                                    <input type="text" id="searchField" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <table id="tblHistory" class="table table-condensed table-sm table-striped" cellspacing="0" width="100%">
+                            <thead>
+                            <th>Timestamp </th>
+                            <th>User </th>
+                            <th>Action </th>
+                            <th></th>
+                            </thead>
+                            <tbody>
+                            <?php
+                            $query = "SELECT v.audit_action_type, v.versionId,
+                                                v.audit_timestamp, 
+                                                v.lastUpdated, 
+                                                v.versionNo, 
+                                                v.title, 
+                                                v.filePath, 
+                                                v.remarks,
+                                                v.lifecycleStateId,
+                                                v.availabilityId,
+                                                s.statusname, v.statusId,
+                                                st.stepName, st.stepNo,
+                                                CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS name
+                                            
+                                            FROM doc_versions v 
+                                            JOIN doc_status s ON v.statusId= s.id
+                                            JOIN steps st ON v.stepId = st.id
+                                            LEFT JOIN employee e ON v.audit_user_id = e.EMP_ID
+                                            WHERE v.documentId = $documentId
+                                            ORDER BY v.audit_timestamp DESC;";
+
+                            $rows = $crud->getData($query);
+
+                            if(!empty($rows)) {
+                                $labelCol = '';
+                                foreach ((array)$rows as $key => $row) {
+
+                                    ?>
+                                    <tr>
+                                        <td>
+                                            <?php echo date("F j, Y g:i:s A ", strtotime($row['audit_timestamp']));?>
+                                        </td>
+                                        <td>
+                                            <?php echo $row['name'];?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            if($row['audit_action_type'] == 'LOCKED') { $labelCol = 'default';?>
+                                                <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->availabilityString($row['availabilityId']);?></span> the document.
+                                            <?php }else if($row['audit_action_type'] == 'STATUSED') {
+                                                if($row['statusId'] ==  1) { $labelCol = 'info'; }
+                                                else if($row['statusId'] ==  2) { $labelCol = 'primary'; }
+                                                else if($row['statusId'] ==  3) { $labelCol = 'success'; }
+                                                else if($row['statusId'] ==  4) { $labelCol = 'danger'; } ?>
+                                                <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->assignStatusString($row['statusId']);?></span> status assigned to the document.
+                                            <?php }else if($row['audit_action_type'] == 'MOVED') {
+                                                $labelCol = 'primary'?>
+                                                <span class="label label-<?php echo $labelCol;?>">MOVED</span> the document to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong>.
+                                            <?php }else if($row['audit_action_type'] == 'CYCLED'){
+                                                if($row['lifecycleStateId'] ==  1) $labelCol = 'info';
+                                                if($row['lifecycleStateId'] ==  2) $labelCol = 'warning';?>
+                                                <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->lifecycleString($row['lifecycleStateId']);?></span> the document.
+                                            <?php }else if($row['audit_action_type'] == 'UPDATED' || $row['audit_action_type'] == 'CREATED') {
+                                                $labelCol = 'success'?>
+                                                <span class="label label-<?php echo $labelCol;?>"><?php echo $row['audit_action_type'];?></span> the document.
+                                            <?php }else if($row['audit_action_type'] == 'STATUSED/MOVED') {
+                                                $labelCol = 'primary'?>
+                                                <span class="label label-<?php echo $labelCol;?>">MOVED</span> the document to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong>.<br>
+                                            <?php if($row['statusId'] ==  1) { $labelCol = 'info'; }
+                                                else if($row['statusId'] ==  2) { $labelCol = 'primary'; }
+                                                else if($row['statusId'] ==  3) { $labelCol = 'success'; }
+                                                else if($row['statusId'] ==  4) { $labelCol = 'danger'; } ?>
+                                                <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->assignStatusString($row['statusId']);?></span> status assigned to the document.
+                                            <?php }
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php if($row['audit_action_type'] != 'LOCKED'){?>
+                                                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalVersionPreview<?php echo $row['versionId'];?>"><i class="fa fa-eye"></i> Remarks</button>
+                                                <div id="modalVersionPreview<?php echo $row['versionId'];?>" class="modal fade" role="dialog">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-body">
+                                                                <div class="row">
+                                                                    <div class="col-lg-8">
+
+                                                                    </div>
+                                                                    <div class="col-lg-4">
+                                                                        <?php echo $row['remarks'];?>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+
+                                                            </div>
+                                                        </div>
+
+                                                        </form>
+
+                                                    </div>
+                                                </div>
+                                            <?php }?>
+                                            <a class="btn btn-sm fa fa-info-circle"></a>
+                                            <a class="btn btn-sm fa fa-download"  href="<?php echo $filePath;?>" download="<?php echo $row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']);?>"></a>
+                                        </td>
+                                    </tr>
+                                    <div id="preview" class="modal fade" role="dialog">
+                                        <div class="modal-dialog">
+
+                                            <form method="POST" id="comment_form">
+
+                                                <!-- Modal content-->
+                                                <div class="modal-content">
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <input type="hidden" name="comment_name" id="comment_name" class="form-control" placeholder="Enter Name" value="<?php echo $userId; ?>"/>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <textarea name="comment_content" id="comment_content" class="form-control" placeholder="Enter Comment" rows="5"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <div class="form-group">
+                                                            <input type="hidden" name="comment_id" id="comment_id" value="0" />
+                                                            <input type="hidden" name="documentId" id="documentId" value="<?php echo $documentId; ?>" />
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                <?php }
+                            }?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-header"><b>Comments</b></div>
+                    <div class="card-body">
+                        <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
+                        <span id="comment_message"></span>
+                        <div id="display_comment"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 
-    <div id="approveModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
-            <div class="modal-content">
-                <div class="modal-header">
-                   <h5 class="modal-title"><b>Confirm Approve?</b></h5>
-                </div>
-                <div class="moda l-body">
-                    <div class="form-group">
-                        <p>Please provide remarks before confirming.</p>
-                        <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="form-group">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" name="btnAccept" class="btn btn-primary" value="<?php echo $documentId; ?>">Confirm Approve</button>
-                    </div>
-                </div>
-            </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="rejectModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <form method="POST" action="<?php echo $_SERVER["PHP_SELF"];?>">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><b>Confirm Reject?</b></h5>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <p>Please provide remarks before confirming.</p>
-                        <textarea name="remarks" id="remarks" class="form-control" placeholder="Required remarks here..." rows="10" required></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="form-group">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" name="btnReject" class="btn btn-primary" value="<?php echo $documentId; ?>">Confirm Reject</button>
-                    </div>
-                </div>
-            </div>
-            </form>
-        </div>
-    </div>
-
-    <?php
-
-        $query = "SELECT nextStepId, routeName FROM step_routes WHERE currentStepId ='$currentStepId';";
-        $rows = $crud->getData($query);
-        if (!empty($rows)) {
-            foreach ((array)$rows as $key => $row) {
-                ?>
-                <div id="<?php echo $row['nextStepId'];?>Modal" class="modal fade" role="dialog">
-                    <div class="modal-dialog">
-                        <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
-                            <input type="hidden" name="documentId" value="<?php echo $documentId; ?>">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title"><b>Confirm '<?php echo $row['routeName'];?>'?</b></h5>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <p>Please provide remarks before confirming.</p>
-                                        <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <div class="form-group">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                        <button class="btn btn-primary" type="submit" name="btnRoute" value="<?php echo $row['nextStepId'];?>">Confirm</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <?php
-            }
-        }
-    ?>
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
@@ -597,8 +524,6 @@ include 'EDMS_SIDEBAR.php';
 
     </div>
 </div>
-
-
     <div id="uploadModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <form method="POST" id="documentUploadForm">
@@ -642,7 +567,6 @@ include 'EDMS_SIDEBAR.php';
 
         </div>
     </div>
-
 <script>
 
     $(document).ready(function(){
@@ -659,11 +583,8 @@ include 'EDMS_SIDEBAR.php';
                 contentType: false,
                 data: new FormData(this),
                 success: function(response){
-                    if(response != 'Upload success!'){
-                        $("#err").html('<div class="alert alert-warning">'+response+'</div>');
-                    }else{
-                        location.reload();
-                    }
+                    if(JSON.parse(response).success == '1'){ location.reload(); }
+                    else { $("#err").html('<div class="alert alert-info">'+JSON.parse(response).html+'</div>'); };
                 },
                 error: function(){
                     alert("Something went wrong :(");
@@ -706,42 +627,42 @@ include 'EDMS_SIDEBAR.php';
 
         let typeId = '';
 
-
-        $('#tblHistory2').DataTable({
-            pageLength: 5,
-            bSort: false
-        });
-
-        let table = $('#tblHistory').DataTable( {
-            bSort: true,
+        table = $('#tblHistory').DataTable( {
             destroy: true,
             bLengthChange: false,
             pageLength: 5,
-            "ajax": {
-                "url":"EDMS_AJAX_DocumentActivityStream.php",
-                "type":"POST",
-                "data":{ documentId: documentId, typeId: typeId },
-                "dataSrc": ''
-            },
-            columns: [
-                { data: "card_content" }
-            ]
+            bSort: false,
+            initComplete: function () {
+                var columnUser = this.api().column(1);
+                var selectUser = $('#selectedUser').on( 'change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                        columnUser.search( val ? '^'+val+'$' : '', true, false ).draw();
+                    } );
+                columnUser.data().unique().sort().each( function ( d, j ) {
+                    selectUser.append( '<option value="'+d+'">'+d+'</option>' )
+                } );
+
+                var columnAction = this.api().column(2);
+                var selectAction = $('#selectedAction').on( 'change', function () {
+                    columnAction.search($('#selectedAction').val()).draw();
+                } );
+
+            }
         });
+
         $(".dataTables_filter").hide();
         $('#searchField').keyup(function(){
             table.search($('#searchField').val()).draw();
         });
 
-        function filterType(type){
-            table.column(1).search(type).draw();
-        }
 
-        setInterval(function(){
-            table.ajax.reload();
-        },1000)
+        // setInterval(function(){
+        //     table.ajax.reload();
+        // },1000)
 
 
     });
+
 
     function load_comment(documentId)
     {
@@ -757,4 +678,5 @@ include 'EDMS_SIDEBAR.php';
     }
 
 </script>
+
 <?php include 'GLOBAL_FOOTER.php';?>

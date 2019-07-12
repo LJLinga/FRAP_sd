@@ -10,7 +10,7 @@
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 
-$processId = $_POST['processId'];
-$processName = $_POST['processName'];
+$groupId = $_POST['groupId'];
+$groupDesc = $_POST['groupDesc'];
 
-$crud->execute("UPDATE process SET processName = '$processName' WHERE id = '$processId'");
+$crud->execute("UPDATE groups SET groupDesc = '$groupDesc' WHERE id = '$groupId'");

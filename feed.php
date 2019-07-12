@@ -78,7 +78,7 @@ include 'GLOBAL_HEADER.php';
             <div class="row" style="position: relative;">
 
                 <div class="column col-lg-2" style="margin-top: 1rem; margin-bottom: 1rem; position:fixed;">
-                    <div class="panel panel-default" style="margin-top: 1rem;">
+                    <div class="panel panel-green" style="margin-top: 1rem;">
                         <div class="panel-heading">
                             <b> Account Information  </b>
                         </div>
@@ -89,7 +89,7 @@ include 'GLOBAL_HEADER.php';
                             <b>User Type: </b>   <?php echo $row3['STATUS'];?> <br>
                         </div>
                     </div>
-                    <div class="panel panel-default" style="margin-top: 1rem;">
+                    <div class="panel panel-green" style="margin-top: 1rem;">
                         <div class="panel-heading">
                             <b> Faculty Assistance Loan Program </b>
                         </div>
@@ -109,7 +109,7 @@ include 'GLOBAL_HEADER.php';
                         </div>
                     </div>
 
-                    <div class="panel panel-default" style="margin-top: 1rem;">
+                    <div class="panel panel-green" style="margin-top: 1rem;">
                         <div class="panel-heading">
                             <b> Health-Aid Assistance  </b>
                         </div>
@@ -129,7 +129,7 @@ include 'GLOBAL_HEADER.php';
                         </div>
                     </div>
 
-                    <div class="panel panel-default" style="margin-top: 1rem;">
+                    <div class="panel panel-green" style="margin-top: 1rem;">
                         <div class="panel-heading">
                             <b> Lifetime Membership Status</b>
                         </div>
@@ -163,7 +163,7 @@ include 'GLOBAL_HEADER.php';
                         $postId = $row['id'];
                         ?>
 
-                        <div class="panel panel-default" style="margin-top: 1rem;">
+                        <div class="panel panel-green" style="margin-top: 1rem;">
                             <div class="panel-body" style="overflow: hidden; max-height: 50rem;">
                                 <h4 class="card-title"><b><?php echo $row['title'];?></b></h4>
                                 <h5 class="card-subtitle">by <?php echo $row['name'];?> | <?php echo date("F j, Y g:i A ", strtotime($row['lastUpdated'])) ;?></h5>
@@ -198,7 +198,7 @@ include 'GLOBAL_HEADER.php';
                         $lastTimeStamp = $row['timePublished'];
                     }?>
 
-                    <div class="panel panel-default">
+                    <div class="panel panel-green">
                         <div class="panel-body">
                             <?php if(!empty($rows[0]['permalink'])) { ?>
                                 <a href="<?php echo "http://localhost/FRAP_sd/feed.php?lastTimeStamp=".$lastTimeStamp ?>" >Load More</a>
@@ -211,7 +211,7 @@ include 'GLOBAL_HEADER.php';
                 </div>
 
                 <div id="calendarColumn" class="column col-lg-4 col-lg-offset-8" style="margin-top: 1rem; margin-bottom: 1rem; position: fixed;">
-                    <div class="panel panel-default" style="margin-top: 1rem;">
+                    <div class="panel panel-green" style="margin-top: 1rem;">
                         <div class="panel-heading">
                             <b> Events </b>
                         </div>

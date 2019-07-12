@@ -4,6 +4,7 @@
         "froala/wysiwyg-editor-php-sdk": "1.0.1",
         "google/apiclient": "^2.0",
         "phpoffice/phpword": "0.16.0",
-        "phpoffice/phppowerpoint": "0.9.0"
+        "phpoffice/phppowerpoint": "0.9.0",
+        "ext-json": "*"
     }
 }

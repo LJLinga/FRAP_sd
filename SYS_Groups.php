@@ -13,15 +13,9 @@ session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_SYS_ADMIN_CHECKING.php');
 
-if(isset($_POST['btnAddProcess'])){
-    $processName = $crud->esc($_POST['processName']);
-    if($processId = $crud->executeGetKey("INSERT INTO process (processName) VALUES ('$processName');")){
-        echo 'success';
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Step_Routes.php?id=".$processId);
-    }else{
-        echo 'Database error.';
-    }
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflows.php");
+if(isset($_POST['btnAddGroup'])){
+    $groupDesc = $crud->esc($_POST['groupDesc']);
+    $groupId = $crud->addGroup($groupDesc);
 }
 
 
@@ -41,7 +35,7 @@ $userId = $_SESSION['idnum'];
         <div class="row">
             <div class="col-lg-12">
                 <h3 class="page-header">
-                    Workflows
+                    Groups
                 </h3>
             </div>
         </div>
@@ -49,38 +43,62 @@ $userId = $_SESSION['idnum'];
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading" style="position:relative;">
-                        <b class="panel-title">Special Workflows</b>
+                        <div class="row">
+                            <div class="col-lg-10">
+                                <b>User Groups</b>
+                            </div>
+                            <div class="col-lg-2">
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#modalAddGroup">Add Group</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="panel-body">
-                        <table class="table table-striped table-responsive" align="center">
+                        <table class="table table-striped table-responsive" align="center" id="dataTable">
                             <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Editable by </th>
+                                <th>Display Name</th>
+                                <th>Active Status</th>
+                                <th>Members</th>
+                                <th>Editable by</th>
+                                <th>Activatable by</th>
                                 <th>Removable by</th>
-                                <th width="200px;">Action</th>
+                                <th width="100px;">Action</th>
                             </tr>
                             </thead>
                             <tbody>
 
                             <?php
 
-                            $rows = $crud->getSpecialWorkflows();
+                            $rows = $crud->getNonAdminGroups();
                             if(!empty($rows)){
                                 foreach((array) $rows as $key => $row){
+
                                     ?>
                                     <tr>
                                         <td>
-                                            <?php echo $row['processName']; ?>
+                                            <?php echo $row['groupName']; ?>
                                         </td>
                                         <td>
-                                            <?php echo $crud->editableString($row['editableId']); ?>
+                                            <?php echo $row['groupDesc']; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->activeString($row['isActive']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $row['member_count']; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->editableString($row['isEditable']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->deactivatableString($row['isDeactivatable']); ?>
                                         </td>
                                         <td>
                                             <?php echo $crud->removableString($row['isRemovable']); ?>
                                         </td>
                                         <td>
-                                            <a href="SYS_Workflow_Settings.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default"><i class="fa fa-gear"></i> Settings</a>
+                                            <a href="SYS_Group_Settings.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default">Edit</a>
                                         </td>
                                     </tr>
                                     <?php
@@ -95,20 +113,17 @@ $userId = $_SESSION['idnum'];
                     <div class="panel-heading" style="position:relative;">
                         <div class="row">
                             <div class="col-lg-10">
-                                <b class="panel-title">Document Workflows</b>
-                            </div>
-                            <div class="col-lg-2">
-                                <button id="addWorkflow" class="btn btn-primary" data-toggle="modal" data-target="#modalAddWorkflow">New Document Workflow</button>
+                                <b>Admin Groups</b>
                             </div>
                         </div>
                     </div>
                     <div class="panel-body">
-                        <table class="table table-striped table-responsive" align="center" id="dataTable">
+                        <table class="table table-striped table-responsive" align="center">
                             <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Editable by </th>
-                                <th>Removable by</th>
+                                <th>Display Name</th>
+                                <th>Members</th>
                                 <th width="200px;">Action</th>
                             </tr>
                             </thead>
@@ -116,22 +131,23 @@ $userId = $_SESSION['idnum'];
 
                             <?php
 
-                            $rows = $crud->getDocumentWorkflows();
+                            $rows = $crud->getAdminGroups();
                             if(!empty($rows)){
                                 foreach((array) $rows as $key => $row){
-                                   ?>
+
+                                    ?>
                                     <tr>
                                         <td>
-                                            <?php echo $row['processName']; ?>
+                                            <?php echo $row['groupName']; ?>
                                         </td>
                                         <td>
-                                            <?php echo $crud->editableString($row['editableId']); ?>
+                                            <?php echo $row['groupDesc']; ?>
                                         </td>
                                         <td>
-                                            <?php echo $crud->removableString($row['isRemovable']); ?>
+                                            <?php echo $row['member_count']; ?>
                                         </td>
                                         <td>
-                                            <a href="SYS_Workflow_Settings.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default"><i class="fa fa-gear"></i> Settings</a>
+                                            <a href="SYS_Group_Settings.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default">Edit</a>
                                         </td>
                                     </tr>
                                     <?php
@@ -152,27 +168,27 @@ $userId = $_SESSION['idnum'];
 </div>
 <!-- /#wrapper -->
 
-<div class="modal fade" id="modalAddWorkflow" role="dialog">
+<div class="modal fade" id="modalAddGroup" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <form method="POST" action="">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    New Document Workflow
-                </h5>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="title">
-                        Name
-                    </label>
-                    <input type="text" name="processName" class="form-control" required>
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Create Group
+                    </h5>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" name="btnAddProcess" class="btn btn-primary">Save</button>
-            </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="title">
+                            Name
+                        </label>
+                        <input type="text" name="groupDesc" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" name="btnAddGroup" class="btn btn-primary">Save</button>
+                </div>
             </form>
         </div>
     </div>
@@ -181,5 +197,4 @@ $userId = $_SESSION['idnum'];
 <script>
     $('#dataTable').DataTable({});
 </script>
-
 

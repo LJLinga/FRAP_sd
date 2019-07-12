@@ -3,35 +3,38 @@
 
         <ul class="nav navbar-nav side-nav">
             <br>
-            <!--
-            <form>
-                <div class="form-group">
-                    <input class="form-control" placeholder="Search">
-                </div>
-            </form>
+            <li>
+                <a href="javascript:" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-folder-open"></i> Document Library <i class="fa fa-fw fa-caret-down"></i></a>
+                <ul id="demo" class="collapse in">
+                    <li id="navSideItemWorkspace">
+                        <a href="EDMS_Workspace.php"><i class="fa fa-fw fa-folder"></i> Workspace </a>
+                    </li>
+                    <li id="navSideItemWorkspace">
+                        <a href="EDMS_MyDocuments.php"><i class="fa fa-fw fa-folder"></i> My Documents </a>
+                    </li>
+                    <?php $rows = $crud->getUserGroups($_SESSION['idnum']);
+                    foreach((array) $rows AS $key => $row){ ?>
+                        <li id="navSideItemGroup<?php echo $row['id'];?>">
+                            <a href="EDMS_Groupspace.php?id=<?php echo $row['id'];?>"><i class="fa fa-fw fa-folder"></i> <?php echo $row['groupDesc'];?>
+                                <span class="label label-primary">14</span>
+                            </a>
+                        </li>
+                    <?php }
+                    ?>
+                </ul>
+            </li>
 
-            <li class="active">
-                <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-folder-open"></i> Documents <i class="fa fa-fw fa-caret-down"></i></a>
-                <ul id="demo" class="collapse"> -->
             <li>
-                <a href="EDMS_Workspace.php"><i class="fa fa-fw fa-folder"></i> Workspace </a>
-            </li>
-            <li>
-                <a href="EDMS_MyDocuments.php"><i class="fa fa-fw fa-folder"></i> My Documents </a>
-            </li>
-            <li>
-                <a href="EDMS_FacultyManual.php"><i class="fa fa-fw fa-folder"></i> Faculty Manual</a>
+                <a href="MANUAL_FacultyManual.php"><i class="fa fa-fw fa-folder"></i> Faculty Manual</a>
             </li>
 
             <?php
-                if($_SESSION['EDMS_ROLE'] != 3 && $_SESSION['EDMS_ROLE'] != 4 && $_SESSION['EDMS_ROLE'] != 5 && $_SESSION['EDMS_ROLE'] != 6){
-
-                }else{
-                    echo '<li>
-                                <a href="EDMS_ManualRevisions.php"><i class="fa fa-fw fa-folder"></i> Manual Revisions</a>
-                            </li>';
-                }
-            ?>
+            $rows = $crud->doesUserHaveWorkflow($_SESSION['idnum'],7);
+            if(!empty($rows)){?>
+                <li>
+                    <a href="MANUAL_ManualRevisions.php"><i class="fa fa-fw fa-folder"></i> Manual Revisions</a>
+                </li>
+            <?php } ?>
 
         </ul>
     </div>

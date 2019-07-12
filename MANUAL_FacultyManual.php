@@ -89,7 +89,7 @@ function getSection($crud, $parentId = 0, $marginLeft = 0, $parentNo = ''){
                                 echo '<div class="card" style="position: relative;">';
                                 echo '<div class="card-body">';
                                 echo $row['title'].' ('.$row['year'].')<br>';
-                                echo '<a href="EDMS_PublishSections.php?id='.$row['id'].'" target="_blank" class="btn btn-primary btn-sm" style="position: absolute; right: 2rem; top: 0.5rem;"><i class="fa fa-print"></i></a>';
+                                echo '<a href="MANUAL_PublishSections.php?id='.$row['id'].'" target="_blank" class="btn btn-primary btn-sm" style="position: absolute; right: 2rem; top: 0.5rem;"><i class="fa fa-print"></i></a>';
                                 echo '</div></div>';
                             }
                         }else{
