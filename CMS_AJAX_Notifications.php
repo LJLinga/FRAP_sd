@@ -31,7 +31,7 @@ if(isset($_POST['userId']) && isset($_POST['limit'])){
     if(!empty($rows)){
         foreach ((array) $rows as $key => $row){
             $output .= '<a href="CMS_EditPost.php?postId='.$row['postId'].'" >';
-            $output .= '<div class="card-body"  href="CMS_EditPost.php?postId="'.$row['postId'].'">';
+            $output .= '<div>';
             $output .= $row['message'];
             $output .= '<br>'.date("F j, Y g:i:s A ", strtotime($row['timeStamp']));
             $output .= '<br>';

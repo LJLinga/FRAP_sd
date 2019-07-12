@@ -24,6 +24,7 @@ if(isset($_GET['docId'])){
                 d.firstAuthorId, d.timeCreated, d.availabilityId, d.versionNo, d.authorId, d.title, d.filePath, d.lastUpdated,
 		        CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS originalAuthor, dt.type,
                 (SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) FROM employee e WHERE e.EMP_ID = d.authorId) AS currentAuthor,
+                (SELECT CONCAT(e2.LASTNAME,', ',e2.FIRSTNAME) FROM employee e2 WHERE e2.EMP_ID = d.statusedById) AS statusedByName,
 		        d.stepId,  p.processName, s.stepName, d.availabilityId, d.availabilityById, d.statusId
                 FROM documents d 
                 JOIN employee e ON d.firstAuthorId = e.EMP_ID
@@ -54,6 +55,7 @@ if(isset($_GET['docId'])){
             $statusId = $row['statusId'];
             $docType = $row['type'];
             $statusName = $crud->assignStatusString($statusId);
+            $statusUpdaterName = $row['statusedByName'];
         }
 
         $rows = $crud->getStepUserPermissions($currentStepId, $firstAuthorId, $userId);
@@ -205,8 +207,30 @@ include 'EDMS_SIDEBAR.php';
                             </tr>
                             <tr>
                                 <th>Status</th>
-                                <td><?php echo $statusName; ?></td>
+                                <?php
+
+                                if($statusId == 3){
+                                    $labelCol = 'success';
+                                }else if($statusId == 4){
+                                    $labelCol = 'danger';
+                                }else if($statusId == 2){
+                                    $labelCol = 'primary';
+                                }else if($statusId == 1){
+                                    $labelCol = 'info';
+                                }
+                                ?>
+                                <td>
+                                    <span class="label label-<?php echo $labelCol;?>">
+                                        <?php echo $statusName;?>
+                                    </span>
+                                </td>
                             </tr>
+                            <?php if($statusUpdaterName != ''){?>
+                            <tr>
+                                <th>Status updated by</th>
+                                <td><?php echo $statusUpdaterName; ?></td>
+                            </tr>
+                            <?php } ?>
                             <tr>
                                 <th>Created by</th>
                                 <td><?php echo $originalAuthor; ?></td>

@@ -75,7 +75,7 @@ $userName = $rows[0]['name'];
                         </div>
                     </div>
                     <div class="panel-body">
-                        <table id="myTable1" class="table table-striped" cellspacing="0" width="100%">
+                        <table id="myTable1" class="table table-striped table-condensed table-sm" cellspacing="0" width="100%">
                             <thead>
                             <tr>
                                 <th>Title</th>

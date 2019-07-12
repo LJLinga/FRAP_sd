@@ -271,7 +271,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                 $bool = true;
                 $insertKey = $this->executeGetKey("INSERT INTO groups (groupName, groupDesc) VALUES ('$groupName','$groupDesc');");
             }else{
-                $groupName = substr($groupName, 0, strpos($groupName, "_%"));
+                $groupName = strtok($groupName, '_');
                 $groupName.='_%'.substr(str_shuffle("CHRISTAN"), 0,5);
             }
         } while ($bool == false);
@@ -306,6 +306,46 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                                 ORDER BY g.groupName ASC;");
     }
 
+    public function deleteGroup($groupId){
+        $rows = $this->getGroupMembers($groupId);
+        if(!empty($rows)){
+           foreach((array) $rows AS $key => $row){
+               $this->removeUserFromGroup($groupId,$row['EMP_ID']);
+           }
+        }
+        $rows = $this->getData("SELECT id FROM steps WHERE groupId = '$groupId';");
+        if(!empty($rows)){
+            foreach((array) $rows AS $key => $row){
+                $this->removeStepGroup($row['id']);
+            }
+        }
+        $this->execute("DELETE FROM groups WHERE id = '$groupId'");
+    }
+
+    public function removeStep($stepId){
+        $this->execute("DELETE FROM steps WHERE id = '$stepId';");
+    }
+
+    public function removeStepGroup($stepId){
+        $this->execute("UPDATE steps SET gread= '1', gwrite='1', groute='1', gcomment='1', groupId = NULL WHERE id = '$stepId';");
+    }
+
+    public function removeStepRoute($routeId){
+        $this->execute("DELETE FROM step_routes WHERE id = '$routeId';");
+    }
+
+    public function isUserGroupAdmin($userId, $groupId){
+        $rows = $this->getData("SELECT ug.userId FROM user_groups ug
+                                        WHERE ug.userId = '$userId' 
+                                        AND ug.groupId = '$groupId'
+                                        AND ug.isAdmin = '2' LIMIT 1;");
+        if(!empty($rows)){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
     public function getNonAdminGroups(){
         return $this->getData("SELECT g.*, 
                                 (SELECT COUNT(ug.userId) FROM user_groups ug WHERE ug.groupId = g.id) AS member_count 
@@ -322,13 +362,20 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                                 ORDER BY g.groupName ASC;");
     }
 
-
     public function getGroupMembers($groupId){
         return $this->getData("SELECT e.EMP_ID, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS name, ug.isAdmin
                                         FROM user_groups ug 
                                         JOIN employee e ON ug.userId = e.EMP_ID
                                         WHERE ug.groupId = '$groupId'
                                         ORDER BY ug.isAdmin DESC, name ASC;");
+    }
+
+    public function deactivateGroup($groupId){
+        return $this->execute("UPDATE groups SET isActive = '1' WHERE id = '$groupId'");
+    }
+
+    public function activateGroup($groupId){
+        return $this->execute("UPDATE groups SET isActive = '2' WHERE id = '$groupId'");
     }
 
     public function getUsersNotInGroup($groupId){
@@ -386,12 +433,8 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                                         WHERE r.currentStepId = '$stepId' ORDER BY r.orderNo;");
     }
 
-    public function getStepGroupPermissions($stepId, $groupId){
-        return $this->getData("SELECT sg.* FROM step_groups sg WHERE g.id = '$groupId' AND sg.stepId = '$stepId' LIMIT 1;");
-    }
-
-    public function getStepCreatorPermissions($stepId){
-        return $this->getData("SELECT su.read, su.write, su.route, su.comment FROM step_author su WHERE su.stepId='$stepId' LIMIT 1;");
+    public function getStep($stepId){
+        return $this->getData("SELECT s.* FROM steps s WHERE s.id = '$stepId' LIMIT 1;");
     }
 
     public function getWorkflowDocTypes($processId){
@@ -436,10 +479,10 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function getStepGroupMemberPermissions($stepId, $userId){
-        return $this->getData("SELECT sg.* FROM user_groups ug 
+        return $this->getData("SELECT s.* FROM user_groups ug 
                                         JOIN groups g ON ug.groupId = g.id
-                                        JOIN step_groups sg ON g.id = sg.groupId
-                                        WHERE sg.stepId = '$stepId' AND ug.userId = '$userId'
+                                        JOIN steps s ON g.id = s.groupId
+                                        WHERE s.id = '$stepId' AND ug.userId = '$userId'
                                         LIMIT 1;");
     }
 
@@ -447,10 +490,25 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     public function getStepUserPermissions($stepId, $creatorId, $userId)
     {
         if ($userId == $creatorId) {
-            return $this->getStepCreatorPermissions($stepId);
+            return $this->getStep($stepId);
         } else {
-            return $this->getStepGroupMemberPermissions($stepId, $userId);
+            $rows = $this->getStepGroupMemberPermissions($stepId, $userId);
+            if(empty($rows)){
+                return $this->getStepProcessGroupMemberPermissions($stepId, $userId);
+            }else{
+                return $rows;
+            }
         }
+    }
+
+    public function getStepProcessGroupMemberPermissions($stepId, $userId){
+        return $this->getData("SELECT pg.* FROM process_groups pg
+                                        JOIN process p ON pg.processId = p.id
+                                        JOIN steps s ON p.id = s.processId
+                                        JOIN groups g ON pg.groupId = g.id
+                                        JOIN user_groups ug ON g.id = ug.groupId
+                                        WHERE s.id = '$stepId'
+                                        AND ug.userId = '$userId';");
     }
 
     public function getProcessIdOfDocType($docTypeId){
@@ -482,6 +540,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                                         LIMIT 1; ");
     }
 
+
     public function sendNotifications(){
 
     }
@@ -490,9 +549,24 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
 
     }
 
-    public function sendEmail($emailTo, $emailFrom, $subject, $message){
+    public function getUserEmail($userId){
+        $email = '';
+        $rows = $this->getData("SELECT EMAIL FROM member WHERE MEMBER_ID = '$userId' LIMIT 1;");
+        if(!empty($rows)){
+            foreach((array) $rows AS $key => $row){
+                $email = $row['EMAIL'];
+            }
+        }
+        return $email;
+    }
+
+    public function sendEmail($receiverId, $senderId, $subject, $message){
         //Will be used for EDMS, CMS, Manual whenever someone moves a document/item to a step
         //Could also be used for literally any email notif purpose
+
+        $emailFrom = $this->getUserEmail($senderId);
+        $emailTo = $this->getUserEmail($receiverId);
+
         $headers = array(
             'From' => $emailFrom,
             'Reply-To' => $emailFrom,
@@ -502,8 +576,25 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         mail($emailTo, $subject, $message, $headers);
     }
 
-    public function addNotification($notification){
+    public function getUserName($userId){
+        $rows = $this->getData("SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS name FROM employee e WHERE e.EMP_ID = '$userId' LIMIT 1;");
+        $name = '';
+        foreach($rows AS $key => $row){
+            $name = $row['name'];
+        }
+        return $name;
+    }
 
+    public function addNotification($senderId, $receiverId, $message, $hyperlink, $type){
+        return $this->execute("INSERT INTO notifications (senderId, receiverId, message, hyperlink, notification_type) VALUES ('$senderId','$receiverId','$message', '$hyperlink', '$type');");
+    }
+
+    public function displayUserNotifications($userId){
+        return $this->getData("SELECT * FROM notifications WHERE receiverId = '$userId'");
+    }
+
+    public function displayUnseenUserNotifications($userId){
+        return $this->getData("SELECT * FROM notifications WHERE receiverId = '$userId' AND seen = '1';");
     }
 
     // TO DO: notificaTIONS thread

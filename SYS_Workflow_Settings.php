@@ -59,7 +59,7 @@ if(isset($_POST['btnAddStep'])){
 if(isset($_POST['btnDeleteStep'])){
     $processId = $_POST['processId'];
     $stepId = $_POST['stepId'];
-    if($crud->execute("DELETE FROM steps WHERE id = '$stepId';")){
+    if($crud->removeStep($stepId)){
         echo 'success';
     }else{
         echo 'Cannot delete steps currently in use by items or routes.';
@@ -77,6 +77,17 @@ if(isset($_POST['btnAddGroup'])){
     if(isset($_POST['comment'])) { $comment = 2; }
     if($crud->execute("INSERT INTO `process_groups` (`groupId`, `processId`, `read`, `write`, `route`, `comment`) VALUES ('$groupId','$processId','$read','$write','$route','$comment');")){
         echo 'success2';
+    }else{
+        echo 'Database error.';
+    }
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflow_Settings.php?id=".$processId);
+}
+
+if(isset($_POST['btnDeleteGroup'])){
+    $processId = $_POST['processId'];
+    $groupId = $_POST['groupId'];
+    if($crud->execute("DELETE FROM process_groups WHERE groupId = '$groupId' AND processId = '$processId';")){
+        echo 'success3';
     }else{
         echo 'Database error.';
     }
@@ -412,6 +423,71 @@ include 'SYS_SIDEBAR.php';
                             <label class="form-check-label" >Write (Update content) </label>
                         </div>
                         <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="route" value="true">
+                            <label class="form-check-label" >Route (Move to step, approve, reject) </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" name="btnAddGroup" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" role="dialog" id="modalAddStepPermissions" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="">
+                <div class="modal-header">
+                    <h4 class="modal-title">Assign Permissions to Step</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group form-inline">
+                        <input type="hidden" name="processId" value="<?php echo $processId;?>">
+                        <label>Group</label>
+                        <select class="form-control" name="groupId">
+                            <?php
+
+                            $rows = $crud->getData("SELECT g.id, g.groupName, g.groupDesc FROM groups g
+                                                            WHERE g.id NOT IN (SELECT pg.groupId FROM process_groups pg WHERE pg.processId = '$processId');");
+                            if(!empty($rows)){
+                                foreach((array)$rows AS $key => $row){
+                                    ?>
+                                    <option value="<?php echo $row['id'];?>">
+                                        <?php echo $row['groupName'];?> (<?php echo $row['groupDesc'];?>)
+                                    </option>
+                                    <?php
+                                }
+                            }else{
+                                echo 'No group to add.';
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <label>Creator Permissions</label>
+                    <div class="form-group form-inline">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="read" value="true">
+                            <label class="form-check-label" >Read</label>
+                            <input type="checkbox" class="form-check-input" name="comment" value="true">
+                            <label class="form-check-label" >Comment</label>
+                            <input type="checkbox" class="form-check-input" name="write" value="true">
+                            <label class="form-check-label" >Write (Update content) </label>
+                            <input type="checkbox" class="form-check-input" name="route" value="true">
+                            <label class="form-check-label" >Route (Move to step, approve, reject) </label>
+                        </div>
+                    </div>
+                    <div class="form-group form-inline">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="read" value="true">
+                            <label class="form-check-label" >Read</label>
+                            <input type="checkbox" class="form-check-input" name="comment" value="true">
+                            <label class="form-check-label" >Comment</label>
+                            <input type="checkbox" class="form-check-input" name="write" value="true">
+                            <label class="form-check-label" >Write (Update content) </label>
                             <input type="checkbox" class="form-check-input" name="route" value="true">
                             <label class="form-check-label" >Route (Move to step, approve, reject) </label>
                         </div>

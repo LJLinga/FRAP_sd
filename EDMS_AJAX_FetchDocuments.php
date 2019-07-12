@@ -21,7 +21,7 @@ if(isset($_POST['requestType'])){
                 (SELECT CONCAT(e.FIRSTNAME,', ',e.LASTNAME) FROM employee e2 WHERE e2.EMP_ID = d.firstAuthorId) AS firstAuthorName 
                 FROM documents d 
                 LEFT JOIN employee e ON e.EMP_ID = d.authorId
-                JOIN doc_status stat ON stat.id = d.statusId 
+                JOIN doc_status stat ON stat.id = d.statusId
                 JOIN doc_type t ON t.id = d.typeId
                 JOIN steps s ON s.id = d.stepId
                 JOIN process pr ON pr.id = s.processId
@@ -36,8 +36,8 @@ if(isset($_POST['requestType'])){
         $rows = $crud->getData($query);
         $data = [];
         foreach ((array) $rows as $key => $row) {
-            $buttons = '<a class="btn btn-info" data-toggle="tooltip" title="View document" name="documentId" href="EDMS_ViewDocument.php?docId='.$row['documentId'].'"><i class="fa fa-eye"></i></a>';
-            $buttons .= ' <a class="btn btn-success" data-toggle="tooltip" title="Download document" href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"><i class="fa fa-download"></i></a>';
+            $buttons = '<a class="btn btn-info btn-sm" data-toggle="tooltip" title="View document" name="documentId" href="EDMS_ViewDocument.php?docId='.$row['documentId'].'"><i class="fa fa-eye"></i></a>';
+            $buttons .= ' <a class="btn btn-success btn-sm" data-toggle="tooltip" title="Download document" href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"><i class="fa fa-download"></i></a>';
 
             $data[] =  array(
                 'title' => $row['title'],
@@ -60,8 +60,8 @@ if(isset($_POST['requestType'])){
 
         $data = [];
         foreach ((array) $rows as $key => $row) {
-            $buttons = '<a class="btn btn-info" data-toggle="tooltip" title="View document" name="documentId" href="EDMS_ViewDocument.php?docId='.$row['documentId'].'"><i class="fa fa-eye"></i></a>';
-            $buttons .= ' <a class="btn btn-success" data-toggle="tooltip" title="Download document" href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"><i class="fa fa-download"></i></a>';
+            $buttons = '<a class="btn btn-info btn-sm" data-toggle="tooltip" title="View document" name="documentId" href="EDMS_ViewDocument.php?docId='.$row['documentId'].'"><i class="fa fa-eye"></i></a>';
+            $buttons .= ' <a class="btn btn-success btn-sm" data-toggle="tooltip" title="Download document" href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"><i class="fa fa-download"></i></a>';
 
             $data[] =  array(
                 'title' => $row['title'],

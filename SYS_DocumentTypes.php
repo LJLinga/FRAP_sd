@@ -13,6 +13,8 @@ session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_SYS_ADMIN_CHECKING.php');
 
+
+
 if(isset($_POST['btnAddDocType'])){
     $typeName = $crud->esc($_POST['docTypeName']);
     $processId = $_POST['assignedProcess'];

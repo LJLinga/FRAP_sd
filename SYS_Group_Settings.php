@@ -13,14 +13,13 @@ session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 
 $userId = $_SESSION['idnum'];
-
-
+$sysRole = $_SESSION['SYS_ROLE'];
 
 if(isset($_POST['btnUpdateGroup'])){
     $groupId = $_POST['groupId'];
     $groupDesc = $_POST['groupName'];
 
-    if($crud->setGroupDisplayName($groupDesc)){
+    if($crud->setGroupDisplayName($groupId,$groupDesc)){
         echo 'success1';
     }else{
         echo 'Database error.';
@@ -45,6 +44,22 @@ if(isset($_POST['btnAddMember'])){
         echo 'Database error.';
     }
     header("Location: http://". $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/SYS_Group_Settings.php?id=".$groupId);
+}
+
+if(isset($_POST['btnInviteUser'])){
+    $groupId = $_POST['groupId'];
+    $memberId = $_POST['memberId'];
+    $message = $_POST['message'];
+
+    $isAdmin = '1';
+    if(isset($_POST['isAdmin'])){ $isAdmin = '2'; };
+
+    if($crud->execute("INSERT INTO group_invitations (groupId, invitedId, inviterId, message, isAdmin) VALUES ('$groupId','$memberId','$userId','$message','$isAdmin');")){
+        echo 'success1';
+    }else{
+        echo 'Database error.';
+    }
+    //header("Location: http://". $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/SYS_Group_Settings.php?id=".$groupId);
 }
 
 if(isset($_POST['btnRemoveMember'])){
@@ -80,6 +95,24 @@ if(isset($_POST['btnUnmakeAdmin'])){
     header("Location: http://". $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/SYS_Group_Settings.php?id=".$groupId);
 }
 
+if(isset($_POST['btnRemove'])){
+    $groupId = $_POST['groupId'];
+    $crud->deleteGroup($groupId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF'])."/SYS_Groups.php");
+}
+
+if(isset($_POST['btnDeactivate'])){
+    $groupId = $_POST['groupId'];
+    $crud->deactivateGroup($groupId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF'])."/SYS_Groups.php");
+}
+
+if(isset($_POST['btnActivate'])){
+    $groupId = $_POST['groupId'];
+    $crud->activateGroup($groupId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF'])."/SYS_Groups.php");
+}
+
 if(isset($_GET['id'])){
     $groupId = $_GET['id'];
     $rows = $crud->getGroup($groupId);
@@ -97,7 +130,7 @@ if(isset($_GET['id'])){
 
 
 
-$page_title = 'Configuration - Group - Settings';
+$page_title = $groupDesc.' Group';
 include 'GLOBAL_HEADER.php';
 include 'SYS_SIDEBAR.php';
 
@@ -132,6 +165,7 @@ include 'SYS_SIDEBAR.php';
                         <div class="form-inline">
                             <b>Members</b>
                             <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modalAddMember">Add Member</button>
+                            <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modalInviteUser">Invite Member</button>
                         </div>
                     </div>
                     <div class="panel-body">
@@ -389,6 +423,56 @@ include 'SYS_SIDEBAR.php';
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="submit" name="btnAddMember" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" role="dialog" id="modalInviteUser" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="">
+                <div class="modal-header">
+                    <h4 class="modal-title">Invite User</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group form-inline">
+                        <input type="hidden" name="groupId" value="<?php echo $groupId;?>">
+                        <label>User</label>
+                        <select class="form-control" name="memberId" style="width: 100%;">
+                            <?php
+
+                            $rows = $crud->getUsersNotInGroup($groupId);
+                            if(!empty($rows)){
+                                foreach((array)$rows AS $key => $row){
+                                    ?>
+                                    <option value="<?php echo $row['EMP_ID'];?>">
+                                        <?php echo $row['name'];?>
+                                    </option>
+                                    <?php
+                                }
+                            }else{
+                                echo 'No users to add.';
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="isAdmin" value="true">
+                            <label class="form-check-label" >Make Group Admin</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea rows="5" class="form-control" name="message"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" name="btnInviteUser" class="btn btn-primary">Save</button>
                 </div>
             </form>
         </div>

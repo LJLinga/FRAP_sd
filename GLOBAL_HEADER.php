@@ -108,14 +108,6 @@
                     $_SESSION['EDMS_ROLE'] =  $result['EDMS_ROLE'];
                     $_SESSION['SYS_ROLE'] =  $result['SYS_ROLE'];
 
-                    //$rows = $crud->getData("SELECT roleName FROM edms_roles WHERE id = ".$_SESSION['EDMS_ROLE']." LIMIT 1;");
-                    //$_SESSION['EDMS_ROLE_NAME'] = $rows[0]['roleName'];
-
-                    //$rows = $crud->getData("SELECT roleName FROM cms_roles WHERE id = ".$_SESSION['CMS_ROLE']." LIMIT 1;");
-                    //$_SESSION['CMS_ROLE_NAME'] = $rows[0]['roleName'];
-
-                    //$rows = $crud->getData("SELECT roleName FROM frap_roles WHERE id = ".$_SESSION['FRAP_ROLE']." LIMIT 1;");
-                    //$_SESSION['FRAP_ROLE_NAME'] = $rows[0]['roleName'];
 
                     if($_SESSION['FRAP_ROLE'] > 1 || $_SESSION['EDMS_ROLE'] > 1 || $_SESSION['CMS_ROLE'] > 1) {
                         echo '<li class="dropdown sideicons"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> Admin Tools <b class="caret"></b></a><ul class="dropdown-menu alert-dropdown">';
@@ -148,12 +140,24 @@
                 </li>
                 <li class="dropdown sideicons">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-newspaper-o"><span id="cmsCount" class="badge"></span></i></a>
+                        <i class="fa fa-newspaper-o"><span id="cmsCount" class="label label-danger"></span></i></a>
                     <ul class="dropdown-menu alert-dropdown">
-                        <div id="cms_notifications" style="font-size: 12px;"></div>
+                        <li id="cms_notifications" style="font-size: 12px;">
+
+                        </li>
                         <li class="divider"></li>
                         <li>
                             <a href="CMS_PostsDashboard.php">View All</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown sideicons">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-globe"><span id="notificationsCount" class="label label-danger"></span></i></a>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li id="notificationsDisplay" style=""></li>
+                        <li>
+                            <a href="notifications.php">View All</a>
                         </li>
                     </ul>
                 </li>
@@ -186,6 +190,15 @@
                 </li>
 
             </ul>
+
+            <div id="notif_alert" class="alert alert-info" style="position:fixed;
+                                top: 8%;
+                                right: 2%;
+                                 font-size: 10pt;">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <span id="spanMsg"></span>
+
+            </div>
 
             <script>
                 $(document).ready(function(){
@@ -226,10 +239,34 @@
                         });
                     }
 
+                    $("#notif_alert").hide();
+
+                    function load_notifications() {
+                        $.ajax({
+                            url: "GLOBAL_AJAX_Notifications.php",
+                            method: "POST",
+                            data: '',
+                            dataType: "json",
+                            success: function (data) {
+                                $('#spanMsg').html(data.notifications[1]);
+                                if (data.count > 0) {
+                                    $('#notificationsCount').html(data.count);
+                                    $.each(data.notifications, function(key, value){
+                                        $('#spanMsg').html(value);
+                                        $("#notif_alert").slideDown();
+                                        $("#notif_alert").fadeTo(5000, 5000).slideUp(5000, function(){});
+                                    });
+                                }
+                            }
+                        });
+                    }
+
                     setInterval(function(){
-                        load_cms_notifications(temp)
-                        load_unseen_notification(temp); // this will run after every 1 second
-                    }, 5000);
+
+                        //load_notifications();
+                        //load_cms_notifications(temp);
+                        //load_unseen_notification(temp); // this will run after every 1 second
+                    }, 1000);
 
 
                 });

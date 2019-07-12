@@ -75,7 +75,7 @@ $groups = $crud->getUserGroups($userId);
                         </div>
                     </div>
                     <div class="panel-body">
-                        <table id="myTable1" class="table table-striped table-responsive" cellspacing="0" width="100%">
+                        <table id="myTable1" class="table table-striped table-responsive table-condensed table-sm" cellspacing="0" width="100%">
                             <thead>
                             <tr>
                                 <th>Title</th>

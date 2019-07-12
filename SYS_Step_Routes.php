@@ -46,7 +46,7 @@ if(isset($_POST['btnAddRoute'])){
 if(isset($_POST['btnDeleteRoute'])){
     $routeId = $_POST['routeId'];
     $stepId = $_POST['stepId'];
-    if($crud->execute("DELETE FROM step_routes WHERE id = '$routeId';")){
+    if($crud->removeStepRoute($routeId)){
         echo 'success3';
     }else{
         echo 'Database error.';

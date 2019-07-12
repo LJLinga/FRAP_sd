@@ -35,41 +35,80 @@ include 'EDMS_SIDEBAR.php';
 
 <div class="content-wrapper">
     <div class="container-fluid">
-        <h3 class="page-header">
-            <div class="row">
-                <div class="col-lg-8">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">
                     <?php echo $groupDesc;?> (<?php echo $groupName;?>) Space
                     <button name="btnAddDocument" id="btnAddDocument" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Add Document</button>
                     <button name="btnMyWorkflows" id="btnMyWorkflows" data-toggle="modal" data-target="#myWorkflowsModal" class="btn btn-info">My Workflows</button>
-                </div>
-                <div class="col-lg-4">
-                    <div class="form-inline">
-                        Search
-                        <input type="text" id="searchField" class="form-control">
-                    </div>
-                </div>
+
+                </h3>
             </div>
-        </h3>
+
+        </div>
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        <p class="panel-title"><?php echo $row['processName'];?></p>
-
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-inline">
+                                    <label for="sel1">Document Type</label>
+                                    <select class="form-control" id="selectedType">
+                                        <option value="" selected>All</option>
+                                        <?php
+                                        $rows = $crud->getUserDocTypes($userId);
+                                        foreach((array)$rows as $key => $row){
+                                            echo '<option value="'.$row['type'].'">'.$row['type'].'</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-inline">
+                                    <label for="sel1">Status</label>
+                                    <select class="form-control" id="selectedStatus">
+                                        <option value="" selected>All</option>
+                                        <?php
+                                        $rows = $crud->getData("SELECT statusName FROM facultyassocnew.doc_status;");
+                                        foreach((array)$rows as $key => $row){
+                                            echo '<option value="'.$row['statusName'].'">'.$row['statusName'].'</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-inline">
+                                    <label for="sel1">Search</label>
+                                    <input type="text" id="searchField" class="form-control">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="panel-body">
-                        <table id="myTable1" class="table table-striped table-responsive" cellspacing="0" width="100%">
+                        <table id="myTable1" class="table table-striped table-responsive table-condensed table-sm" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>Processes</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Version</th>
+                                <th>Submitted by</th>
+                                <th>Submitted on</th>
+                                <th>Status</th>
+                                <th>Last modified on</th>
+                                <th>Action</th>
                             </tr>
                             </thead>
-                            <tbody>
-
-                            </tbody>
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+
                 <?php
 
                 $rows = $crud->getGroupWorkflows2($groupId);
