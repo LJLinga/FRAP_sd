@@ -121,7 +121,7 @@ $result2=mysqli_query($dbc,$query2);
                 <!-- alert -->
                 <div class="row">
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-12">
 
                         <div class="panel panel-green">
 
@@ -210,12 +210,12 @@ $result2=mysqli_query($dbc,$query2);
                                         <tr>
 
                                         <td align="center">ID Number</td>
-                                        <td align="center">Name</td>
-                                        <td align="center">Membership Fee</td>
-                                        <td align="center">Health Aid Fee</td>
-                                        <td align="center">FALP Loan</td>
+                                        <td align="left">Name</td>
+                                        <td align="right">Membership Fee(₱)</td>
+                                        <td align="right">Health Aid Fee(₱)</td>
+                                        <td align="right">FALP Loan(₱)</td>
                                        
-                                        <td align="center" width="110px">Total</td>
+                                        <td align="right" width="110px">Total(₱)</td>
                                         
                                         </tr>
                                     </thead>
@@ -235,12 +235,12 @@ $result2=mysqli_query($dbc,$query2);
                                         ?>
                                         <tr>
 
-                                        <td align="center"><b><?php echo $ans['ID'];?></b></td>
-                                        <td align="center" width="250px"><b><?php echo $ans['FIRST']." ".$ans['MIDDLE']." ".$ans['LAST'];?></b></td>
-                                        <td align="center"><b>₱ <?php echo number_format($ans['MFee'],2)."<br>";?></b></td>
-                                        <td align="center"><b>₱ <?php echo number_format($ans['HAFee'],2)."<br>";?></b></td>
-                                        <td align="center"><b>₱ <?php echo number_format($ans['FFee'],2)."<br>";?></b></td>
-                                        <td align="center"><b>₱ <?php echo number_format($total,2)."<br>";?></b></td>
+                                        <td align="center"><?php echo $ans['ID'];?></td>
+                                        <td align="left" width="250px"><?php echo $ans['FIRST']." ".$ans['MIDDLE']." ".$ans['LAST'];?></td>
+                                        <td align="right"> <?php echo number_format($ans['MFee'],2)."<br>";?></td>
+                                        <td align="right"> <?php echo number_format($ans['HAFee'],2)."<br>";?></td>
+                                        <td align="right"> <?php echo number_format($ans['FFee'],2)."<br>";?></td>
+                                        <td align="right"> <?php echo number_format($total,2)."<br>";?></td>
 
                                         </tr>
                                         <?php } ?>
@@ -290,7 +290,7 @@ function myFunction() {
     });
              document.getElementById("total").align = "right";
              document.getElementById("total").style = "position:relative;right:25px;font-size: 20px;";
-            document.getElementById("total").innerHTML="Total amount to be collected: P"+<?php echo $totals;?>;
+            document.getElementById("total").innerHTML="Total amount to be collected: ₱"+<?php echo '"'.number_format((float)$totals,2).'"';?>;
         });
         $(function () {
                 

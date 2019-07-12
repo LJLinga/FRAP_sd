@@ -29,8 +29,68 @@
     <![endif]-->
     <script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
     </script>
+<link rel="stylesheet" href="dialog.css">
+<script>
+function CustomAlert(){
+    this.render = function(dialog){
+        var winW = window.innerWidth;
+        var winH = window.innerHeight;
+        var dialogoverlay = document.getElementById('dialogoverlay');
+        var dialogbox = document.getElementById('dialogbox');
+        dialogoverlay.style.display = "block";
+        dialogoverlay.style.height = winH+"px";
+        dialogbox.style.left = (winW/2) - (650 * .5)+"px";
+        dialogbox.style.top = "100px";
+        dialogbox.style.display = "block";
+        document.getElementById('dialogboxhead').innerHTML = "Overview";
+        var idNum = document.getElementById('idNum').value +"</br>";
+        var name = document.getElementsByName('lName')[0].value +","+document.getElementsByName('fName')[0].value +" "+document.getElementsByName('mName')[0].value +"</br>";
+           
+        var email =   document.getElementsByName('email')[0].value +"</br>";
+        var civStat =  document.getElementsByName('civStat')[0].options[ document.getElementsByName('civStat')[0].value].text +"</br>";
+        var bDate =   document.getElementsByName('bYear')[0].value +"/"+document.getElementsByName('bMonth')[0].value+"/"+document.getElementsByName('bDay')[0].value+"</br>";
+        var sex =   document.getElementsByName('sex')[0].value +"</br>";
+        var aDate  = document.getElementsByName('aYear')[0].value +"/"+document.getElementsByName('aMonth')[0].value+"/"+document.getElementsByName('aDay')[0].value+"</br>";
+        var appDate  = document.getElementsByName('appYear')[0].value +"/"+document.getElementsByName('appMonth')[0].value+"/"+document.getElementsByName('appDay')[0].value+"</br>";
+        var empStat =    document.getElementsByName('empStat')[0].options[ document.getElementsByName('empStat')[0].value].text +"</br>";
+        var hDate  = document.getElementsByName('hYear')[0].value +"/"+document.getElementsByName('hMonth')[0].value+"/"+document.getElementsByName('hDay')[0].value+"</br>";
+        var honum =    document.getElementsByName('honum')[0].value +"</br>";
+        var bunum =    document.getElementsByName('bunum')[0].value +"</br>";
+        var haddress =    document.getElementsByName('haddress')[0].value +"</br>";
+        var baddress =    document.getElementsByName('baddress')[0].value +"</br>";
+           
+        document.getElementById('dialogboxbody').innerHTML = 
+        "<b>ID Number:</b> "+idNum+
+        "<b>Name: </b>"+name+
+        "<b>Email:</b> "+email+
+        "<b>Civil Status: </b>"+civStat+
+        "<b>Date of Birth: </b></b>"+bDate+
+        "<b>Member Since:</b> "+aDate+
+        "<b>Date applied:</b> "+appDate+
+        "<b>Employment Status:</b> "+empStat+
+        "<b>Hired Date:</b> "+hDate+
+        "<b>Home Number:</b> "+honum+
+        "<b>Business Number:</b> "+bunum+
+        "<b>Home Address:</b> "+haddress+
+        "<b>Business Address:</b> "+baddress
+
+           
+        ;
+        
+        document.getElementById('dialogboxfoot').innerHTML = 'Is the information correct? <button type = button onclick="Alert.back()" class = "btn btn-danger">No</button> <button class = "btn btn-submit" name = "submit" id = "submit">Yes</button>';
 
 
+    }
+    this.back = function(){
+        document.getElementById('dialogbox').style.display = "none";
+        document.getElementById('dialogoverlay').style.display = "none";
+    }
+
+    
+
+}
+var Alert = new CustomAlert();
+</script>
 
     <script> $(function(){
         $('#scrollToTopScript').load('scrollToTop.html');
@@ -375,7 +435,7 @@ $success = null;
                                                     <br>
                                                 <label>
                                                 <span class="labelspan">Last Name<big class="req"> *</big>
-                                                <input type="text" class="form-control memname" placeholder="Last Name" name="lName" <?php if(isset($_POST['lName'])){
+                                                <input type="text" class="form-control memname" placeholder="Last Name" name="lName" id="lName"<?php if(isset($_POST['lName'])){
                                                   echo "value = '{$_POST['lName']}'";
                                                 } ?> required>
                                                 </label>
@@ -993,8 +1053,17 @@ $success = null;
                             <div align = "center" style = "font-size: 20px;">
                                 Please check your Email for more instructions
                             </div>
-<div style = "position:relative;top:30px;">
-                            <input id = "submit"  type="submit" name="submit" value="Sumbit"></p>
+                            <div id="dialogoverlay"></div>
+                            <div id="dialogbox">
+  <div>
+    <div id="dialogboxhead"></div>
+    <div id="dialogboxbody"></div>
+    <div id="dialogboxfoot"></div>
+  </div>
+</div>
+<div style = "position:relative;top:30px;left:50%">
+<button type = "button" class = "btn btn-success" onclick="Alert.render('submit')">Submit</button>
+                            <!--<input id = "submit"  type="submit" name="submit" value="Sumbit"></p>-->
 </div>
                        </form>
 

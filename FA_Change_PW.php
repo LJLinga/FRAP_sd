@@ -99,7 +99,12 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
                 <div class="row">
                     <div class="col-lg-12">
 
-                        <p><i>Fields with <big class="req">*</big> are required to be filled out and those without are optional.</i></p>
+                        <p><i>New password should:</i></p>
+                        <ul>
+                            <li>be alphanumeric,</li>
+                            <li>contain a special character,</li>
+                            <li>be at least 8 characters</li>
+                        </ul>
                         
                         <!--Insert success page--> 
                         

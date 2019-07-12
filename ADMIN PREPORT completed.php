@@ -21,7 +21,7 @@ if(isset($_POST['print'])){
     
 if(!isset($_POST['event_start'])){
    
-        $query="SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID
+        $query="SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID,l.amount as 'Amount'
 from loans l  
 
 join member m
@@ -42,7 +42,7 @@ else {
                 $monthEnd = substr($dateEnd,strpos($dateEnd,"-")+1);
             }
     if(!isset($yearEnd)){
-        $query = "SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID
+        $query = "SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID,l.amount as 'Amount'
 from loans l  
 
 join member m
@@ -51,7 +51,7 @@ on l.member_id = m.member_id
                     group by l.loan_id";
     }
     else{
-        $query = "SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID
+        $query = "SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID,l.amount as 'Amount'
 from loans l  
 
 join member m
@@ -97,7 +97,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                 <div class="row">
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-12">
 
                         <div class="panel panel-green">
 
@@ -124,12 +124,12 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                 </div>
                             </div>
                         </div>
-<div class="col-lg-12lg-4">
+                        <div class="col-lg-12lg-4">
                             <div class="form-group">
                                 <label for="event_start">End Date</label>
                                 <div class="input-group date" id="datetimepicker2">
                                     <input id="event_end" name="event_end" type="text" class="form-control">
-                                    <
+                                    
                                 </div>
                             </div>
                         </div>
@@ -174,8 +174,8 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <tr>
 
                                         <td align="center" width="250px"><b>ID Number</b></td>
-                                        <td align="center"><b>Name</b></td>
-                                        <td align="center"><b>Loan Completed</b></td>
+                                        <td align="left"><b>Name</b></td>
+                                        <td align="right"><b>Loan Completed(₱)</b></td>
 
                                         </tr>
 
@@ -191,8 +191,8 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <tr>
 
                                         <td align="center"><?php echo $ans['ID'];?></td>
-                                        <td align="center"><?php echo $ans['First']." ".$ans['Middle']." ".$ans['Last'];?></td>
-                                        <td align="center">FALP Loan</td>
+                                        <td align="left"><?php echo $ans['First']." ".$ans['Middle']." ".$ans['Last'];?></td>
+                                        <td align="right"><?php echo number_format($ans['amount'],2);?></td>
                                         
 
                                         </tr>

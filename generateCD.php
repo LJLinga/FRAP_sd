@@ -50,7 +50,7 @@ function Footer()
 }
 if(!isset($_SESSION['event_start'])){
    
-        $query="SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID
+        $query="SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID,l.amount as 'Amount'
 from loans l  
 
 join member m
@@ -71,7 +71,7 @@ else {
                 $monthEnd = substr($dateEnd,strpos($dateEnd,"-")+1);
             }
     if(!isset($yearEnd)){
-        $query = "SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID
+        $query = "SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID,l.AMOUNT as 'Amount'
 from loans l  
 
 join member m
@@ -80,7 +80,7 @@ on l.member_id = m.member_id
                     group by l.loan_id";
     }
     else{
-        $query = "SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID
+        $query = "SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID,l.amount as 'Amount'
 from loans l  
 
 join member m
@@ -114,7 +114,7 @@ $pdf->ln();
 $pdf->Cell(45);
 $pdf->Cell(20,5,'ID Number '	,'L,B,R',0,'C');
 $pdf->Cell(50	,5,'Full Name'	,'L,B,R',0,'L');
-$pdf->Cell(30	,5,'Loan Completed'	,'L,B,R',0,'C');
+$pdf->Cell(30	,5,'Loan Completed'	,'L,B,R',0,'R');
 $pdf->ln();
 $pdf->SetFont('Times','',10);
 
@@ -135,7 +135,7 @@ $pdf->Cell(45);
 $pdf->Cell(20,5,$row['ID']	,'L,B,R',0,'C');
 $pdf->Cell(50	,5,"$last, $first $middle"	,'L,B,R',0,'L');
 
-    $pdf->Cell(30   ,5,"FALP Loan"   ,'L,B,R',0,'C');
+    $pdf->Cell(30   ,5, number_format($row['Amount'],2)    ,'L,B,R',0,'R');
 
 
 

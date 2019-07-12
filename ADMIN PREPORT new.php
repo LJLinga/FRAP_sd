@@ -84,7 +84,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                 <div class="row">
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-12">
 
                         <div class="panel panel-green">
 
@@ -128,12 +128,12 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                             </div>
                         </div>
 
-                                    <div class="col-lg-3" align="center">
-                                        <input onclick="$('form').attr('target', '')"  type="submit" class="btn btn-success" name="select_date" value="Generate Report">
-                                    </div>
-                                       <div class="col-lg-3" align="center">
-                                           <input onclick="$('form').attr('target', '_blank')"  type="submit" class="btn btn-default" name="print" value="Print Report">
-                                       </div>
+                        <div class="col-lg-3" align="left">
+                            <input onclick="$('form').attr('target', '')"  type="submit" class="btn btn-success" name="select_date" value="Generate Report">
+                        </div>
+                           <div class="col-lg-3" align="left">
+                               <input onclick="$('form').attr('target', '_blank')"  type="submit" class="btn btn-default" name="print" value="Print Report">
+                           </div>
                                     
 
                                 </div>
@@ -165,7 +165,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <td align="center" width="200px"><b>ID Number</b></td>
                                         <td align="center" width="250px"><b>Name</b></td>
                                         <td align="center" width="200px"><b>Loan Type</b></td>
-                                        <td align="center" width="200px"><b>Deduction Amount</b></td>
+                                        <td align="center" width="200px"><b>Deduction Amount(₱)</b></td>
                                         <td align="center" width="200px"><b>Deduction Frequency</b></td>
 
                                         </tr>
@@ -181,10 +181,10 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <tr>
 
                                         <td align="center"><?php echo $ans['ID'];?></td>
-                                        <td align="center"><?php echo $ans['First']." ".$ans['Middle']." ".$ans['Last'];?></td>
-                                        <td align="center"> FALP Loan</td>
-                                        <td align="center">₱ <?php echo number_format($ans['Amount'],2)."<br>";?></td>
-                                        <td align="center"> Per Payday</td>
+                                        <td align="left"><?php echo $ans['First']." ".$ans['Middle']." ".$ans['Last'];?></td>
+                                        <td align="left"> FALP Loan</td>
+                                        <td align="right"> <?php echo number_format($ans['Amount'],2)."<br>";?></td>
+                                        <td align="left"> Per Payday</td>
 
                                         </tr>
 

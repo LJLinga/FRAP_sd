@@ -18,11 +18,11 @@ function Header()
     // Arial bold 15
     $this->SetFont('Arial','B',10);
     // Move to the right
-	$this->Cell(15);
+	$this->Cell(25);
 
 	 $this->Cell(55,10,'Faculty Association,Inc.',0,0,'C');
 	 $this->Ln(5);
-	 $this->Cell(19);
+	 $this->Cell(29);
 	 $this->SetFont('Arial','',10);
 	$this->Cell(55,10,'De La Salle University - Manila',0,0,'C');
     $this->Cell(80);
@@ -155,7 +155,7 @@ $pdf->ln();
 $pdf->SetFont('Times','',10);
 
 $result=mysqli_query($dbc,$query2);
-
+$total1=0;
 
 while($row=mysqli_fetch_assoc($result)){
 $last = $row['LAST'];
@@ -196,14 +196,15 @@ $total = (float)$mfee+(float)$bank+(float)$falp+(float)$health;
 
 
 $total = sprintf("%.2f",$total);
-
+$total1 = sprintf("%.2f",$total1+$total);
 $pdf->Cell(30	,5,"$total"	,'L,B,R',0,'R');
 $pdf->ln();
 
 
 
 }
-$pdf->Cell(230   ,5,"$total" ,'L,B,R',0,'R');
+$pdf->Cell(50);
+$pdf->Cell(180   ,5,"$total1" ,'L,B,R',0,'R');
 $pdf->ln();
 
 $pdf->SetFont('Times','B',12);

@@ -18,7 +18,7 @@
   background-color: #555;
 }
 
-#submit {
+b.submit {
 
   font-size: 18px;
   border: none;
@@ -35,6 +35,6 @@
     
 }
 
-#submit:hover {
+.submit:hover {
   background-color: #009933;
 }
