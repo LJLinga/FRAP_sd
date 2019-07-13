@@ -14,14 +14,9 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 
 $userId = $_SESSION['idnum'];
 $sysRole = $_SESSION['SYS_ROLE'];
+$sysRole = 1;
 
-if($sysRole == 1){
-    $rows = $crud->getNonAdminGroups();
-}else if($sysRole == 2){
-    $rows = $crud->getNonAdminGroups();
-}else{
-    $rows = $crud->getUserGroups($userId);
-}
+
 
 if(isset($_POST['btnAddGroup'])){
     $groupDesc = $crud->esc($_POST['groupDesc']);
@@ -50,7 +45,12 @@ if(isset($_POST['btnActivate'])){
 $page_title = 'Groups';
 include 'GLOBAL_HEADER.php';
 
-include 'SYS_SIDEBAR.php';
+
+if($sysRole == '2' || $sysRole == '3'){
+    include 'SYS_SIDEBAR.php';
+}else{
+    include 'EDMS_SIDEBAR.php';
+}
 
 ?>
 <script>
@@ -93,6 +93,14 @@ include 'SYS_SIDEBAR.php';
                             <tbody>
 
                             <?php
+
+                            if($sysRole == 2){
+                                $rows = $crud->getNonAdminGroups();
+                            }else if($sysRole == 3){
+                                $rows = $crud->getNonAdminGroups();
+                            }else{
+                                $rows = $crud->getUserGroupsWithCount($userId);
+                            }
 
                             if(!empty($rows)){
                                 foreach((array) $rows as $key => $row){
@@ -149,9 +157,9 @@ include 'SYS_SIDEBAR.php';
                                             <form action="" method="POST">
                                                 <input type="hidden" name="groupId" value="<?php echo $row['id'];?>">
                                                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalPermissions"><i class="fa fa-eye"></i></button>
-                                                <?php if($boolEdit){ ?>
+
                                                 <a href="SYS_Group_Settings.php?id=<?php echo $row['id'];?>" id="btnEdit" class="btn btn-default"><i class="fa fa-edit"></i></a>
-                                            <?php }?>
+
                                             <?php if($boolDeac){
                                                 if($row['isActive'] == '2'){?>
                                                     <button class="btn btn-warning" type="submit" name="btnDeactivate"><i class="fa fa-power-off"></i></button>

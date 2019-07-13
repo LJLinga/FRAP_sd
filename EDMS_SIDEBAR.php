@@ -25,14 +25,14 @@
             </li>
 
             <li>
-                <a href="MANUAL_FacultyManual.php"><i class="fa fa-fw fa-folder"></i> Faculty Manual</a>
+                <a href="MANUAL_FacultyManual.php"><i class="fa fa-fw fa-book"></i> Faculty Manual</a>
             </li>
 
             <?php
             $rows = $crud->doesUserHaveWorkflow($_SESSION['idnum'],7);
             if(!empty($rows)){?>
                 <li>
-                    <a href="MANUAL_ManualRevisions.php"><i class="fa fa-fw fa-folder"></i> Manual Revisions</a>
+                    <a href="MANUAL_ManualRevisions.php"><i class="fa fa-fw fa-pencil"></i> Manual Revisions</a>
                 </li>
             <?php } ?>
 

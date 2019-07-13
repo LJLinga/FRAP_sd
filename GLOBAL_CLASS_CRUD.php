@@ -79,6 +79,13 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         return $this->getData($query);
     }
 
+    public function getUserGroupsWithCount($userId){
+        $query = "SELECT g.*, (SELECT COUNT(ug.userId) FROM user_groups ug WHERE ug.groupId = g.id) AS member_count  FROM groups g JOIN user_groups ug 
+                    ON g.id = ug.groupId
+                    WHERE ug.userId='$userId' ORDER BY g.groupName;";
+        return $this->getData($query);
+    }
+
     public function isUserInGroup($userId, $groupId){
         $query = "SELECT g.id FROM groups g 
                     JOIN user_groups ug ON g.id = ug.groupId
@@ -97,7 +104,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                     JOIN user_groups ug ON g.id = ug.groupId
                     WHERE ug.userId='$userId' AND g.groupName = '$groupName' 
                     LIMIT 1;";
-        $rows = getData($query);
+        $rows = $this->getData($query);
         if(!empty($rows)){
             return true;
         }else {
@@ -191,9 +198,9 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
 
     public function availabilityString($num){
         if($num == '2'){
-            return 'LOCKED';
+            return 'CHECKED OUT';
         }else if($num == '1'){
-            return 'UNLOCKED';
+            return 'CHECKED IN';
         }
     }
 
@@ -531,9 +538,8 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
 
     public function doesUserHaveWorkflow($userId, $processId){
         return $this->getData("SELECT pr.id FROM process pr 
-                                        JOIN steps s ON pr.id = s.processId
-                                        JOIN step_groups sg ON s.id = sg.stepId
-                                        JOIN groups g ON sg.groupId = g.id 
+                                        JOIN process_groups pg ON pr.id = pg.processId
+                                        JOIN groups g ON pg.groupId = g.id 
                                         JOIN user_groups ug on g.id = ug.groupId
                                         WHERE ug.userId = '$userId'
                                         AND pr.id = '$processId'
@@ -574,6 +580,20 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         );
 
         mail($emailTo, $subject, $message, $headers);
+    }
+
+    public function getGroupInvites($groupId){
+        return $this->getData("SELECT gi.*, CONCAT(e.LASTNAME,',', e.FIRSTNAME) as name FROM group_invitations gi
+                                        JOIN employee e ON e.EMP_ID = gi.invitedId
+                                        WHERE gi.groupId = '$groupId'");
+    }
+
+    public function getGroupNoninvitedUsers($groupId){
+        return $this->getData("SELECT e.EMP_ID, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS name
+                                        FROM employee e 
+                                        WHERE e.EMP_ID NOT IN (SELECT gi.invitedId FROM group_invitations gi WHERE gi.groupId = '$groupId')
+                                        AND e.EMP_ID NOT IN (SELECT ug.userId FROM user_groups ug WHERE ug.groupId = '$groupId')
+                                        AND e.ACC_STATUS = 2;");
     }
 
     public function getUserName($userId){

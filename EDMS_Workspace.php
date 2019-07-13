@@ -35,7 +35,7 @@ $groups = $crud->getUserGroups($userId);
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <div class="panel panel-info">
+                <div class="panel panel-secondary">
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-lg-4">

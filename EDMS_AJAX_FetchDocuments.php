@@ -27,8 +27,7 @@ if(isset($_POST['requestType'])){
                 JOIN process pr ON pr.id = s.processId
                 WHERE t.isActive = 2 AND pr.id IN (SELECT pr.id FROM user_groups ug
                                                     JOIN groups g ON ug.groupId = g.id
-                                                    JOIN step_groups sg ON g.id = sg.groupId
-                                                    JOIN steps s ON sg.stepId = s.id
+                                                    JOIN steps s ON g.id = s.groupId
                                                     JOIN process pr ON s.processId = pr.id
                                                     WHERE ug.userId = '$userId') 
                 AND d.firstAuthorId !='$userId' ORDER BY d.lastUpdated DESC;";

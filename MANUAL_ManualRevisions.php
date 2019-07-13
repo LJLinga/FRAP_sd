@@ -14,12 +14,11 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 //include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 $userId = $_SESSION['idnum'];
-$edmsRole = $_SESSION['EDMS_ROLE'];
-$panelRole = $_SESSION['PANEL_ROLE'];
 $revisions = 'closed';
 
-if($_SESSION['EDMS_ROLE'] != 3 && $_SESSION['EDMS_ROLE'] != 4 && $_SESSION['EDMS_ROLE'] != 5 && $_SESSION['EDMS_ROLE'] != 6){
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/feed.php");
+$rows = $crud->doesUserHaveWorkflow($_SESSION['idnum'],7);
+if(empty($rows)){
+    //redirect
 }
 
 if(isset($_POST['btnPrint'])){
@@ -67,15 +66,7 @@ if(!empty($rows)){
     }
 }
 
-$rows = $crud->getData("SELECT sr.* FROM step_roles sr WHERE stepId = 9 AND roleId = '$edmsRole';");
-if(!empty($rows)){
-    foreach((array) $rows as $key => $row){
-        $read= $row['read'];
-        $write= $row['write'];
-        $route= $row['route'];
-        $comment = $row['comment'];
-    }
-}
+$boolPres = $crud->isUserInGroupName($userId,"GRP_PRESIDENT");
 
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
@@ -99,7 +90,7 @@ include 'EDMS_SIDEBAR.php';
                         <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
                         <?php if($revisions == 'open') {
                             echo '<b> Faculty Manual Revisions </b> started last '.$revisionsOpened;
-                            if($edmsRole == '4'){
+                            if($boolPres){
                                 echo '<span style="position: absolute; top:4px; right:4px;">';
                                 echo 'Revisions Actions: ';
                                 echo '<button class="btn btn-danger" name="btnClose" value="'.$revisionsId.'"> Close Revisions </button> ';
@@ -107,7 +98,7 @@ include 'EDMS_SIDEBAR.php';
                             }
                         }else{
                             echo 'Faculty Manual Revisions are closed.';
-                            if($edmsRole == '4') {
+                            if($boolPres) {
                                 echo '<span style="position: absolute; top:4px; right:4px;" class="btn-group">';
                                 echo '<button class="btn btn-success" name="btnOpen"> Open Revisions </button>';
                                 echo '<button type="button" id="btnPublish" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Publish Changes</button>';

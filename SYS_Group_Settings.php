@@ -14,6 +14,7 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 
 $userId = $_SESSION['idnum'];
 $sysRole = $_SESSION['SYS_ROLE'];
+$sysRole = 1;
 
 if(isset($_POST['btnUpdateGroup'])){
     $groupId = $_POST['groupId'];
@@ -59,7 +60,19 @@ if(isset($_POST['btnInviteUser'])){
     }else{
         echo 'Database error.';
     }
-    //header("Location: http://". $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/SYS_Group_Settings.php?id=".$groupId);
+    header("Location: http://". $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/SYS_Group_Settings.php?id=".$groupId);
+}
+
+if(isset($_POST['btnCancelInvite'])){
+    $groupId = $_POST['groupId'];
+    $inviteId = $_POST['inviteId'];
+
+    if($crud->execute("DELETE FROM group_invitations WHERE id = '$inviteId'")){
+        echo 'success1';
+    }else{
+        echo 'Database error.';
+    }
+    header("Location: http://". $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/SYS_Group_Settings.php?id=".$groupId);
 }
 
 if(isset($_POST['btnRemoveMember'])){
@@ -117,12 +130,51 @@ if(isset($_GET['id'])){
     $groupId = $_GET['id'];
     $rows = $crud->getGroup($groupId);
 
+    $boolGroupAdmin = $crud->isUserGroupAdmin($userId,$groupId);
+    $boolForceAdd = false;
+    $boolEdit = false;
+    $boolDel = false;
+    $boolDeac = false;
+
     if(!empty($rows)) {
         foreach ((array)$rows AS $key => $row) {
             $groupId = $row['id'];
             $groupName = $row['groupName'];
             $groupDesc = $row['groupDesc'];
+            $isDeactivatable = $row['isDeactivatable'];
+            $isEditable = $row['isEditable'];
+            $isRemovable = $row['isRemovable'];
         }
+
+        if($isEditable == '2' && $sysRole == '3'){
+            $boolEdit = true;
+        }else if($isEditable == '3' && ($sysRole == '2' || $sysRole == '3')){
+            $boolEdit = true;
+        }else if($isEditable == '4' && ($sysRole == '2' || $sysRole == '3' || $boolGroupAdmin)){
+            $boolEdit = true;
+        }
+
+        if($isDeactivatable == '2' && $sysRole == '3'){
+            $boolDeac = true;
+        }else if($isDeactivatable == '3' && ($sysRole == '2' || $sysRole == '3')){
+            $boolDeac = true;
+        }else if($isDeactivatable == '4' && ($sysRole == '2' || $sysRole == '3' || $boolGroupAdmin)){
+            $boolDeac = true;
+        }
+
+        if($isRemovable == '2' && $sysRole == '3'){
+            $boolDel = true;
+        }else if($isRemovable == '3' && ($sysRole == '2' || $sysRole == '3')){
+            $boolDel = true;
+        }else if($isRemovable == '4' && ($sysRole == '2' || $sysRole == '3' || $boolGroupAdmin)){
+            $boolDel = true;
+        }
+
+        if($sysRole == '2' || $sysRole == '3'){
+            $boolForceAdd = true;
+        }
+
+
     }else{
         header("Location: http://" . $_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF'])."/SYS_Groups.php");
     }
@@ -132,7 +184,18 @@ if(isset($_GET['id'])){
 
 $page_title = $groupDesc.' Group';
 include 'GLOBAL_HEADER.php';
-include 'SYS_SIDEBAR.php';
+
+if($sysRole == '2' || $sysRole == '3'){
+    include 'SYS_SIDEBAR.php';
+}else{
+    include 'EDMS_SIDEBAR.php';
+}
+
+?>
+
+<?php
+
+
 
 ?>
 
@@ -150,7 +213,9 @@ include 'SYS_SIDEBAR.php';
                         </span>
                         <span id="displayName">
                             <span id="spanProcessName"><?php echo $groupDesc;?></span> (<?php echo $groupName;?>)
+                            <?php if($boolEdit){ ?>
                             <button id="btnEditName" class="btn btn-default"><i class="fa fa-edit"></i> Edit </button>
+                            <?php } ?>
                         </span>
                     </div>
                 </h3>
@@ -158,17 +223,17 @@ include 'SYS_SIDEBAR.php';
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12">
-
+            <div class="col-lg-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="form-inline">
                             <b>Members</b>
+                            <?php if($boolEdit){ ?>
                             <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modalAddMember">Add Member</button>
-                            <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modalInviteUser">Invite Member</button>
+                            <?php } ?>
                         </div>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body" style="overflow-y: auto">
                         <?php
                         $rows = $crud->getGroupMembers($groupId);
 
@@ -178,9 +243,12 @@ include 'SYS_SIDEBAR.php';
                                 <tr>
                                     <th>Full Name</th>
                                     <th>Role</th>
-                                    <th width="400px;">Action</th>
+                                    <?php if($boolEdit){ ?>
+                                    <th>Action</th>
+                                    <?php } ?>
                                 </tr>
                                 </thead>
+
                                 <tbody>
                                 <?php
                                 foreach ((array)$rows as $key => $row) {
@@ -193,22 +261,27 @@ include 'SYS_SIDEBAR.php';
                                             <?php echo $crud->groupRoleString($row['isAdmin']);?>
                                         </td>
                                         <td>
+                                            <?php if($boolEdit){ ?>
                                             <form action="" method="POST">
                                                 <input type="hidden" name="groupId" value="<?php echo $groupId;?>"/>
                                                 <input type="hidden" name="memberId" value="<?php echo $row['EMP_ID'];?>"/>
-                                                <button type="submit" class="btn btn-danger" name="btnRemoveMember"><i class="fa fa-trash"></i> Remove</button>
+
+                                                <button type="submit" class="btn btn-danger" name="btnRemoveMember" data-toggle="tooltip" title="Remove member"><i class="fa fa-trash"></i></button>
 
                                                 <?php if($row['isAdmin'] == '1') { ?>
-                                                <button type="submit" class="btn btn-info" name="btnMakeAdmin"><i class="fa fa-user-circle"></i> Make Admin</button>
+                                                    <button type="submit" class="btn btn-info" name="btnMakeAdmin" data-toggle="tooltip" title="Make an admin"><i class="fa fa-user-circle"></i></button>
                                                 <?php } else if($row['isAdmin'] == '2') { ?>
-                                                    <button type="submit" class="btn btn-warning" name="btnUnmakeAdmin"><i class="fa fa-user-circle"></i> Unmake Admin</button>
+                                                    <button type="submit" class="btn btn-warning" name="btnUnmakeAdmin" data-toggle="tooltip" title="Remove admin"><i class="fa fa-user-circle"></i></button>
                                                 <?php } ?>
+
                                             </form>
+                                            <?php } ?>
                                         </td>
                                     </tr>
 
                                 <?php } ?>
                                 </tbody>
+
                             </table>
                             <?php
                         }else{
@@ -221,6 +294,74 @@ include 'SYS_SIDEBAR.php';
                         ?>
                     </div>
                 </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="form-inline">
+                            <b>Pending invites</b>
+                            <?php if($boolEdit){ ?>
+                            <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modalInviteUser">Invite Member</button>
+                            <?php } ?>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="overflow-y: auto">
+                        <?php
+                        $rows = $crud->getGroupInvites($groupId);
+
+                        if(!empty($rows)) {?>
+                            <table class="table table-responsive table-striped" align="center" id="dataTable">
+                                <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Invited as</th>
+                                    <?php if($boolEdit){ ?>
+                                    <th>Action</th>
+                                    <?php } ?>
+                                </tr>
+                                </thead>
+
+                                <tbody >
+                                <?php
+                                foreach ((array)$rows as $key => $row) {
+                                    ?>
+                                    <tr>
+                                        <td>
+                                            <?php echo $row['name'];?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->groupRoleString($row['isAdmin']);?>
+                                        </td>
+                                        <td>
+                                            <?php if($boolEdit){ ?>
+                                            <form action="" method="POST">
+                                                <input type="hidden" name="groupId" value="<?php echo $groupId;?>"/>
+                                                <input type="hidden" name="inviteId" value="<?php echo $row['id'];?>"/>
+                                                <button type="submit" class="btn btn-warning" name="btnCancelInvite" data-toggle="tooltip" title="Cancel invite"><i class="fa fa-trash"></i></button>
+                                            </form>
+                                            <?php } ?>
+                                        </td>
+                                    </tr>
+
+                                <?php } ?>
+                                </tbody>
+
+                            </table>
+                            <?php
+                        }else{
+                            ?>
+                            <div class="alert alert-info">
+                                No pending invites.
+                            </div>
+                            <?php
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <b>Group Workflow Involvement</b>
@@ -374,6 +515,7 @@ include 'SYS_SIDEBAR.php';
                 </div>
             </div>
         </div>
+
     </div>
     <!-- /.container-fluid -->
 
@@ -444,7 +586,7 @@ include 'SYS_SIDEBAR.php';
                         <select class="form-control" name="memberId" style="width: 100%;">
                             <?php
 
-                            $rows = $crud->getUsersNotInGroup($groupId);
+                            $rows = $crud->getGroupNoninvitedUsers($groupId);
                             if(!empty($rows)){
                                 foreach((array)$rows AS $key => $row){
                                     ?>
@@ -482,6 +624,7 @@ include 'SYS_SIDEBAR.php';
     let groupId = "<?php echo $groupId;?>";
 
     $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
         $('#editName').hide();
         $('#btnEditName').on('click', function() { editName(); });
         $('#btnCancelEditName').on('click',function() { displayName(); });

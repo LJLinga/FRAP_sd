@@ -112,7 +112,7 @@ include 'GLOBAL_HEADER.php';
     <div class="container-fluid">
         <div class="row">
             <div class="column col-lg-2" style="margin-top: 1rem; margin-bottom: 1rem; position: fixed;">
-                <div class="panel panel-green" style="margin-top: 1rem;">
+                <div class="panel panel-default" style="margin-top: 1rem;">
                     <div class="panel-heading">
                         <b> Account Information  </b>
                     </div>
@@ -123,7 +123,7 @@ include 'GLOBAL_HEADER.php';
                         <b>User Type: </b>   <?php echo $row3['STATUS'];?> <br>
                     </div>
                 </div>
-                <div class="panel panel-green" style="margin-top: 1rem;">
+                <div class="panel panel-default" style="margin-top: 1rem;">
                     <div class="panel-heading">
                         <b> Faculty Assistance Loan Program </b>
                     </div>
@@ -143,7 +143,7 @@ include 'GLOBAL_HEADER.php';
                     </div>
                 </div>
 
-                <div class="panel panel-green" style="margin-top: 1rem;">
+                <div class="panel panel-default" style="margin-top: 1rem;">
                     <div class="panel-heading">
                         <b> Health-Aid Assistance  </b>
                     </div>
@@ -163,7 +163,7 @@ include 'GLOBAL_HEADER.php';
                     </div>
                 </div>
 
-                <div class="panel panel-green" style="margin-top: 1rem;">
+                <div class="panel panel-default" style="margin-top: 1rem;">
                     <div class="panel-heading">
                         <b> Lifetime Membership Status</b>
                     </div>
@@ -179,12 +179,12 @@ include 'GLOBAL_HEADER.php';
 
             </div>
             <div class="column col-lg-6 col-lg-offset-2" style="margin-top: 1rem; margin-bottom: 1rem;">
-                <div class="panel panel-green" style="margin-top: 1rem;">
+                <div class="panel panel-default" style="margin-top: 1rem;">
                     <div class="panel-body">
-                        <a href="<?php echo "http://localhost/FRAP_sd/feed.php"?>" ><i class="fa fa-backward"></i> Back to Newsfeed</a>
+                        <a href="<?php echo "http://localhost/FRAP_sd/feed.php"?>" ><i class="fa fa-arrow-left"></i> Back to Newsfeed</a>
                     </div>
                 </div>
-                <div class="panel panel-green" style="margin-top: 1rem;">
+                <div class="panel panel-default" style="margin-top: 1rem;">
                     <div class="panel-body">
                         <h4 class="panel-title"><b><?php echo $page_title;?></b></h4>
                         <h5 class="card-text">by <?php echo $author;?> | <?php echo date("F j, Y g:i A ", strtotime($lastUpdated)) ;?></h5>
@@ -207,7 +207,7 @@ include 'GLOBAL_HEADER.php';
                                                                 WHERE ref.postId = $postId");
 
                             if(!empty($rows)) {
-                                echo '<div class="panel panel-info" style="margin-top: 1rem;">
+                                echo '<div class="panel panel-secondary" style="margin-top: 1rem;">
                                         <div class="panel-heading"><b>Document References</b></div>
                                         <div class="panel-body">';
                                 foreach ((array)$rows as $key => $row) {
@@ -240,12 +240,12 @@ include 'GLOBAL_HEADER.php';
                             if(!empty($rows)) {
                                 foreach ((array)$rows as $key => $row) {
                                     $pollId = $row['id'];
-                                    echo '<div class="panel panel-info" style="margin-top: 1rem;">
+                                    echo '<div class="panel panel-secondary" style="margin-top: 1rem;">
                                                 <div class="panel-heading"><b>Question: '.$row['question'].'</b></div>
                                                 <div class="panel-body">';
                                     $rowsIfAnswered = $crud->getData("SELECT pr.responderId, po.response 
                                                           FROM poll_options po JOIN poll_responses pr ON pr.responseId = po.optionId
-                                                          WHERE po.pollId = '$pollId' AND pr.responderId = '$userId' ;");
+                                                          WHERE po.pollId = '$pollId' AND pr.responderId = '$userId' LIMIT 1;");
                                     if(empty($rowsIfAnswered)) {
                                         $rows2 = $crud->getData("SELECT optionId, response FROM poll_options WHERE pollId = '$pollId';");
                                         if (!empty($rows)) {
@@ -308,7 +308,7 @@ include 'GLOBAL_HEADER.php';
                             $html .= '<b>'.$row['name'].'</b> ('.date("F j, Y g:i:s A ", strtotime($row['timeStamp'])).')<br>';
                             $count++;
                         }
-                        $output .= '<div class="panel panel-green" style="margin-top: 1rem;">';
+                        $output .= '<div class="panel panel-default" style="margin-top: 1rem;">';
                         $output .= '<div class="panel-body">';
                         $output .= '<a style="text-align: left" data-toggle="collapse" data-target="#collapse_seen" aria-expanded="true" aria-controls="collapse_seen">Seen by '.$count.' people.</a><br>';
                         $output .= '<div id="collapse_seen" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
@@ -318,7 +318,7 @@ include 'GLOBAL_HEADER.php';
                     }
                     echo $output;
                 ?>
-                <div class="panel panel-green" style="margin-top: 1rem;">
+                <div class="panel panel-default" style="margin-top: 1rem;">
                     <div class="panel-body">
                         <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
                         <span id="comment_message"></span>
@@ -327,7 +327,7 @@ include 'GLOBAL_HEADER.php';
                 </div>
             </div>
             <div id="calendarColumn" class="column col-lg-4 col-lg-offset-8" style="margin-top: 1rem; margin-bottom: 2rem; position: fixed;">
-                <div class="panel panel-green" style="margin-top: 1rem;">
+                <div class="panel panel-default" style="margin-top: 1rem;">
                     <div class="panel-heading">
                         <b> Events </b>
                     </div>
