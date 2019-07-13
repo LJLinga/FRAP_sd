@@ -133,7 +133,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                 <div class="row">
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-12">
 
                                     <form action="ADMIN DREPORT general.php" method="POST">
 
@@ -158,11 +158,11 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                             </div>
                         </div>
 
-                                    <div class="col-lg-3" align="left">
+                                <div class="col-lg-3" align="left">
 
-                                        <input onclick="$('form').attr('target', '')" type="submit" class="btn btn-success" name="select_date" value="Generate Report">
+                                    <input onclick="$('form').attr('target', '')" type="submit" class="btn btn-success" name="select_date" value="Generate Report">
 
-                                    </div>
+                                </div>
 
                                     <div class="col-lg-3" align="left">
 
@@ -197,9 +197,9 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <tr>
 
                                         <td align="center" width="250px"><b>ID Number</b></td>
-                                        <td align="center"><b>Name</b></td>
-                                        <td align="center" width="200px"><b>Department</b></td>
-                                        <td align="center" width="200px"><b>Total Salary Deduction</b></td>
+                                        <td align="left"><b>Name</b></td>
+                                        <td align="left" width="200px"><b>Department</b></td>
+                                        <td align="right" width="200px"><b>Total Salary Deduction(₱)</b></td>
 
                                         </tr>
 
@@ -215,9 +215,9 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <tr>
 
                                         <td align="center"><?php echo $ans['ID'];?></td>
-                                        <td align="center"><?php echo $ans['First']." ".$ans['Middle']." ".$ans['Last'];?></td>
-                                        <td align="center"><?php echo $ans['DEPT_NAME'];?></td>
-                                        <td align="center"><?php echo $ans['Total'];?></td>
+                                        <td align="left"><?php echo $ans['First']." ".$ans['Middle']." ".$ans['Last'];?></td>
+                                        <td align="left"><?php echo $ans['DEPT_NAME'];?></td>
+                                        <td align="right"><?php echo $ans['Total'];?></td>
 
                                         </tr>
                                         <?php } ?>
@@ -263,8 +263,8 @@ function myFunction() {
         "dom": '<lf<t><<"#total">ip>>'
     });
              document.getElementById("total").align = "right";
-             document.getElementById("total").style = "position:relative;right:95px;font-size: 20px;";
-            document.getElementById("total").innerHTML="Total amount to be collected: P"+<?php echo $total;?>;
+             document.getElementById("total").style = "position:relative;right:25px;font-size: 20px;";
+             document.getElementById("total").innerHTML="Total amount to be collected: ₱"+<?php echo '"'.number_format((float)$total,2).'"';?>;
         });
         $(function () {
                 
