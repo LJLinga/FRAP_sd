@@ -6,6 +6,11 @@
  * Date: 10/10/2018
  * Time: 7:53 PM
  */
+
+
+$alertMessage = '';
+$alertType = '';
+$alertColor = 'info';
 include_once 'GLOBAL_CLASS_Database.php';
 class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
 
@@ -188,6 +193,23 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         }
     }
 
+    public function redirectToPreviousWithAlert ($alertType){
+        $previousHTTP = $_SERVER['HTTP_REFERER'];
+        //$previousHTTP = strtok($previousHTTP, 'alert=');
+        if (strpos($previousHTTP, '?') == true) {
+            return $previousHTTP.'&alert='.$alertType;
+        }else if(strpos($previousHTTP, '?') != true){
+            return $previousHTTP.'?alert='.$alertType;
+        }
+    }
+
+
+    public function getManualRevisionsFirstStep(){
+        return $this->getData("SELECT s.id FROM steps s 
+                                  JOIN process pr ON s.processId = pr.id 
+                                  WHERE pr.processForId = 2 AND s.stepTypeId = 1 LIMIT 1;");
+    }
+
     public function permissionString($num){
         if($num == '2'){
             return 'YES';
@@ -278,7 +300,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                 $bool = true;
                 $insertKey = $this->executeGetKey("INSERT INTO groups (groupName, groupDesc) VALUES ('$groupName','$groupDesc');");
             }else{
-                $groupName = strtok($groupName, '_');
+                $groupName = strtok($groupName, '_%');
                 $groupName.='_%'.substr(str_shuffle("CHRISTAN"), 0,5);
             }
         } while ($bool == false);
@@ -442,6 +464,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
 
     public function getStep($stepId){
         return $this->getData("SELECT s.* FROM steps s WHERE s.id = '$stepId' LIMIT 1;");
+
     }
 
     public function getWorkflowDocTypes($processId){
@@ -506,6 +529,38 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                 return $rows;
             }
         }
+    }
+
+    public function getManualReferencableDocuments($sectionId){
+        $query = "SELECT v.*, dt.type FROM doc_versions v 
+                    JOIN doc_type dt ON dt.id = v.typeId
+                    WHERE v.versionId IN 
+                    (SELECT MAX(v2.versionId) FROM doc_versions v2 
+                        WHERE (v2.audit_action_type = 'STATUSED'OR v2.audit_action_type = 'STATUSED/MOVED') 
+                        AND v2.statusId = 3 
+                        AND (v2.typeId = 1 OR v2.typeId = 5 OR v2.typeId = 6)
+                        GROUP BY v2.documentId 
+                        ORDER BY v2.statusedOn DESC) 
+                    AND v.versionId NOT IN
+					(SELECT ref.versionId FROM section_ref_versions ref WHERE ref.sectionId = '$sectionId')
+                    ORDER BY v.statusedOn DESC;";
+        return $this->getData($query);
+    }
+
+    public function getPostReferencableDocuments($postId){
+        $query = "SELECT v.*, dt.type FROM doc_versions v 
+                    JOIN doc_type dt ON dt.id = v.typeId
+                    WHERE v.versionId IN 
+                    (SELECT MAX(v2.versionId) FROM doc_versions v2 
+                        WHERE (v2.audit_action_type = 'STATUSED'OR v2.audit_action_type = 'STATUSED/MOVED') 
+                        AND v2.statusId = 3 
+                        AND (v2.typeId = 8)
+                        GROUP BY v2.documentId 
+                        ORDER BY v2.statusedOn DESC) 
+                    AND v.versionId NOT IN
+					(SELECT ref.versionId FROM post_ref_versions ref WHERE ref.sectionId = '$postId')
+                    ORDER BY v.statusedOn DESC;";
+        return $this->getData($query);
     }
 
     public function getStepProcessGroupMemberPermissions($stepId, $userId){

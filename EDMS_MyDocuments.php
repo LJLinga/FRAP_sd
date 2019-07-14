@@ -11,15 +11,16 @@ $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
-//include('GLOBAL_EDMS_ADMIN_CHECKING.php');
+include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
+include 'GLOBAL_ALERTS.php';
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
 
-$edmsRole = $_SESSION['EDMS_ROLE'];
 $userId = $_SESSION['idnum'];
 $rows = $crud->getData("SELECT CONCAT(e.FIRSTNAME, ,e.LASTNAME) AS name FROM employee e WHERE e.EMP_ID ='$userId' LIMIT 1;");
 $userName = $rows[0]['name'];
+
 ?>
 
 <div class="content-wrapper">
@@ -219,6 +220,7 @@ $userName = $rows[0]['name'];
         destroy: true,
         pageResize: true,
         pageLength: 10,
+        scrollX: true,
         order: [[3, 'desc']],
         "ajax": {
             "url":"EDMS_AJAX_FetchDocuments.php",
@@ -253,8 +255,8 @@ $userName = $rows[0]['name'];
     }
 
     setInterval(function(){
-        table.ajax.reload();
-    },1000)
+        table.ajax.reload(null,false);
+    },5000)
 
 </script>
 

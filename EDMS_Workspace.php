@@ -12,6 +12,10 @@ require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 
+$alertType = '';
+$alertMessage = '';
+
+include_once 'GLOBAL_ALERTS.php';
 include_once 'GLOBAL_HEADER.php';
 include_once 'EDMS_SIDEBAR.php';
 
@@ -42,6 +46,7 @@ $groups = $crud->getUserGroups($userId);
                                 <div class="form-inline">
                                     <label for="sel1">Document Type</label>
                                     <select class="form-control" id="selectedType">
+
                                         <option value="" selected>All</option>
                                         <?php
                                             $rows = $crud->getUserDocTypes($userId);
@@ -287,8 +292,9 @@ $groups = $crud->getUserGroups($userId);
     }
 
     setInterval(function(){
-        table.ajax.reload();
-    },1000)
+        table.ajax.reload(null,false);
+    },5000)
 </script>
+<?php include_once 'GLOBAL_FOOTER.php';?>
 
 

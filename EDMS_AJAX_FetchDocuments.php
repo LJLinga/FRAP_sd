@@ -118,6 +118,72 @@ if(isset($_POST['requestType'])){
         echo json_encode($data);
         exit;
 
+    }else if ($_POST['requestType'] == 'MANUAL_REFERENCES'){
+        $sectionId = $_POST['sectionId'];
+
+        $rows = $crud->getManualReferencableDocuments($sectionId);
+        $data = [];
+        foreach ((array) $rows as $key => $row) {
+            $buttons = '<button type="button" class="btn btn-success btn-sm fa fa-plus add_doc_ref" data-toggle="tooltip" value="'.$row['versionId'].'" title="Add"></button>';
+            //$buttons = '<a class="btn btn-info" data-toggle="tooltip" title="View document" name="documentId" href="EDMS_ViewDocument.php?docId='.$row['documentId'].'"><i class="fa fa-eye"></i></a>';
+            $buttons .= ' <a class="btn btn-secondary btn-sm fa fa-download" data-toggle="tooltip" title="Download document" href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"></a>';
+
+            $data[] =  array(
+                'title' => $row['title'],
+                'vers' => $row['versionNo'],
+                'type' => $row['type'],
+                'submitted_by' => $crud->getUserName($row['firstAuthorId']),
+                'submitted_on' => date("m/d/Y g:i:s A ", strtotime($row['timeCreated'])),
+                'approved_by' => $crud->getUserName($row['statusedById']),
+                'approved_on' => date("m/d/Y g:i:s A ", strtotime($row['statusedOn'])),
+                'actions' => $buttons
+            );
+
+        }
+        echo json_encode($data);
+        exit;
+
+    }else if ($_POST['requestType'] == 'INSERT_MANUAL_REFERENCE'){
+        $sectionId = $_POST['sectionId'];
+        $versionId = $_POST['versionId'];
+
+        try{
+            $crud->execute("INSERT INTO section_ref_versions (sectionId, versionId, referencedById) VALUES ('$sectionId','$versionId','$userId')");
+            echo 'success';
+        }catch(Exception $e){
+            echo $e;
+        }
+        exit;
+    }else if ($_POST['requestType'] == 'ADDED_MANUAL_REFERENCES'){
+        $sectionId = $_POST['sectionId'];
+
+        $rows = $crud->getData("SELECT ref.*, dv.*, dt.type  FROM section_ref_versions ref
+                                        JOIN doc_versions dv on ref.versionId = dv.versionId
+                                        JOIN doc_type dt ON dt.id = dv.typeId
+                                        WHERE ref.sectionId = '$sectionId'");
+        $data = [];
+        if(!empty($rows)){
+            foreach((array) $rows AS $key => $row){
+
+                $buttons = '<button type="button" class="btn btn-success btn-sm fa fa-plus remove_doc_ref" data-toggle="tooltip" value="'.$row['versionId'].'" title="Add"></button>';
+                //$buttons = '<a class="btn btn-info" data-toggle="tooltip" title="View document" name="documentId" href="EDMS_ViewDocument.php?docId='.$row['documentId'].'"><i class="fa fa-eye"></i></a>';
+                $buttons .= ' <a class="btn btn-secondary btn-sm fa fa-download" data-toggle="tooltip" title="Download document" href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"></a>';
+                $data[] =  array(
+                    'title' => $row['title'],
+                    'vers' => $row['versionNo'],
+                    'type' => $row['type'],
+                    'submitted_by' => $crud->getUserName($row['firstAuthorId']),
+                    'submitted_on' => date("m/d/Y g:i:s A ", strtotime($row['timeCreated'])),
+                    'approved_by' => $crud->getUserName($row['statusedById']),
+                    'approved_on' => date("m/d/Y g:i:s A ", strtotime($row['statusedOn'])),
+                    'referenced_by' => $crud->getUserName($row['referencedById']),
+                    'referenced_on' => date("m/d/Y g:i:s A ", strtotime($row['referencedOn'])),
+                    'actions' => $buttons
+                );
+            }
+        }
+        echo json_encode($data);
+        exit;
     }
 }
 

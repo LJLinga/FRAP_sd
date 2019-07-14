@@ -14,9 +14,7 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 $edmsRole = $_SESSION['EDMS_ROLE'];
 $userId = $_SESSION['idnum'];
 
-
 if(isset($_GET['docId'])){
-
     $documentId = $_GET['docId'];
 
     // Load document
@@ -41,6 +39,8 @@ if(isset($_GET['docId'])){
 
     $rows = $crud->getData($query);
     if(!empty($rows)){
+
+
         foreach((array) $rows as $key => $row){
             $firstAuthorId = $row['firstAuthorId'];
             $originalAuthor = $row['originalAuthor'];
@@ -83,8 +83,7 @@ if(isset($_GET['docId'])){
                 $comment = $row['comment'];
             }
         }else{
-            //Learn return to previous.
-            header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
+            header("Location:".$crud->redirectToPreviousWithAlert("DOC_NO_PERMISSIONS"));
         }
 
         if($availability == '2'){
@@ -93,11 +92,11 @@ if(isset($_GET['docId'])){
             else $write = '1';
         }
     }else{
-        //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
+        header("Location:".$crud->redirectToPreviousWithAlert("DOC_NOT_LOAD"));
     }
 
 }else{
-   header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_Workspace.php");
+    header("Location:".$crud->redirectToPreviousWithAlert("DOC_NO_PERMISSIONS"));
 }
 
 if(isset($_POST['btnUnlock'])){
@@ -116,8 +115,10 @@ if(isset($_POST['btnLock'])){
     if($availability == '1'){
         $userId = $_POST['userId'];
         $crud->execute("UPDATE documents SET availabilityId='2', availabilityById='$userId' WHERE documentId='$documentId'");
+        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId."&alert=DOC_LOCK_SUCCESS");
+    }else{
+        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId."&alert=DOC_LOCK_FAIL");
     }
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/EDMS_ViewDocument.php?docId=".$documentId);
 }
 
 if(isset($_POST['btnDownload'])){
@@ -163,9 +164,19 @@ if(isset($_POST['btnArchive'])){
     $crud->execute("UPDATE documents SET availabilityId='2', availabilityById='$userId' WHERE documentId='$documentId'");
 }
 
+if(isset($_GET['alert'])){
+    $alertType = $_GET['alert'];
+    if($alertType == 'DOC_LOCK_FAIL') { $alertColor = 'danger'; $alertMessage = "Unable to check the document out. <strong>".$availabilityByName."</strong> has locked it first."; }
+    else if($alertType == 'DOC_LOCK_SUCCESS'){ $alertColor = 'success'; $alertMessage = 'You have successfully checked the document out!'; }
+}
+
+include 'GLOBAL_ALERTS.php';
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
 ?>
+
+
+
 <div id="content-wrapper">
     <div class="container-fluid">
         <div class="row" style="margin-top: 2rem;">
@@ -200,8 +211,13 @@ include 'EDMS_SIDEBAR.php';
                         <div class="row">
                             <div class="col-lg-12">
                                 <b class="panel-title">Document History</b>
+                                <button class="btn btn-default btn-sm fa fa-expand" type="button" data-toggle="collapse" data-target="#collapseHistory" style="position: absolute; top: 0px; right: 15px;">
+
                             </div>
                         </div>
+
+                    </div>
+                    <div class="panel-body" id="collapseHistory">
                         <div class="row">
                             <div class="col-lg-2">
                                 <div class="form-inline">
@@ -243,8 +259,6 @@ include 'EDMS_SIDEBAR.php';
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="panel-body">
                         <table id="tblHistory" class="table table-condensed table-sm table-striped" cellspacing="0" width="100%">
                             <thead>
                             <th>Timestamp </th>
@@ -263,7 +277,7 @@ include 'EDMS_SIDEBAR.php';
                                                 v.remarks,
                                                 v.lifecycleStateId, v.statusedById, v.lifecycleStatedById, v.availabilityById,
                                                 v.availabilityId, dt.type AS docType, v.lastUpdated,
-                                                s.statusname, v.statusId, p.processName,
+                                                s.statusname, v.statusId, p.processName, v.availabilityOn,
                                                 st.stepName, st.stepNo, v.statusedOn,
                                                 CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS name,
                                                 CONCAT(e1.LASTNAME,', ',e1.FIRSTNAME) AS authorName,
@@ -337,7 +351,7 @@ include 'EDMS_SIDEBAR.php';
                                             ?>
                                         </td>
                                         <td>
-                                            <?php if($row['audit_action_type'] != 'LOCKED'){?>
+                                            <?php if($row['audit_action_type'] != 'LOCKED' && $row['audit_action_type'] != 'CREATED'){?>
                                                 <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalVersionPreview<?php echo $row['versionId'];?>"><i class="fa fa-eye"></i></a>
                                                 <div id="modalVersionPreview<?php echo $row['versionId'];?>" class="modal fade" role="dialog">
                                                     <div class="modal-dialog modal-lg">
@@ -517,35 +531,6 @@ include 'EDMS_SIDEBAR.php';
                                             <a class="btn btn-sm fa fa-download"  href="<?php echo $filePath;?>" download="<?php echo $row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']);?>"></a>
                                         </td>
                                     </tr>
-                                    <div id="preview" class="modal fade" role="dialog">
-                                        <div class="modal-dialog">
-
-                                            <form method="POST" id="comment_form">
-
-                                                <!-- Modal content-->
-                                                <div class="modal-content">
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <input type="hidden" name="comment_name" id="comment_name" class="form-control" placeholder="Enter Name" value="<?php echo $userId; ?>"/>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <textarea name="comment_content" id="comment_content" class="form-control" placeholder="Enter Comment" rows="5"></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <div class="form-group">
-                                                            <input type="hidden" name="comment_id" id="comment_id" value="0" />
-                                                            <input type="hidden" name="documentId" id="documentId" value="<?php echo $documentId; ?>" />
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                            <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit"/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </form>
-
-                                        </div>
-                                    </div>
                                 <?php }
                             }?>
                             </tbody>
@@ -561,6 +546,7 @@ include 'EDMS_SIDEBAR.php';
                     </div>
                 </div>
             </div>
+
             <div class="col-lg-4">
 
                 <div class="panel panel-default">
@@ -677,6 +663,7 @@ include 'EDMS_SIDEBAR.php';
                         </table>
                     </div>
                 </div>
+                <?php if($remarkType != ''){ ?>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="row">
@@ -774,6 +761,7 @@ include 'EDMS_SIDEBAR.php';
                         </div>
                     </div>
                 </div>
+                <?php } ?>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <b>Document Actions</b>

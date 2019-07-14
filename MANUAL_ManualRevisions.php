@@ -17,8 +17,10 @@ $userId = $_SESSION['idnum'];
 $revisions = 'closed';
 
 $rows = $crud->doesUserHaveWorkflow($_SESSION['idnum'],7);
-if(empty($rows)){
-    //redirect
+
+$boolInGroup = false;
+if(!empty($rows)){
+    $boolInGroup = true;
 }
 
 if(isset($_POST['btnPrint'])){
@@ -42,7 +44,7 @@ if(isset($_POST['btnPublish'])){
         $timeCreated = $row['timeCreated'];
         $crud->execute("INSERT INTO published_versions (manualId, sectionId, timeCreated) VALUES ('$manualId','$sectionId','$timeCreated')");
     }
-    //header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_PublishSections.php");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_PublishSections.php");
 }
 
 if(isset($_POST['btnOpen'])){
@@ -78,7 +80,7 @@ include 'EDMS_SIDEBAR.php';
             <div class="col-lg-12">
                 <h3 class="page-header"> Manual Revisions
                     <?php
-                        if($revisions == 'open' && isset($write) && $write = '2') echo '<a class="btn btn-primary" href="MANUAL_AddSection.php">Add Section</a>';
+                        if($revisions == 'open' && $boolInGroup) echo '<a class="btn btn-primary" href="MANUAL_AddSection.php">Add Section</a>';
                         ?>
                 </h3>
             </div>
