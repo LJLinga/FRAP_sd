@@ -36,16 +36,16 @@ $userName = $rows[0]['name'];
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
-
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-lg-4">
                                 <div class="form-inline">
-                                    <label for="sel1">Category</label>
-                                    <select class="form-control" onchange="filterType(this.value)">
+                                    <label for="sel1">Document Type</label>
+                                    <select class="form-control" id="selectedType">
+
                                         <option value="" selected>All</option>
                                         <?php
-                                        $rows = $crud->getData("SELECT t.type FROM facultyassocnew.doc_type t WHERE isActive = 2;");
+                                        $rows = $crud->getUserDocTypes($userId);
                                         foreach((array)$rows as $key => $row){
                                             echo '<option value="'.$row['type'].'">'.$row['type'].'</option>';
                                         }
@@ -56,14 +56,12 @@ $userName = $rows[0]['name'];
                             <div class="col-lg-4">
                                 <div class="form-inline">
                                     <label for="sel1">Status</label>
-                                    <select class="form-control" onchange="filterStatus(this.value)">
-                                        <option value="" selected>All</option>
-                                        <?php
-                                        $rows = $crud->getData("SELECT statusName FROM facultyassocnew.doc_status;");
-                                        foreach((array)$rows as $key => $row){
-                                            echo '<option value="'.$row['statusName'].'">'.$row['statusName'].'</option>';
-                                        }
-                                        ?>
+                                    <select class="form-control" id="selectedStatus" name="selectedAction">
+                                        <option value="">ALL</option>
+                                        <option value="draft" selected>DRAFT</option>
+                                        <option value="pending">PENDING</option>
+                                        <option value="approved">APPROVED</option>
+                                        <option value="rejected">REJECTED</option>
                                     </select>
                                 </div>
                             </div>
@@ -239,7 +237,18 @@ $userName = $rows[0]['name'];
             { data: "modified_by"},
             { data: "lastUpdated"},
             { data: "actions"}
-        ]
+        ],
+        initComplete: function(){
+            var columnType = this.api().column(1);
+            var selectType = $('#selectedType').on( 'change', function () {
+                columnType.search($('#selectedType').val()).draw();
+            } );
+
+            var columnStatus = this.api().column(4);
+            var selectStatus = $('#selectedStatus').on( 'change', function () {
+                columnStatus.search($('#selectedStatus').val()).draw();
+            } );
+        }
     });
 
     $(".dataTables_filter").hide();
@@ -247,12 +256,6 @@ $userName = $rows[0]['name'];
         table.search($('#searchField').val()).draw();
     });
 
-    function filterStatus(status){
-        table.column(4).search(status).draw();
-    }
-    function filterType(type){
-        table.column(1).search(type).draw();
-    }
 
     setInterval(function(){
         table.ajax.reload(null,false);

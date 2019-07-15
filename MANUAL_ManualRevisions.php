@@ -113,27 +113,60 @@ include 'EDMS_SIDEBAR.php';
                 </div>
                 <div class="panel panel-default" style="margin-top: 1rem;">
                     <div class="panel-heading">
-                        <div class="btn-group">
-                        <a type="button" class="btn btn-default" id="btnAll" onclick="searchTable('')">All</a>
-                        <?php
-                        $rows = $crud->getData("SELECT status FROM facultyassocnew.section_status WHERE id!= 4;");
-                        if(!empty($rows)){
-                            foreach((array) $rows as $key => $row){
-                                echo '<a type="button" class="btn btn-default" onclick="searchTable(&quot;'.$row['status'].'&quot;,&quot;3&quot;)">'.$row['status'].'</a>';
-                            }
-                        }
-                        ?>
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="form-inline">
+                                    <label for="sel1">Ver. No. </label>
+                                    <select class="form-control" id="selectedVersion" name="selectedUser">
+                                        <option value="">All</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-inline">
+                                    <label for="sel1">User </label>
+                                    <select class="form-control" id="selectedUser" name="selectedUser">
+                                        <option value="">All</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-inline">
+                                    <label for="sel1">Action</label>
+                                    <select class="form-control" id="selectedAction" name="selectedAction">
+                                        <option value="" selected>All</option>
+                                        <option value="created">CREATED</option>
+                                        <option value="updated">UPDATED</option>
+                                        <option value="moved">MOVED</option>
+                                        <option value="checked out">CHECKED OUT</option>
+                                        <option value="checked in">CHECKED IN</option>
+                                        <option value="draft">DRAFT</option>
+                                        <option value="pending">PENDING</option>
+                                        <option value="approved">APPROVED</option>
+                                        <option value="rejected">REJECTED</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-inline">
+                                    <label for="sel1">Search</label>
+                                    <input type="text" id="searchField" class="form-control">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="panel-body">
-                        <table id="myTable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <table id="tblSections" class="table table-striped">
                             <thead>
                             <tr>
-                                <th width="100px">No.</th>
-                                <th width="400px">Title</th>
-                                <th width="300px">Modified By</th>
-                                <th width="200px">Status</th>
-                                <th width="100px">Action</th>
+                                <th>No.</th>
+                                <th>Title</th>
+                                <th>Ver. No.</th>
+                                <th>Created on</th>
+                                <th>Modified by</th>
+                                <th>Modified on</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
                             </thead>
                         </table>
@@ -198,16 +231,6 @@ include 'EDMS_SIDEBAR.php';
                         ?>
                     </div>
                 </div>
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        My Activities
-                    </div>
-                    <div class="panel-body">
-                        <div class="col-lg-2">All <b class="caret"></b></div>
-                        <div class="col-lg-7"></div>
-                        <div class="col-lg-3"><i class="fa fa-fw fa-plus-circle"></i>Create Groups</div>
-                    </div>
-                </div>
             </div>
 
         </div>
@@ -250,22 +273,6 @@ include 'EDMS_SIDEBAR.php';
 </div>
 <script>
 
-//    $('table.table').DataTable( {
-//        "ajax": {
-//            "url":"EDMS_AJAX_FetchSections.php",
-//            "type":"POST",
-//            "data":{ role: '<?php //echo $edmsRole;?>//'},
-//            "dataSrc": ''
-//        },
-//        columns: [
-//            { data: "section_no" },
-//            { data: "title" },
-//            { data: "modified_by" },
-//            { data: "status" },
-//            { data: "action" },
-//        ]
-//    } );
-
     $(document).ready(function(){
         $('#datetimepicker1').datetimepicker( {
             locale: moment().local('ph'),
@@ -275,35 +282,65 @@ include 'EDMS_SIDEBAR.php';
         });
     });
 
-    searchTable('',3);
+    let table = $('#tblSections').DataTable( {
+        bSort: false,
+        destroy: true,
+        pageLength: 5,
+        "ajax": {
+            "url":"EDMS_AJAX_FetchSections.php",
+            "type":"POST",
+            "dataSrc": ''
+        },
+        columns: [
+            { data: "section_no" },
+            { data: "title" },
+            { data: "ver_no" },
+            { data: "created_on" },
+            { data: "modified_by" },
+            { data: "modified_on" },
+            { data: "status" },
+            { data: "action" },
+        ],
+        initComplete: function(){
+            var columnSecNo = this.api().column(0);
+            var selectSecNo = $('#selectedSection').on( 'change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                columnSecNo.search( val ? '^'+val+'$' : '', true, false ).draw();
+            } );
+            var columnVer = this.api().column(2);
+            var selectVer = $('#selectedVersion').on( 'change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                columnVer.search( val ? '^'+val+'$' : '', true, false ).draw();
+            } );
+            columnVer.data().unique().sort().each( function ( d, j ) {
+                selectVer.append( '<option value="'+d+'">'+d+'</option>' )
+            } );
 
-    function searchTable(searchText, col){
-        let table = $('table.table').DataTable( {
-            bSort: false,
-            destroy: true,
-            pageLength: 5,
-            "ajax": {
-                "url":"EDMS_AJAX_FetchSections.php",
-                "type":"POST",
-                "data":{ role: '<?php echo $edmsRole;?>'},
-                "dataSrc": ''
-            },
-            columns: [
-                { data: "section_no" },
-                { data: "title" },
-                { data: "modified_by" },
-                { data: "status" },
-                { data: "action" },
-            ]
-        });
-        if(searchText === 'All'){
-            searchText = '';
+            var columnUser = this.api().column(4);
+            var selectUser = $('#selectedUser').on( 'change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                columnUser.search( val ? '^'+val+'$' : '', true, false ).draw();
+            } );
+            columnUser.data().unique().sort().each( function ( d, j ) {
+                selectUser.append( '<option value="'+d+'">'+d+'</option>' )
+            } );
+
+            var columnAction = this.api().column(6);
+            var selectAction = $('#selectedStatus').on( 'change', function () {
+                columnAction.search($('#selectedStatus').val()).draw();
+            } );
         }
-        table.column(col).search(searchText).draw();
-        // setInterval(function(){
-        //     table.ajax.reload();
-        // },1000)
-    }
+    });
+
+    $(".dataTables_filter").hide();
+    $('#searchField').keyup(function(){
+        table.search($('#searchField').val()).draw();
+    });
+
+    setInterval(function(){
+        table.ajax.reload(null,false);
+    },5000);
+
 </script>
 
 <?php include 'GLOBAL_FOOTER.php';?>

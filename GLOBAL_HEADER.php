@@ -26,6 +26,7 @@
     <script src="js/moment.js"></script>
     <script src="js/bootstrap-datetimepicker.min.js"></script>
     <script src="js/select2.min.js"></script>
+    <script src="js/tinymce.min.js"></script>
 
     <link href="datatables/dataTables.bootstrap4.css" rel="stylesheet">
     <script src="datatables/jquery.dataTables.js"></script>

@@ -7,7 +7,10 @@
  */
 
 include_once('GLOBAL_CLASS_CRUD.php');
+include_once('GLOBAL_PRINT_FPDF.php');
 $crud = new GLOBAL_CLASS_CRUD();
+$printer = new PDF();
+
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
@@ -262,7 +265,7 @@ include 'EDMS_SIDEBAR.php';
                             </div>
                             <div class="panel panel-default">
                                 <div class="panel-body" style="height: 50rem; overflow-y: auto;">
-                                    <p style="text-align: justify;"><?php echo $content; ?></p>
+                                    <p style="text-align: justify;"><?php echo nl2br($content); ?></p>
                                 </div>
                             </div>
                         <?php } ?>
@@ -384,9 +387,9 @@ include 'EDMS_SIDEBAR.php';
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <?php if($row['audit_action_type'] != 'LOCKED' && $row['audit_action_type'] != 'CREATED'){?>
+                                                    <?php if($row['audit_action_type'] != 'LOCKED'){?>
                                                         <button type="button" class="btn btn-info btn-sm fa fa-eye" data-toggle="modal" data-target="#modalVersionPreview<?php echo $row['versionId'];?>"></button>
-                                                        <button type="button" class="btn btn-sm btn-secondary fa fa-print"></button>
+                                                        <a href="MANUAL_PrintOneSection.php?versionId=<?php echo $row['versionId'];?>" target="_blank" class="btn btn-sm btn-secondary fa fa-print"></a>
                                                         <div id="modalVersionPreview<?php echo $row['versionId'];?>" class="modal fade" role="dialog">
                                                             <div class="modal-dialog modal-lg">
                                                                 <div class="modal-content">
@@ -565,6 +568,34 @@ include 'EDMS_SIDEBAR.php';
                         </div>
 
                         <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <b>References</b>
+                                        <button id="btnRefModal" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
+                                        <button class="btn btn-default btn-sm fa fa-expand" type="button" data-toggle="collapse" data-target="#collapseReferences" style="position: absolute; top: 0px; right: 15px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body collapse in" id="collapseReferences">
+                                <table class="table table-striped table-sm" id="tblReferences">
+                                    <thead>
+                                    <tr>
+                                        <th> Title </th>
+                                        <th> Ver No </th>
+                                        <th> Type </th>
+                                        <th> Submitted by </th>
+                                        <th> Submitted on </th>
+                                        <th> Referenced by </th>
+                                        <th> Referenced on </th>
+                                        <th> Action </th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
                             <div class="panel-heading"><b>Comments</b></div>
                             <div class="panel-body" style="max-width: 20rem; overflow-y: auto;">
                                 <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
@@ -692,11 +723,9 @@ include 'EDMS_SIDEBAR.php';
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <div class="row">
-                                    <div class="col-lg-10">
+                                    <div class="col-lg-12">
                                         <b>Most Recent Remark</b>
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <a class="btn btn-sm fa fa-eye" id="btnComfyView" data-toggle="modal" data-target="#modalComfyView" title="Comfy view"></a>
+                                        <a class="btn btn-sm fa fa-eye" id="btnComfyView" data-toggle="modal" data-target="#modalComfyView" title="Comfy view" style="position: absolute; right:15px"></a>
                                     </div>
                                 </div>
                             </div>
@@ -844,9 +873,9 @@ include 'EDMS_SIDEBAR.php';
                             if( $write=='2'){?>
                                 <form method="POST" action="">
                                     <input type="hidden" name="userId" value="<?php echo $userId;?>">
-                                    <button class="btn btn-default" type="submit" name="btnLock" value="<?php echo $sectionId;?>" style="text-align: left; width:100%;">Check Out and Edit</button>
-                                    <button type="button" class="btn btn-default" style="text-align: left; width: 100%;">Print</button>
-                                    <button type="button" class="btn btn-warning" style="text-align: left; width: 100%;">Archive</button>
+                                    <button class="btn btn-default" type="submit" name="btnLock" value="<?php echo $sectionId;?>" style="text-align: left; width:100%;"><i class="fa fa-edit"></i> Check Out and Edit</button>
+                                    <a href="MANUAL_PrintOneSection.php?sectionId=<?php echo $sectionId;?>" target="_blank" class="btn btn-default" style="text-align: left; width: 100%;"><i class="fa fa-print"></i> Print</a>
+                                    <button type="button" class="btn btn-warning" style="text-align: left; width: 100%;"><i class="fa fa-archive"></i> Archive</button>
                                 </form>
                             <?php } ?>
 
@@ -867,30 +896,7 @@ include 'EDMS_SIDEBAR.php';
                             </div>
                         <?php } ?>
 
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <b>References</b>
-                                <button id="btnRefModal" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
-                            </div>
-                            <div class="panel-body">
-                                <table class="table table-responsive table-striped table-sm">
-                                <thead>
-                                <tr>
-                                    <th> Title </th>
-                                    <th> Ver No </th>
-                                    <th> Type </th>
-                                    <th> Submitted by </th>
-                                    <th> Submitted on </th>
-                                    <th> Approved by </th>
-                                    <th> Approved on </th>
-                                    <th> Referenced by </th>
-                                    <th> Referenced on </th>
-                                    <th> Action </th>
-                                </tr>
-                                </thead>
-                                </table>
-                            </div>
-                        </div>
+
 
                     </div>
                 </div>
@@ -938,7 +944,7 @@ include 'EDMS_SIDEBAR.php';
                     <strong class="modal-title">Reference Document</strong>
                 </div>
                 <div class="modal-body">
-                    <table class="table table-striped table-sm" id="tblReferences">
+                    <table class="table table-striped table-sm" id="tblAddReferences">
                         <thead>
                         <tr>
                             <th> Title </th>
@@ -960,9 +966,9 @@ include 'EDMS_SIDEBAR.php';
 
         </div>
     </div>
+    <script>tinymce.init({selector:'#sectionContent'});</script>
     <script>
         $(document).ready( function(){
-
 
             let tableHistory = $('#tblHistory').DataTable( {
                 bLengthChange: false,
@@ -1001,58 +1007,116 @@ include 'EDMS_SIDEBAR.php';
                 }
             });
 
-
-
-            let tableAddRef = $('#tblAddReferences').DataTable( {
-                bSort: true,
-                bLengthChange: false,
-                destroy: true,
-                pageLength: 10,
-                scrollX,
-                "ajax": {
-                    "url":"EDMS_AJAX_FetchDocuments.php",
-                    "type":"POST",
-                    "dataSrc": '',
-                    "data": {
-                        requestType: 'MANUAL_REFERENCES',
-                        sectionId: "<?php echo $sectionId;?>"
-                    },
-                },
-                columns: [
-                    { data: "title" },
-                    { data: "vers"},
-                    { data: "type" },
-                    { data: "submitted_by"},
-                    { data: "submitted_on"},
-                    { data: "approved_by"},
-                    { data: "approved_on"},
-                    { data: "actions"}
-                ],
-                initComplete: function () {
-
-
-                }
-            });
-
-
-
-            $('#btnRefModal').on('click', function(){
-                reloadDataTable(tableAddRef);
-            });
-
             $('.add_doc_ref').on('click', function(){
+                console.log('clicked');
                 reloadDataTable(tableAddRef);
                 reloadDataTable(tableRef);
             });
 
-            function reloadDataTable(table){
-                table.ajax.reload(null,false);
-            }
+
 
             $(".dataTables_filter").hide();
         });
 
+        let tableAddRef = $('#tblAddReferences').DataTable( {
+            bSort: true,
+            bLengthChange: false,
+            destroy: true,
+            pageLength: 10,
+            scrollX: true,
+            "ajax": {
+                "url":"EDMS_AJAX_FetchDocuments.php",
+                "type":"POST",
+                "dataSrc": '',
+                "data": {
+                    requestType: 'MANUAL_REFERENCES',
+                    sectionId: "<?php echo $sectionId;?>"
+                },
+            },
+            columns: [
+                { data: "title" },
+                { data: "vers"},
+                { data: "type" },
+                { data: "submitted_by"},
+                { data: "submitted_on"},
+                { data: "approved_by"},
+                { data: "approved_on"},
+                { data: "actions"}
+            ],
+            initComplete: function() {
 
+
+
+            }
+
+        });
+
+        let tableRef = $('#tblReferences').DataTable( {
+            bSort: true,
+            bLengthChange: false,
+            destroy: true,
+            pageLength: 10,
+            scrollX: true,
+            "ajax": {
+                "url":"EDMS_AJAX_FetchDocuments.php",
+                "type":"POST",
+                "dataSrc": '',
+                "data": {
+                    requestType: 'ADDED_MANUAL_REFERENCES',
+                    sectionId: "<?php echo $sectionId;?>"
+                },
+            },
+            columns: [
+                { data: "title" },
+                { data: "vers"},
+                { data: "type" },
+                { data: "submitted_by"},
+                { data: "submitted_on"},
+                { data: "referenced_by"},
+                { data: "referenced_on"},
+                { data: "actions"}
+            ],
+            initComplete: function () {
+
+
+            }
+        });
+
+
+        $('#btnRefModal').on('click', function(){
+            reloadDataTable(tableAddRef);
+        });
+
+        function reloadDataTable(table){
+            table.ajax.reload(null,false);
+        }
+
+        function addRef(versionId){
+            console.log('Add reference.');
+            $.ajax({
+                url: "EDMS_AJAX_FetchDocuments.php",
+                method: "POST",
+                data: {requestType: 'INSERT_MANUAL_REFERENCE', sectionId: "<?php echo $sectionId?>", versionId: versionId},
+                success: function(data){ console.log(data);
+                    reloadDataTable(tableAddRef);
+                    reloadDataTable(tableRef);
+                }
+            });
+
+        }
+
+        function removeRef(versionId){
+            console.log('Remove reference.');
+            $.ajax({
+                url: "EDMS_AJAX_FetchDocuments.php",
+                method: "POST",
+                data: {requestType: 'REMOVE_MANUAL_REFERENCE', sectionId: "<?php echo $sectionId?>", versionId: versionId},
+                success: function(data){ console.log(data)
+                    reloadDataTable(tableAddRef);
+                    reloadDataTable(tableRef);
+                }
+            });
+        }
 
         $('#comment_form').on('submit', function(event){
             event.preventDefault();

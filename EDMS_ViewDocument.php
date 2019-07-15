@@ -212,7 +212,6 @@ include 'EDMS_SIDEBAR.php';
                             <div class="col-lg-12">
                                 <b class="panel-title">Document History</b>
                                 <button class="btn btn-default btn-sm fa fa-expand" type="button" data-toggle="collapse" data-target="#collapseHistory" style="position: absolute; top: 0px; right: 15px;">
-
                             </div>
                         </div>
 
@@ -319,34 +318,22 @@ include 'EDMS_SIDEBAR.php';
                                         </td>
                                         <td>
                                             <?php
-                                            if($row['audit_action_type'] == 'LOCKED') { $labelCol = 'default';?>
-                                                <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->availabilityString($row['availabilityId']);?></span> the document.
-                                            <?php }else if($row['audit_action_type'] == 'STATUSED') {
-                                                if($row['statusId'] ==  1) { $labelCol = 'info'; }
-                                                else if($row['statusId'] ==  2) { $labelCol = 'primary'; }
-                                                else if($row['statusId'] ==  3) { $labelCol = 'success'; }
-                                                else if($row['statusId'] ==  4) { $labelCol = 'danger'; } ?>
-                                                <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->assignStatusString($row['statusId']);?></span> status assigned to the document.
-                                            <?php }else if($row['audit_action_type'] == 'MOVED') {
-                                                $labelCol = 'primary'?>
-                                                <span class="label label-<?php echo $labelCol;?>">MOVED</span> the document to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong>.
-                                            <?php }else if($row['audit_action_type'] == 'CYCLED'){
-                                                if($row['lifecycleStateId'] ==  1) $labelCol = 'info';
-                                                if($row['lifecycleStateId'] ==  2) $labelCol = 'warning';?>
-                                                <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->lifecycleString($row['lifecycleStateId']);?></span> the document.
+                                            if($row['audit_action_type'] == 'LOCKED') { ?>
+                                                <?php echo $crud->coloriseAvailability($row['availabilityId']);?> the document.
+                                            <?php }else if($row['audit_action_type'] == 'STATUSED') { ?>
+                                                <?php echo $crud->coloriseStatus($row['statusId']);?> status assigned to the document.
+                                            <?php }else if($row['audit_action_type'] == 'MOVED') { ?>
+                                                <?php echo $crud->coloriseStep();?> the document to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong>.
+                                            <?php }else if($row['audit_action_type'] == 'CYCLED'){ ?>
+                                                <?php echo $crud->coloriseCycle($row['lifecycleStateId']);?>the document.
                                             <?php }else if($row['audit_action_type'] == 'UPDATED' || $row['audit_action_type'] == 'CREATED') {
                                                 $labelCol = 'success'?>
                                                 <span class="label label-<?php echo $labelCol;?>"><?php echo $row['audit_action_type'];?></span> the document.<br>
                                                 <span class="label label-default">CHECKED IN</span> the document.
                                             <?php }else if($row['audit_action_type'] == 'STATUSED/MOVED') {
                                                 $labelCol = 'primary'?>
-                                                <span class="label label-<?php echo $labelCol;?>">MOVED</span> the document to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong>.<br>
-                                                <?php if($row['statusId'] ==  1) { $labelCol = 'info'; }
-                                                else if($row['statusId'] ==  2) { $labelCol = 'primary'; }
-                                                else if($row['statusId'] ==  3) { $labelCol = 'success'; }
-                                                else if($row['statusId'] ==  4) { $labelCol = 'danger'; }
-                                                ?>
-                                                <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->assignStatusString($row['statusId']);?></span> status assigned to the document.
+                                                <?php echo $crud->coloriseStep();?> the document to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong>.<br>
+                                                <?php echo $crud->coloriseStatus($row['statusId']);?> status assigned to the document.
                                             <?php }
                                             ?>
                                         </td>

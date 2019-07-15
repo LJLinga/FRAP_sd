@@ -39,7 +39,7 @@ $groups = $crud->getUserGroups($userId);
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <div class="panel panel-secondary">
+                <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-lg-4">
@@ -60,14 +60,12 @@ $groups = $crud->getUserGroups($userId);
                             <div class="col-lg-4">
                                 <div class="form-inline">
                                     <label for="sel1">Status</label>
-                                    <select class="form-control" id="selectedStatus">
-                                        <option value="" selected>All</option>
-                                        <?php
-                                            $rows = $crud->getData("SELECT statusName FROM facultyassocnew.doc_status;");
-                                            foreach((array)$rows as $key => $row){
-                                                echo '<option value="'.$row['statusName'].'">'.$row['statusName'].'</option>';
-                                            }
-                                        ?>
+                                    <select class="form-control" id="selectedStatus" name="selectedAction">
+                                        <option value="">ALL</option>
+                                        <option value="draft" selected>DRAFT</option>
+                                        <option value="pending">PENDING</option>
+                                        <option value="approved">APPROVED</option>
+                                        <option value="rejected">REJECTED</option>
                                     </select>
                                 </div>
                             </div>

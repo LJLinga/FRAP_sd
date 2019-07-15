@@ -428,6 +428,40 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                                         ORDER BY p.processForId, p.processName, s.stepNo ASC;");
     }
 
+    public function coloriseStatus($num){
+        $string = $this->assignStatusString($num);
+        $color = '';
+        if($num == '1') { $color = "info"; }
+        else if($num == '2') { $color = "primary"; }
+        else if($num == '3') { $color = "success"; }
+        else if($num == '4') { $color = "danger"; }
+        return '<span class="label label-'.$color.'">'.$string.'</span>';
+    }
+
+    public function coloriseStep(){
+        return '<span class="label label-primary">MOVED</span>';
+    }
+
+    public function coloriseCycle($num){
+        $string = $this->assignStatusString($num);
+        $color = '';
+        if($num == '1') { $color = "success"; }
+        else if($num == '2') { $color = "warning"; }
+        return '<span class="label label-'.$color.'">'.$string.'</span>';
+    }
+
+    public function coloriseUpdated($string){
+        return '<span class="label label-success">'.$string.'</span>';
+    }
+
+    public function coloriseAvailability($num){
+        $string = $this->availabilityString($num);
+        $color = '';
+        if($num == '1') { $color = "default"; }
+        else if($num == '2') { $color = "default"; }
+        return '<span class="label label-'.$color.'">'.$string.'</span>';
+    }
+
     public function getUserDocTypes($userId){
         return $this->getData("SELECT dt.* FROM steps s 
                                         JOIN process p on s.processId = p.id 
@@ -493,14 +527,13 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
 
     //TO DO: handle documents with deactivated types, they should be viewable but cant be interacted with.
     public function getPersonalDocuments($userId){
-        return $this->getData("SELECT d.documentId, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName, 
+        return $this->getData("SELECT d.documentId, d.statusId, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName, 
                 d.filePath, d.title, d.versionNo, d.timeCreated, d.lastUpdated,
-                stat.statusName, s.stepNo, s.stepName, t.type,
+                s.stepNo, s.stepName, t.type,
                 pr.processName, 
                 (SELECT CONCAT(e.FIRSTNAME,', ',e.LASTNAME) FROM employee e2 WHERE e2.EMP_ID = d.firstAuthorId) AS firstAuthorName 
                 FROM facultyassocnew.documents d 
                 JOIN employee e ON e.EMP_ID = d.authorId
-                JOIN doc_status stat ON stat.id = d.statusId 
                 JOIN doc_type t ON t.id = d.typeId
                 JOIN steps s ON s.id = d.stepId
                 JOIN process pr ON pr.id = s.processId
