@@ -88,8 +88,8 @@ if(isset($_GET['docId'])){
 
         if($availability == '2'){
             $route = '1';
-            if($availabilityById == $userId) $write = '2';
-            else $write = '1';
+            if($availabilityById != $userId) $write = '1';
+            else $write = '2';
         }
     }else{
         header("Location:".$crud->redirectToPreviousWithAlert("DOC_NOT_LOAD"));
@@ -755,73 +755,80 @@ include 'EDMS_SIDEBAR.php';
                     </div>
                     <div class="panel-body">
                         <div class="btn-group btn-group-vertical" style="width: 100%;">
-                            <?php
-                            if($currentStepId == '1'){
-                                //ASSIGN PROCESS BUTTON WITH CONFIRM MODAL
-                            }else if($route=='2' && $availability=='1') {
-                                $rows = $crud->getStepRoutes($currentStepId);
-                                if (!empty($rows)) {
-                                    foreach ((array)$rows as $key => $row) {
-                                        $btnClass = 'btn btn-primary';
-                                        if($row['assignStatus'] == 3){
-                                            $btnClass = 'btn btn-success';
-                                        }else if($row['assignStatus'] == 4){
-                                            $btnClass = 'btn btn-danger';
-                                        }
+                            <?php if($availability == '1'){ ?>
+                                <?php
+                                    if($route=='2') {
+                                    $rows = $crud->getStepRoutes($currentStepId);
+                                    if (!empty($rows)) {
+                                        foreach ((array)$rows as $key => $row) {
+                                            $btnClass = 'btn btn-primary';
+                                            if($row['assignStatus'] == 3){
+                                                $btnClass = 'btn btn-success';
+                                            }else if($row['assignStatus'] == 4){
+                                                $btnClass = 'btn btn-danger';
+                                            }
 
-                                        ?>
-                                        <button class="<?php echo $btnClass;?>" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#modalRoute<?php echo $row['routeId'];?>">
-                                            <?php echo $row['routeName'];?>
-                                        </button>
-                                        <div id="modalRoute<?php echo $row['routeId'];?>" class="modal fade" role="dialog">
-                                            <div class="modal-dialog">
-                                                <form method="POST" action="">
-                                                    <input type="hidden" name="documentId" value="<?php echo $documentId; ?>">
-                                                    <input type="hidden" name="assignStatusId" value="<?php echo $row['assignStatus'];?>">
-                                                    <input type="hidden" name="nextStepId" value="<?php echo $row['nextStepId'];?>">
-                                                    <input type="hidden" name="currentStatusId" value="<?php echo $statusId;?>">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title"><b>Confirm '<?php echo $row['routeName'];?>'?</b></h5>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="form-group">
-                                                                <p>Please provide remarks first.</p>
-                                                                <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
+                                            ?>
+                                            <button class="<?php echo $btnClass;?>" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#modalRoute<?php echo $row['routeId'];?>">
+                                                <?php echo $row['routeName'];?>
+                                            </button>
+                                            <div id="modalRoute<?php echo $row['routeId'];?>" class="modal fade" role="dialog">
+                                                <div class="modal-dialog">
+                                                    <form method="POST" action="">
+                                                        <input type="hidden" name="documentId" value="<?php echo $documentId; ?>">
+                                                        <input type="hidden" name="assignStatusId" value="<?php echo $row['assignStatus'];?>">
+                                                        <input type="hidden" name="nextStepId" value="<?php echo $row['nextStepId'];?>">
+                                                        <input type="hidden" name="currentStatusId" value="<?php echo $statusId;?>">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title"><b>Confirm '<?php echo $row['routeName'];?>'?</b></h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="form-group">
+                                                                    <p>Please provide remarks first.</p>
+                                                                    <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <div class="form-group">
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                    <button class="btn btn-primary" type="submit" name="btnRoute">Confirm</button>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <div class="modal-footer">
-                                                            <div class="form-group">
-                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                                <button class="btn btn-primary" type="submit" name="btnRoute">Confirm</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </form>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <?php
+                                            <?php
+                                        }
                                     }
                                 }
-                            }
-                            ?>
+                                ?>
+                            <?php if( $write=='2'){?>
                             <form method="POST" action="">
-                                <?php if( $write=='2' && $availability=='1'){?>
-                                    <input type="hidden" name="filePath" value="<?php echo $filePath;?>">
-                                    <input type="hidden" name="userId" value="<?php echo $userId;?>">
-                                    <button class="btn btn-default" type="submit" name="btnLock" value="<?php echo $documentId;?>" style="text-align: left; width:100%;">Check Out and Edit
-                                        <a href="<?php echo $filePath?>" download><button type="button" class="btn btn-default" style="text-align: left; width: 100%;">Download</button></a>
-                                    <button type="button" class="btn btn-warning" style="text-align: left; width: 100%;">Archive</button>
-                                <?php } else if($write=='2' && $availability=='2'){ ?>
-                                    <button type="button" class="btn btn-primary" id="btnUpload" data-toggle="modal" data-target="#uploadModal" style="text-align: left; width: 100%;">Finish Editing</button>
-                                    <button class="btn btn-warning" type="submit" name="btnUnlock" id="btnUnlock" value="<?php echo $documentId;?>" style="text-align: left; width: 100%;">Cancel Editing</button>
-                                <?php } else if($availability == '2' && ($availabilityById != $userId)) { ?>
+                            <input type="hidden" name="filePath" value="<?php echo $filePath;?>">
+                            <input type="hidden" name="userId" value="<?php echo $userId;?>">
+                                <button class="btn btn-default" type="submit" name="btnLock" value="<?php echo $documentId;?>" style="text-align: left; width:100%;">Check Out and Edit</button>
+                                <a href="<?php echo $filePath?>" download><button type="button" class="btn btn-default" style="text-align: left; width: 100%;">Download</button></a>
+                                <button type="button" class="btn btn-warning" style="text-align: left; width: 100%;">Archive</button>
+                                <?php }  ?>
+                                </form>
+                            <?php } ?>
+
+                            <?php if($availability == '2'){ ?>
+                                <?php if($write=='2'){ ?>
+                                    <form method="POST" action="">
+                                        <button type="button" class="btn btn-primary" id="btnUpload" data-toggle="modal" data-target="#uploadModal" style="text-align: left; width: 100%;">Finish Editing</button>
+                                        <button class="btn btn-warning" type="submit" name="btnUnlock" id="btnUnlock" value="<?php echo $documentId;?>" style="text-align: left; width: 100%;">Cancel Editing</button>
+                                    </form>
+                                <?php } else { ?>
                                     <div class="alert alert-warning">
                                         The document has been checked out by <strong><?php echo $availabilityByName;?></strong> on <i><?php echo date("F j, Y g:i:s A ", strtotime($availabilityOn));?></i> which means most document actions are restricted.
                                     </div>
-                                    <a href="<?php echo $filePath?>" download><button type="button" class="btn btn-default" style="text-align: left; width: 100%;">Download</button></a>
+
                                 <?php } ?>
-                            </form>
+                            <?php } ?>
+                            <a href="<?php echo $filePath?>" download><button type="button" class="btn btn-default" style="text-align: left; width: 100%;">Download</button></a>
                         </div>
                     </div>
 

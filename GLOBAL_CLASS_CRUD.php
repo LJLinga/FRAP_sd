@@ -553,12 +553,52 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                 ORDER BY d.lastUpdated DESC;");
     }
 
+    public function getPersonalDocumentsEditing($userId){
+        return $this->getData("SELECT d.documentId, d.statusId, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName, 
+                d.filePath, d.title, d.versionNo, d.timeCreated, d.lastUpdated,
+                s.stepNo, s.stepName, t.type,
+                pr.processName, 
+                (SELECT CONCAT(e.FIRSTNAME,', ',e.LASTNAME) FROM employee e2 WHERE e2.EMP_ID = d.firstAuthorId) AS firstAuthorName 
+                FROM facultyassocnew.documents d 
+                JOIN employee e ON e.EMP_ID = d.authorId
+                JOIN doc_type t ON t.id = d.typeId
+                JOIN steps s ON s.id = d.stepId
+                JOIN process pr ON pr.id = s.processId
+                WHERE t.isActive = 2 AND (d.firstAuthorId = '$userId' OR d.authorId = '$userId')
+                AND d.availabilityById = '$userId' AND d.availabilityId = '2'
+                ORDER BY d.lastUpdated DESC;");
+    }
+
     public function getStepGroupMemberPermissions($stepId, $userId){
-        return $this->getData("SELECT s.* FROM user_groups ug 
+        return $this->getData("SELECT s.*, s.gread AS `read`, s.gwrite AS `write`, s.gcomment AS `comment`, s.groute AS route FROM user_groups ug 
                                         JOIN groups g ON ug.groupId = g.id
                                         JOIN steps s ON g.id = s.groupId
                                         WHERE s.id = '$stepId' AND ug.userId = '$userId'
                                         LIMIT 1;");
+    }
+
+    public function getNeedsMyAttentionDocuments($userId){
+        return $this->getData("SELECT COUNT(d.documentId) FROM documents d
+                JOIN doc_type t ON t.id = d.typeId
+                WHERE t.isActive = 2 AND d.stepId IN (SELECT s.id FROM user_groups ug
+                                                    JOIN groups g ON ug.groupId = g.id
+                                                    JOIN steps s ON g.id = s.groupId
+                                                    WHERE ug.userId = '$userId' AND (s.groute = 2 OR s.gwrite = 2))
+                AND d.firstAuthorId != '$userId'
+                AND d.statusId = '2'
+                ORDER BY d.lastUpdated DESC;");
+    }
+
+    public function getEditingByMeDocuments($userId){
+        return $this->getData("SELECT COUNT(d.documentId) FROM documents d
+                JOIN doc_type t ON t.id = d.typeId
+                WHERE t.isActive = 2 AND d.stepId IN (SELECT s.id FROM user_groups ug
+                                                    JOIN groups g ON ug.groupId = g.id
+                                                    JOIN steps s ON g.id = s.groupId
+                                                    WHERE ug.userId = '$userId' AND (s.groute = 2 OR s.gwrite = 2))
+                AND d.firstAuthorId != '$userId'
+                AND d.statusId = '2'
+                ORDER BY d.lastUpdated DESC;");
     }
 
     // ONE GROUP PER STEP ONLY, CHANGE OF DESIGN
