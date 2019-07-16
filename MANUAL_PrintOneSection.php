@@ -28,8 +28,8 @@ if(isset($_GET['versionId'])){
             $pdf->addPage();
             $pdf->setTitle($row['sectionNo']);
             $pdf->writeSection($row['sectionNo'], $row['title'], $row['content']);
-            $pdf->Output();
         }
+        $pdf->Output();
     }
 }
 

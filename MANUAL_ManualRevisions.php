@@ -25,7 +25,7 @@ if(!empty($rows)){
 
 if(isset($_POST['btnPrint'])){
     //$crud->execute("INSERT INTO revisions (initiatedById, statusId) VALUES ('$userId','2')");
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_PublishSections.php");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_PrintManual.php");
 }
 
 if(isset($_POST['btnPublish'])){
@@ -35,16 +35,16 @@ if(isset($_POST['btnPublish'])){
 
     $manualId = $crud->executeGetKey("INSERT INTO faculty_manual (year, title, publishedById) VALUES ('$year','$title','$publishedById');");
 
-    $rows = $crud->getData("SELECT v.timeCreated, v.sectionId FROM facultyassocnew.section_versions v 
+    $rows = $crud->getData("SELECT v.versionId, v.sectionId FROM facultyassocnew.section_versions v 
                                     WHERE v.timeCreated = (SELECT MAX(v2.timeCreated) FROM section_versions v2 WHERE v.sectionId = v2.sectionId)
-                                    AND v.statusId = 2");
+                                    AND v.statusId = 3");
 
     foreach((array)$rows AS $key=>$row){
         $sectionId = $row['sectionId'];
-        $timeCreated = $row['timeCreated'];
-        $crud->execute("INSERT INTO published_versions (manualId, sectionId, timeCreated) VALUES ('$manualId','$sectionId','$timeCreated')");
+        $versionId = $row['versionId'];
+        $crud->execute("INSERT INTO published_versions (manualId, sectionId, versionId) VALUES ('$manualId','$sectionId','$versionId')");
     }
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_PublishSections.php");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_PrintManual.php?id=".$manualId);
 }
 
 if(isset($_POST['btnOpen'])){
@@ -85,8 +85,8 @@ include 'EDMS_SIDEBAR.php';
                 </h3>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-8">
+        <div class="row" style="height: 100%;">
+            <div class="col-lg-8" style="max-height: inherit;">
                 <div class="panel panel-default">
                     <div class="panel-body" style="position: relative;">
                         <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
@@ -103,7 +103,7 @@ include 'EDMS_SIDEBAR.php';
                             if($boolPres) {
                                 echo '<span style="position: absolute; top:4px; right:4px;" class="btn-group">';
                                 echo '<button class="btn btn-success" name="btnOpen"> Open Revisions </button>';
-                                echo '<button type="button" id="btnPublish" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Publish Changes</button>';
+                                echo '<button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Publish Changes</button>';
                                 echo '</span>';
                             }
                         }
@@ -176,44 +176,12 @@ include 'EDMS_SIDEBAR.php';
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
-                <div class="panel panel-green">
-                    <div class="panel-heading">
-                        <b>
-                            <?php
-                            $rows = $crud->getData("SELECT roleName FROM edms_roles WHERE id = ".$_SESSION['EDMS_ROLE']." LIMIT 1;");
-                            echo $rows[0]['roleName'];
-                            ?>
-                        </b> Workflows
-                    </div>
-                    <div class="panel-body">
-                        <?php
-                        $rows = $crud->getData("SELECT  pr.processName, s.stepNo, s.stepName AS name 
-                                                FROM employee e 
-                                                JOIN edms_roles er ON e.EDMS_ROLE = er.id 
-                                                JOIN step_roles sr ON sr.roleId = er.id
-                                                JOIN steps s ON s.id = sr.stepId
-                                                JOIN process pr ON pr.id = s.processId
-                                                WHERE e.EMP_ID = '$userId'
-                                                ORDER BY pr.processName, s.stepNo");
-                        if(!empty($rows)){
-                            foreach((array)$rows AS $key => $row){
-                                echo '<div class="card">';
-                                echo '<div class="card-body">';
-                                echo $row['processName'].' <i class="fa fa-arrow-right"></i> Step '.$row['stepNo'].' - '.$row['name'].'<br>';
-                                echo '</div></div>';
-                            }
-                        }else{
-                            echo 'You have no workflows but is still able to submit documents to their respective workflows.';
-                        }
-                        ?>
-                    </div>
-                </div>
-                <div class="panel panel-primary">
+            <div class="col-lg-4" style="max-height: 100%;">
+                <div class="panel panel-info">
                     <div class="panel-heading">
                         Published Manual Editions
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body" style="max-height:50rem; inherit;overflow-y: auto;">
                         <?php
                         $rows = $crud->getData("SELECT id, year, title, timePublished, publishedById 
                                         FROM facultyassocnew.faculty_manual ORDER BY id DESC;");
@@ -222,7 +190,7 @@ include 'EDMS_SIDEBAR.php';
                                 echo '<div class="card" style="position: relative;">';
                                 echo '<div class="card-body">';
                                 echo $row['title'].' ('.$row['year'].')<br>';
-                                echo '<a href="MANUAL_PublishSections.php?id='.$row['id'].'" target="_blank" class="btn btn-primary btn-sm" style="position: absolute; right: 2rem; top: 0.5rem;"><i class="fa fa-print"></i></a>';
+                                echo '<a href="MANUAL_PrintManual.php?id='.$row['id'].'" target="_blank" class="btn btn-primary btn-sm" style="position: absolute; right: 2rem; top: 0.5rem;"><i class="fa fa-print"></i></a>';
                                 echo '</div></div>';
                             }
                         }else{
@@ -240,10 +208,20 @@ include 'EDMS_SIDEBAR.php';
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
-        <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
+        <form method="POST" action="">
             <!-- Modal content-->
             <div class="modal-content">
+                <div class="modal-header">
+                    <strong class="modal-title">Publish Manual Edition</strong>
+                </div>
                 <div class="modal-body">
+                    <?php
+
+                    $rows = $crud->getData("SELECT v.versionId, v.sectionId FROM facultyassocnew.section_versions v 
+                                    WHERE v.timeCreated = (SELECT MAX(v2.timeCreated) FROM section_versions v2 WHERE v.sectionId = v2.sectionId)
+                                    AND v.statusId = 3 LIMIT 1");
+                    if(!empty($rows)){
+                    ?>
                     <div class="form-group">
                         <label for="year">Edition Year</label>
                         <div class="input-group date" id="datetimepicker1">
@@ -258,12 +236,19 @@ include 'EDMS_SIDEBAR.php';
                         <input type="text" class="form-control" id="title" name="title" value="AFED Inc. Manual" required>
                     </div>
                     <span id="err"></span>
+                    <?php }else { ?>
+                        <div class="alert alert-warning">
+                            <strong>There are no publishable (<?php echo $crud->coloriseStatus(3);?>) sections as of the moment. </strong>
+                        </div>
+                    <?php  } ?>
                 </div>
                 <div class="modal-footer">
                     <div class="form-group">
                         <input type="hidden" name="userId" value="<?php echo $userId; ?>">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <?php if(!empty($rows)){ ?>
                         <input type="submit" name="btnPublish" id="btnPublish" class="btn btn-primary">
+                        <?php } ?>
                     </div>
                 </div>
             </div>

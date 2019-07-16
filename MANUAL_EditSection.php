@@ -26,12 +26,6 @@ $query = "SELECT r.id, r.revisionsOpened FROM revisions r WHERE r.statusId = 2 O
 $rows = $crud->getData($query);
 if(!empty($rows)){
     $revisions = 'open';
-    foreach ((array) $rows as $key => $row){
-        $revisionsOpened = $row['revisionsOpened'];
-        $revisionsId = $row['id'];
-    }
-}else{
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_ManualRevisions.php");
 }
 
 
@@ -41,7 +35,7 @@ if(isset($_POST['btnFinish'])){
     $sectionNo = $crud->escape_string($_POST['section_number']);
     $content = $crud->escape_string($_POST['section_content']);
     $crud->execute("UPDATE sections SET title = '$title', sectionNo = '$sectionNo', content = '$content', availabilityId='2', lockedById=NULL WHERE id = '$sectionId'");
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_ViewSection.php?secId=".$sectionId);
+    //header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_ViewSection.php?secId=".$sectionId);
 }
 
 if(isset($_GET['secId'])){
@@ -108,11 +102,26 @@ if(isset($_GET['secId'])){
             header("Location:".$crud->redirectToPreviousWithAlert("DOC_NO_PERMISSIONS"));
         }
 
-        if($availability == '2'){
+        $edit = '2';
+        //Not allowed to edit
+
+        if($revisions != 'open'){
             $route = '1';
-            if($availabilityById == $userId) $write = '2'; //Display FORM inputs instead of the text preview. Lock add reference buttons.
-            else $write = '1';
+            $write = '1';
         }
+
+        //Allowed to write
+        if($write == '2'){
+            //Locked
+            if($availability == '2'){
+                $route = '1'; //Not allowed to route
+                if($availabilityById == $userId) { $edit = '1'; } //Display FORM inputs instead of the text preview. Lock add reference buttons.
+                else { $write = '1'; }
+            }
+        }
+
+
+
     }else{
         header("Location:".$crud->redirectToPreviousWithAlert("DOC_NOT_LOAD"));
     }
@@ -140,10 +149,6 @@ if(isset($_POST['btnLock'])){
     }else{
         header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId);
     }
-}
-
-if(isset($_POST['btnPrint'])){
-    //Print logic
 }
 
 if(isset($_POST['btnRoute'])){
@@ -202,7 +207,7 @@ include 'EDMS_SIDEBAR.php';
 
                 <div class="row" style="margin-top: 2rem;">
                     <div class="column col-lg-8">
-                        <?php if($write=='2' && $availability=='2'){ ?>
+                        <?php if($edit == '1'){ ?>
                         <div class="panel panel-default" style="">
                             <div class="panel-body">
                                 <form id="form" name="form" method="POST" action="">
@@ -572,7 +577,9 @@ include 'EDMS_SIDEBAR.php';
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <b>References</b>
+                                        <?php if($edit == '1'){ ?>
                                         <button id="btnRefModal" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
+                                        <?php } ?>
                                         <button class="btn btn-default btn-sm fa fa-expand" type="button" data-toggle="collapse" data-target="#collapseReferences" style="position: absolute; top: 0px; right: 15px;">
                                     </div>
                                 </div>
@@ -816,88 +823,80 @@ include 'EDMS_SIDEBAR.php';
                             </div>
                         </div>
                         <?php } ?>
-
-                        <?php if($availability == '1'){ ?>
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <b>Section Actions</b>
                             </div>
                             <div class="panel-body">
-                                <?php if($route=='2') {
-                                $rows = $crud->getStepRoutes($currentStepId);
-                                if (!empty($rows)) {
-                                    foreach ((array)$rows as $key => $row) {
-                                        $btnClass = 'btn btn-primary';
-                                        if($row['assignStatus'] == 3){
-                                        $btnClass = 'btn btn-success';
-                                        }else if($row['assignStatus'] == 4){
-                                        $btnClass = 'btn btn-danger';
-                                        }
-
-                                ?>
-                                <button class="<?php echo $btnClass;?>" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#modalRoute<?php echo $row['routeId'];?>">
-                                    <?php echo $row['routeName'];?>
-                                </button>
-                                <div id="modalRoute<?php echo $row['routeId'];?>" class="modal fade" role="dialog">
-                                    <div class="modal-dialog">
-                                        <form method="POST" action="">
-                                            <input type="hidden" name="sectionId" value="<?php echo $sectionId; ?>">
-                                            <input type="hidden" name="assignStatusId" value="<?php echo $row['assignStatus'];?>">
-                                            <input type="hidden" name="nextStepId" value="<?php echo $row['nextStepId'];?>">
-                                            <input type="hidden" name="currentStatusId" value="<?php echo $statusId;?>">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title"><b>Confirm '<?php echo $row['routeName'];?>'?</b></h5>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="form-group">
-                                                        <p>Please provide remarks first.</p>
-                                                        <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <div class="form-group">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                        <button class="btn btn-primary" type="submit" name="btnRoute">Confirm</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
+                                <?php if($revisions != 'open') { ?>
+                                    <div class="alert alert-danger">
+                                        <strong>Revisions are currently closed. All section modification actions are restricted. </strong>
                                     </div>
-                                </div>
-                                <?php
-                                    }
-                                }
-                            }
+                                <?php }else{ ?>
+                                    <?php if($availability == '1'){ ?>
+                                        <?php if($route=='2') {
+                                            $rows = $crud->getStepRoutes($currentStepId);
+                                            if (!empty($rows)) {
+                                                foreach ((array)$rows as $key => $row) {
+                                                    $btnClass = 'btn btn-primary';
+                                                    if($row['assignStatus'] == 3){
+                                                        $btnClass = 'btn btn-success';
+                                                    }else if($row['assignStatus'] == 4){
+                                                        $btnClass = 'btn btn-danger';
+                                                    }
 
-                            if( $write=='2'){?>
-                                <form method="POST" action="">
-                                    <input type="hidden" name="userId" value="<?php echo $userId;?>">
-                                    <button class="btn btn-default" type="submit" name="btnLock" value="<?php echo $sectionId;?>" style="text-align: left; width:100%;"><i class="fa fa-edit"></i> Check Out and Edit</button>
-                                    <a href="MANUAL_PrintOneSection.php?sectionId=<?php echo $sectionId;?>" target="_blank" class="btn btn-default" style="text-align: left; width: 100%;"><i class="fa fa-print"></i> Print</a>
-                                    <button type="button" class="btn btn-warning" style="text-align: left; width: 100%;"><i class="fa fa-archive"></i> Archive</button>
-                                </form>
-                            <?php } ?>
-
+                                                    ?>
+                                                    <button class="<?php echo $btnClass;?>" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#modalRoute<?php echo $row['routeId'];?>">
+                                                        <?php echo $row['routeName'];?>
+                                                    </button>
+                                                    <div id="modalRoute<?php echo $row['routeId'];?>" class="modal fade" role="dialog">
+                                                        <div class="modal-dialog">
+                                                            <form method="POST" action="">
+                                                                <input type="hidden" name="sectionId" value="<?php echo $sectionId; ?>">
+                                                                <input type="hidden" name="assignStatusId" value="<?php echo $row['assignStatus'];?>">
+                                                                <input type="hidden" name="nextStepId" value="<?php echo $row['nextStepId'];?>">
+                                                                <input type="hidden" name="currentStatusId" value="<?php echo $statusId;?>">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title"><b>Confirm '<?php echo $row['routeName'];?>'?</b></h5>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="form-group">
+                                                                            <p>Please provide remarks first.</p>
+                                                                            <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <div class="form-group">
+                                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                            <button class="btn btn-primary" type="submit" name="btnRoute">Confirm</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <?php
+                                                }
+                                            }
+                                        }?>
+                                        <?php if( $write=='2'){?>
+                                            <form method="POST" action="">
+                                                <input type="hidden" name="userId" value="<?php echo $userId;?>">
+                                                <button class="btn btn-default" type="submit" name="btnLock" value="<?php echo $sectionId;?>" style="text-align: left; width:100%;"><i class="fa fa-edit"></i> Check Out and Edit</button>
+                                                <button type="button" class="btn btn-warning" style="text-align: left; width: 100%;"><i class="fa fa-archive"></i> Archive</button>
+                                            </form>
+                                        <?php } ?>
+                                    <?php } ?>
+                                    <?php if($availability == '2' && ($availabilityById != $userId)) { ?>
+                                        <div class="alert alert-warning">
+                                            The section has been checked out by <i><?php echo $availabilityByName;?></i> on <i><?php echo date("F j, Y g:i:s A ", strtotime($availabilityOn));?></i> which means most section actions are restricted.
+                                        </div>
+                                    <?php } ?>
+                                <?php } ?>
+                                <a href="MANUAL_PrintOneSection.php?sectionId=<?php echo $sectionId;?>" target="_blank" class="btn btn-default" style="text-align: left; width: 100%;"><i class="fa fa-print"></i> Print</a>
                             </div>
                         </div>
-                        <?php } ?>
-                        <?php if($availability == '2' && ($availabilityById != $userId)) { ?>
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <b>Section Actions</b>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="alert alert-warning">
-                                        The section has been checked out by <strong><?php echo $availabilityByName;?></strong> on <i><?php echo date("F j, Y g:i:s A ", strtotime($availabilityOn));?></i> which means most section actions are restricted.
-                                    </div>
-                                    <button type="button" class="btn btn-default" style="text-align: left; width: 100%;">Print</button>
-                                </div>
-                            </div>
-                        <?php } ?>
-
-
-
                     </div>
                 </div>
 
@@ -970,6 +969,8 @@ include 'EDMS_SIDEBAR.php';
     <script>
         $(document).ready( function(){
 
+
+
             let tableHistory = $('#tblHistory').DataTable( {
                 bLengthChange: false,
                 pageLength: 10,
@@ -1007,16 +1008,12 @@ include 'EDMS_SIDEBAR.php';
                 }
             });
 
-            $('.add_doc_ref').on('click', function(){
-                console.log('clicked');
-                reloadDataTable(tableAddRef);
-                reloadDataTable(tableRef);
-            });
-
 
 
             $(".dataTables_filter").hide();
         });
+
+        let edit  = "<?php echo $edit;?>";
 
         let tableAddRef = $('#tblAddReferences').DataTable( {
             bSort: true,
@@ -1030,7 +1027,8 @@ include 'EDMS_SIDEBAR.php';
                 "dataSrc": '',
                 "data": {
                     requestType: 'MANUAL_REFERENCES',
-                    sectionId: "<?php echo $sectionId;?>"
+                    sectionId: "<?php echo $sectionId;?>",
+                    edit: edit
                 },
             },
             columns: [
@@ -1063,7 +1061,8 @@ include 'EDMS_SIDEBAR.php';
                 "dataSrc": '',
                 "data": {
                     requestType: 'ADDED_MANUAL_REFERENCES',
-                    sectionId: "<?php echo $sectionId;?>"
+                    sectionId: "<?php echo $sectionId;?>",
+                    edit: edit
                 },
             },
             columns: [

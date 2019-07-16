@@ -450,6 +450,18 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         return '<span class="label label-'.$color.'">'.$string.'</span>';
     }
 
+    public function isRevisionsOpen(){
+        $query = "SELECT r.id, r.revisionsOpened FROM revisions r WHERE r.statusId = 2 ORDER BY r.id DESC LIMIT 1;";
+        $rows = $this->getData($query);
+        if(!empty($rows)){
+            $revisions = 'open';
+            foreach ((array) $rows as $key => $row){
+                $revisionsOpened = $row['revisionsOpened'];
+                $revisionsId = $row['id'];
+            }
+        }
+    }
+
     public function coloriseUpdated($string){
         return '<span class="label label-success">'.$string.'</span>';
     }

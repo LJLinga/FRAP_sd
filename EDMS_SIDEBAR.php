@@ -24,9 +24,9 @@
                 </ul>
             </li>
 
-            <li>
-                <a href="MANUAL_FacultyManual.php"><i class="fa fa-fw fa-book"></i> Faculty Manual</a>
-            </li>
+<!--            <li>-->
+<!--                <a href="MANUAL_FacultyManual.php"><i class="fa fa-fw fa-book"></i> Faculty Manual</a>-->
+<!--            </li>-->
 
             <?php
             $rows = $crud->doesUserHaveWorkflow($_SESSION['idnum'],7);

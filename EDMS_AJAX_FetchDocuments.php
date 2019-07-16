@@ -119,11 +119,15 @@ if(isset($_POST['requestType'])){
 
     }else if ($_POST['requestType'] == 'MANUAL_REFERENCES'){
         $sectionId = $_POST['sectionId'];
+        $edit = $_POST['edit'];
 
         $rows = $crud->getManualReferencableDocuments($sectionId);
         $data = [];
         foreach ((array) $rows as $key => $row) {
-            $buttons = '<button type="button" class="btn btn-success btn-sm fa fa-plus add_doc_ref" onclick="addRef('.$row['versionId'].')" data-toggle="tooltip" title="Add"></button>';
+            $buttons = '';
+            if($edit == '1') {
+                $buttons = '<button type="button" class="btn btn-success btn-sm fa fa-plus add_doc_ref" onclick="addRef(' . $row['versionId'] . ')" data-toggle="tooltip" title="Add"></button>';
+            }
             //$buttons = '<a class="btn btn-info" data-toggle="tooltip" title="View document" name="documentId" href="EDMS_ViewDocument.php?docId='.$row['documentId'].'"><i class="fa fa-eye"></i></a>';
             $buttons .= ' <a class="btn btn-secondary btn-sm fa fa-download" data-toggle="tooltip" title="Download document" href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"></a>';
 
@@ -155,6 +159,7 @@ if(isset($_POST['requestType'])){
         exit;
     }else if ($_POST['requestType'] == 'ADDED_MANUAL_REFERENCES'){
         $sectionId = $_POST['sectionId'];
+        $edit = $_POST['edit'];
 
         $rows = $crud->getData("SELECT ref.*, dv.*, dt.type  FROM section_ref_versions ref
                                         JOIN doc_versions dv on ref.versionId = dv.versionId
@@ -163,9 +168,11 @@ if(isset($_POST['requestType'])){
         $data = [];
         if(!empty($rows)){
             foreach((array) $rows AS $key => $row){
-
-                $buttons = '<button type="button" class="btn btn-sm btn-danger fa fa-trash" data-toggle="tooltip" onclick="removeRef('.$row['versionId'].')" title="Remove"></button>';
-                //$buttons = '<a class="btn btn-info" data-toggle="tooltip" title="View document" name="documentId" href="EDMS_ViewDocument.php?docId='.$row['documentId'].'"><i class="fa fa-eye"></i></a>';
+                $buttons = '';
+                if($edit == '1'){
+                    $buttons = '<button type="button" class="btn btn-sm btn-danger fa fa-trash" data-toggle="tooltip" onclick="removeRef('.$row['versionId'].')" title="Remove"></button>';
+                }
+               //$buttons = '<a class="btn btn-info" data-toggle="tooltip" title="View document" name="documentId" href="EDMS_ViewDocument.php?docId='.$row['documentId'].'"><i class="fa fa-eye"></i></a>';
                 $buttons .= ' <a class="btn btn-secondary btn-sm fa fa-download" data-toggle="tooltip" title="Download document" href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"></a>';
                 $data[] =  array(
                     'title' => $row['title'],
