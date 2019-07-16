@@ -181,7 +181,7 @@ include 'GLOBAL_HEADER.php';
             <div class="column col-lg-6 col-lg-offset-2" style="margin-top: 1rem; margin-bottom: 1rem;">
                 <div class="panel panel-default" style="margin-top: 1rem;">
                     <div class="panel-body">
-                        <a href="<?php echo "http://localhost/FRAP_sd/feed.php"?>" ><i class="fa fa-arrow-left"></i> Back to Newsfeed</a>
+                        <a href="<?php echo "feed.php"?>" ><i class="fa fa-arrow-left"></i> Back to Newsfeed</a>
                     </div>
                 </div>
                 <div class="panel panel-default" style="margin-top: 1rem;">
@@ -191,7 +191,67 @@ include 'GLOBAL_HEADER.php';
                         <br><p class="card-text"><?php echo $body ?></p>
                         <?php
 
-                            $rows = $crud->getData("SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName, 
+
+                        $rows = $crud->getData("SELECT pl.id, pl.typeId, pl.question 
+                                              FROM polls pl WHERE pl.postId='$postId';");
+                        if(!empty($rows)) {
+                            foreach ((array)$rows as $key => $row) {
+                                $pollId = $row['id'];
+                                echo '<div class="panel panel-default" style="margin-top: 1rem;">
+                                                <div class="panel-heading"><b>Question: '.$row['question'].'</b>
+                                                <button class="btn btn-default btn-sm fa fa-expand" type="button" data-toggle="collapse" data-target="#collapseQuestion'.$pollId.'" style="position: absolute; top: 0px; right: 15px;">
+                                                </div>
+                                                <div class="panel-body" id="collapseQuestion'.$pollId.'">';
+                                $rowsIfAnswered = $crud->getData("SELECT pr.responderId, po.response 
+                                                          FROM poll_options po JOIN poll_responses pr ON pr.responseId = po.optionId
+                                                          WHERE po.pollId = '$pollId' AND pr.responderId = '$userId' LIMIT 1;");
+                                if(empty($rowsIfAnswered)) {
+                                    $rows2 = $crud->getData("SELECT optionId, response FROM poll_options WHERE pollId = '$pollId';");
+                                    if (!empty($rows)) {
+                                        echo '<form id="submitResponse">';
+                                        echo '<input type="hidden" name="userId" value="' . $userId . '">';
+                                        foreach ((array)$rows2 as $key2 => $row2) {
+                                            if (empty($rowsIfAnswered)) {
+                                                echo '<div class="form-check">
+                                                          <input class="form-check-input" type="radio" name="responseId" value="' . $row2['optionId'] . '" checked>
+                                                          <label class="form-check-label" for="response">' . $row2['response'] . '</label>
+                                                        </div>';
+                                            }
+                                        }
+                                        echo '<button type="button" class="btn btn-default btn-sm" onclick="respond(this,&quot;' . $pollId . '&quot;)">Submit Response</button>';
+                                        echo '</form>';
+                                    }
+                                }else{
+                                    echo '<div><span class="badge badge-success">You responded "'.$rowsIfAnswered[0]['response'].'"</span></div>';
+                                }
+                                echo '<span class="loadResults">';
+                                $rows3 = $crud->getData("SELECT COUNT(DISTINCT(pr.responderId))  as responseCount, pr.responseId, po.response
+                                        FROM facultyassocnew.poll_responses pr
+                                        JOIN poll_options po ON pr.responseId = po.optionId
+                                        JOIN polls p ON po.pollId = p.id WHERE p.id='$pollId' GROUP BY po.optionId;");
+                                $data = '';
+                                $total = 0;
+                                if(!empty($rows3)) {
+                                    foreach ((array)$rows3 as $key3 => $row3) {
+                                        $total = $total + (int) $row3['responseCount'];
+                                    }
+                                    foreach ((array)$rows3 as $key3 => $row3) {
+                                        $percent = (int) $row3['responseCount'] / $total * 100;
+                                        $percent = round($percent, 2);
+                                        $data .= '<label>'.$row3['response'].'</label>';
+                                        $data .= ' ('.$row3['responseCount'].' out of '.$total.' votes)';
+                                        $data .= '<div class="progress">';
+                                        $data .= '<div class="progress-bar progress-bar-success" role="progressbar" style="width: '.$percent.'%;" aria-valuenow="'.$percent.'" aria-valuemin="0" aria-valuemax="100">'.$percent.'%</div>';
+                                        $data .= '</div>';
+                                    }
+                                }
+                                echo $data;
+                                echo '</span>';
+                                echo '</div></div>';
+                            }
+                        } ?>
+
+                        <?php $rows = $crud->getData("SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName, 
                                                                 v.filePath, v.title, v.versionNo, v.timeCreated, d.lastUpdated,
                                                                 stat.statusName, s.stepNo, s.stepName, t.type,
                                                                 pr.processName, v.versionId AS vid,
@@ -205,95 +265,41 @@ include 'GLOBAL_HEADER.php';
                                                                 JOIN steps s ON s.id = d.stepId
                                                                 JOIN process pr ON pr.id = s.processId
                                                                 WHERE ref.postId = $postId");
-
-                            if(!empty($rows)) {
-                                echo '<div class="panel panel-secondary" style="margin-top: 1rem;">
+                        if(!empty($rows)) {
+                            echo '<div class="panel panel-info" style="margin-top: 1rem;">
                                         <div class="panel-heading"><b>Document References</b></div>
                                         <div class="panel-body">';
-                                foreach ((array)$rows as $key => $row) {
-                                    $title = $row['title'];
-                                    $versionNo = $row['versionNo'];
-                                    $originalAuthor = $row['firstAuthorName'];
-                                    $currentAuthor = $row['authorName'];
-                                    $processName = $row['processName'];
-                                    $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
-                                    $filePath = $row['filePath'];
-                                    $fileName = $title.'_ver'.$versionNo.'_'.basename($filePath);
-                                    echo '<div class="card" style="position: relative;">';
-                                    echo '<input type="hidden" class="refDocuments" value="'.$row['vid'].'">';
-                                    echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
-                                    echo '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >';
-                                    echo '<a class="btn fa fa-download"  href="'.$filePath.'" download="'.$fileName.'"></a>';
-                                    echo '</div>';
-                                    echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
-                                    echo '<div class="card-body">';
-                                    echo 'Process: ' . $processName . '<br>';
-                                    echo 'Created by: ' . $originalAuthor . '<br>';
-                                    echo 'Modified by: ' . $currentAuthor . '<br>';
-                                    echo 'on: <i>' . $updatedOn . '</i><br>';
-                                    echo '</div></div></div>';
-                                }
-                                echo '</div></div>';
+                            foreach ((array)$rows as $key => $row) {
+                                $title = $row['title'];
+                                $versionNo = $row['versionNo'];
+                                $originalAuthor = $row['firstAuthorName'];
+                                $currentAuthor = $row['authorName'];
+                                $processName = $row['processName'];
+                                $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
+                                $filePath = $row['filePath'];
+                                $fileName = $title.'_ver'.$versionNo.'_'.basename($filePath);
+                                echo '<div class="card" style="position: relative;">';
+                                echo '<input type="hidden" class="refDocuments" value="'.$row['vid'].'">';
+                                echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
+                                echo '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >';
+                                echo '<a class="btn fa fa-download"  href="'.$filePath.'" download="'.$fileName.'"></a>';
+                                echo '</div>';
+                                echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
+                                echo '<div class="card-body">';
+                                echo 'Process: ' . $processName . '<br>';
+                                echo 'Created by: ' . $originalAuthor . '<br>';
+                                echo 'Modified by: ' . $currentAuthor . '<br>';
+                                echo 'on: <i>' . $updatedOn . '</i><br>';
+                                echo '</div></div></div>';
                             }
-                            $rows = $crud->getData("SELECT pl.id, pl.typeId, pl.question 
-                                              FROM polls pl WHERE pl.postId='$postId';");
-                            if(!empty($rows)) {
-                                foreach ((array)$rows as $key => $row) {
-                                    $pollId = $row['id'];
-                                    echo '<div class="panel panel-secondary" style="margin-top: 1rem;">
-                                                <div class="panel-heading"><b>Question: '.$row['question'].'</b></div>
-                                                <div class="panel-body">';
-                                    $rowsIfAnswered = $crud->getData("SELECT pr.responderId, po.response 
-                                                          FROM poll_options po JOIN poll_responses pr ON pr.responseId = po.optionId
-                                                          WHERE po.pollId = '$pollId' AND pr.responderId = '$userId' LIMIT 1;");
-                                    if(empty($rowsIfAnswered)) {
-                                        $rows2 = $crud->getData("SELECT optionId, response FROM poll_options WHERE pollId = '$pollId';");
-                                        if (!empty($rows)) {
-                                            echo '<form id="submitResponse">';
-                                            echo '<input type="hidden" name="userId" value="' . $userId . '">';
-                                            foreach ((array)$rows2 as $key2 => $row2) {
-                                                if (empty($rowsIfAnswered)) {
-                                                    echo '<div class="form-check">
-                                                          <input class="form-check-input" type="radio" name="responseId" value="' . $row2['optionId'] . '" checked>
-                                                          <label class="form-check-label" for="response">' . $row2['response'] . '</label>
-                                                        </div>';
-                                                }
-                                            }
-                                            echo '<button type="button" class="btn btn-default btn-sm" onclick="respond(this,&quot;' . $pollId . '&quot;)">Submit Response</button>';
-                                            echo '</form>';
-                                        }
-                                    }else{
-                                        echo '<div><span class="badge badge-success">You responded "'.$rowsIfAnswered[0]['response'].'"</span></div>';
-                                    }
-                                    echo '<span id="loadResults">';
-                                    $rows3 = $crud->getData("SELECT COUNT(DISTINCT(pr.responderId))  as responseCount, pr.responseId, po.response
-                                        FROM facultyassocnew.poll_responses pr
-                                        JOIN poll_options po ON pr.responseId = po.optionId
-                                        JOIN polls p ON po.pollId = p.id WHERE p.id='$pollId' GROUP BY po.optionId;");
-                                    $data = '';
-                                    $total = 0;
-                                    if(!empty($rows3)) {
-                                        foreach ((array)$rows3 as $key3 => $row3) {
-                                            $total = $total + (int) $row3['responseCount'];
-                                        }
-                                        foreach ((array)$rows3 as $key3 => $row3) {
-                                            $percent = (int) $row3['responseCount'] / $total * 100;
-                                            $percent = round($percent, 2);
-                                            $data .= '<label>'.$row3['response'].'</label>';
-                                            $data .= ' ('.$row3['responseCount'].' out of '.$total.' votes)';
-                                            $data .= '<div class="progress">';
-                                            $data .= '<div class="progress-bar progress-bar-success" role="progressbar" style="width: '.$percent.'%;" aria-valuenow="'.$percent.'" aria-valuemin="0" aria-valuemax="100">'.$percent.'%</div>';
-                                            $data .= '</div>';
-                                        }
-                                    }
-                                    echo $data;
-                                    echo '</span>';
-                                    echo '</div></div>';
-                                }
-                            }
+                            echo '</div></div>';
+                        }
+
+
                         ?>
                     </div>
                 </div>
+
                 <?php
                     $query = "SELECT timeStamp, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) as name 
                     FROM post_views v JOIN employee e ON e.EMP_ID = v.viewerId 
@@ -455,7 +461,7 @@ include 'GLOBAL_HEADER.php';
         });
 
         //$('#loadResults').hide();
-        loadResults($('#loadResults'), '<?php echo $pollId; ?>');
+        loadResults($('.loadResults'), '<?php echo $pollId; ?>');
 
 
     });
@@ -483,7 +489,7 @@ include 'GLOBAL_HEADER.php';
             dataType: "JSON",
             success:function(data)
             {
-                //loadResults(span,pollId);
+                loadResults(span,pollId);
             }
         });
     }

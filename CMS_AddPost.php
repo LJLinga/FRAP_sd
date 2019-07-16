@@ -32,15 +32,28 @@ if(isset($_POST['btnSubmit'])){
             }
         }
 
-        if(isset($_POST['option']) && isset($_POST['post_question'])) {
-            $question = $_POST['post_question'];
+        if(isset($_POST['question'])) {
+            echo 'in here';
+            //$question = $_POST['post_question'];
+            $questions = $_POST['question'];
             $typeId = '1';
-            $pollId = $crud->executeGetKey("INSERT INTO polls(postId, typeId, question) VALUES ('$postId','$typeId','$question')");
-            $options = $_POST['option'];
+            //$pollId = $crud->executeGetKey("INSERT INTO polls(postId, typeId, question) VALUES ('$postId','$typeId','$question')");
+            //$options = $_POST['option'];
 
-            foreach((array) $options AS $key => $ref){
-                $query = "INSERT INTO poll_options(pollId,response) VALUES ('$pollId','$ref');";
-                $crud->execute($query);
+//            foreach((array) $options AS $key => $ref){
+//                $query = "INSERT INTO poll_options(pollId,response) VALUES ('$pollId','$ref');";
+//                $crud->execute($query);
+//            }
+            foreach((array) $questions AS $key => $question){
+                echo $key;
+                $pollId = $crud->executeGetKey("INSERT INTO polls(postId, typeId, question) VALUES ('$postId','$typeId','$question')");
+                if(!empty($pollId)){
+                    $options = $_POST['option'.$key];
+                    foreach((array) $options AS $key2 => $ref2){
+                        $query = "INSERT INTO poll_options(pollId,response) VALUES ('$pollId','$ref2');";
+                        $crud->execute($query);
+                    }
+                }
             }
         }
 
@@ -67,131 +80,9 @@ $page_title = 'Santinig - Add Post';
 include 'GLOBAL_HEADER.php';
 include 'CMS_SIDEBAR.php';
 ?>
-    <script>
-
-        //let table = $('table').dataTable();
-
-        $(document).ready( function(){
-            $('textarea').froalaEditor({
-                // Disables video upload
-                videoUpload: false,
-                //
-                imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
-                // Set the file upload URL.
-                fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
-                width: 750,
-                pastePlain: false
-            });
-
-            $('#btnRefModal').on('click', function(){
-                reloadDataTable();
-            });
-
-            /// Recently added for polls
-        });
 
 
-        function reloadDataTable(){
-            let loadedRefs = [];
-            $(".refDocuments").each(function() {
-                loadedRefs.push($(this).val());
-            });
-            $('table').dataTable({
-                destroy: true,
-                "pageLength": 3,
-                "ajax": {
-                    "url":"CMS_AJAX_LoadToAddReferences.php",
-                    "type":"POST",
-                    "data":{ loadedReferences: loadedRefs },
-                    "dataSrc": ''
-                },
-                columns: [
-                    { data: "Document" },
-                    { data: "Status" },
-                    { data: "Action" }
-                ]
-            });
-        }
 
-        function addRef(element, verId, oA, cA, vN, uO, t, pN, fP, fN){
-            $('#noRefsYet').remove();
-            $('#btnUpdate').show();
-            $('#refDocuments').append('<div class="card" style="background-color: #e2fee2; position: relative;">'+
-                '<input type="hidden" name="toAddDocRefs[]" class="refDocuments" value="'+verId+'">'+
-                '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse'+verId+'" aria-expanded="true" aria-controls="collapse'+verId+'"><b>'+t+'</b> <span class="badge">'+vN+'</span></a>'+
-                '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >'+
-                '<a class="btn fa fa-download"  href="'+fP+'" download="'+fN+'"></a>'+
-                '<a class="btn fa fa-remove" onclick="removeRef(this)" ></a>'+
-                '</div>'+
-                '<div id="collapse'+verId+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
-                '<div class="card-body">'+
-                'Process: '+pN+'<br>'+
-                'Created by: '+oA+'<br>'+
-                'Modified by: '+cA+'<br>'+
-                'on: <i>'+uO+'</i><br>'+
-                '</div></div></div>');
-            reloadDataTable();
-        }
-
-        function removeRef(element) {
-            $(element).closest('div.card').remove();
-        }
-
-        function removePoll(element){
-            $(element).closest('div.card').remove();
-            $('#questionCardArea').append("<button type=\"button\" class=\"btn btn-default\" onclick=\"addPoll(this)\"><i class=\"fa fa-fw fa-plus\"></i>Add Question</button>");
-        }
-        function removeResponse(element){
-            $(element).closest('.fieldRow').remove();
-        }
-        function addResponse(element){
-            $('.fieldRow').last().after('<div class="row fieldRow"><br>\n' +
-                '                                        <div class="col-lg-10">\n' +
-                '                                            <input name="option[]" type="text" class="form-control input-md option-input" placeholder="Add an answer" required>\n' +
-                '                                        </div>\n' +
-                '                                        <div class="col-lg-2">\n' +
-                '                                            <button type="button" class="btn btn-danger" onclick="removeResponse(this)"><i class="fa fa-trash"></i></button>\n' +
-                '                                        </div>\n' +
-                '                                    </div>');
-
-        }
-        function addPoll(element){
-            $(element).remove();
-            $('#questionCardArea').append("<div class=\"card\" id=\"questionCard\">\n" +
-                "                            <div class=\"card-header\">\n" +
-                "                                <div class=\"row fieldRow\">\n" +
-                "                                    <div class=\"col-lg-2\">\n" +
-                "                                        <b>Question: </b>\n" +
-                "                                    </div>\n" +
-                "                                    <div class=\"col-lg-9\">\n" +
-                "                                        <input id=\"post_question\" name=\"post_question\" type=\"text\" placeholder=\"Put your question here...\" class=\"form-control input-md\" required>\n" +
-                "                                    </div>\n" +
-                "                                    <div class=\"col-lg-1\">\n" +
-                "                                        <button type=\"button\" class=\"btn btn-danger\" onclick=\"removePoll(this)\"><i class=\"fa fa-trash\"></i></button>\n" +
-                "                                    </div>\n" +
-                "                                </div>\n" +
-                "                            </div>\n" +
-                "                            <div class=\"card-body\">\n" +
-                "                                <div class=\"form-group fieldGroup\">\n" +
-                "                                    <label>Responses</label>\n" +
-                "                                    <div class=\"row fieldRow\">\n" +
-                "                                        <div class=\"col-lg-10\">\n" +
-                "                                            <input name=\"option[]\" type=\"text\" class=\"form-control input-md option-input\" placeholder=\"Add an answer\" required>\n" +
-                "                                        </div>\n" +
-                "                                    </div>\n" +
-                "                                    <br>\n" +
-                "                                    <div class=\"row fieldRow\">\n" +
-                "                                        <div class=\"col-lg-10\">\n" +
-                "                                            <input name=\"option[]\" type=\"text\" class=\"form-control input-md option-input\" placeholder=\"Add an answer\" required>\n" +
-                "                                        </div>\n" +
-                "                                    </div>\n" +
-                "                                    <br>\n" +
-                "                                    <button type=\"button\" class=\"btn btn-default addResponse\" onclick=\"addResponse(this)\" >Add Option</button>\n" +
-                "                                </div>\n" +
-                "                            </div>\n" +
-                "                        </div>");
-        }
-    </script>
 
     <div id="content-wrapper">
         <div class="container-fluid">
@@ -221,7 +112,7 @@ include 'CMS_SIDEBAR.php';
                         <!-- Editing view -->
                         <span id="questionCardArea">
                         </span>
-                        <button type="button" class="btn btn-default" onclick="addPoll(this)"><i class="fa fa-fw fa-plus"></i>Add Question</button>
+                        <button type="button" class="btn btn-default" id="btnAddQuestion"><i class="fa fa-fw fa-plus"></i>Add Question</button>
                     </div>
                     <div id="publishColumn" class="column col-lg-4" style="margin-top: 1rem; margin-bottom: 1rem;">
 
@@ -304,4 +195,127 @@ include 'CMS_SIDEBAR.php';
 
         </div>
     </div>
+
+<div id="questionCard" style="display: none;">
+    <div class="panel panel-default panel-question" >
+        <div class="panel-heading">
+            <div class="form-inline" style="width:100%;">
+                <label>Question: </label>
+                <input class="form-control field_question" style="width:80%;" type="text" name="question[]" required>
+                <button type="button" class="btn btn-danger remove-question" data-toggle="tooltip" title="Remove question"><i class="fa fa-trash"></i></button>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Responses</label>
+                <button type="button" class="btn btn-success add-option" data-toggle="tooltip" title="Add option"><i class="fa fa-plus"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="optionCard" style="display: none;">
+    <div class="form-group form-inline">
+        <input type="text" class="form-control field_option" name="option[]" style="width:80%;" required>
+        <button type="button" class="btn btn-danger remove-option" data-toggle="tooltip" title="Remove option"><i class="fa fa-trash"></i></button>
+    </div>
+</div>
+
 <?php include 'GLOBAL_FOOTER.php' ?>
+
+<script>
+
+    //let table = $('table').dataTable();
+
+    $(document).ready( function(){
+
+        let qCounter = 0;
+
+
+        $('textarea').froalaEditor({
+            // Disables video upload
+            videoUpload: false,
+            //
+            imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
+            // Set the file upload URL.
+            fileUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_FILE_Upload.php',
+            width: 750,
+            pastePlain: false
+        });
+
+        $('#btnRefModal').on('click', function(){
+            reloadDataTable();
+        });
+
+        $('#btnAddQuestion').on('click', function(){
+            let tempQ = qCounter;
+            $('#questionCard').find('.field_question').attr('name','question['+qCounter+']');
+            $('#questionCardArea').before($('#questionCard').contents().clone());
+            $('.remove-question').on('click', function(){
+                $(this).closest('div.panel-question').remove();
+            });
+            $('.remove-option').on('click', function(){
+                $(this).closest('div.form-group').remove();
+            });
+            $('.add-option').on('click', function(){
+                let tempR = tempQ;
+                $('#optionCard').find('.field_option').attr('name','option'+tempR+'[]');
+                $(this).before($('#optionCard').contents().clone());
+                $('.remove-option').on('click', function(){
+                    $(this).closest('div.form-group').remove();
+                });
+            });
+            qCounter++;
+        });
+
+        //$('#questionCard').show();
+
+
+        /// Recently added for polls
+    });
+
+
+    function reloadDataTable(){
+        let loadedRefs = [];
+        $(".refDocuments").each(function() {
+            loadedRefs.push($(this).val());
+        });
+        $('table').dataTable({
+            destroy: true,
+            "pageLength": 3,
+            "ajax": {
+                "url":"CMS_AJAX_LoadToAddReferences.php",
+                "type":"POST",
+                "data":{ loadedReferences: loadedRefs },
+                "dataSrc": ''
+            },
+            columns: [
+                { data: "Document" },
+                { data: "Status" },
+                { data: "Action" }
+            ]
+        });
+    }
+
+    function addRef(element, verId, oA, cA, vN, uO, t, pN, fP, fN){
+        $('#noRefsYet').remove();
+        $('#btnUpdate').show();
+        $('#refDocuments').append('<div class="card" style="background-color: #e2fee2; position: relative;">'+
+            '<input type="hidden" name="toAddDocRefs[]" class="refDocuments" value="'+verId+'">'+
+            '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse'+verId+'" aria-expanded="true" aria-controls="collapse'+verId+'"><b>'+t+'</b> <span class="badge">'+vN+'</span></a>'+
+            '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >'+
+            '<a class="btn fa fa-download"  href="'+fP+'" download="'+fN+'"></a>'+
+            '<a class="btn fa fa-remove" onclick="removeRef(this)" ></a>'+
+            '</div>'+
+            '<div id="collapse'+verId+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
+            '<div class="card-body">'+
+            'Process: '+pN+'<br>'+
+            'Created by: '+oA+'<br>'+
+            'Modified by: '+cA+'<br>'+
+            'on: <i>'+uO+'</i><br>'+
+            '</div></div></div>');
+        reloadDataTable();
+    }
+
+
+</script>

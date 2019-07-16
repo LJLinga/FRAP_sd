@@ -64,6 +64,7 @@ $cmsRole = $_SESSION['CMS_ROLE'];
                 "dataSrc": ''
             },
             columns: columns,
+            bSort: false,
             rowReorder: false
         });
 
@@ -229,14 +230,6 @@ $cmsRole = $_SESSION['CMS_ROLE'];
                     </div>
                 </div>
 
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-header">
-                        <b> Post Activity (Comments, Status Changes)</b>
-                    </div>
-                    <div class="card-body" style="max-height: 20rem; overflow: auto;">
-
-                    </div>
-                </div>
             </div>
             </div>
         </div>

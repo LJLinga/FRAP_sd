@@ -246,6 +246,28 @@ include 'CMS_SIDEBAR.php';
             $('#btnUpdate').show();
         });
 
+        $('#btnAddQuestion').on('click', function(){
+            let tempQ = qCounter;
+            $('#questionCard').find('.field_question').attr('name','question['+qCounter+']');
+            $('#questionCardArea').before($('#questionCard').contents().clone());
+            $('.remove-question').on('click', function(){
+                $(this).closest('div.panel-question').remove();
+            });
+            $('.remove-option').on('click', function(){
+                $(this).closest('div.form-group').remove();
+                $('#toRemovePolls').append('<input type="hidden" name="toRemovePolls[]" value="'+pollId+'">');
+            });
+            $('.add-option').on('click', function(){
+                let tempR = tempQ;
+                $('#optionCard').find('.field_option').attr('name','option'+tempR+'[]');
+                $(this).before($('#optionCard').contents().clone());
+                $('.remove-option').on('click', function(){
+                    $(this).closest('div.form-group').remove();
+                });
+            });
+            qCounter++;
+        });
+
         content.froalaEditor({
             videoUpload: false,
             imageUploadURL: 'CMS_SERVER_INCLUDES/CMS_SERVER_IMAGE_Upload.php',
@@ -365,7 +387,6 @@ include 'CMS_SIDEBAR.php';
     }
     function removePoll(element, pollId){
         $(element).closest('div.card').remove();
-        $('#questionCardArea').append("<button type=\"button\" class=\"btn btn-default\" onclick=\"addPoll(this)\"><i class=\"fa fa-fw fa-plus\"></i>Add Question</button>");
         $('#toRemovePolls').append('<input type="hidden" name="toRemovePolls[]" value="'+pollId+'">');
     }
     function removeResponse(element){
