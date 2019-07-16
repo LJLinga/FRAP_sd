@@ -82,7 +82,9 @@ $success = null;
             $hYear = $_POST['hYear'];
             $hMonth = $_POST['hMonth'];
             $hDay = $_POST['hDay'];
-           
+           $empStat = $_POST['empStat'];
+            $empType = $_POST['empType'];
+            $empStatus = $_POST['empStatus'];
             $dept = NULL;
 
          
@@ -248,7 +250,9 @@ $success = null;
               BUSINESS_NUM = {$bunum},
               HOME_ADDRESS = '{$haddress}',
               BUSINESS_ADDRESS = '{$baddress}',
-              DEPT_ID = {$dept}
+              DEPT_ID = {$dept},
+              TYPE = '{$empType}',
+              EMP_STATUS='{$empStatus}'
               WHERE MEMBER_ID = {$_SESSION['idnum']};";
 
               $result = mysqli_query($dbc,$query1);
@@ -633,19 +637,36 @@ include 'FRAP_USER_SIDEBAR.php';
                                     <div class="row">
 
                                         <div class="col-lg-2">
+                                                <label class="memfieldlabel">Employment Category</label>
+                                                <select class="form-control" name ="empStat" >
 
+                                                    <?php 
+                                                    $selected = $rowMember['EMP_TYPE'];
+                                                    ?>
+                                                        <option value = 1 <?php if($selected ==1)echo "selected";?>>Full-Time</option>
+                                                        <option value = 2 <?php if($selected ==1)echo "selected";?>>Part-Time</option>
+                                        
+                                                </select>
+                                                <label class="memfieldlabel">Employment Type</label>
+                                                <select class="form-control" name ="empType" >
+
+                                                     <?php 
+                                                    $selected = $rowMember['TYPE'];
+                                                    ?>
+                                                        <option value = "Teaching" <?php if($selected =="Teaching")echo "selected";?>>Teaching</option>
+                                                        <option value = "ASF" <?php if($selected =="ASF")echo "selected";?>>Academic Service Faculty</option>
+    
+                                                </select>
                                                 <label class="memfieldlabel">Employment Status</label>
-                                                <select class="form-control" name ="empStat">
-
+                                                <select class="form-control" name ="empStatus" >
+ <?php 
+                                                    $selected = $rowMember['EMP_STATUS'];
+                                                    ?>
                                                     
-                                                        <option>Probationary</option>
-                                                        <option>Permanent</option>
-                                                        <option>Part-time</option>
-                                                        <option>Faculty</option>
-                                                        <option>ASF</option>
-
-                                                  
-
+                                                        <option value = "Permanent"<?php if($selected =="Permanent")echo "selected";?>>Permanent</option>
+                                                        <option value = "Probationary"<?php if($selected =="Probationary")echo "selected";?>>Probationary</option>
+                                                        <option value = "Contractual"<?php if($selected =="Contractual")echo "selected";?>>Contractual</option>
+                                                        
                                                 </select>
 
                                         </div>

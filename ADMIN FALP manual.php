@@ -36,6 +36,7 @@
      	$('#scrollToTopScript').load('scrollToTop.html');
      });
     </script>
+
 </head>
 
 <?php
@@ -61,9 +62,8 @@ $success = null;
     if (isset($_POST['submit'])) {
 
             $idNum = $_POST['idNum']; 
-            $email = $_POST['email'];
+           
             $failedLife = null;
-
             $failedFalp = null;
             //first and last names
             $fName = NULL;
@@ -80,7 +80,9 @@ $success = null;
             $hYear = $_POST['hYear'];
             $hMonth = $_POST['hMonth'];
             $hDay = $_POST['hDay'];
-           
+            $empStat = $_POST['empStat'];
+            $empType = $_POST['empType'];
+            $empStatus = $_POST['empStatus'];
             $dept = NULL;
 
          
@@ -165,35 +167,35 @@ $success = null;
                     echo '</script>';
 
             }
-             else if(empty($_POST['email'])){ // checks if any of the adresses are empty 
+            else if(empty($_POST['email'])){ // checks if any of the adresses are empty 
 
                     echo '<script language="javascript">';
-                    echo 'alert("Please fill up the email address! ")';
+                    echo 'alert("Please put your  DLSU email address! ")';
                     echo '</script>';
 
             }
             else if(isset($_POST['hasFALP'])&&(empty($_POST['amount']) || empty($_POST['terms']))){
-                	
-                	
-                	
+                    
+                    
+                    
                
-                	
-           			echo '<script language="javascript">';
+                    
+                    echo '<script language="javascript">';
                     echo 'alert("You forgot to fill up the FALP portion!")';
                     echo '</script>';
-           				
-           			}
+                        
+                    }
 
 
-           		
+                
 
-           	else if(isset($_POST['hasLifetime'])&&(empty($_POST['primary']) )){
-                	echo '<script language="javascript">';
+            else if(isset($_POST['hasLifetime'])&&(empty($_POST['primary']) )){
+                    echo '<script language="javascript">';
                     echo 'alert("You forgot to fill up the Life portion!")';
                     echo '</script>';
-           			
+                    
 
-           		}
+                }
             else {
 
                $fName = $_POST['fName'];
@@ -227,88 +229,158 @@ $success = null;
                $ldateappl = $laYear . "-" . $laMonth . "-" . $laDay;
                if(!empty($_POST['bunum']) && !empty($_POST['baddress'])){ //if the business number is not empty
                      $bunum = $_POST['bunum'];
-                     $baddress = $_POST['baddress'];         
+                     $baddress = $_POST['baddress'];
+
+
+    
 
                }
 
                else if(!empty($_POST['bunum']) ){ //if the bnum isnt empty
                     $bunum = $_POST['bunum'];
 
-                  
+
 
                }
 
                else if(!empty($_POST['baddress'])){ // if the Business address isnt empty
                     $baddress = $_POST['baddress'];
 
-          
-
-
 
                }
 
-              $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME,CIV_STATUS, MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, BUSINESS_NUM, HOME_ADDRESS, BUSINESS_ADDRESS, DEPT_ID,USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,EMAIL) 
-                          VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat},'{$mName}',{$sex},'{$birthdate}','{$datehired}',{$honum},{$bunum},'{$haddress}','{$baddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','99999999','{$_POST['email']}')";
+               
+                 $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS,  MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, HOME_ADDRESS, DEPT_ID, USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,EMAIL,EMP_TYPE,TYPE,EMP_STATUS) 
+                        VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}',{$sex},'{$birthdate}','{$datehired}','{$honum}','{$haddress}',{$dept},1,2,'{$dateappl}','{$dateapp}','99999999','{$_POST['email']}',{$_POST['empStat']},'{$empType}','{$empStatus}')"; 
 
-              $result = mysqli_query($dbc,$query1);
+                    $result = mysqli_query($dbc,$query1); 
 
-              $pw = "password";
 
-              $query2 = "INSERT INTO MEMBER_ACCOUNT (MEMBER_ID, PASSWORD, FIRST_CHANGE_PW) VALUES ('{$idNum}', PASSWORD('{$pw}'), '0');";
-               $result2 = mysqli_query($dbc, $query2);
                 if(isset($_POST['hasFALP'])){
-                	$falpPaid = '0';
-                	
-                	
-                	
-                		if(!empty($_POST['fAmountPaid'])){
-                			$falpPaid = $_POST['fAmountPaid'];
-		            }
+                    $falpPaid = '0';
+                    
+                    
+                    
+                        if(!empty($_POST['fAmountPaid'])){
+                            $falpPaid = $_POST['fAmountPaid'];
+                        }
 
-                $query = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,DATE_APPROVED,PICKUP_STATUS,AMOUNT_PAID,EMP_ID)
-		                          values({$_POST['idNum']},1,{$_POST['amount']},5,{$_POST['terms']},{$_POST['amount']}+{$_POST['amount']}*5/100,({$_POST['amount']}+{$_POST['amount']}*5/100)/{$_POST['terms']}/2,2,2,'{$fdateappl}','{$fdateapp}',{$_POST['pickupStatus']},{$falpPaid},99999999);";
+                        $query = "INSERT INTO loans(MEMBER_ID,LOAN_DETAIL_ID,AMOUNT,INTEREST,PAYMENT_TERMS,PAYABLE,PER_PAYMENT,APP_STATUS,LOAN_STATUS,DATE_APPLIED,DATE_APPROVED,PICKUP_STATUS,AMOUNT_PAID,EMP_ID)
+                                  values({$_POST['idNum']},1,{$_POST['amount']},5,{$_POST['terms']},{$_POST['amount']}+{$_POST['amount']}*5/100,({$_POST['amount']}+{$_POST['amount']}*5/100)/{$_POST['terms']}/2,1,2,'{$fdateappl}','{$fdateapp}',{$_POST['pickupStatus']},{$falpPaid},99999999);";
 
-                mysqli_query($dbc,$query);
-		               
-           			
+                       mysqli_query($dbc,$query);
+                       
+                    
 
-           		}
-           		if(isset($_POST['hasLifetime'])){
-                	
-                	
-                		$primary = $_POST['primary'];
-                		$secondary = 'null';
-                		$org = 'null';
-                		if(!empty($_POST['secondary'])){
-                			$secondary = $_POST['secondary'];
-                		}
-                		if(!empty($_POST['org'])){
-                			$org = "'".$_POST['org']."'";
-                		}
-		                $query4 = "INSERT INTO lifetime(MEMBER_ID,`PRIMARY`,SECONDARY,ORG,APP_STATUS,DATE_ADDED,EMP_ID) values({$_POST['idNum']},'{$primary}',{$secondary},{$org},2,'{$ldateapp}',99999999);";
+                }
+                if(isset($_POST['hasLifetime'])){
+                    
+                    
+                        $primary = $_POST['primary'];
+                        $secondary = 'null';
+                        $org = 'null';
+                        if(!empty($_POST['secondary'])){
+                            $secondary = $_POST['secondary'];
+                        }
+                        if(!empty($_POST['org'])){
+                            $org = "'".$_POST['org']."'";
+                        }
+                        $query4 = "INSERT INTO lifetime(MEMBER_ID,`PRIMARY`,SECONDARY,ORG,APP_STATUS,DATE_ADDED,EMP_ID) values({$_POST['idNum']},'{$primary}',{$secondary},{$org},1,'{$ldateapp}',99999999);";
 
-		               mysqli_query($dbc,$query4);
-		               
-           			
+                       mysqli_query($dbc,$query4);
+                       
+                    
 
-           		}
+                }
                 $query3 = " SELECT * FROM MEMBER WHERE MEMBER_ID = {$_POST['idNum']}";
 
                 $result = mysqli_query($dbc,$query3);
                 $row = mysqli_fetch_assoc($result);
                 if(!empty($row)){
-              	  $success = "yes";
-           	    }
+                  $success = "yes";
+                }
+
+
 
             }
 
     }
- $page_title = 'FALP - Only ';
+ $page_title = 'Register Member ';
 include 'GLOBAL_HEADER.php';
 include 'FRAP_ADMIN_SIDEBAR.php';
 ?>
 
 <body>
+  <script>
+function submitModal() {
+
+    
+        var idNum = document.getElementById('idNum').value +"</br>";
+        var name = document.getElementsByName('lName')[0].value +","+document.getElementsByName('fName')[0].value +" "+document.getElementsByName('mName')[0].value +"</br>";
+           
+        var email =   document.getElementsByName('email')[0].value +"</br>";
+        var civStat =  document.getElementsByName('civStat')[0].options[ document.getElementsByName('civStat')[0].value-1].text +"</br>";
+        var bDate =   document.getElementsByName('bYear')[0].value +" "+document.getElementsByName('bMonth')[0].options[ document.getElementsByName('bMonth')[0].value-1].text+" "+document.getElementsByName('bDay')[0].value+"</br>";
+        var sex =   document.getElementsByName('sex')[0].value +"</br>";
+        var aDate  = document.getElementsByName('aYear')[0].value +" "+document.getElementsByName('aMonth')[0].options[ document.getElementsByName('aMonth')[0].value-1].text+" "+document.getElementsByName('aDay')[0].value+"</br>";
+        var appDate  = document.getElementsByName('appYear')[0].value +" "+document.getElementsByName('appMonth')[0].options[ document.getElementsByName('appMonth')[0].value-1].text+" "+document.getElementsByName('appDay')[0].value+"</br>";
+        var empStat =    document.getElementsByName('empStat')[0].options[ document.getElementsByName('empStat')[0].value-1].text +"</br>";
+        var hDate  = document.getElementsByName('hYear')[0].value +" "+document.getElementsByName('hMonth')[0].options[ document.getElementsByName('hMonth')[0].value-1].text+" "+document.getElementsByName('hDay')[0].value+"</br>";
+        var honum =    document.getElementsByName('honum')[0].value +"</br>";
+        var bunum =    document.getElementsByName('bunum')[0].value +"</br>";
+        var haddress =    document.getElementsByName('haddress')[0].value +"</br>";
+        var baddress =    document.getElementsByName('baddress')[0].value +"</br>";
+        var lifeInfo = "";
+        if(document.getElementsByName('hasLifetime')[0].checked){
+            var primary = document.getElementsByName('primary')[0].value +"</br>";
+            var secondary = document.getElementsByName('secondary')[0].value +"</br>";
+            var org = document.getElementsByName('org')[0].value +"</br>";
+            var laDate = document.getElementsByName('laYear')[0].value +" "+document.getElementsByName('laMonth')[0].options[ document.getElementsByName('laMonth')[0].value-1].text+" "+document.getElementsByName('laDay')[0].value+"</br>";
+            var lDate = document.getElementsByName('lYear')[0].value +" "+document.getElementsByName('lMonth')[0].options[ document.getElementsByName('lMonth')[0].value-1].text+" "+document.getElementsByName('lDay')[0].value+"</br>";
+
+            lifeInfo = 
+            "</br><b style = 'font-size:20px;'>Lifetime Information</b></br>"+
+            "<b>Primary:</b> "+primary+
+            "<b>Secondary:</b> "+secondary+
+            "<b>Organization:</b> "+org+
+            "<b>Date Applied:</b> "+laDate+
+            "<b>Date Approved:</b> "+lDate;
+        }
+        document.getElementById('dialogboxbody1').innerHTML = 
+        "<b style = 'font-size:20px;'>Personal Information</b></br>"+
+        "<b>ID Number:</b> "+idNum+
+        "<b>Name: </b>"+name+
+        "<b>Email:</b> "+email+
+        "<b>Civil Status: </b>"+civStat+
+        "<b>Date of Birth: </b></b>"+bDate+
+        "<b>Member Since:</b> "+aDate+
+        "<b>Date applied:</b> "+appDate+
+        "<br><b style = 'font-size:20px;'>Employment Information</b>"+
+        "</br><b>Employment Status:</b> "+empStat+
+        "<b>Hired Date:</b> "+hDate+
+        "<br><b style = 'font-size:20px;'>Contact Information</b></br>"+
+        "<b>Home Number:</b> "+honum+
+        "<b>Business Number:</b> "+bunum+
+        "<b>Home Address:</b> "+haddress+
+        "<b>Business Address:</b> "+baddress
+        +lifeInfo
+           
+        ;
+        
+        document.getElementById('dialogboxfoot1').innerHTML = 'Is the information correct? <button type = button onclick="closeModal()" class = "btn btn-danger">No</button> <button class = "btn btn-success" name = "submit" id = "submit">Yes</button>';
+
+$('#exampleModalScrollable').modal('show',$(this));  
+
+    }
+
+
+</script>
+<script>
+    function closeModal(){
+    $('#exampleModalScrollable').modal('toggle');
+}    
+
+</script>
 	<button onclick="topFunction()" id="scrollToTop" title="Go to top">Scroll to Top</button>
     
     	
@@ -356,24 +428,18 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                         <div class="col-lg-12">
                                                 <span class="labelspan"><b>ID Number</b><big class="req"> *</big></span>
-                                                <input type="text" minlength = "8" maxlength="8" class="form-control memname" placeholder="e.g. 09000000" name="idNum" <?php if(isset($_POST['idNum'])){
-                                                	echo "value = '{$_POST['idNum']}'";
-                                                } ?>
-                                                >
+                                                <input type="text" minlength = "8" maxlength="8" class="form-control memname" placeholder="e.g. 09000000" name="idNum"  >
+                                                
                                                 </label>
 
                                                 <label>
                                                 <span class="labelspan">Last Name<big class="req"> *</big>
-                                                <input type="text" class="form-control memname" placeholder="Last Name" name="lName" <?php if(isset($_POST['lName'])){
-                                                  echo "value = '{$_POST['lName']}'";
-                                                } ?>>
+                                                <input type="text" class="form-control memname" placeholder="Last Name" name="lName" >
                                                 </label>
 
                                                 <label>
                                                 <span class="labelspan">First Name<big class="req"> *</big></span>
-                                                <input type="text" class="form-control memname" placeholder="First Name" name="fName"  <?php if(isset($_POST['fName'])){
-                                                	echo "value = '{$_POST['fName']}'";
-                                                } ?>>
+                                                <input type="text" class="form-control memname" placeholder="First Name" name="fName"  >
                                                 </label>
 
                                                 <label>
@@ -384,9 +450,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                 </label>
                                                 <div>
                                                  <span class="labelspan">DLSU Email<big class="req"> *</big>
-                                                <input type="text" class="form-control memname" placeholder="Email" name="email" <?php if(isset($_POST['email'])){
-                                                  echo "value = '{$_POST['email']}'";
-                                                } ?>>
+                                                <input type="text" class="form-control memname" placeholder="Email" name="email">
                                                 </span>
                                               </div>
                                                
@@ -622,17 +686,29 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <div class="col-lg-2">
 
                                                 <label class="memfieldlabel">Employment Category</label>
-                                                <select class="form-control" name ="empStat">
+                                                <select class="form-control" name ="empStat" >
 
                                                     
-                                                        <option>Probationary</option>
-                                                        <option>Permanent</option>
-                                                        <option>Part-time</option>
-                                                        <option>Faculty</option>
-                                                        <option>ASF</option>
+                                                        <option value = 1>Full-Time</option>
+                                                        <option value = 2>Part-Time</option>
+                                        
+                                                </select>
+                                                <label class="memfieldlabel">Employment Type</label>
+                                                <select class="form-control" name ="empType" >
 
-                                                  
+                                                    
+                                                        <option value = "Teaching">Teaching</option>
+                                                        <option value = "ASF">Academic Service Faculty</option>
+    
+                                                </select>
+                                                <label class="memfieldlabel">Employment Status</label>
+                                                <select class="form-control" name ="empStatus" >
 
+                                                    
+                                                        <option value = "Permanent">Permanent</option>
+                                                        <option value = "Probationary">Probationary</option>
+                                                        <option value = "Contractual">Contractual</option>
+                                                        
                                                 </select>
 
                                         </div>
@@ -735,9 +811,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <div class="col-lg-12">
 
                                             <label class="memfieldlabel">Home Phone Number</label><big class="req"> *</big>
-                                            <input type="number" class="form-control memfields number" placeholder="Home Phone Number" name="honum" <?php if(isset($_POST['honum'])){
-                                                	echo "value = '{$_POST['honum']}'";
-                                                } ?>>
+                                            <input type="number" class="form-control memfields number" placeholder="Home Phone Number" name="honum" >
 
                                         </div>
 
@@ -748,9 +822,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <div class="col-lg-12">
 
                                             <label class="memfieldlabel">Business Phone Number</label>
-                                            <input type="number" class="form-control memfields number" placeholder="Home Phone Number" name="bunum" <?php if(isset($_POST['bunum'])){
-                                                	echo "value = '{$_POST['bunum']}'";
-                                                } ?>>
+                                            <input type="number" class="form-control memfields number" placeholder="Home Phone Number" name="bunum" >
 
                                         </div>
 
@@ -761,9 +833,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <div class="col-lg-12">
 
                                             <label class="memfieldlabel">Home Address</label><big class="req"> *</big>
-                                            <textarea class="form-control memfields address" placeholder="Address" name="haddress" rows="2"  ><?php if(isset($_POST['haddress'])){
-                                                	echo $_POST['haddress'];
-                                                } ?></textarea> 
+                                            <textarea class="form-control memfields address" placeholder="Address" name="haddress" rows="2"  ></textarea> 
 
                                         </div>
 
@@ -774,9 +844,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <div class="col-lg-12">
 
                                             <label class="memfieldlabel">Business Address</label>
-                                            <textarea  class="form-control memfields address" placeholder="Address" name="baddress" rows="2" ><?php if(isset($_POST['baddress'])){
-                                                	echo $_POST['baddress'];
-                                                } ?></textarea> 
+                                            <textarea  class="form-control memfields address" placeholder="Address" name="baddress" rows="2" ></textarea> 
 
                                         </div>
 
@@ -800,9 +868,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <div class="col-lg-4">
 
                                            
-                                             <input type="checkbox" name="hasLifetime" value="1" <?php if(isset($_POST['hasLifetime'])){
-                                                	echo "checked";
-                                                } ?>>Check box if member has lifetime<p>
+                                             <input type="checkbox" name="hasLifetime" value="1" >Check box if member has lifetime<p>
 
                                         </div>
 
@@ -813,9 +879,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <div class="col-lg-4">
 
                                             <label class="memfieldlabel">Primary Beneficiary</label><big class="req">*</big>
-                                            <input type="text" class="form-control" name="primary" id="primary" <?php if(isset($_POST['primary'])){
-                                                	echo "value = '{$_POST['primary']}'";
-                                                } ?>>
+                                            <input type="text" class="form-control" name="primary" id="primary" >
 
                                         </div>
 
@@ -828,9 +892,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <div class="col-lg-4">
                                             
                                             <label class="memfieldlabel">Secondary Beneficiary</label>
-                                            <input type="text" class="form-control"  name="secondary"  id="secondary" <?php if(isset($_POST['secondary'])){
-                                                	echo "value = '{$_POST['secondary']}'";
-                                                } ?>>
+                                            <input type="text" class="form-control"  name="secondary"  id="secondary" >
                                            
 
                                             
@@ -842,9 +904,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <div class="col-lg-4">
 
                                             <label class="memfieldlabel">Organization</label>
-                                            <input type="text" class="form-control"  name="org" id="org" <?php if(isset($_POST['org'])){
-                                                	echo "value = '{$_POST['org']}'";
-                                                }?>>
+                                            <input type="text" class="form-control"  name="org" id="org" >
 
                                         </div>
 
@@ -977,9 +1037,38 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                 </div>
 
                             </div>
-                            
+                            <div id="dialogoverlay"></div>
+                            <div id="dialogbox">
+  <div>
+    <div id="dialogboxhead"></div>
+    <div id="dialogboxbody"></div>
+    <div id="dialogboxfoot"></div>
+  </div>
+</div>
 
-                            <input id = "submit"  type="submit" name="submit" value="Sumbit"></p>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style = "background: #47d147;color:#fff;">
+        <h1 class="modal-title" id="exampleModalScrollableTitle" style = "font-size:20px;">Please check the information provided</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="dialogboxbody1">
+        
+      </div>
+      <div class="modal-footer" id="dialogboxfoot1" style = "background: #47d147;">
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+                            <button  class = "btn btn-success" name = "submit">Submit</button>
 
                        </form>
 
@@ -1020,7 +1109,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
     ?>
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+    
 <script>
         document.getElementById("falpcompute").onclick = function() {calculate()};
         

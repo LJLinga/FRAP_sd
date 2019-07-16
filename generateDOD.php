@@ -184,7 +184,7 @@ else
 
 if(!empty($row['HAFee'])){
 	$health =(float)$row['HAFee'];
-	$pdf->Cell(25	,5,'100.00'	,'L,B,R',0,'R');
+	$pdf->Cell(25	,5,number_format($health,2)	,'L,B,R',0,'R');
 }
 else
 	$pdf->Cell(25	,5,'0.00'	,'L,B,R',0,'R');

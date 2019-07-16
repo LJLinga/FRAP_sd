@@ -72,6 +72,7 @@ function submitModal() {
         "<b>Email:</b> "+email+
         "<b>Civil Status: </b>"+civStat+
         "<b>Date of Birth: </b></b>"+bDate+
+        "<b>Sex: </b></b>"+sex+
         "<b>Member Since:</b> "+aDate+
         "<b>Date applied:</b> "+appDate+
         "<br><b style = 'font-size:20px;'>Employment Information</b>"+
@@ -146,7 +147,10 @@ $success = null;
             $hYear = $_POST['hYear'];
             $hMonth = $_POST['hMonth'];
             $hDay = $_POST['hDay'];
-           
+           $empStat = $_POST['empStat'];
+            $empType = $_POST['empType'];
+            $empStatus = $_POST['empStatus'];
+            $dept = NULL;
             $dept = NULL;
 
          
@@ -314,8 +318,8 @@ $success = null;
                }
 
                
-                 $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS,  MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, HOME_ADDRESS, DEPT_ID, USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,EMAIL,EMP_TYPE) 
-                        VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}','{$sex}','{$birthdate}','{$datehired}','{$honum}','{$haddress}',{$dept},1,1,'{$dateappl}','{$dateapp}','99999999','{$_POST['email']}',{$_POST['empStat']})"; 
+                 $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS,  MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, HOME_ADDRESS, DEPT_ID, USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,EMAIL,EMP_TYPE,TYPE,EMP_STATUS) 
+                        VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}','{$sex}','{$birthdate}','{$datehired}','{$honum}','{$haddress}',{$dept},1,1,'{$dateappl}','{$dateapp}','99999999','{$_POST['email']}',{$_POST['empStat']},'{$empType}','{$empStatus}')"; 
 
                     $result = mysqli_query($dbc,$query1); 
 
@@ -713,14 +717,26 @@ $success = null;
                                                 <select class="form-control" name ="empStat" >
 
                                                     
-                                                        <option value = 1>Probationary</option>
-                                                        <option value = 2>Permanent</option>
-                                                        <option value = 3>Part-time</option>
-                                                        <option value = 4>Faculty</option>
-                                                        <option value = 5>ASF</option>
+                                                        <option value = 1>Full-Time</option>
+                                                        <option value = 2>Part-Time</option>
+                                        
+                                                </select>
+                                                <label class="memfieldlabel">Employment Type</label>
+                                                <select class="form-control" name ="empType" >
 
-                                                  
+                                                    
+                                                        <option value = "Teaching">Teaching</option>
+                                                        <option value = "ASF">Academic Service Faculty</option>
+    
+                                                </select>
+                                                <label class="memfieldlabel">Employment Status</label>
+                                                <select class="form-control" name ="empStatus" >
 
+                                                    
+                                                        <option value = "Permanent">Permanent</option>
+                                                        <option value = "Probationary">Probationary</option>
+                                                        <option value = "Contractual">Contractual</option>
+                                                        
                                                 </select>
 
                                         </div>
