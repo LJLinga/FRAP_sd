@@ -361,7 +361,7 @@ $userName = $rows[0]['name'];
     });
 
     $('#searchField2').keyup(function(){
-        table.search($('#searchField2').val()).draw();
+        table2.search($('#searchField2').val()).draw();
     });
 
 

@@ -421,11 +421,30 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function getGroupWorkflows($groupId){
-        return $this->getData("SELECT p.*, sg.*, s.*, p.id FROM steps s 
+        return $this->getData("SELECT p.*, s.*, s.gread AS `read`, s.gwrite AS `write`, s.gcomment AS `comment`, s.groute AS `route`, p.id AS processId, s.id AS stepId
+                                        FROM steps s 
                                         JOIN process p on s.processId = p.id 
-                                        JOIN step_groups sg on s.id = sg.stepId
-                                        WHERE sg.groupId = '$groupId'
+                                        WHERE s.groupId = '$groupId'
                                         ORDER BY p.processForId, p.processName, s.stepNo ASC;");
+    }
+
+    public function getGroupWorkflowsSpectate($groupId){
+        return $this->getData("SELECT p.*, pg.*, p.id FROM process p JOIN process_groups pg on p.id = pg.processId 
+                                        WHERE pg.groupId = '$groupId'
+                                        ORDER BY p.processForId, p.processName ASC;");
+    }
+
+    public function getGroupDocWorkflows($groupId){
+        return $this->getData("SELECT p.*, s.*, s.gread AS `read`, s.gwrite AS `write`, s.gcomment AS `comment`, s.groute AS `route`, p.id FROM steps s 
+                                        JOIN process p on s.processId = p.id 
+                                        WHERE s.groupId = '$groupId' AND p.processForId = 1
+                                        ORDER BY p.processForId, p.processName, s.stepNo ASC;");
+    }
+
+    public function getGroupDocWorkflowsSpectate($groupId){
+        return $this->getData("SELECT p.*, pg.*, p.id FROM process p JOIN process_groups pg on p.id = pg.processId 
+                                        WHERE pg.groupId = '$groupId' AND p.processForId = 1
+                                        ORDER BY p.processName ASC;");
     }
 
     public function coloriseStatus($num){

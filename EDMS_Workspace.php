@@ -474,11 +474,11 @@ $groups = $crud->getUserGroups($userId);
     });
 
     $('#searchField2').keyup(function(){
-        table.search($('#searchField').val()).draw();
+        table2.search($('#searchField2').val()).draw();
     });
 
     $('#searchField3').keyup(function(){
-        table.search($('#searchField').val()).draw();
+        table3.search($('#searchField3').val()).draw();
     });
 
     setInterval(function(){
