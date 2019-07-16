@@ -217,7 +217,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <td align="center"><?php echo $ans['ID'];?></td>
                                         <td align="left"><?php echo $ans['First']." ".$ans['Middle']." ".$ans['Last'];?></td>
                                         <td align="left"><?php echo $ans['DEPT_NAME'];?></td>
-                                        <td align="right"><?php echo $ans['Total'];?></td>
+                                        <td align="right"><?php echo  number_format($ans['Total'],2);?></td>
 
                                         </tr>
                                         <?php } ?>
@@ -275,12 +275,21 @@ function myFunction() {
                 format: 'DD-MM- YYYY'
 
             });
+             <?php
+            if(isset($_POST['event_start'])){
+                echo "document.getElementById('event_start').value ='".$_POST['event_start']."'";
+            }?>;
+
             $('#event_end').datetimepicker( {
                 locale: moment().local('ph'),
                 
                 
                 format: 'DD-MM- YYYY'
             });
+            <?php
+            if(isset($_POST['event_end'])){
+                echo "document.getElementById('event_end').value = '".$_POST['event_end']."'";
+            }?>;
 
         
         });

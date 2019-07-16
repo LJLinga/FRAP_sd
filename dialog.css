@@ -16,7 +16,11 @@
 	width:650px;
 	z-index: 10;
 }
+.modal-header{ 
+	background: #47d147; font-size:19px; padding:10px; color:#fff;
+}
+.dialogboxhead{  }
 #dialogbox > div{ background:#FFF; margin:8px; }
-#dialogbox > div > #dialogboxhead{ background: #47d147; font-size:19px; padding:10px; color:#fff; }
-#dialogbox > div > #dialogboxbody{ background: #ffffff; font-size:15px;padding:20px; color:#000000; }
+#dialogbox > div > .dialogboxhead{ background: #47d147; font-size:19px; padding:10px; color:#fff; }
+#dialogbox > div > #dialogboxbody{ background: #ffffff; font-size:15px;padding:20px; color:#000000; max-height: 50px;}
 #dialogbox > div > #dialogboxfoot{ background: #47d147; padding:10px; text-align:right; }

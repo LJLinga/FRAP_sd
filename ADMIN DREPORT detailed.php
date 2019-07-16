@@ -158,7 +158,8 @@ $result2=mysqli_query($dbc,$query2);
                             <div class="form-group">
                                 <label for="event_start">Start Date</label>
                                 <div class="input-group date" id="datetimepicker1">
-                                    <input id="event_start" name="event_start" type="text" class="form-control">
+                                    <input id="event_start" name="event_start" type="text" class="form-control"
+                                    >
                                   
                                 </div>
                             </div>
@@ -167,7 +168,7 @@ $result2=mysqli_query($dbc,$query2);
                             <div class="form-group">
                                 <label for="event_end">End Date</label>
                                 <div class="input-group date" id="datetimepicker2">
-                                    <input id="event_end" name="event_end" type="text" class="form-control" onClick = "myFunction()">
+                                    <input id="event_end" name="event_end" type="text" class="form-control" onClick = "myFunction()"  >
                                     
                                 </div>
                             </div>
@@ -297,17 +298,24 @@ function myFunction() {
              $('#event_start').datetimepicker( {
                 locale: moment().local('ph'),
                 maxDate: moment(),
-                
+              
                 format: 'DD-MM- YYYY'
 
             });
+            <?php
+            if(isset($_POST['event_start'])){
+                echo "document.getElementById('event_start').value = '".$_POST['event_start']."'";
+            }?>;
             $('#event_end').datetimepicker( {
                 locale: moment().local('ph'),
                 
                 
                 format: 'DD-MM- YYYY'
             });
-
+            <?php
+            if(isset($_POST['event_end'])){
+                echo "document.getElementById('event_end').value = '".$_POST['event_end']."'";
+            }?>;
         
         });
 

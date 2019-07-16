@@ -135,6 +135,17 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
 
                                              </div>  
 
+                                             
+
+                                            <div class="col-lg-12">
+                                                <br>
+                                                <div class="col-lg-1">
+
+                                              <input id = "submit"  type="submit" name="submit" value="Submit" disabled>
+                                                </div>
+                                                 <div class="col-lg-11"></div>
+                                            </div>
+
                                     </div>
 
                                  
@@ -142,7 +153,7 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
                                   </div>
                             
 
-                            <input id = "submit"  type="submit" name="submit" value="Submit" disabled></div>
+                           </div>
 
                        </form>
 
@@ -189,29 +200,6 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
     $(document.getElementById("cpass")).keyup(function(){
          var pass = document.getElementById("pass").value;
          var cpass = document.getElementById("cpass").value;
-         var format = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-         var format2 = /[0-9]+/;
-         if(pass.length <8){
-            document.getElementById("chk").innerHTML = '<font  color = "red">Password is less than 8 characters</font>';
-            return;
-            
-         }
-         else{
-            if(!format2.test(pass)){
-                document.getElementById("chk").innerHTML = '<font  color = "red">Password should be alphanumeric</font>';
-                return;
-                
-            }
-            else if(!format.test(pass)){
-                document.getElementById("chk").innerHTML = '<font  color = "red">Password should contain at least 1 special character</font>';
-                return;
-                
-            }
-            
-
-            
-            
-         }
          if(pass!=cpass){
         
         document.getElementById("chk").innerHTML = '<font  color = "red">Password is not the same</font>';
@@ -223,7 +211,7 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
          }
 
 
-              
+    
            
          
   
@@ -242,7 +230,7 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
          document.getElementById("chk").innerHTML = "";
          if(pass.length <8){
             document.getElementById("chk").innerHTML = '<font  color = "red">Password is less than 8 characters</font>';
-            
+            return;
          }
          else{
             if(!format2.test(pass)){
@@ -251,19 +239,20 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
             }
             else if(!format.test(pass)){
                 document.getElementById("chk").innerHTML = '<font  color = "red">Password should contain at least 1 special character</font>';
-                
+                return;
             }
             
 
             
             
          }
-        document.getElementById("submit").disabled = true;
+        document.getElementById("submit").disabled = false;
               
-    $('#blogLink').click (function (e) {
+    $('#submit').click (function (e) {
         e.preventDefault(); //will stop the link href to call the blog page
-
+        document.getElementById("chk").innerHTML = '<font  color = "green"><b>Password has been changed </b></font>';
         setTimeout(function () {
+
             window.location.href = "index.php"; //will redirect to your blog page (an ex: blog.html)
             }, 2000); //will call the function after 2 secs.
 

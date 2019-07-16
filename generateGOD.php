@@ -16,7 +16,7 @@ class PDF extends FPDF
 function Header()
 {
     // Logo
-    $this->Image('images/AFED Logo - Copy.jpg',0,10,20);
+    $this->Image('images/AFED Logo - Copy.jpg',20,10,20);
     // Arial bold 15
     $this->SetFont('Arial','B',10);
     // Move to the right
@@ -117,14 +117,14 @@ $pdf->Cell(5);
 $pdf->SetFont('Times','B',10);
 $pdf->Cell(20,5,''	,'L,T,R',0);
 $pdf->Cell(80	,5,''	,'L,T,R',0,'L');
-$pdf->Cell(50	,5,''	,'L,T,R',0,'R');
+$pdf->Cell(60	,5,''	,'L,T,R',0,'R');
 $pdf->Cell(30	,5,'Total Salary '	,'L,T,R',0,'R');
 $pdf->ln();
 $pdf->Cell(5);
 $pdf->Cell(20,5,'ID Number '	,'L,B,R',0,'C');
 $pdf->Cell(80	,5,'Full Name'	,'L,B,R',0,'L');
-$pdf->Cell(50	,5,'Department'	,'L,B,R',0,'L');
-$pdf->Cell(30	,5,'Deduction'	,'L,B,R',0,'R');
+$pdf->Cell(60	,5,'Department'	,'L,B,R',0,'L');
+$pdf->Cell(30	,5,'Deduction(P)'	,'L,B,R',0,'R');
 $pdf->ln();
 $pdf->SetFont('Times','',10);
 
@@ -147,18 +147,18 @@ $pdf->Cell(20,5,$row['ID']	,1,0,'C');
 $pdf->Cell(80	,5,"$last, $first $middle"	,1,0,'L');
 
 
-$total = sprintf("%.2f",$row['Total']);
-$total1 = sprintf("%.2f",$total1+$total);
+$total =  $row['Total'];
+$total1 =  $total1+$total;
 
-$pdf->Cell(50	,5,"{$row['DEPT_NAME']}"	,'L,B,R',0,'L');
-$pdf->Cell(30	,5,"{$row['Total']}"	,1,0,'R');
+$pdf->Cell(60	,5,"{$row['DEPT_NAME']}"	,'L,B,R',0,'L');
+$pdf->Cell(30	,5,number_format($total,2)	,1,0,'R');
 $pdf->ln();
 
 
 
 }
-$pdf->Cell(50);
-$pdf->Cell(180   ,5,"$total1" ,'L,B,R',0,'R');
+$pdf->Cell(5);
+$pdf->Cell(190   ,5,number_format($total1,2) ,'L,B,R',0,'R');
 $pdf->ln();
 $pdf->SetFont('Times','B',12);
 

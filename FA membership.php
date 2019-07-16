@@ -31,35 +31,42 @@
     </script>
 <link rel="stylesheet" href="dialog.css">
 <script>
-function CustomAlert(){
-    this.render = function(dialog){
-        var winW = window.innerWidth;
-        var winH = window.innerHeight;
-        var dialogoverlay = document.getElementById('dialogoverlay');
-        var dialogbox = document.getElementById('dialogbox');
-        dialogoverlay.style.display = "block";
-        dialogoverlay.style.height = winH+"px";
-        dialogbox.style.left = (winW/2) - (650 * .5)+"px";
-        dialogbox.style.top = "100px";
-        dialogbox.style.display = "block";
-        document.getElementById('dialogboxhead').innerHTML = "Overview";
+function submitModal() {
+
+    
         var idNum = document.getElementById('idNum').value +"</br>";
         var name = document.getElementsByName('lName')[0].value +","+document.getElementsByName('fName')[0].value +" "+document.getElementsByName('mName')[0].value +"</br>";
            
         var email =   document.getElementsByName('email')[0].value +"</br>";
-        var civStat =  document.getElementsByName('civStat')[0].options[ document.getElementsByName('civStat')[0].value].text +"</br>";
-        var bDate =   document.getElementsByName('bYear')[0].value +"/"+document.getElementsByName('bMonth')[0].value+"/"+document.getElementsByName('bDay')[0].value+"</br>";
+        var civStat =  document.getElementsByName('civStat')[0].options[ document.getElementsByName('civStat')[0].value-1].text +"</br>";
+        var bDate =   document.getElementsByName('bYear')[0].value +" "+document.getElementsByName('bMonth')[0].options[ document.getElementsByName('bMonth')[0].value-1].text+" "+document.getElementsByName('bDay')[0].value+"</br>";
         var sex =   document.getElementsByName('sex')[0].value +"</br>";
-        var aDate  = document.getElementsByName('aYear')[0].value +"/"+document.getElementsByName('aMonth')[0].value+"/"+document.getElementsByName('aDay')[0].value+"</br>";
-        var appDate  = document.getElementsByName('appYear')[0].value +"/"+document.getElementsByName('appMonth')[0].value+"/"+document.getElementsByName('appDay')[0].value+"</br>";
-        var empStat =    document.getElementsByName('empStat')[0].options[ document.getElementsByName('empStat')[0].value].text +"</br>";
-        var hDate  = document.getElementsByName('hYear')[0].value +"/"+document.getElementsByName('hMonth')[0].value+"/"+document.getElementsByName('hDay')[0].value+"</br>";
+        var aDate  = document.getElementsByName('aYear')[0].value +" "+document.getElementsByName('aMonth')[0].options[ document.getElementsByName('aMonth')[0].value-1].text+" "+document.getElementsByName('aDay')[0].value+"</br>";
+        var appDate  = document.getElementsByName('appYear')[0].value +" "+document.getElementsByName('appMonth')[0].options[ document.getElementsByName('appMonth')[0].value-1].text+" "+document.getElementsByName('appDay')[0].value+"</br>";
+        var empStat =    document.getElementsByName('empStat')[0].options[ document.getElementsByName('empStat')[0].value-1].text +"</br>";
+        var hDate  = document.getElementsByName('hYear')[0].value +" "+document.getElementsByName('hMonth')[0].options[ document.getElementsByName('hMonth')[0].value-1].text+" "+document.getElementsByName('hDay')[0].value+"</br>";
         var honum =    document.getElementsByName('honum')[0].value +"</br>";
         var bunum =    document.getElementsByName('bunum')[0].value +"</br>";
         var haddress =    document.getElementsByName('haddress')[0].value +"</br>";
         var baddress =    document.getElementsByName('baddress')[0].value +"</br>";
-           
-        document.getElementById('dialogboxbody').innerHTML = 
+        var lifeInfo = "";
+        if(document.getElementsByName('hasLifetime')[0].checked){
+            var primary = document.getElementsByName('primary')[0].value +"</br>";
+            var secondary = document.getElementsByName('secondary')[0].value +"</br>";
+            var org = document.getElementsByName('org')[0].value +"</br>";
+            var laDate = document.getElementsByName('laYear')[0].value +" "+document.getElementsByName('laMonth')[0].options[ document.getElementsByName('laMonth')[0].value-1].text+" "+document.getElementsByName('laDay')[0].value+"</br>";
+            var lDate = document.getElementsByName('lYear')[0].value +" "+document.getElementsByName('lMonth')[0].options[ document.getElementsByName('lMonth')[0].value-1].text+" "+document.getElementsByName('lDay')[0].value+"</br>";
+
+            lifeInfo = 
+            "</br><b style = 'font-size:20px;'>Lifetime Information</b></br>"+
+            "<b>Primary:</b> "+primary+
+            "<b>Secondary:</b> "+secondary+
+            "<b>Organization:</b> "+org+
+            "<b>Date Applied:</b> "+laDate+
+            "<b>Date Approved:</b> "+lDate;
+        }
+        document.getElementById('dialogboxbody1').innerHTML = 
+        "<b style = 'font-size:20px;'>Personal Information</b></br>"+
         "<b>ID Number:</b> "+idNum+
         "<b>Name: </b>"+name+
         "<b>Email:</b> "+email+
@@ -67,31 +74,32 @@ function CustomAlert(){
         "<b>Date of Birth: </b></b>"+bDate+
         "<b>Member Since:</b> "+aDate+
         "<b>Date applied:</b> "+appDate+
-        "<b>Employment Status:</b> "+empStat+
+        "<br><b style = 'font-size:20px;'>Employment Information</b>"+
+        "</br><b>Employment Status:</b> "+empStat+
         "<b>Hired Date:</b> "+hDate+
+        "<br><b style = 'font-size:20px;'>Contact Information</b></br>"+
         "<b>Home Number:</b> "+honum+
         "<b>Business Number:</b> "+bunum+
         "<b>Home Address:</b> "+haddress+
         "<b>Business Address:</b> "+baddress
-
+        +lifeInfo
            
         ;
         
-        document.getElementById('dialogboxfoot').innerHTML = 'Is the information correct? <button type = button onclick="Alert.back()" class = "btn btn-danger">No</button> <button class = "btn btn-submit" name = "submit" id = "submit">Yes</button>';
+        document.getElementById('dialogboxfoot1').innerHTML = 'Is the information correct? <button type = button onclick="closeModal()" class = "btn btn-danger">No</button> <button class = "btn btn-success" name = "submit" id = "submit">Yes</button>';
 
+$('#exampleModalScrollable').modal('show',$(this));  
 
     }
-    this.back = function(){
-        document.getElementById('dialogbox').style.display = "none";
-        document.getElementById('dialogoverlay').style.display = "none";
-    }
 
-    
 
-}
-var Alert = new CustomAlert();
 </script>
+<script>
+    function closeModal(){
+    $('#exampleModalScrollable').modal('toggle');
+}    
 
+</script>
     <script> $(function(){
         $('#scrollToTopScript').load('scrollToTop.html');
      });
@@ -547,11 +555,19 @@ $success = null;
 
                                             <p id="glabel"><b>Sex</b></p>
                                             <div class="radio">
-                                                <label><input type="radio" name="sex" value = "male" required>Male</label>
+                                                <label><input type="radio" name="sex" value = "male" required <?php if(isset($_POST['sex'])){
+                                                    if($_POST['sex']=='male')
+                                                        echo "checked";
+
+                                                } ?>>Male</label>
                                             </div>
 
                                             <div class="radio" >
-                                                <label><input type="radio" name="sex" value = "female">Female</label>
+                                                <label><input type="radio" name="sex" value = "female" <?php if(isset($_POST['sex'])){
+                                                    if($_POST['sex']=='female')
+                                                        echo "checked";
+
+                                                } ?>>Female</label>
                                             </div>
 
                                         </div>
@@ -1061,8 +1077,32 @@ $success = null;
     <div id="dialogboxfoot"></div>
   </div>
 </div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style = "background: #47d147;color:#fff;">
+        <h1 class="modal-title" id="exampleModalScrollableTitle" style = "font-size:20px;">Please check the information provided</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="dialogboxbody1">
+        
+      </div>
+      <div class="modal-footer" id="dialogboxfoot1" style = "background: #47d147;">
+        
+      </div>
+    </div>
+  </div>
+</div>
+
 <div style = "position:relative;top:30px;left:50%">
-<button type = "button" class = "btn btn-success" onclick="Alert.render('submit')">Submit</button>
+<button type = "button" class = "btn btn-success" onclick="submitModal()" >Submit</button>
+
                             <!--<input id = "submit"  type="submit" name="submit" value="Sumbit"></p>-->
 </div>
                        </form>
