@@ -34,12 +34,12 @@ join (SELECT max(date_applied) as 'Date' from loans) latest
 else {
    $dateStart = $_POST['event_start'];
             
-            $yearStart = substr($dateStart,0,strpos($dateStart,"-"));
-            $monthStart = substr($dateStart,strpos($dateStart,"-")+1);
+            $yearStart = substr($dateStart,0,strpos($dateStart," "));
+            $monthStart = substr($dateStart,strpos($dateStart," ")+1);
             if(!empty($_POST['event_end'])){
                 $dateEnd = $_POST['event_end'];
-                $yearEnd = substr($dateEnd,0,strpos($dateEnd,"-"));
-                $monthEnd = substr($dateEnd,strpos($dateEnd,"-")+1);
+                $yearEnd = substr($dateEnd,0,strpos($dateEnd," "));
+                $monthEnd = substr($dateEnd,strpos($dateEnd," ")+1);
             }
     if(!isset($yearEnd)){
         $query = "SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID,l.amount as 'Amount'
@@ -77,15 +77,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
-                            Completed Deductions for <?php if(isset($yearStart)){echo date('F', mktime(0, 0, 0, $monthStart, 10)).' '.$yearStart;
-                                if(isset($yearEnd)){
-
-                                    echo ' - '.date('F', mktime(0, 0, 0, $monthEnd, 10)).' '.$yearEnd;
-
-                                }}
-                                else{
-                                    echo "Latest date";
-                                }?>
+                            Completed Deductions
 
                             
                         </h1>
@@ -103,7 +95,14 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                             <div class="panel-heading">
 
-                                <b>View Report for (Year & Month)</b>
+                                <b>View Report for <?php if(isset($yearStart)){echo $monthStart." ".$yearStart;
+                                if(isset($yearEnd)){
+
+                                    echo " - ".$monthEnd." ".$yearEnd;
+
+                                }}else{
+                                    echo "Latest Date";
+                                }?></b>
 
                             </div>
 
@@ -234,13 +233,21 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                 
                 format: 'YYYY MMM'
             });
+             <?php
+            if(isset($_POST['event_start'])){
+                echo "document.getElementById('event_start').value ='".$_POST['event_start']."'";
+            }?>;
+
             $('#event_end').datetimepicker( {
                 locale: moment().local('ph'),
                 
                 
                 format: 'YYYY MMM'
             });
-
+             <?php
+            if(isset($_POST['event_end'])){
+                echo "document.getElementById('event_end').value ='".$_POST['event_end']."'";
+            }?>;
         
         });
 

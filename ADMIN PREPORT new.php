@@ -33,12 +33,12 @@ if(!isset($_POST['event_start'])){
 else {
    $dateStart = $_POST['event_start'];
             
-            $yearStart = substr($dateStart,0,strpos($dateStart,"-"));
-            $monthStart = substr($dateStart,strpos($dateStart,"-")+1);
+            $yearStart = substr($dateStart,0,strpos($dateStart," "));
+            $monthStart = substr($dateStart,strpos($dateStart," ")+1);
             if(!empty($_POST['event_end'])){
                 $dateEnd = $_POST['event_end'];
-                $yearEnd = substr($dateEnd,0,strpos($dateEnd,"-"));
-                $monthEnd = substr($dateEnd,strpos($dateEnd,"-")+1);
+                $yearEnd = substr($dateEnd,0,strpos($dateEnd," "));
+                $monthEnd = substr($dateEnd,strpos($dateEnd," ")+1);
             }
     if(!isset($yearEnd)){
         $query = "SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',l.per_payment as 'Amount'
@@ -90,10 +90,10 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                             <div class="panel-heading">
 
-                                <b>View Report for <?php if(isset($yearStart)){echo date('F Y', mktime(0, 0, 0, $monthStart+1, $dayStart,$yearStart));
+                                <b>View Report for <?php if(isset($yearStart)){echo $monthStart." ".$yearStart;
                                 if(isset($yearEnd)){
 
-                                    echo ' - '.date('F Y', mktime(0, 0, 0, $monthEnd, $dayEnd,$yearEnd));
+                                    echo " - ".$monthEnd." ".$yearEnd;
 
                                 }}else{
                                     echo "Latest Date";
@@ -227,12 +227,21 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                 maxDate: moment(),
                 format: 'YYYY MMM'
             });
+
+            <?php
+            if(isset($_POST['event_start'])){
+                echo "document.getElementById('event_start').value ='".$_POST['event_start']."'";
+            }?>;
             $('#event_end').datetimepicker( {
                 locale: moment().local('ph'),
                 
                 
                 format: 'YYYY MMM'
             });
+             <?php
+            if(isset($_POST['event_end'])){
+                echo "document.getElementById('event_end').value ='".$_POST['event_end']."'";
+            }?>;
 
         
         });

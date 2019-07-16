@@ -75,7 +75,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                 <div class="row">
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-12">
 
                         <div class="panel panel-green">
 
@@ -88,11 +88,11 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                             <div class="panel-body">
 
                                 <div class="row">
-
+                                    <div class="col-lg-12">
                                   <form action = "ADMIN MREPORT report.php" method = "post">
 
                         <div class="col-lg-12lg-4">
-                            <div class="form-group">
+                            
                                 <label for="event_start">Start Date</label>
                                 <div class="input-group date" id="datetimepicker1">
                                     <input id="event_start" name="event_start" type="text" class="form-control">
@@ -100,7 +100,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
                                 </div>
-                            </div>
+                           
                         </div>
                         <div class="col-lg-12lg-4">
                             <div class="form-group">
@@ -121,7 +121,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <input type="submit" class="btn btn-success" name="select_date" value="Generate Report">
                                         </form>
                                     </div>
-
+                                    
                                 </div>
 
                             </div>
