@@ -85,101 +85,248 @@ include 'EDMS_SIDEBAR.php';
             </div>
         </div>
         <div class="row" style="height: 100%;">
-            <div class="col-lg-8" style="max-height: inherit;">
+            <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-body" style="position: relative;">
                         <form method="POST" action="">
-                        <?php if($revisions == 'open') {
-                            echo '<b> Faculty Manual Revisions </b> started last '.$revisionsOpened;
-                            if($boolPres){
-                                echo '<span style="position: absolute; top:4px; right:4px;">';
-                                echo 'Revisions Actions: ';
-                                echo '<button class="btn btn-danger" name="btnClose" value="'.$revisionsId.'"> Close Revisions </button> ';
-                                echo '</span>';
+                            <?php if($revisions == 'open') {
+                                echo '<b> Faculty Manual Revisions </b> started last '.$revisionsOpened;
+                                if($boolPres){
+                                    echo '<span style="position: absolute; top:4px; right:4px;">';
+                                    echo 'Revisions Actions: ';
+                                    echo '<button class="btn btn-danger" name="btnClose" value="'.$revisionsId.'"> Close Revisions </button> ';
+                                    echo '</span>';
+                                }
+                            }else{
+                                echo 'Faculty Manual Revisions are closed.';
+                                if($boolPres) {
+                                    echo '<span style="position: absolute; top:4px; right:4px;" class="btn-group">';
+                                    echo '<button class="btn btn-success" name="btnOpen"> Open Revisions </button>';
+                                    echo '<button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Publish Changes</button>';
+                                    echo '</span>';
+                                }
                             }
-                        }else{
-                            echo 'Faculty Manual Revisions are closed.';
-                            if($boolPres) {
-                                echo '<span style="position: absolute; top:4px; right:4px;" class="btn-group">';
-                                echo '<button class="btn btn-success" name="btnOpen"> Open Revisions </button>';
-                                echo '<button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Publish Changes</button>';
-                                echo '</span>';
-                            }
-                        }
-                        ?>
+                            ?>
                         </form>
                     </div>
                 </div>
-                <div class="panel panel-default" style="margin-top: 1rem;">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-lg-4">
-                                <div class="form-inline">
-                                    <label for="sel1">Ver. No. </label>
-                                    <select class="form-control" id="selectedNo" name="selectedNo">
-                                        <option value="">All</option>
-                                    </select>
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Needs attention</a></li>
+                    <li role="presentation"><a href="#editing" aria-controls="editing" role="tab" data-toggle="tab">I'm currently editing</a></li>
+                    <li role="presentation"><a href="#active" aria-controls="active" role="tab" data-toggle="tab">Active</a></li>
+                    <li role="presentation"><a href="#archived" aria-controls="archived" role="tab" data-toggle="tab">Archived</a></li>
+                    <li role="presentation"><a href="#published" aria-controls="published" role="tab" data-toggle="tab">Manual Editions</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="home">
+                        <div class="panel panel-secondary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Ver. No. </label>
+                                            <select class="form-control" id="selectedNo" name="selectedNo">
+                                                <option value="">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Modified by </label>
+                                            <select class="form-control" id="selectedUser" name="selectedUser">
+                                                <option value="">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Search</label>
+                                            <input type="text" id="searchField" class="form-control">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
-                                <div class="form-inline">
-                                    <label for="sel1">Modified by </label>
-                                    <select class="form-control" id="selectedUser" name="selectedUser">
-                                        <option value="">All</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="form-inline">
-                                    <label for="sel1">Search</label>
-                                    <input type="text" id="searchField" class="form-control">
-                                </div>
+                            <div class="panel-body">
+                                <table id="tblSections" class="table table-striped table-responsive table-condensed table-sm" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Title</th>
+                                        <th>Ver. No.</th>
+                                        <th>Created on</th>
+                                        <th>Modified by</th>
+                                        <th>Modified on</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                </table>
                             </div>
                         </div>
                     </div>
-                    <div class="panel-body">
-                        <table id="tblSections" class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Title</th>
-                                <th>Ver. No.</th>
-                                <th>Created on</th>
-                                <th>Modified by</th>
-                                <th>Modified on</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                        </table>
+                    <div role="tabpanel" class="tab-pane" id="editing">
+                        <div class="panel panel-secondary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Ver. No. </label>
+                                            <select class="form-control" id="selectedNo2" name="selectedNo">
+                                                <option value="">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Modified by </label>
+                                            <select class="form-control" id="selectedUser2" name="selectedUser">
+                                                <option value="">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Search</label>
+                                            <input type="text" id="searchField2" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table id="tblSections2" class="table table-striped table-responsive table-condensed table-sm" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Title</th>
+                                        <th>Ver. No.</th>
+                                        <th>Created on</th>
+                                        <th>Modified by</th>
+                                        <th>Modified on</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-4" style="max-height: 100%;">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        Published Manual Editions
+                    <div role="tabpanel" class="tab-pane" id="active">
+                        <div class="panel panel-secondary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Ver. No. </label>
+                                            <select class="form-control" id="selectedNo3" name="selectedNo">
+                                                <option value="">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Modified by </label>
+                                            <select class="form-control" id="selectedUser3" name="selectedUser">
+                                                <option value="">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Search</label>
+                                            <input type="text" id="searchField3" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table id="tblSections3" class="table table-striped table-responsive table-condensed table-sm" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Title</th>
+                                        <th>Ver. No.</th>
+                                        <th>Created on</th>
+                                        <th>Modified by</th>
+                                        <th>Modified on</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                    <div class="panel-body" style="max-height:50rem; inherit;overflow-y: auto;">
-                        <?php
-                        $rows = $crud->getData("SELECT id, year, title, timePublished, publishedById 
+                    <div role="tabpanel" class="tab-pane" id="archived">
+                        <div class="panel panel-secondary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Ver. No. </label>
+                                            <select class="form-control" id="selectedNo4" name="selectedNo">
+                                                <option value="">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Modified by </label>
+                                            <select class="form-control" id="selectedUser4" name="selectedUser">
+                                                <option value="">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Search</label>
+                                            <input type="text" id="searchField4" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table id="tblSections4" class="table table-striped table-responsive table-condensed table-sm" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Title</th>
+                                        <th>Ver. No.</th>
+                                        <th>Created on</th>
+                                        <th>Modified by</th>
+                                        <th>Modified on</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="published">
+                        <div class="panel panel-secondary">
+                            <div class="panel-heading">
+                            </div>
+                            <div class="panel-body" style="max-height:50rem; inherit;overflow-y: auto;">
+                                <?php
+                                $rows = $crud->getData("SELECT id, year, title, timePublished, publishedById 
                                         FROM facultyassocnew.faculty_manual ORDER BY id DESC;");
-                        if(!empty($rows)){
-                            foreach((array)$rows AS $key => $row){
-                                echo '<div class="card" style="position: relative;">';
-                                echo '<div class="card-body">';
-                                echo $row['title'].' ('.$row['year'].')<br>';
-                                echo '<a href="MANUAL_PrintManual.php?id='.$row['id'].'" target="_blank" class="btn btn-primary btn-sm" style="position: absolute; right: 2rem; top: 0.5rem;"><i class="fa fa-print"></i></a>';
-                                echo '</div></div>';
-                            }
-                        }else{
-                            echo 'You have no published manuals editions.';
-                        }
-                        ?>
+                                if(!empty($rows)){
+                                    foreach((array)$rows AS $key => $row){
+                                        echo '<div class="card" style="position: relative;">';
+                                        echo '<div class="card-body">';
+                                        echo $row['title'].' ('.$row['year'].')<br>';
+                                        echo '<a href="MANUAL_PrintManual.php?id='.$row['id'].'" target="_blank" class="btn btn-primary btn-sm" style="position: absolute; right: 2rem; top: 0.5rem;"><i class="fa fa-print"></i></a>';
+                                        echo '</div></div>';
+                                    }
+                                }else{
+                                    echo 'You have no published manuals editions.';
+                                }
+                                ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -287,13 +434,148 @@ include 'EDMS_SIDEBAR.php';
         }
     });
 
+    let table2 = $('#tblSections2').DataTable( {
+        bSort: true,
+        destroy: true,
+        pageLength: 10,
+        aaSorting: [],
+        "ajax": {
+            "url":"EDMS_AJAX_FetchSections.php",
+            "type":"POST",
+            "dataSrc": '',
+            "data": {requestType: 'MANUAL_SECTIONS_EDITING'}
+        },
+        columns: [
+            { data: "section_no" },
+            { data: "title" },
+            { data: "ver_no" },
+            { data: "created_on" },
+            { data: "modified_by" },
+            { data: "modified_on" },
+            { data: "status" },
+            { data: "action" },
+        ],
+        initComplete: function(){
+            var columnSecNo = this.api().column(0);
+            var selectSecNo = $('#selectedNo2').on( 'change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                columnSecNo.search( val ? '^'+val+'$' : '', true, false ).draw();
+            } );
+            columnSecNo.data().unique().sort().each( function ( d, j ) {
+                selectSecNo.append( '<option value="'+d+'">'+d+'</option>' )
+            } );
+            var columnUser = this.api().column(4);
+            var selectUser = $('#selectedUser2').on( 'change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                columnUser.search( val ? '^'+val+'$' : '', true, false ).draw();
+            } );
+            columnUser.data().unique().sort().each( function ( d, j ) {
+                selectUser.append( '<option value="'+d+'">'+d+'</option>' )
+            } );
+        }
+    });
+
+    let table3 = $('#tblSections3').DataTable( {
+        bSort: true,
+        destroy: true,
+        pageLength: 10,
+        aaSorting: [],
+        "ajax": {
+            "url":"EDMS_AJAX_FetchSections.php",
+            "type":"POST",
+            "dataSrc": '',
+            "data": {requestType: 'MANUAL_SECTIONS_READCOMMENT'}
+        },
+        columns: [
+            { data: "section_no" },
+            { data: "title" },
+            { data: "ver_no" },
+            { data: "created_on" },
+            { data: "modified_by" },
+            { data: "modified_on" },
+            { data: "status" },
+            { data: "action" },
+        ],
+        initComplete: function(){
+            var columnSecNo = this.api().column(0);
+            var selectSecNo = $('#selectedNo3').on( 'change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                columnSecNo.search( val ? '^'+val+'$' : '', true, false ).draw();
+            } );
+            columnSecNo.data().unique().sort().each( function ( d, j ) {
+                selectSecNo.append( '<option value="'+d+'">'+d+'</option>' )
+            } );
+            var columnUser = this.api().column(4);
+            var selectUser = $('#selectedUser3').on( 'change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                columnUser.search( val ? '^'+val+'$' : '', true, false ).draw();
+            } );
+            columnUser.data().unique().sort().each( function ( d, j ) {
+                selectUser.append( '<option value="'+d+'">'+d+'</option>' )
+            } );
+        }
+    });
+
+    let table4 = $('#tblSections4').DataTable( {
+        bSort: true,
+        destroy: true,
+        pageLength: 10,
+        aaSorting: [],
+        "ajax": {
+            "url":"EDMS_AJAX_FetchSections.php",
+            "type":"POST",
+            "dataSrc": '',
+            "data": {requestType: 'MANUAL_SECTIONS_ARCHIVED'}
+        },
+        columns: [
+            { data: "section_no" },
+            { data: "title" },
+            { data: "ver_no" },
+            { data: "created_on" },
+            { data: "modified_by" },
+            { data: "modified_on" },
+            { data: "status" },
+            { data: "action" },
+        ],
+        initComplete: function(){
+            var columnSecNo = this.api().column(0);
+            var selectSecNo = $('#selectedNo4').on( 'change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                columnSecNo.search( val ? '^'+val+'$' : '', true, false ).draw();
+            } );
+            columnSecNo.data().unique().sort().each( function ( d, j ) {
+                selectSecNo.append( '<option value="'+d+'">'+d+'</option>' )
+            } );
+            var columnUser = this.api().column(4);
+            var selectUser = $('#selectedUser4').on( 'change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                columnUser.search( val ? '^'+val+'$' : '', true, false ).draw();
+            } );
+            columnUser.data().unique().sort().each( function ( d, j ) {
+                selectUser.append( '<option value="'+d+'">'+d+'</option>' )
+            } );
+        }
+    });
+
     $(".dataTables_filter").hide();
     $('#searchField').keyup(function(){
         table.search($('#searchField').val()).draw();
     });
+    $('#searchField2').keyup(function(){
+        table2.search($('#searchField').val()).draw();
+    });
+    $('#searchField3').keyup(function(){
+        table3.search($('#searchField').val()).draw();
+    });
+    $('#searchField4').keyup(function(){
+        table4.search($('#searchField').val()).draw();
+    });
 
     setInterval(function(){
         table.ajax.reload(null,false);
+        table2.ajax.reload(null,false);
+        table3.ajax.reload(null,false);
+        table4.ajax.reload(null,false);
     },5000);
 
 </script>

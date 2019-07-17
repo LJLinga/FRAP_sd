@@ -247,10 +247,16 @@ $userName = $rows[0]['name'];
                 processData: false,
                 contentType: false,
                 data: new FormData(this),
-                dataType: 'json',
                 success: function(response){
-                    if(JSON.parse(response).success == '1'){ location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+JSON.parse(response).id }
-                    else { $("#err").html('<div class="alert alert-info">'+JSON.parse(response).html+'</div>'); };
+                    if(JSON.parse(response).success === '1'){
+                        window.open(
+                            "EDMS_ViewDocument.php?docId="+JSON.parse(response).id,
+                            '_blank' // <- This is what makes it open in a new window.
+                        );
+                        $('#documentUploadForm')[0].reset();
+                        $('#myModal').modal('toggle');
+                    }
+                    else { $("#err").html('<div class="alert alert-warning">'+JSON.parse(response).html+'</div>'); };
                 },
                 error: function(){
                     alert("Error");
