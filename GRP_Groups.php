@@ -18,7 +18,7 @@ if(isset($_POST['btnAccept'])){
     $invitationId = $_POST['invitationId'];
     $groupId = $_POST['groupId'];
     $asAdmin = $_POST['asAdmin'];
-    $key = $crud->executeGetKey("INSERT INTO user_groups (groupId, userId, isAdmin) VALUES ('$groupId','$userId','$asAdmin')");
+    $key = $crud->execute("INSERT INTO user_groups (groupId, userId, isAdmin) VALUES ('$groupId','$userId','$asAdmin')");
     if($key){
         $crud->execute("DELETE FROM group_invitations WHERE id='$invitationId';");
     }
@@ -138,13 +138,31 @@ include 'EDMS_SIDEBAR.php';
                                             <?php echo $crud->friendlyDate($row['timestamp']); ?>
                                         </td>
                                         <td>
-                                            <form method="POST" action="">
-                                                <input name="invitationId" type="hidden" value="<?php echo $row['id'];?>">
-                                                <input name="groupId" type="hidden" value="<?php echo $row['groupId'];?>">
-                                                <input name="asAdmin" type="hidden" value="<?php echo $row['isAdmin'];?>">
-                                                <button name="btnAccept" type="submit" class="btn btn-success btn-sm fa fa-handshake-o" data-toggle="tooltip" title="Accept invitation"></button>
-                                                <button name="btnDecline" type="submit" class="btn btn-danger btn-sm fa fa-trash-o" data-toggle="tooltip" title="Decline invitation"></button>
-                                            </form>
+                                            <button class="btn btn-info fa fa-mail-reply" data-toggle="modal" data-target="#inviteModal"></button>
+                                            <div id="inviteModal" class="modal fade" role="dialog">
+                                                <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-body">
+                                                                <strong><?php echo $crud->getUserName($row['inviterId']); ?></strong> is inviting you as a
+                                                                <strong><?php if($row['isAdmin'] == '1') echo 'ADMIN'; else echo 'MEMBER'; ?></strong> of
+                                                                <strong><?php echo $row['groupDesc']; ?></strong>
+                                                                <div class="alert alert-info">
+                                                                    <i>"<?php echo $row['message'];?>"</i>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <form method="POST" action="">
+                                                                    <input name="invitationId" type="hidden" value="<?php echo $row['id'];?>">
+                                                                    <input name="groupId" type="hidden" value="<?php echo $row['groupId'];?>">
+                                                                    <input name="asAdmin" type="hidden" value="<?php echo $row['isAdmin'];?>">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                    <button name="btnDecline" type="submit" class="btn btn-danger" data-toggle="tooltip" title="Decline invitation"> Decline </button>
+                                                                    <button name="btnAccept" type="submit" class="btn btn-success" data-toggle="tooltip" title="Accept invitation"> Accept </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
 

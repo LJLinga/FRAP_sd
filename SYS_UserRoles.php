@@ -135,7 +135,6 @@ include 'SYS_SIDEBAR.php';
             placeholder: 'Select or search...'
         });
     });
-</script>
 
     function saveRoles(element){
         var userId = $(element).closest('tr').find('.userId').val();

@@ -14,7 +14,6 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 
 $userId = $_SESSION['idnum'];
 $sysRole = $_SESSION['SYS_ROLE'];
-//$sysRole = 1;
 
 if(isset($_POST['btnUpdateGroup'])){
     $groupId = $_POST['groupId'];
@@ -184,12 +183,7 @@ if(isset($_GET['id'])){
 
 $page_title = $groupDesc.' Group';
 include 'GLOBAL_HEADER.php';
-
-if($sysRole == '2' || $sysRole == '3'){
-    include 'SYS_SIDEBAR.php';
-}else{
-    include 'EDMS_SIDEBAR.php';
-}
+include 'SYS_SIDEBAR.php';
 
 ?>
 
