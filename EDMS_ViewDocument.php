@@ -26,7 +26,7 @@ if(isset($_GET['docId'])){
                 (SELECT CONCAT(e3.LASTNAME,', ',e3.FIRSTNAME) FROM employee e3 WHERE e3.EMP_ID = d.availabilityById) AS availabilityByName,
                 (SELECT CONCAT(e4.LASTNAME,', ',e4.FIRSTNAME) FROM employee e4 WHERE e4.EMP_ID = d.lifecycleStatedById) AS statedByName,
                 (SELECT CONCAT(e5.LASTNAME,', ',e5.FIRSTNAME) FROM employee e5 WHERE e5.EMP_ID = d.remark_user_id) AS remarkedByName, d.remarks, d.remark_timestamp, d.remark_action_type,
-		        d.stepId,  p.processName, s.stepName, d.availabilityId, d.availabilityById, d.statusId, d.lifecycleStateId, d.lifecycleStatedOn, d.availabilityOn, d.statusedOn
+		        d.stepId,  p.processName, s.stepName, d.lifecycleStatedById, d.availabilityById, d.statusId, d.lifecycleStateId, d.lifecycleStatedOn, d.availabilityOn, d.statusedOn
                 FROM documents d 
                 JOIN employee e ON d.firstAuthorId = e.EMP_ID
                 JOIN steps s ON d.stepId = s.id 
@@ -81,6 +81,7 @@ if(isset($_GET['docId'])){
                 $write = $row['write'];
                 $route = $row['route'];
                 $comment = $row['comment'];
+                $cycle = $row['cycle'];
             }
         }else{
             header("Location:".$crud->redirectToPreviousWithAlert("DOC_NO_PERMISSIONS"));
@@ -88,6 +89,7 @@ if(isset($_GET['docId'])){
 
         if($availability == '2'){
             $route = '1';
+            $cycle = '1';
             if($availabilityById != $userId) $write = '1';
             else $write = '2';
         }
@@ -238,16 +240,17 @@ include 'EDMS_SIDEBAR.php';
                                 <div class="form-inline">
                                     <label for="sel1">Action</label>
                                     <select class="form-control" id="selectedAction" name="selectedAction">
-                                        <option value="" selected>All</option>
-                                        <option value="created">CREATED</option>
-                                        <option value="updated">UPDATED</option>
-                                        <option value="moved">MOVED</option>
-                                        <option value="checked out">CHECKED OUT</option>
-                                        <option value="checked in">CHECKED IN</option>
+                                        <option value="" selected>ALL</option>
+                                        <option value="created|updated|archived|restored|draft|pending|approved|rejected|moved">MAIN</option>
+                                        <option value="created|updated">CONTENT UPDATES</option>
+                                        <option value="archived|restored">ARCHIVE/RESTORE</option>
+                                        <option value="draft|pending|approved|rejected">ALL STATUS</option>
                                         <option value="draft">DRAFT</option>
                                         <option value="pending">PENDING</option>
                                         <option value="approved">APPROVED</option>
                                         <option value="rejected">REJECTED</option>
+                                        <option value="moved">STEP UPDATES</option>
+                                        <option value="checked out|checked in">CHECK-IN/CHECK-OUT</option>
                                     </select>
                                 </div>
                             </div>
@@ -825,7 +828,71 @@ include 'EDMS_SIDEBAR.php';
                                     <div class="alert alert-warning">
                                         The document has been checked out by <strong><?php echo $availabilityByName;?></strong> on <i><?php echo date("F j, Y g:i:s A ", strtotime($availabilityOn));?></i> which means most document actions are restricted.
                                     </div>
+                                <?php } ?>
+                                <?php if( $cycle=='2'){?>
+                                    <?php if($stateId == 1) { ?>
+                                        <button type="button" data-toggle="modal" data-target="#modalArchive" class="btn btn-warning" style="text-align: left; width: 100%;"><i class="fa fa-archive"></i> Archive</button>
+                                        <div id="modalArchive" class="modal fade" role="dialog">
+                                            <div class="modal-dialog">
+                                                <!-- Modal content-->
+                                                <div class="modal-content">
+                                                    <form method="POST" action="">
+                                                        <div class="modal-header">
+                                                            <strong>Confirm Archive?</strong>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label>Reason I'm archiving this section</label>
+                                                                <textarea name="remarks" class="form-control" rows="10" required></textarea>
+                                                            </div>
 
+                                                            <div class="alert alert-warning">
+                                                                <strong>Archiving this section will mean that it will not get published in any manual edition until it is restored.
+                                                                    It will also remain read-only to other users except for those who have edit permissions in this current step.
+                                                                    Are you sure you want to archive?</strong>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <input type="hidden" name="sectionId" value="<?php echo $sectionId;?>">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" name="btnArchive" class="btn btn-primary">Yes, I'm sure</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php }else if($stateId == 2){?>
+                                        <button type="button" data-toggle="modal" data-target="#modalRestore" class="btn btn-info" style="text-align: left; width: 100%;"><i class="fa fa-archive"></i> Restore</button>
+                                        <div id="modalRestore" class="modal fade" role="dialog">
+                                            <div class="modal-dialog">
+                                                <!-- Modal content-->
+                                                <div class="modal-content">
+                                                    <form method="POST" action="">
+                                                        <div class="modal-header">
+                                                            <strong>Confirm Restore?</strong>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label>Reason I'm restoring this section</label>
+                                                                <textarea name="remarks" class="form-control" rows="10" required></textarea>
+                                                            </div>
+
+                                                            <div class="alert alert-info">
+                                                                <strong>Restoring this section will put it back into the the process.
+                                                                    The original section permissions will be restored to the participants of the Manual Revisions process.
+                                                                    Are you sure you want to restore?</strong>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <input type="hidden" name="sectionId" value="<?php echo $sectionId;?>">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" name="btnRestore" class="btn btn-primary">Yes, I'm sure</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
                                 <?php } ?>
                             <?php } ?>
                             <a href="<?php echo $filePath?>" download><button type="button" class="btn btn-default" style="text-align: left; width: 100%;">Download</button></a>
@@ -883,11 +950,23 @@ include 'EDMS_SIDEBAR.php';
                         </div>
                         <div class="form-group">
                             <label for=".radio"> Save New Version As </label>
+                            <label for=".radio"> Save New Version As </label>
+                            <?php
+                            $tempVerNo = explode(".",$versionNo);
+                            if($tempVerNo){
+                                $largeNum = $tempVerNo[0];
+                                $smallNum = $tempVerNo[1];
+                            }else{
+                                $largeNum = $versionNo;
+                                $smallNum = '0';
+                            }
+
+                            ?>
                             <div class="radio">
-                                <label><input type="radio" name="newVersionNo" value="<?php echo floatval($versionNo) + 0.1; ?>" checked><?php echo floatval($versionNo) + 0.1; ?> (Minor Update)</label>
+                                <label><input type="radio" name="newVersionNo" value="<?php echo $largeNum.'.'.(floatval($smallNum) + 1); ?>" checked><?php echo $largeNum.'.'.(floatval($smallNum) + 1); ?> (Minor Update)</label>
                             </div>
                             <div class="radio">
-                                <label><input type="radio" name="newVersionNo" value="<?php echo ceil(floatval($versionNo) + 0.1); ?>"><?php echo ceil(floatval($versionNo) + 0.1); ?> (Major Update)</label>
+                                <label><input type="radio" name="newVersionNo" value="<?php echo (floatval($largeNum) + 1).'.0';?>"><?php echo (floatval($largeNum) + 1).'.0'; ?> (Major Update)</label>
                             </div>
                         </div>
                         <div class="form-group">
@@ -974,6 +1053,7 @@ include 'EDMS_SIDEBAR.php';
             bLengthChange: false,
             pageLength: 10,
             bSort: false,
+            search: {regex: true},
             initComplete: function () {
 
                 var columnVer = this.api().column(1);
@@ -996,7 +1076,7 @@ include 'EDMS_SIDEBAR.php';
 
                 var columnAction = this.api().column(3);
                 var selectAction = $('#selectedAction').on( 'change', function () {
-                    columnAction.search($('#selectedAction').val()).draw();
+                    columnAction.search($('#selectedAction').val(), true, false).draw();
                 } );
 
             }

@@ -24,6 +24,8 @@
                 </ul>
             </li>
 
+
+
 <!--            <li>-->
 <!--                <a href="MANUAL_FacultyManual.php"><i class="fa fa-fw fa-book"></i> Faculty Manual</a>-->
 <!--            </li>-->
@@ -35,6 +37,10 @@
                     <a href="MANUAL_ManualRevisions.php"><i class="fa fa-fw fa-pencil"></i> Manual Revisions</a>
                 </li>
             <?php } ?>
+
+            <li>
+                <a href="GRP_Groups.php"><i class="fa fa-fw fa-group"></i> My Groups</a>
+            </li>
 
         </ul>
     </div>

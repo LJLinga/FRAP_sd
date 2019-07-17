@@ -9,6 +9,7 @@ if(isset($_GET['alert'])){
     else if($alertType == 'POST_NO_PERMISSIONS') { $alertColor = 'danger'; $alertMessage = "The post you are trying to view is not published."; }
     else if($alertType == 'SECTION_NOT_LOAD') { $alertColor = 'danger'; $alertMessage = "The section you are trying to view is not available."; }
     else if($alertType == 'SECTION_NO_PERMISSIONS') { $alertColor = 'danger'; $alertMessage = "The section you are trying to view is not published."; }
+    else if($alertType == 'DOC_LOCKED') { $alertColor = 'warning'; $alertMessage = "The document you are trying to view is locked for editing by another user."; }
 }
 
 ?>

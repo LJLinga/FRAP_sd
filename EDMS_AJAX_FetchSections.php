@@ -10,28 +10,82 @@
 include_once('GLOBAL_CLASS_CRUD.php');
 $crud = new GLOBAL_CLASS_CRUD();
 
-$query = "SELECT s.*, st.stepNo, st.stepName, stat.status 
+if(isset($_POST['requestType'])){
+    $requestType = $_POST['requestType'];
+    if($requestType == 'MANUAL_SECTIONS_WRITEROUTE'){
+        $query = "SELECT s.*, st.stepNo, st.stepName
+                FROM sections s 
+                JOIN steps st ON st.id = s.stepId 
+                WHERE s.statusId= 2
+                
+                ORDER BY s.sectionNo;
+                ";
+
+        $rows = $crud->getData($query);
+        $data = [];
+        foreach ((array) $rows as $key => $row) {
+            $data[] =  array(
+                'section_no' => $row['sectionNo'],
+                'title' => $row['title'],
+                'ver_no' => $row['versionNo'],
+                'created_on' => date("F j, Y g:i:s A ", strtotime($row['timeCreated'])),
+                'modified_by' => $crud->getUserName($row['authorId']),
+                'modified_on' => date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])),
+                'status' => $crud->coloriseStatus($row['statusId']),
+                'action' => '<a type="button" class="btn btn-primary fa fa-eye" href="MANUAL_EditSection.php?secId='.$row['id'].'"></a>'
+            );
+
+        }
+        echo json_encode($data);
+        exit;
+    }else if($requestType == 'MANUAL_SECTIONS_ARCHIVED'){
+        $query = "SELECT s.*, st.stepNo, st.stepName, stat.status 
                 FROM sections s 
                 JOIN employee e ON e.EMP_ID = s.authorId
                 JOIN section_status stat ON stat.id = s.statusId
                 JOIN steps st ON st.id = s.stepId ORDER BY s.sectionNo;
                 ";
 
-$rows = $crud->getData($query);
-$data = [];
-foreach ((array) $rows as $key => $row) {
-    $data[] =  array(
-        'section_no' => $row['sectionNo'],
-        'title' => $row['title'],
-        'ver_no' => $row['versionNo'],
-        'created_on' => date("F j, Y g:i:s A ", strtotime($row['timeCreated'])),
-        'modified_by' => $crud->getUserName($row['authorId']),
-        'modified_on' => date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])),
-        'status' => $crud->coloriseStatus($row['statusId']),
-        'action' => '<a type="button" class="btn btn-primary fa fa-eye" href="MANUAL_EditSection.php?secId='.$row['id'].'"></a>'
-    );
+        $rows = $crud->getData($query);
+        $data = [];
+        foreach ((array) $rows as $key => $row) {
+            $data[] =  array(
+                'section_no' => $row['sectionNo'],
+                'title' => $row['title'],
+                'ver_no' => $row['versionNo'],
+                'created_on' => date("F j, Y g:i:s A ", strtotime($row['timeCreated'])),
+                'modified_by' => $crud->getUserName($row['authorId']),
+                'modified_on' => date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])),
+                'status' => $crud->coloriseStatus($row['statusId']),
+                'action' => '<a type="button" class="btn btn-primary fa fa-eye" href="MANUAL_EditSection.php?secId='.$row['id'].'"></a>'
+            );
 
+        }
+    }else if($requestType == 'MANUAL_SECTIONS_WRITEROUTE'){
+        $query = "SELECT s.*, st.stepNo, st.stepName, stat.status 
+                FROM sections s 
+                JOIN employee e ON e.EMP_ID = s.authorId
+                JOIN section_status stat ON stat.id = s.statusId
+                JOIN steps st ON st.id = s.stepId ORDER BY s.sectionNo;
+                ";
+
+        $rows = $crud->getData($query);
+        $data = [];
+        foreach ((array) $rows as $key => $row) {
+            $data[] =  array(
+                'section_no' => $row['sectionNo'],
+                'title' => $row['title'],
+                'ver_no' => $row['versionNo'],
+                'created_on' => date("F j, Y g:i:s A ", strtotime($row['timeCreated'])),
+                'modified_by' => $crud->getUserName($row['authorId']),
+                'modified_on' => date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])),
+                'status' => $crud->coloriseStatus($row['statusId']),
+                'action' => '<a type="button" class="btn btn-primary fa fa-eye" href="MANUAL_EditSection.php?secId='.$row['id'].'"></a>'
+            );
+
+        }
+    }
 }
-echo json_encode($data);
-exit;
+
+
 ?>

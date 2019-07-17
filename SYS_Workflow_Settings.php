@@ -70,17 +70,55 @@ if(isset($_POST['btnDeleteStep'])){
 if(isset($_POST['btnAddGroup'])){
     $processId = $_POST['processId'];
     $groupId = $_POST['groupId'];
-    $read = 1; $write = 1; $route = 1; $comment = 1;
+    $read = 1;
+    $write = 1;
+    $route = 1;
+    $comment = 1;
+    $cycle = 1;
     if(isset($_POST['read'])) { $read = 2; }
     if(isset($_POST['write'])) { $write = 2; }
     if(isset($_POST['route'])) { $route = 2; }
     if(isset($_POST['comment'])) { $comment = 2; }
-    if($crud->execute("INSERT INTO `process_groups` (`groupId`, `processId`, `read`, `write`, `route`, `comment`) VALUES ('$groupId','$processId','$read','$write','$route','$comment');")){
+    if (isset($_POST['cycle'])) {
+        $cycle = 2;
+    }
+    if ($crud->execute("INSERT INTO `process_groups` (`groupId`,`processId`, `read`, `write`, `cycle`,`route`, `comment`) VALUES ('$groupId','$processId','$read','$write','$cycle','$route','$comment');")) {
         echo 'success2';
     }else{
         echo 'Database error.';
     }
     header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflow_Settings.php?id=".$processId);
+}
+
+if (isset($_POST['btnUpdateGroup'])) {
+    $processId = $_POST['processId'];
+    $groupId = $_POST['groupId'];
+    $read = 1;
+    $write = 1;
+    $route = 1;
+    $comment = 1;
+    $cycle = 1;
+    if (isset($_POST['read'])) {
+        $read = 2;
+    }
+    if (isset($_POST['write'])) {
+        $write = 2;
+    }
+    if (isset($_POST['route'])) {
+        $route = 2;
+    }
+    if (isset($_POST['comment'])) {
+        $comment = 2;
+    }
+    if (isset($_POST['cycle'])) {
+        $cycle = 2;
+    }
+    if ($crud->execute("UPDATE `process_groups` SET `read` = '$read', `write` = '$write', `route` = '$route', `comment` = '$comment', `cycle`='$cycle' WHERE `groupId` = '$groupId' AND `processId` = '$processId';")) {
+        echo 'success2';
+    } else {
+        echo 'Database error.';
+    }
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflow_Settings.php?id=" . $processId);
 }
 
 if(isset($_POST['btnDeleteGroup'])){
@@ -251,6 +289,7 @@ include 'SYS_SIDEBAR.php';
                                     <th>Read</th>
                                     <th>Comment</th>
                                     <th>Write</th>
+                                    <th>Cycle</th>
                                     <th>Route</th>
                                     <th width="250px;">Action</th>
                                 </tr>
@@ -274,6 +313,9 @@ include 'SYS_SIDEBAR.php';
                                         </td>
                                         <td>
                                             <?php echo $crud->permissionString($row['write']);?>
+                                        </td>
+                                        <td>
+                                            <?php echo $crud->permissionString($row['cycle']); ?>
                                         </td>
                                         <td>
                                             <?php echo $crud->permissionString($row['route']);?>
@@ -312,6 +354,15 @@ include 'SYS_SIDEBAR.php';
                                                             <div class="form-check">
                                                                 <input type="checkbox" class="form-check-input" name="write" value="true" <?php if($row['write'] == '2') { echo 'checked'; } ?>>
                                                                 <label class="form-check-label" >Write (Update content) </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input type="checkbox" class="form-check-input"
+                                                                       name="cycle"
+                                                                       value="true" <?php if ($row['cycle'] == '2') {
+                                                                    echo 'checked';
+                                                                } ?>>
+                                                                <label class="form-check-label">Cycle
+                                                                    (Archive/Restore) </label>
                                                             </div>
                                                             <div class="form-check">
                                                                 <input type="checkbox" class="form-check-input" name="route" value="true" <?php if($row['route'] == '2') { echo 'checked'; } ?>>

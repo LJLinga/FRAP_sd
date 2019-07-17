@@ -96,7 +96,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                     JOIN user_groups ug ON g.id = ug.groupId
                     WHERE ug.userId='$userId' AND ug.groupId = '$groupId' 
                     LIMIT 1;";
-        $rows = getData($query);
+        $rows = $this->getData($query);
         if(!empty($rows)){
             return true;
         }else {
@@ -399,6 +399,10 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                                         ORDER BY ug.isAdmin DESC, name ASC;");
     }
 
+    public function friendlyDate($date){
+        return date("F j, Y g:i:s A ", strtotime($date));
+    }
+
     public function deactivateGroup($groupId){
         return $this->execute("UPDATE groups SET isActive = '1' WHERE id = '$groupId'");
     }
@@ -505,7 +509,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function getWorkflowGroups($processId){
-        return $this->getData("SELECT g.id, g.groupName, g.groupDesc, pg.read, pg.write, pg.comment, pg.route 
+        return $this->getData("SELECT g.id, g.groupName, g.groupDesc, pg.read, pg.cycle, pg.write, pg.comment, pg.route 
                                 FROM groups g JOIN process_groups pg on g.id = pg.groupId
                                                             WHERE pg.processId = '$processId'");
     }
@@ -589,14 +593,14 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function getStepGroupMemberPermissions($stepId, $userId){
-        return $this->getData("SELECT s.*, s.gread AS `read`, s.gwrite AS `write`, s.gcomment AS `comment`, s.groute AS route FROM user_groups ug 
+        return $this->getData("SELECT s.*, s.gcycle AS `cycle`,s.gread AS `read`, s.gwrite AS `write`, s.gcomment AS `comment`, s.groute AS route FROM user_groups ug 
                                         JOIN groups g ON ug.groupId = g.id
                                         JOIN steps s ON g.id = s.groupId
                                         WHERE s.id = '$stepId' AND ug.userId = '$userId'
                                         LIMIT 1;");
     }
 
-    public function getNeedsMyAttentionDocuments($userId){
+    public function getNeedsMyAttentionDocumentsCount($userId){
         return $this->getData("SELECT COUNT(d.documentId) FROM documents d
                 JOIN doc_type t ON t.id = d.typeId
                 WHERE t.isActive = 2 AND d.stepId IN (SELECT s.id FROM user_groups ug
@@ -608,7 +612,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                 ORDER BY d.lastUpdated DESC;");
     }
 
-    public function getEditingByMeDocuments($userId){
+    public function getEditingByMeDocumentsCount($userId){
         return $this->getData("SELECT COUNT(d.documentId) FROM documents d
                 JOIN doc_type t ON t.id = d.typeId
                 WHERE t.isActive = 2 AND d.stepId IN (SELECT s.id FROM user_groups ug
@@ -635,6 +639,10 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         }
     }
 
+    public function getPublishableSections($manualId){
+
+    }
+
     public function getManualReferencableDocuments($sectionId){
         $query = "SELECT v.*, dt.type FROM doc_versions v 
                     JOIN doc_type dt ON dt.id = v.typeId
@@ -642,7 +650,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                     (SELECT MAX(v2.versionId) FROM doc_versions v2 
                         WHERE (v2.audit_action_type = 'STATUSED'OR v2.audit_action_type = 'STATUSED/MOVED') 
                         AND v2.statusId = 3 
-                        AND (v2.typeId = 1 OR v2.typeId = 5 OR v2.typeId = 6)
+                        AND (v2.typeId = 4 OR v2.typeId = 5 OR v2.typeId = 6)
                         GROUP BY v2.documentId 
                         ORDER BY v2.statusedOn DESC) 
                     AND v.versionId NOT IN

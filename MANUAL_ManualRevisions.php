@@ -36,9 +36,10 @@ if(isset($_POST['btnPublish'])){
     $manualId = $crud->executeGetKey("INSERT INTO faculty_manual (year, title, publishedById) VALUES ('$year','$title','$publishedById');");
 
     $rows = $crud->getData("SELECT v.versionId, v.sectionId FROM facultyassocnew.section_versions v 
-                                    WHERE v.timeCreated = (SELECT MAX(v2.timeCreated) FROM section_versions v2 WHERE v.sectionId = v2.sectionId)
+                                    WHERE v.versionId = (SELECT MAX(v2.versionId) FROM section_versions v2 WHERE v.sectionId = v2.sectionId)
                                     AND v.statusId = 3");
-
+    //Get the newly APPROVED sections from section_versions first -> Copy them to new manual
+    //Get the old PUBLISHED sections from old manual WHERE sectionId NOT IN current manual sectionId -> Copy them to new manual
     foreach((array)$rows AS $key=>$row){
         $sectionId = $row['sectionId'];
         $versionId = $row['versionId'];
@@ -79,9 +80,7 @@ include 'EDMS_SIDEBAR.php';
         <div class="row">
             <div class="col-lg-12">
                 <h3 class="page-header"> Manual Revisions
-                    <?php
-                        if($revisions == 'open' && $boolInGroup) echo '<a class="btn btn-primary" href="MANUAL_AddSection.php">Add Section</a>';
-                        ?>
+                    <?php if($revisions == 'open' && $boolInGroup) echo '<a class="btn btn-primary" href="MANUAL_AddSection.php">Add Section</a>'; ?>
                 </h3>
             </div>
         </div>
@@ -89,7 +88,7 @@ include 'EDMS_SIDEBAR.php';
             <div class="col-lg-8" style="max-height: inherit;">
                 <div class="panel panel-default">
                     <div class="panel-body" style="position: relative;">
-                        <form method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
+                        <form method="POST" action="">
                         <?php if($revisions == 'open') {
                             echo '<b> Faculty Manual Revisions </b> started last '.$revisionsOpened;
                             if($boolPres){
@@ -114,40 +113,23 @@ include 'EDMS_SIDEBAR.php';
                 <div class="panel panel-default" style="margin-top: 1rem;">
                     <div class="panel-heading">
                         <div class="row">
-                            <div class="col-lg-2">
+                            <div class="col-lg-4">
                                 <div class="form-inline">
                                     <label for="sel1">Ver. No. </label>
-                                    <select class="form-control" id="selectedVersion" name="selectedUser">
+                                    <select class="form-control" id="selectedNo" name="selectedNo">
                                         <option value="">All</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <div class="form-inline">
-                                    <label for="sel1">User </label>
+                                    <label for="sel1">Modified by </label>
                                     <select class="form-control" id="selectedUser" name="selectedUser">
                                         <option value="">All</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
-                                <div class="form-inline">
-                                    <label for="sel1">Action</label>
-                                    <select class="form-control" id="selectedAction" name="selectedAction">
-                                        <option value="" selected>All</option>
-                                        <option value="created">CREATED</option>
-                                        <option value="updated">UPDATED</option>
-                                        <option value="moved">MOVED</option>
-                                        <option value="checked out">CHECKED OUT</option>
-                                        <option value="checked in">CHECKED IN</option>
-                                        <option value="draft">DRAFT</option>
-                                        <option value="pending">PENDING</option>
-                                        <option value="approved">APPROVED</option>
-                                        <option value="rejected">REJECTED</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <div class="form-inline">
                                     <label for="sel1">Search</label>
                                     <input type="text" id="searchField" class="form-control">
@@ -170,9 +152,6 @@ include 'EDMS_SIDEBAR.php';
                             </tr>
                             </thead>
                         </table>
-                    </div>
-                    <div class="panel-footer">
-                        <span id="lastUpdatedOn">Last Updated on....</span>
                     </div>
                 </div>
             </div>
@@ -218,8 +197,8 @@ include 'EDMS_SIDEBAR.php';
                     <?php
 
                     $rows = $crud->getData("SELECT v.versionId, v.sectionId FROM facultyassocnew.section_versions v 
-                                    WHERE v.timeCreated = (SELECT MAX(v2.timeCreated) FROM section_versions v2 WHERE v.sectionId = v2.sectionId)
-                                    AND v.statusId = 3 LIMIT 1");
+                                    WHERE v.versionId = (SELECT MAX(v2.versionId) FROM section_versions v2 WHERE v.sectionId = v2.sectionId
+                                    AND v2.statusId = 3 LIMIT 1) AND v.lifecycleId = 1");
                     if(!empty($rows)){
                     ?>
                     <div class="form-group">
@@ -238,7 +217,7 @@ include 'EDMS_SIDEBAR.php';
                     <span id="err"></span>
                     <?php }else { ?>
                         <div class="alert alert-warning">
-                            <strong>There are no publishable (<?php echo $crud->coloriseStatus(3);?>) sections as of the moment. </strong>
+                            <strong>There are no updated and publishable (<?php echo $crud->coloriseStatus(3);?>) sections as of the moment. </strong>
                         </div>
                     <?php  } ?>
                 </div>
@@ -268,13 +247,15 @@ include 'EDMS_SIDEBAR.php';
     });
 
     let table = $('#tblSections').DataTable( {
-        bSort: false,
+        bSort: true,
         destroy: true,
-        pageLength: 5,
+        pageLength: 10,
+        aaSorting: [],
         "ajax": {
             "url":"EDMS_AJAX_FetchSections.php",
             "type":"POST",
-            "dataSrc": ''
+            "dataSrc": '',
+            "data": {requestType: 'MANUAL_SECTIONS_WRITEROUTE'}
         },
         columns: [
             { data: "section_no" },
@@ -288,19 +269,13 @@ include 'EDMS_SIDEBAR.php';
         ],
         initComplete: function(){
             var columnSecNo = this.api().column(0);
-            var selectSecNo = $('#selectedSection').on( 'change', function () {
+            var selectSecNo = $('#selectedNo').on( 'change', function () {
                 var val = $.fn.dataTable.util.escapeRegex($(this).val());
                 columnSecNo.search( val ? '^'+val+'$' : '', true, false ).draw();
             } );
-            var columnVer = this.api().column(2);
-            var selectVer = $('#selectedVersion').on( 'change', function () {
-                var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                columnVer.search( val ? '^'+val+'$' : '', true, false ).draw();
+            columnSecNo.data().unique().sort().each( function ( d, j ) {
+                selectSecNo.append( '<option value="'+d+'">'+d+'</option>' )
             } );
-            columnVer.data().unique().sort().each( function ( d, j ) {
-                selectVer.append( '<option value="'+d+'">'+d+'</option>' )
-            } );
-
             var columnUser = this.api().column(4);
             var selectUser = $('#selectedUser').on( 'change', function () {
                 var val = $.fn.dataTable.util.escapeRegex($(this).val());
@@ -308,11 +283,6 @@ include 'EDMS_SIDEBAR.php';
             } );
             columnUser.data().unique().sort().each( function ( d, j ) {
                 selectUser.append( '<option value="'+d+'">'+d+'</option>' )
-            } );
-
-            var columnAction = this.api().column(6);
-            var selectAction = $('#selectedStatus').on( 'change', function () {
-                columnAction.search($('#selectedStatus').val()).draw();
             } );
         }
     });

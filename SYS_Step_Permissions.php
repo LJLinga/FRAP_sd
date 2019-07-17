@@ -26,13 +26,14 @@ function permissionString($num){
 if(isset($_POST['btnUpdateGroup'])){
     $stepId = $_POST['stepId'];
     $groupId = $_POST['groupId'];
-    $read = 1; $write = 1; $route = 1; $comment = 1;
+    $read = 1; $write = 1; $route = 1; $comment = 1; $cycle = 1;
     if(isset($_POST['read'])) { $read = 2; }
     if(isset($_POST['write'])) { $write = 2; }
     if(isset($_POST['route'])) { $route = 2; }
+    if(isset($_POST['cycle'])) { $cycle = 2; }
     if(isset($_POST['comment'])) { $comment = 2; }
 
-    if($crud->execute("UPDATE steps SET gread= '$read', gwrite='$write', groute='$route', gcomment='$comment', groupId = '$groupId' WHERE id = '$stepId';")){
+    if($crud->execute("UPDATE steps SET gread= '$read', gcycle='$cycle', gwrite='$write', groute='$route', gcomment='$comment', groupId = '$groupId' WHERE id = '$stepId';")){
         echo 'success1';
     }else{
         echo 'Database error.';
@@ -52,13 +53,14 @@ if(isset($_POST['btnDeleteGroup'])){
 
 if(isset($_POST['btnUpdateCreator'])){
     $stepId = $_POST['stepId'];
-    $read = 1; $write = 1; $route = 1; $comment = 1;
+    $read = 1; $write = 1; $route = 1; $comment = 1; $cycle =1;
     if(isset($_POST['read'])) { $read = 2; }
     if(isset($_POST['write'])) { $write = 2; }
     if(isset($_POST['route'])) { $route = 2; }
     if(isset($_POST['comment'])) { $comment = 2; }
+    if(isset($_POST['cycle'])) { $cycle = 2; }
 
-    if($crud->execute("UPDATE steps SET `read` = '$read', `write`='$write', route='$route', `comment` ='$comment' WHERE id = '$stepId';")){
+    if($crud->execute("UPDATE steps SET `read` = '$read', cycle='$cycle', `write`='$write', route='$route', `comment` ='$comment' WHERE id = '$stepId';")){
         echo 'success1';
     }else{
         echo 'Database error.';
@@ -87,11 +89,13 @@ if(isset($_GET['id'])){
             $groupRead = $row['gread'];
             $groupWrite = $row['gwrite'];
             $groupComment = $row['gcomment'];
+            $groupCycle = $row['gcycle'];
             $groupRoute = $row['groute'];
             $read = $row['read'];
             $route= $row['route'];
             $comment = $row['comment'];
             $write = $row['write'];
+            $cycle = $row['cycle'];
         }
     }else{
         header("Location: http://" . $_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF'])."/SYS_Workflows.php");
@@ -148,6 +152,7 @@ include 'SYS_SIDEBAR.php';
                                     <th>Read</th>
                                     <th>Comment</th>
                                     <th>Write</th>
+                                    <th>Cycle</th>
                                     <th>Route</th>
                                     <th width="250px;">Action</th>
                                 </tr>
@@ -168,6 +173,9 @@ include 'SYS_SIDEBAR.php';
                                     </td>
                                     <td>
                                         <?php echo permissionString($groupWrite);?>
+                                    </td>
+                                    <td>
+                                        <?php echo permissionString($groupCycle);?>
                                     </td>
                                     <td>
                                         <?php echo permissionString($groupRoute);?>
@@ -204,7 +212,11 @@ include 'SYS_SIDEBAR.php';
                                                         </div>
                                                         <div class="form-check">
                                                             <input type="checkbox" class="form-check-input" name="write" value="true" <?php if($groupWrite == '2') { echo 'checked'; } ?>>
-                                                            <label class="form-check-label" >Write (Update content) </label>
+                                                            <label class="form-check-label" >Write (Edit content) </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input" name="cycle" value="true" <?php if($groupCycle == '2') { echo 'checked'; } ?>>
+                                                            <label class="form-check-label" >Cycle (Archive/Restore) </label>
                                                         </div>
                                                         <div class="form-check">
                                                             <input type="checkbox" class="form-check-input" name="route" value="true" <?php if($groupRoute == '2') { echo 'checked'; } ?>>
@@ -240,6 +252,7 @@ include 'SYS_SIDEBAR.php';
                                 <th>Read</th>
                                 <th>Comment</th>
                                 <th>Write</th>
+                                <th>Cycle</th>
                                 <th>Route</th>
                                 <th width="250px;">Action</th>
                             </tr>
@@ -254,6 +267,9 @@ include 'SYS_SIDEBAR.php';
                                 </td>
                                 <td>
                                     <?php echo permissionString($write);?>
+                                </td>
+                                <td>
+                                    <?php echo permissionString($cycle);?>
                                 </td>
                                 <td>
                                     <?php echo permissionString($route);?>
@@ -286,6 +302,10 @@ include 'SYS_SIDEBAR.php';
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" name="write" value="true" <?php if($write == '2') { echo 'checked'; } ?>>
                                                         <label class="form-check-label" >Write (Update content) </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" name="cycle" value="true" <?php if($cycle == '2') { echo 'checked'; } ?>>
+                                                        <label class="form-check-label" >Cycle (Archive/Restore) </label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" name="route" value="true" <?php if($route == '2') { echo 'checked'; } ?>>

@@ -14,7 +14,7 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 
 $userId = $_SESSION['idnum'];
 $sysRole = $_SESSION['SYS_ROLE'];
-//$sysRole = 1;
+$sysRole = 1;
 
 
 
