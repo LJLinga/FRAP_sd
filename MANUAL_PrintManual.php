@@ -111,8 +111,8 @@ WHERE pub.manualId = '$manualId'");
 
 
 if(!empty($rows)){
-    $pdf->AddPage();
     foreach((array)$rows AS $key => $row){
+        $pdf->AddPage();
         $pdf->writeSection($row['sectionNo'],$row['title'],$row['content']);
     }
     $pdf->Output();

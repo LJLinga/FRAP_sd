@@ -35,7 +35,7 @@ if(isset($_POST['btnPublish'])){
 
     $manualId = $crud->executeGetKey("INSERT INTO faculty_manual (year, title, publishedById) VALUES ('$year','$title','$publishedById');");
 
-    $rows = $crud->getData("SELECT v.sectionNo, v.title FROM facultyassocnew.section_versions v 
+    $rows = $crud->getData("SELECT v.versionId, v.sectionId FROM facultyassocnew.section_versions v 
                                     WHERE v.versionId = (SELECT MAX(v2.versionId) FROM section_versions v2 WHERE v.sectionId = v2.sectionId
                                     AND v2.statusId = 3 LIMIT 1) AND v.lifecycleId = 1");
     //Get the old PUBLISHED sections from old manual WHERE sectionId NOT IN current manual sectionId -> Copy them to new manual
@@ -80,7 +80,7 @@ include 'EDMS_SIDEBAR.php';
         <div class="row">
             <div class="col-lg-12">
                 <h3 class="page-header"> Manual Revisions
-                    <?php if($revisions == 'open' && $boolInGroup) echo '<a class="btn btn-primary" href="MANUAL_AddSection.php">Add Section</a>'; ?>
+                    <?php if($revisions == 'open' && $boolInGroup) echo '<a class="btn btn-primary" target="_blank" href="MANUAL_AddSection.php">Add Section</a>'; ?>
                 </h3>
             </div>
         </div>
@@ -90,7 +90,7 @@ include 'EDMS_SIDEBAR.php';
                     <div class="panel-body" style="position: relative;">
                         <form method="POST" action="">
                             <?php if($revisions == 'open') {
-                                echo '<b> Faculty Manual Revisions </b> started last '.$revisionsOpened;
+                                echo 'The last <strong>Faculty Manual Revisions</strong> session started on '.$crud->friendlyDate($revisionsOpened);
                                 if($boolPres){
                                     echo '<span style="position: absolute; top:4px; right:4px;">';
                                     echo 'Revisions Actions: ';
@@ -168,7 +168,7 @@ include 'EDMS_SIDEBAR.php';
                         <div class="panel panel-secondary">
                             <div class="panel-heading">
                                 <div class="row">
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <div class="form-inline">
                                             <label for="sel1">Ver. No. </label>
                                             <select class="form-control" id="selectedNo2" name="selectedNo">
@@ -176,7 +176,7 @@ include 'EDMS_SIDEBAR.php';
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <div class="form-inline">
                                             <label for="sel1">Modified by </label>
                                             <select class="form-control" id="selectedUser2" name="selectedUser">
@@ -184,7 +184,19 @@ include 'EDMS_SIDEBAR.php';
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
+                                        <div class="form-inline">
+                                            <label for="sel1">Status</label>
+                                            <select class="form-control" id="selectedStatus2" name="selectedAction">
+                                                <option value="" selected>ALL</option>
+                                                <option value="draft">DRAFT</option>
+                                                <option value="pending">PENDING</option>
+                                                <option value="approved">APPROVED</option>
+                                                <option value="rejected">REJECTED</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
                                         <div class="form-inline">
                                             <label for="sel1">Search</label>
                                             <input type="text" id="searchField2" class="form-control">
@@ -214,7 +226,7 @@ include 'EDMS_SIDEBAR.php';
                         <div class="panel panel-secondary">
                             <div class="panel-heading">
                                 <div class="row">
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <div class="form-inline">
                                             <label for="sel1">Ver. No. </label>
                                             <select class="form-control" id="selectedNo3" name="selectedNo">
@@ -222,7 +234,7 @@ include 'EDMS_SIDEBAR.php';
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <div class="form-inline">
                                             <label for="sel1">Modified by </label>
                                             <select class="form-control" id="selectedUser3" name="selectedUser">
@@ -230,7 +242,19 @@ include 'EDMS_SIDEBAR.php';
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
+                                        <div class="form-inline">
+                                            <label for="sel1">Status</label>
+                                            <select class="form-control" id="selectedStatus3" name="selectedAction">
+                                                <option value="" selected>ALL</option>
+                                                <option value="draft">DRAFT</option>
+                                                <option value="pending">PENDING</option>
+                                                <option value="approved">APPROVED</option>
+                                                <option value="rejected">REJECTED</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
                                         <div class="form-inline">
                                             <label for="sel1">Search</label>
                                             <input type="text" id="searchField3" class="form-control">
@@ -260,7 +284,7 @@ include 'EDMS_SIDEBAR.php';
                         <div class="panel panel-secondary">
                             <div class="panel-heading">
                                 <div class="row">
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <div class="form-inline">
                                             <label for="sel1">Ver. No. </label>
                                             <select class="form-control" id="selectedNo4" name="selectedNo">
@@ -268,7 +292,7 @@ include 'EDMS_SIDEBAR.php';
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <div class="form-inline">
                                             <label for="sel1">Modified by </label>
                                             <select class="form-control" id="selectedUser4" name="selectedUser">
@@ -276,7 +300,19 @@ include 'EDMS_SIDEBAR.php';
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
+                                        <div class="form-inline">
+                                            <label for="sel1">Status</label>
+                                            <select class="form-control" id="selectedStatus4" name="selectedAction">
+                                                <option value="" selected>ALL</option>
+                                                <option value="draft">DRAFT</option>
+                                                <option value="pending">PENDING</option>
+                                                <option value="approved">APPROVED</option>
+                                                <option value="rejected">REJECTED</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
                                         <div class="form-inline">
                                             <label for="sel1">Search</label>
                                             <input type="text" id="searchField4" class="form-control">
@@ -507,6 +543,10 @@ include 'EDMS_SIDEBAR.php';
             columnUser.data().unique().sort().each( function ( d, j ) {
                 selectUser.append( '<option value="'+d+'">'+d+'</option>' )
             } );
+            var columnStatus = this.api().column(6);
+            var selectStatus = $('#selectedStatus2').on( 'change', function () {
+                columnStatus.search($('#selectedStatus2').val()).draw();
+            } );
         }
     });
 
@@ -548,6 +588,10 @@ include 'EDMS_SIDEBAR.php';
             columnUser.data().unique().sort().each( function ( d, j ) {
                 selectUser.append( '<option value="'+d+'">'+d+'</option>' )
             } );
+            var columnStatus = this.api().column(6);
+            var selectStatus = $('#selectedStatus3').on( 'change', function () {
+                columnStatus.search($('#selectedStatus3').val()).draw();
+            } );
         }
     });
 
@@ -588,6 +632,10 @@ include 'EDMS_SIDEBAR.php';
             } );
             columnUser.data().unique().sort().each( function ( d, j ) {
                 selectUser.append( '<option value="'+d+'">'+d+'</option>' )
+            } );
+            var columnStatus = this.api().column(6);
+            var selectStatus = $('#selectedStatus4').on( 'change', function () {
+                columnStatus.search($('#selectedStatus4').val()).draw();
             } );
         }
     });

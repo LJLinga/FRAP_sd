@@ -9,7 +9,6 @@
 include_once('GLOBAL_CLASS_CRUD.php');
 include_once('GLOBAL_PRINT_FPDF.php');
 $crud = new GLOBAL_CLASS_CRUD();
-$printer = new PDF();
 
 require_once('mysql_connect_FA.php');
 session_start();
@@ -35,8 +34,13 @@ if(isset($_POST['btnFinish'])){
     $title = $crud->escape_string($_POST['section_title']);
     $sectionNo = $crud->escape_string($_POST['section_number']);
     $content = $crud->escape_string($_POST['section_content']);
-    $crud->execute("UPDATE sections SET title = '$title', sectionNo = '$sectionNo', content = '$content', availabilityId='2', lockedById=NULL WHERE id = '$sectionId'");
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId);
+
+    if($revisions == 'open'){
+        $crud->execute("UPDATE sections SET title = '$title', sectionNo = '$sectionNo', content = '$content', availabilityId='2', lockedById=NULL WHERE id = '$sectionId'");
+    }else{
+        $error='&alert=SECTION_REVISIONS_CLOSED';
+    }
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId.$error);
 }
 
 if(isset($_POST['btnUnlock'])){
@@ -51,12 +55,18 @@ if(isset($_POST['btnLock'])){
     foreach((array) $rows as $key => $row){
         $availability = $row['availabilityId'];
     }
-    if($availability == '1'){
-        $userId = $_POST['userId'];
-        $crud->execute("UPDATE sections SET availabilityId='2', availabilityById='$userId' WHERE id='$sectionId'");
+
+    if($revisions == 'open'){
+        if($availability == '1'){
+            $userId = $_POST['userId'];
+            $crud->execute("UPDATE sections SET availabilityId='2', availabilityById='$userId' WHERE id='$sectionId'");
+        }else{
+            $error='&alert=SECTION_LOCKED';
+        }
     }else{
-        $error='&alert=SECTION_LOCKED';
+        $error='&alert=SECTION_REVISIONS_CLOSED';
     }
+
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId.$error);
 }
 
@@ -73,14 +83,18 @@ if(isset($_POST['btnRoute'])){
     if($statusId >= 5){
         $statusId = $currentStatusId;
     }
-    if($availability == '1'){
-        if($statusId != $currentStatusId){
-            $crud->execute("UPDATE sections SET statusId = '$statusId', stepId='$nextStepId', statusedById='$userId', steppedById='$userId', remarks = '$remarks' WHERE id='$sectionId'");
-        }else if($statusId == $currentStatusId){
-            $crud->execute("UPDATE sections SET stepId='$nextStepId', steppedById='$userId', remarks = '$remarks' WHERE id='$sectionId'");
+    if($revisions == 'open') {
+        if ($availability == '1') {
+            if ($statusId != $currentStatusId) {
+                $crud->execute("UPDATE sections SET statusId = '$statusId', stepId='$nextStepId', statusedById='$userId', steppedById='$userId', remarks = '$remarks' WHERE id='$sectionId'");
+            } else if ($statusId == $currentStatusId) {
+                $crud->execute("UPDATE sections SET stepId='$nextStepId', steppedById='$userId', remarks = '$remarks' WHERE id='$sectionId'");
+            }
+        } else {
+            $error = '&alert=SECTION_LOCKED';
         }
     }else{
-        $error='&alert=SECTION_LOCKED';
+        $error='&alert=SECTION_REVISIONS_CLOSED';
     }
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId.$error);
 }
@@ -92,9 +106,12 @@ if(isset($_POST['btnSave'])){
     $remarks = $crud->escape_string($_POST['remarks']);
     $versionNo = $_POST['newVersionNo'];
     $sectionId = $_POST['sectionId'];
-
-    $crud->execute("UPDATE sections SET versionNo='$versionNo', title='$title', sectionNo='$sectionNo', content='$content', authorId='$userId', availabilityId='1', availabilityById='$userId', remarks='$remarks' WHERE id='$sectionId';");
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId);
+    if($revisions == 'open'){
+        $crud->execute("UPDATE sections SET versionNo='$versionNo', title='$title', sectionNo='$sectionNo', content='$content', authorId='$userId', availabilityId='1', availabilityById='$userId', remarks='$remarks' WHERE id='$sectionId';");
+    }else{
+        $error='&alert=SECTIONS_REVISIONS_CLOSED';
+    }
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId.$error);
 }
 
 if(isset($_POST['btnArchive'])){
@@ -105,19 +122,40 @@ if(isset($_POST['btnArchive'])){
     foreach((array) $rows as $key => $row){
         $availability = $row['availabilityId'];
     }
-    if($availability == '1'){
-        $crud->execute("UPDATE sections SET lifecycleId = 2, remarks='$remarks', lifecycledById ='$userId' WHERE id = '$sectionId' ");
+
+    if($revisions == 'open'){
+        if($availability == '1'){
+            $crud->execute("UPDATE sections SET lifecycleId = 2, remarks='$remarks', lifecycledById ='$userId' WHERE id = '$sectionId' ");
+        }else{
+            $error='&alert=SECTION_LOCKED';
+        }
     }else{
-        $error='&alert=SECTION_LOCKED';
+        $error='&alert=SECTIONS_REVISIONS_CLOSED';
     }
+
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId.$error);
 }
 
 if(isset($_POST['btnRestore'])){
     $sectionId = $_POST['sectionId'];
     $remarks = $crud->escape_string($_POST['remarks']);
-    $crud->execute("UPDATE sections SET lifecycleId = 1, remarks='$remarks', lifecycledById ='$userId' WHERE id = '$sectionId' ");
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId);
+
+    $rows = $crud->getData("SELECT lifecycleId FROM sections WHERE id = '$sectionId'");
+    foreach((array) $rows as $key => $row){
+        $lifecycleId = $row['lifecycleId'];
+    }
+
+    if($revisions == 'open'){
+        if($lifecycleId == 2){
+            $crud->execute("UPDATE sections SET lifecycleId = 1, remarks='$remarks', lifecycledById ='$userId' WHERE id = '$sectionId' ");
+        }else{
+            $error='&alert=SECTIONS_RESTORE _FAIL';
+        }
+    }else{
+        $error='&alert=SECTIONS_REVISIONS_CLOSED';
+    }
+
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId.$error);
 }
 
 if(isset($_GET['secId'])){

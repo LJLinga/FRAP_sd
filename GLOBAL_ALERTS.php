@@ -15,6 +15,8 @@ if(isset($_GET['alert'])){
     else if($alertType == 'DOC_LOCK_SUCCESS'){ $alertColor = 'success'; $alertMessage = 'You have successfully checked the document out!'; }
     else if($alertType == 'SECTION_LOCK_FAIL') { $alertColor = 'danger'; $alertMessage = "Unable to check the document out. Another user has locked it first."; }
     else if($alertType == 'SECTION_LOCK_SUCCESS'){ $alertColor = 'success'; $alertMessage = 'You have successfully checked the document out!'; }
+    else if($alertType == 'SECTION_REVISIONS_CLOSED'){ $alertColor = 'danger'; $alertMessage = 'Action failed because revisions are closed. Sorry.'; }
+    else if($alertType == 'SECTION_RESTORE_FAIL'){ $alertColor = 'warning'; $alertMessage = 'Another user has already restored this document. '; }
 }
 
 ?>

@@ -78,8 +78,8 @@ if(isset($_POST['requestType'])){
         $query = "SELECT s.*, st.stepNo, st.stepName
                 FROM sections s 
                 JOIN steps st ON st.id = s.stepId 
-                WHERE s.statusId = 2
-                AND s.lifecycleId = 1
+                WHERE
+                s.lifecycleId = 1
                 AND s.stepId IN (SELECT s2.id FROM steps s2 
 								JOIN process pr ON s2.processId = pr.id
 								JOIN process_groups pg ON pr.id = pg.processId 
@@ -110,8 +110,7 @@ if(isset($_POST['requestType'])){
         $query = "SELECT s.*, st.stepNo, st.stepName
                 FROM sections s 
                 JOIN steps st ON st.id = s.stepId 
-                WHERE s.statusId = 2
-                AND s.lifecycleId = 1
+                WHERE s.lifecycleId = 1
                 AND s.stepId IN (SELECT s.id FROM user_groups ug
                                                     JOIN groups g ON ug.groupId = g.id
                                                     JOIN steps s ON g.id = s.groupId
