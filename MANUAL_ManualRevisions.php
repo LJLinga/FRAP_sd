@@ -35,11 +35,11 @@ if(isset($_POST['btnPublish'])){
 
     $manualId = $crud->executeGetKey("INSERT INTO faculty_manual (year, title, publishedById) VALUES ('$year','$title','$publishedById');");
 
-    $rows = $crud->getData("SELECT v.versionId, v.sectionId FROM facultyassocnew.section_versions v 
-                                    WHERE v.versionId = (SELECT MAX(v2.versionId) FROM section_versions v2 WHERE v.sectionId = v2.sectionId)
-                                    AND v.statusId = 3");
-    //Get the newly APPROVED sections from section_versions first -> Copy them to new manual
+    $rows = $crud->getData("SELECT v.sectionNo, v.title FROM facultyassocnew.section_versions v 
+                                    WHERE v.versionId = (SELECT MAX(v2.versionId) FROM section_versions v2 WHERE v.sectionId = v2.sectionId
+                                    AND v2.statusId = 3 LIMIT 1) AND v.lifecycleId = 1");
     //Get the old PUBLISHED sections from old manual WHERE sectionId NOT IN current manual sectionId -> Copy them to new manual
+    //Get the newly APPROVED sections from section_versions first -> Copy them to new manual
     foreach((array)$rows AS $key=>$row){
         $sectionId = $row['sectionId'];
         $versionId = $row['versionId'];
@@ -332,7 +332,7 @@ include 'EDMS_SIDEBAR.php';
 </div>
 
 <div id="myModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
 
         <form method="POST" action="">
             <!-- Modal content-->
@@ -341,27 +341,62 @@ include 'EDMS_SIDEBAR.php';
                     <strong class="modal-title">Publish Manual Edition</strong>
                 </div>
                 <div class="modal-body">
-                    <?php
 
-                    $rows = $crud->getData("SELECT v.versionId, v.sectionId FROM facultyassocnew.section_versions v 
+                    <?php
+                    //get the most recent approved sections, publish them all.
+                    $rows = $crud->getData("SELECT v.sectionNo, v.title FROM facultyassocnew.section_versions v 
                                     WHERE v.versionId = (SELECT MAX(v2.versionId) FROM section_versions v2 WHERE v.sectionId = v2.sectionId
                                     AND v2.statusId = 3 LIMIT 1) AND v.lifecycleId = 1");
                     if(!empty($rows)){
                     ?>
-                    <div class="form-group">
-                        <label for="year">Edition Year</label>
-                        <div class="input-group date" id="datetimepicker1">
-                            <input id="year" name="year" type="text" class="form-control">
-                            <span class="input-group-addon">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <strong>You are about to publish the following sections:</strong>
+                                    </div>
+                                    <div class="panel-body" style="max-height: 50rem; overflow-y: auto;">
+                                        <table class="table table-responsive table-sm table-striped table-condensed">
+                                            <thead>
+                                                <th>No.</th>
+                                                <th>Title</th>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $ctr=0;
+                                                    foreach((array) $rows AS $key=> $row){ $ctr++; ?>
+                                                        <tr>
+                                                            <td><?php echo $row['sectionNo'] ;?></td>
+                                                            <td><?php echo $row['title'] ;?></td>
+                                                        </tr>
+                                                    <?php }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="panel-footer">
+                                        Total of <?php echo $ctr;?> sections.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="year">Edition Year</label>
+                                    <div class="input-group date" id="datetimepicker1">
+                                        <input id="year" name="year" type="text" class="form-control">
+                                        <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="title">Title</label>
+                                    <input type="text" class="form-control" id="title" name="title" value="AFED Inc. Manual" required>
+                                </div>
+                                <span id="err"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="title">Title</label>
-                        <input type="text" class="form-control" id="title" name="title" value="AFED Inc. Manual" required>
-                    </div>
-                    <span id="err"></span>
+
                     <?php }else { ?>
                         <div class="alert alert-warning">
                             <strong>There are no updated and publishable (<?php echo $crud->coloriseStatus(3);?>) sections as of the moment. </strong>
@@ -373,7 +408,7 @@ include 'EDMS_SIDEBAR.php';
                         <input type="hidden" name="userId" value="<?php echo $userId; ?>">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <?php if(!empty($rows)){ ?>
-                        <input type="submit" name="btnPublish" id="btnPublish" class="btn btn-primary">
+                            <button type="submit" name="btnPublish" id="btnPublish" class="btn btn-primary">Proceed</button>
                         <?php } ?>
                     </div>
                 </div>

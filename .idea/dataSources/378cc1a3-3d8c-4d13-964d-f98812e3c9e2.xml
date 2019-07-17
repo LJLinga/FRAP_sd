@@ -4953,12 +4953,13 @@ MEMBER_ID</RefColNames>
     </column>
     <column id="1008" parent="298" name="lifecycleId">
       <Position>24</Position>
-      <DataType>int(11)|0s</DataType>
+      <DataType>int(1)|0s</DataType>
+      <DefaultExpression>1</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="1009" parent="298" name="lifecycledById">
       <Position>25</Position>
-      <DataType>int(11)|0s</DataType>
+      <DataType>int(8)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="1010" parent="298" name="lifecycledOn">

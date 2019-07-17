@@ -55,7 +55,7 @@ if(isset($_POST['btnLock'])){
         $userId = $_POST['userId'];
         $crud->execute("UPDATE sections SET availabilityId='2', availabilityById='$userId' WHERE id='$sectionId'");
     }else{
-        $error='&alert=DOC_LOCKED';
+        $error='&alert=SECTION_LOCKED';
     }
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId.$error);
 }
@@ -80,7 +80,7 @@ if(isset($_POST['btnRoute'])){
             $crud->execute("UPDATE sections SET stepId='$nextStepId', steppedById='$userId', remarks = '$remarks' WHERE id='$sectionId'");
         }
     }else{
-        $error='&alert=DOC_LOCKED';
+        $error='&alert=SECTION_LOCKED';
     }
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId.$error);
 }
@@ -108,7 +108,7 @@ if(isset($_POST['btnArchive'])){
     if($availability == '1'){
         $crud->execute("UPDATE sections SET lifecycleId = 2, remarks='$remarks', lifecycledById ='$userId' WHERE id = '$sectionId' ");
     }else{
-        $error='&alert=DOC_LOCKED';
+        $error='&alert=SECTION_LOCKED';
     }
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId.$error);
 }
@@ -182,7 +182,7 @@ if(isset($_GET['secId'])){
                 $cycle = $row['cycle'];
             }
         }else{
-            header("Location:".$crud->redirectToPreviousWithAlert("DOC_NO_PERMISSIONS"));
+            header("Location:".$crud->redirectToPreviousWithAlert("SECTION_NO_PERMISSIONS"));
         }
 
         $edit = '2';
@@ -206,17 +206,11 @@ if(isset($_GET['secId'])){
 
 
     }else{
-        header("Location:".$crud->redirectToPreviousWithAlert("DOC_NOT_LOAD"));
+        header("Location:".$crud->redirectToPreviousWithAlert("SECTION_NOT_LOAD"));
     }
 
 }else{
-    header("Location:".$crud->redirectToPreviousWithAlert("DOC_NOT_LOAD"));
-}
-
-if(isset($_GET['alert'])){
-    $alertType = $_GET['alert'];
-    if($alertType == 'DOC_LOCK_FAIL') { $alertColor = 'danger'; $alertMessage = "Unable to check the document out. <strong>".$availabilityByName."</strong> has locked it first."; }
-    else if($alertType == 'DOC_LOCK_SUCCESS'){ $alertColor = 'success'; $alertMessage = 'You have successfully checked the document out!'; }
+    header("Location:".$crud->redirectToPreviousWithAlert("SECTION_NOT_LOAD"));
 }
 
 $page_title = 'Faculty Manual - Edit Section';

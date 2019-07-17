@@ -13,6 +13,7 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 
 $edmsRole = $_SESSION['EDMS_ROLE'];
 $userId = $_SESSION['idnum'];
+$error = '';
 
 if(isset($_GET['docId'])){
     $documentId = $_GET['docId'];
@@ -98,7 +99,7 @@ if(isset($_GET['docId'])){
     }
 
 }else{
-    header("Location:".$crud->redirectToPreviousWithAlert("DOC_NO_PERMISSIONS"));
+    header("Location:".$crud->redirectToPreviousWithAlert("DOC_NOT_LOAD"));
 }
 
 if(isset($_POST['btnUnlock'])){
@@ -115,9 +116,8 @@ if(isset($_POST['btnLock'])){
         $availability = $row['availabilityId'];
     }
     if($availability == '1'){
-        $userId = $_POST['userId'];
         $crud->execute("UPDATE documents SET availabilityId='2', availabilityById='$userId' WHERE documentId='$documentId'");
-        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId."&alert=DOC_LOCK_SUCCESS");
+        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
     }else{
         header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId."&alert=DOC_LOCK_FAIL");
     }
@@ -158,19 +158,36 @@ if(isset($_POST['btnRoute'])){
         }else if($statusId == $currentStatusId){
             $crud->execute("UPDATE documents SET stepId='$nextStepId', steppedById='$userId', remarks = '$remarks' WHERE documentId='$documentId'");
         }
+    }else{
+        $error = 'DOC_LOCKED';
     }
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
 }
 
 if(isset($_POST['btnArchive'])){
-    $crud->execute("UPDATE documents SET availabilityId='2', availabilityById='$userId' WHERE documentId='$documentId'");
+    $documentId = $_POST['documentId'];
+    $remarks = $crud->escape_string($_POST['remarks']);
+
+    $rows = $crud->getData("SELECT availabilityId FROM documents WHERE documentId = '$documentId'");
+    foreach((array) $rows as $key => $row){
+        $availability = $row['availabilityId'];
+    }
+    if($availability == '1'){
+        $crud->execute("UPDATE documents SET lifecycleStateId = 2, remarks='$remarks', lifecycleStatedById ='$userId' WHERE documentId = '$documentId' ");
+    }else{
+        $error='&alert=DOC_LOCKED';
+    }
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId.$error);
 }
 
-if(isset($_GET['alert'])){
-    $alertType = $_GET['alert'];
-    if($alertType == 'DOC_LOCK_FAIL') { $alertColor = 'danger'; $alertMessage = "Unable to check the document out. <strong>".$availabilityByName."</strong> has locked it first."; }
-    else if($alertType == 'DOC_LOCK_SUCCESS'){ $alertColor = 'success'; $alertMessage = 'You have successfully checked the document out!'; }
+if(isset($_POST['btnRestore'])){
+    $documentId = $_POST['documentId'];
+    $remarks = $crud->escape_string($_POST['remarks']);
+    $crud->execute("UPDATE documents SET lifecycleStateId = 1, remarks='$remarks', lifecycleStatedById ='$userId' WHERE documentId = '$documentId' ");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
 }
+
+$page_title = $docType.' > '.$title;
 
 include 'GLOBAL_ALERTS.php';
 include 'GLOBAL_HEADER.php';
@@ -809,13 +826,9 @@ include 'EDMS_SIDEBAR.php';
                                 ?>
                             <?php if( $write=='2'){?>
                             <form method="POST" action="">
-                            <input type="hidden" name="filePath" value="<?php echo $filePath;?>">
-                            <input type="hidden" name="userId" value="<?php echo $userId;?>">
                                 <button class="btn btn-default" type="submit" name="btnLock" value="<?php echo $documentId;?>" style="text-align: left; width:100%;">Check Out and Edit</button>
-                                <a href="<?php echo $filePath?>" download><button type="button" class="btn btn-default" style="text-align: left; width: 100%;">Download</button></a>
-                                <button type="button" class="btn btn-warning" style="text-align: left; width: 100%;">Archive</button>
-                                <?php }  ?>
                                 </form>
+                                <?php }  ?>
                             <?php } ?>
 
                             <?php if($availability == '2'){ ?>
@@ -842,18 +855,18 @@ include 'EDMS_SIDEBAR.php';
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="form-group">
-                                                                <label>Reason I'm archiving this section</label>
+                                                                <label>Reason I'm archiving this document</label>
                                                                 <textarea name="remarks" class="form-control" rows="10" required></textarea>
                                                             </div>
 
                                                             <div class="alert alert-warning">
-                                                                <strong>Archiving this section will mean that it will not get published in any manual edition until it is restored.
+                                                                <strong>Archiving this document will mean that it will not get published in any manual edition until it is restored.
                                                                     It will also remain read-only to other users except for those who have edit permissions in this current step.
                                                                     Are you sure you want to archive?</strong>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <input type="hidden" name="sectionId" value="<?php echo $sectionId;?>">
+                                                            <input type="hidden" name="documentId" value="<?php echo $documentId;?>">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                             <button type="submit" name="btnArchive" class="btn btn-primary">Yes, I'm sure</button>
                                                         </div>
@@ -873,18 +886,18 @@ include 'EDMS_SIDEBAR.php';
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="form-group">
-                                                                <label>Reason I'm restoring this section</label>
+                                                                <label>Reason I'm restoring this document</label>
                                                                 <textarea name="remarks" class="form-control" rows="10" required></textarea>
                                                             </div>
 
                                                             <div class="alert alert-info">
-                                                                <strong>Restoring this section will put it back into the the process.
-                                                                    The original section permissions will be restored to the participants of the Manual Revisions process.
+                                                                <strong>Restoring this document will put it back into the the process.
+                                                                    The original document permissions will be restored to the participants of the Manual Revisions process.
                                                                     Are you sure you want to restore?</strong>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <input type="hidden" name="sectionId" value="<?php echo $sectionId;?>">
+                                                            <input type="hidden" name="documentId" value="<?php echo $documentId;?>">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                             <button type="submit" name="btnRestore" class="btn btn-primary">Yes, I'm sure</button>
                                                         </div>
@@ -1007,7 +1020,7 @@ include 'EDMS_SIDEBAR.php';
                 contentType: false,
                 data: new FormData(this),
                 success: function(response){
-                    if(JSON.parse(response).success == '1'){ location.reload(); }
+                    if(JSON.parse(response).success == '1'){ location.href = 'EDMS_ViewDocument.php?docId='+documentId+'&alert=DOC_UPDATE_SUCCESS'; }
                     else { $("#err").html('<div class="alert alert-info">'+JSON.parse(response).html+'</div>'); };
                 },
                 error: function(){
