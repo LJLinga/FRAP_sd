@@ -6,6 +6,28 @@
     include('GLOBAL_CLASS_CRUD.php');
     $crud = new GLOBAL_CLASS_CRUD();
 
+    $query = "SELECT * FROM LOANS where MEMBER_ID = {$_SESSION['idnum']}  ORDER BY LOAN_ID DESC LIMIT 1 ";
+    $result = mysqli_query($dbc,$query);
+    $ans = mysqli_fetch_assoc($result);
+
+    $query = "SELECT l1.APP_STATUS,l2.STATUS as 'Status' FROM LOANS l1 JOIN LOAN_STATUS l2 ON l1.LOAN_STATUS = l2.STATUS_ID where l1.MEMBER_ID = {$_SESSION['idnum']} 
+                      ORDER BY loan_id DESC LIMIT 1";
+    $result = mysqli_query($dbc,$query);
+    $ans1 = mysqli_fetch_assoc($result);
+
+
+    //checks if user has pending application
+
+    if($ans['LOAN_STATUS'] == 4){
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP reviewapp.php");
+
+    }else if($ans['LOAN_STATUS'] == 5){
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP application.php");
+
+    }
+
     //check first if the guy is a part time.
 
 
@@ -18,14 +40,8 @@
     include 'GLOBAL_HEADER.php';
     include 'FRAP_USER_SIDEBAR.php';
 
-    $query = "SELECT * FROM LOANS where MEMBER_ID = {$_SESSION['idnum']}  ORDER BY LOAN_ID DESC LIMIT 1 ";
-    $result = mysqli_query($dbc,$query);
-    $ans = mysqli_fetch_assoc($result);
 
-    $query = "SELECT l1.APP_STATUS,l2.STATUS as 'Status' FROM LOANS l1 JOIN LOAN_STATUS l2 ON l1.LOAN_STATUS = l2.STATUS_ID where l1.MEMBER_ID = {$_SESSION['idnum']} 
-                  ORDER BY loan_id DESC LIMIT 1";
-    $result = mysqli_query($dbc,$query);
-    $ans1 = mysqli_fetch_assoc($result);
+
 ?>
 <style>
     #noresize {
@@ -337,7 +353,7 @@
                                                 <tr>
                                                     <td align='center'> <?php echo $row['REQ_TYPE'] ?></td>
                                                     <td align='center'> <?php echo $row['statusName'] ?></td>
-                                                    <td align='center'> <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>">
+                                                    <td align='center'> <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>" target="_blank">
 
                                                             <button type="button" class="btn btn-info" ><i class="fa fa-file" aria-hidden="true"></i> </button></a></td>
                                                 </tr>
@@ -394,58 +410,58 @@
 
                                 </div>
                                 </div>
-                            <div class="row" style="margin-top:1rem;">
-                                <div class="col-lg-12">
-
-
-                                    <div class="panel panel-default">
-
-                                        <div class="panel-heading">
-
-                                            <b>Receipt from the Admin</b>
-
-                                        </div>
-
-                                        <div class="panel-body">
-                                            <?php
-                                            //gets the document ids and their
-                                            $query = "SELECT d.documentId, d.title, ds.statusName
-                                                 from ref_document_loans rdl
-                                                 join documents d 
-                                                 ON rdl.DOC_ID = d.documentId
-                                                 join doc_status ds
-                                                 on d.statusId = ds.id
-                                                 WHERE rdl.LOAN_ID = {$ans['LOAN_ID']}
-                                                 AND rdl.DOC_REF_TYPE = 2";
-                                            $rows = $crud->getData($query);
-
-
-                                            foreach((array) $rows as $key => $row){   ?>
-
-                                                <div class="row">
-                                                    <div class="col-lg-2"></div>
-                                                    <div class="col-lg-8" align="center">
-                                                        <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>">
-                                                            <button type="button" class="btn btn-info">View Receipt</button></a>
-                                                        <br>
-                                                        <br>
-                                                    </div>
-                                                    <div class="col-lg-2"></div>
-
-                                                </div>
-
-                                            <?php }?>
-
-                                        </div>
-
-
-
-                                    </div>
-
-                                </div>
-
-
-                            </div>
+<!--                            <div class="row" style="margin-top:1rem;">-->
+<!--                                <div class="col-lg-12">-->
+<!---->
+<!---->
+<!--                                    <div class="panel panel-default">-->
+<!---->
+<!--                                        <div class="panel-heading">-->
+<!---->
+<!--                                            <b>Receipt from the Admin</b>-->
+<!---->
+<!--                                        </div>-->
+<!---->
+<!--                                        <div class="panel-body">-->
+<!--                                            --><?php
+//                                            //gets the document ids and their
+//                                            $query = "SELECT d.documentId, d.title, ds.statusName
+//                                                 from ref_document_loans rdl
+//                                                 join documents d
+//                                                 ON rdl.DOC_ID = d.documentId
+//                                                 join doc_status ds
+//                                                 on d.statusId = ds.id
+//                                                 WHERE rdl.LOAN_ID = {$ans['LOAN_ID']}
+//                                                 AND rdl.DOC_REF_TYPE = 2";
+//                                            $rows = $crud->getData($query);
+//
+//
+//                                            foreach((array) $rows as $key => $row){   ?>
+<!---->
+<!--                                                <div class="row">-->
+<!--                                                    <div class="col-lg-2"></div>-->
+<!--                                                    <div class="col-lg-8" align="center">-->
+<!--                                                        <a href ="EDMS_ViewDocument.php?docId=--><?php //echo $row['documentId'];?><!--">-->
+<!--                                                            <button type="button" class="btn btn-info">View Receipt</button></a>-->
+<!--                                                        <br>-->
+<!--                                                        <br>-->
+<!--                                                    </div>-->
+<!--                                                    <div class="col-lg-2"></div>-->
+<!---->
+<!--                                                </div>-->
+<!---->
+<!--                                            --><?php //}?>
+<!---->
+<!--                                        </div>-->
+<!---->
+<!---->
+<!---->
+<!--                                    </div>-->
+<!---->
+<!--                                </div>-->
+<!---->
+<!---->
+<!--                            </div>-->
 
                             <?php }?>
 
