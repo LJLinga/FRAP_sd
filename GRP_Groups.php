@@ -104,6 +104,12 @@ include 'EDMS_SIDEBAR.php';
                         <strong>Group Invitations</strong>
                     </div>
                     <div class="panel-body">
+
+
+                            <?php
+                            $rows = $crud->getData("SELECT i.*,g.groupDesc FROM group_invitations i JOIN groups g ON g.id = i.groupId WHERE invitedId = '$userId'");
+
+                            if(!empty($rows)){ ?>
                         <table class="table table-striped table-responsive" align="center" id="dataTable">
                             <thead>
                             <tr>
@@ -115,12 +121,7 @@ include 'EDMS_SIDEBAR.php';
                             </tr>
                             </thead>
                             <tbody>
-
-                            <?php
-                            $rows = $crud->getData("SELECT i.*,g.groupDesc FROM group_invitations i JOIN groups g ON g.id = i.groupId WHERE invitedId = '$userId'");
-
-                            if(!empty($rows)){
-                                foreach((array) $rows as $key => $row){
+                                <?php foreach((array) $rows as $key => $row){
 
 
                                     ?>
@@ -132,7 +133,7 @@ include 'EDMS_SIDEBAR.php';
                                             <?php echo $row['groupDesc']; ?>
                                         </td>
                                         <td>
-                                            <?php if($row['isAdmin'] == '1') echo 'ADMIN'; else echo 'MEMBER'; ?>
+                                            <?php if($row['isAdmin'] == '2') echo 'ADMIN'; else echo 'MEMBER'; ?>
                                         </td>
                                         <td>
                                             <?php echo $crud->friendlyDate($row['timestamp']); ?>
@@ -144,7 +145,7 @@ include 'EDMS_SIDEBAR.php';
                                                         <div class="modal-content">
                                                             <div class="modal-body">
                                                                 <strong><?php echo $crud->getUserName($row['inviterId']); ?></strong> is inviting you as a
-                                                                <strong><?php if($row['isAdmin'] == '1') echo 'ADMIN'; else echo 'MEMBER'; ?></strong> of
+                                                                <strong><?php if($row['isAdmin'] == '2') echo 'ADMIN'; else echo 'MEMBER'; ?></strong> of
                                                                 <strong><?php echo $row['groupDesc']; ?></strong>
                                                                 <div class="alert alert-info">
                                                                     <i>"<?php echo $row['message'];?>"</i>
@@ -166,12 +167,15 @@ include 'EDMS_SIDEBAR.php';
                                         </td>
                                     </tr>
 
-                                    <?php
-                                }
-                            }
-                            ?>
+                                    <?php } ?>
                             </tbody>
                         </table>
+                            <?php }else { ?>
+                                <div class="alert alert-info">
+                                    You have no pending group invitations.
+                                </div>
+                        <?php } ?>
+
                     </div>
                 </div>
             </div>

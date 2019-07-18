@@ -331,8 +331,6 @@ include 'EDMS_SIDEBAR.php';
                                         <tr>
                                             <th>Workflow for</th>
                                             <th>Workflow Name</th>
-                                            <th>Read</th>
-                                            <th>Comment</th>
                                             <th>Write</th>
                                             <th>Route</th>
                                         </tr>
@@ -384,12 +382,6 @@ include 'EDMS_SIDEBAR.php';
                                                     <?php echo $row['processName'];?>
                                                 </td>
                                                 <td>
-                                                    <?php echo $crud->permissionString($row['read']);?>
-                                                </td>
-                                                <td>
-                                                    <?php echo $crud->permissionString($row['comment']);?>
-                                                </td>
-                                                <td>
                                                     <?php echo $crud->permissionString($row['write']);?>
                                                 </td>
                                                 <td>
@@ -421,8 +413,6 @@ include 'EDMS_SIDEBAR.php';
                                             <th>Workflow for</th>
                                             <th>Workflow Name</th>
                                             <th>Step</th>
-                                            <th>Read</th>
-                                            <th>Comment</th>
                                             <th>Write</th>
                                             <th>Route</th>
                                         </tr>
@@ -475,13 +465,6 @@ include 'EDMS_SIDEBAR.php';
                                                 </td>
                                                 <td>
                                                     Step <?php echo $row['stepNo'].': '.$row['stepName'];?>
-                                                </td>
-
-                                                <td>
-                                                    <?php echo $crud->permissionString($row['read']);?>
-                                                </td>
-                                                <td>
-                                                    <?php echo $crud->permissionString($row['comment']);?>
                                                 </td>
                                                 <td>
                                                     <?php echo $crud->permissionString($row['write']);?>

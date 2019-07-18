@@ -38,6 +38,22 @@ if(isset($_POST['btnLock'])){
     exit;
 }
 
+if(isset($_POST['btnRevert'])){
+    $documentId = $_POST['documentId'];
+    $remarks = $_POST['remarks'];
+    $title = $_POST['title'];
+    $filePath = $_POST['filePath'];
+    $versionNo = $_POST['newVersionNo'];
+    try{
+        $crud->execute("UPDATE documents SET authorId='$userId', remarks='$remarks',
+                                    versionNo='$versionNo', title='$title',filePath='$filePath' WHERE documentId='$documentId';");
+    }catch(Exception $e){
+        $error='&alert=DATABASE_ERROR';
+    }
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId.$error);
+    exit;
+}
+
 if(isset($_POST['btnRoute'])){
     $documentId = $_POST['documentId'];
     $nextStepId = $_POST['nextStepId'];
@@ -359,12 +375,12 @@ include 'EDMS_SIDEBAR.php';
                                         </td>
                                         <td>
                                             <?php if($row['audit_action_type'] != 'LOCKED' && $row['audit_action_type'] != 'CREATED'){?>
-                                                <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalVersionPreview<?php echo $row['versionId'];?>"><i class="fa fa-eye"></i></a>
+                                                <a class="btn btn-sm" data-toggle="modal" data-target="#modalVersionPreview<?php echo $row['versionId'];?>"><i class="fa fa-eye"></i></a>
                                                 <div id="modalVersionPreview<?php echo $row['versionId'];?>" class="modal fade" role="dialog">
                                                     <div class="modal-dialog modal-lg">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <strong class="modal-title">Version Preview</strong>
+                                                                <strong class="modal-title">Remarks Preview</strong>
                                                             </div>
                                                             <div class="modal-body">
                                                                 <div class="row">
@@ -374,34 +390,26 @@ include 'EDMS_SIDEBAR.php';
                                                                                 <strong><?php echo $row['name'];?></strong> on
                                                                                 <i><?php echo date("F j, Y g:i:s A ", strtotime($row['audit_timestamp']));?></i><br>
                                                                                 <?php
-                                                                                if($row['audit_action_type'] == 'LOCKED') { $labelCol = 'default';?>
-                                                                                    <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->availabilityString($row['availabilityId']);?></span> the document.
-                                                                                <?php }else if($row['audit_action_type'] == 'STATUSED') {
-                                                                                    if($row['statusId'] ==  1) { $labelCol = 'info'; }
-                                                                                    else if($row['statusId'] ==  2) { $labelCol = 'primary'; }
-                                                                                    else if($row['statusId'] ==  3) { $labelCol = 'success'; }
-                                                                                    else if($row['statusId'] ==  4) { $labelCol = 'danger'; } ?>
-                                                                                    <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->assignStatusString($row['statusId']);?></span> status assigned to the document.
-                                                                                <?php }else if($row['audit_action_type'] == 'MOVED') {
-                                                                                    $labelCol = 'primary'?>
-                                                                                    <span class="label label-<?php echo $labelCol;?>">MOVED</span> the document to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong>.
-                                                                                <?php }else if($row['audit_action_type'] == 'CYCLED'){
-                                                                                    if($row['lifecycleStateId'] ==  1) $labelCol = 'info';
-                                                                                    if($row['lifecycleStateId'] ==  2) $labelCol = 'warning';?>
-                                                                                    <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->lifecycleString($row['lifecycleStateId']);?></span> the document.
+                                                                                if($row['audit_action_type'] == 'LOCKED') { ?>
+                                                                                    <?php echo $crud->coloriseAvailability($row['availabilityId']);?> the document.
+                                                                                <?php }else if($row['audit_action_type'] == 'STATUSED') { ?>
+                                                                                    <?php echo $crud->coloriseStatus($row['statusId']);?> status assigned to the document.<br>
+                                                                                    <span class="label label-default">CHECKED IN</span> the document.
+                                                                                <?php }else if($row['audit_action_type'] == 'MOVED') { ?>
+                                                                                    <?php echo $crud->coloriseStep();?> the document to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong>.<br>
+                                                                                    <span class="label label-default">CHECKED IN</span> the document.
+                                                                                <?php }else if($row['audit_action_type'] == 'CYCLED'){ ?>
+                                                                                    <?php echo $crud->coloriseCycle($row['lifecycleStateId']);?> the document.<br>
+                                                                                    <span class="label label-default">CHECKED IN</span> the document.
                                                                                 <?php }else if($row['audit_action_type'] == 'UPDATED' || $row['audit_action_type'] == 'CREATED') {
                                                                                     $labelCol = 'success'?>
                                                                                     <span class="label label-<?php echo $labelCol;?>"><?php echo $row['audit_action_type'];?></span> the document.<br>
                                                                                     <span class="label label-default">CHECKED IN</span> the document.
                                                                                 <?php }else if($row['audit_action_type'] == 'STATUSED/MOVED') {
                                                                                     $labelCol = 'primary'?>
-                                                                                    <span class="label label-<?php echo $labelCol;?>">MOVED</span> the document to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong>.<br>
-                                                                                    <?php if($row['statusId'] ==  1) { $labelCol = 'info'; }
-                                                                                    else if($row['statusId'] ==  2) { $labelCol = 'primary'; }
-                                                                                    else if($row['statusId'] ==  3) { $labelCol = 'success'; }
-                                                                                    else if($row['statusId'] ==  4) { $labelCol = 'danger'; }
-                                                                                    ?>
-                                                                                    <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->assignStatusString($row['statusId']);?></span> status assigned to the document.
+                                                                                    <?php echo $crud->coloriseStep();?> the document to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong>.<br>
+                                                                                    <?php echo $crud->coloriseStatus($row['statusId']);?> status assigned to the document.<br>
+                                                                                    <span class="label label-default">CHECKED IN</span> the document.
                                                                                 <?php }
                                                                                 ?>
                                                                             </div>
@@ -521,8 +529,9 @@ include 'EDMS_SIDEBAR.php';
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-lg-6" style="max-height: 60rem; overflow-y: auto;">
-                                                                        <div class="alert alert-info">
+                                                                    <div class="col-lg-6">
+                                                                        <label>Remarks </label>
+                                                                        <div class="alert alert-info" style="max-height: 60rem; overflow-y: auto;">
                                                                             "<i><?php echo $row['remarks'];?></i>"
                                                                         </div>
                                                                     </div>
@@ -535,6 +544,179 @@ include 'EDMS_SIDEBAR.php';
                                                     </div>
                                                 </div>
                                             <?php }?>
+                                            <?php if($row['audit_action_type'] == 'UPDATED' || $row['audit_action_type'] == 'CREATED') { ?>
+                                                <a class="btn btn-sm" data-toggle="modal" data-target="#modalRevert<?php echo $row['versionId'];?>"><i class="fa fa-refresh"></i></a>
+                                                <div id="modalRevert<?php echo $row['versionId'];?>" class="modal fade" role="dialog">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <form method="POST" action="">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <strong>Revert to Version <?php echo $row['versionNo'];?></strong>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6">
+                                                                            <div class="panel panel-default">
+                                                                                <div class="panel-heading">
+                                                                                    <b>Version Details</b>
+                                                                                </div>
+                                                                                <div class="panel-body">
+                                                                                    <table class="table table-responsive table-striped table-condensed table-sm">
+                                                                                        <tbody>
+                                                                                        <tr>
+                                                                                            <th>Title</th>
+                                                                                            <td><?php echo $row['title']; ?></td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th>Version No.</th>
+                                                                                            <td><?php echo $row['versionNo']; ?></td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th>Type</th>
+                                                                                            <td><?php echo $row['docType']; ?></td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th>Process</th>
+                                                                                            <td><?php echo $row['processName']; ?></td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th>Stage</th>
+                                                                                            <td><?php echo $row['stepName']; ?></td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th>Status</th>
+                                                                                            <?php
+
+                                                                                            if($statusId == 3){
+                                                                                                $labelCol = 'success';
+                                                                                            }else if($statusId == 4){
+                                                                                                $labelCol = 'danger';
+                                                                                            }else if($statusId == 2){
+                                                                                                $labelCol = 'primary';
+                                                                                            }else if($statusId == 1){
+                                                                                                $labelCol = 'info';
+                                                                                            }
+                                                                                            ?>
+                                                                                            <td>
+                                                                                            <span class="label label-<?php echo $labelCol;?>">
+                                                                                                <?php echo $statusName;?>
+                                                                                            </span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <?php if($row['statusedById'] != ''){?>
+
+                                                                                            <tr>
+                                                                                                <th>Status updated by</th>
+                                                                                                <td><?php echo $row['statusedByName']; ?></td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <th>Status updated on</th>
+                                                                                                <td><?php echo date("F j, Y g:i:s A ", strtotime($row['statusedOn']));?></td>
+                                                                                            </tr>
+                                                                                        <?php } ?>
+                                                                                        <?php if($row['lifecycleStatedById'] != ''){ ?>
+                                                                                            <tr>
+                                                                                                <th>State</th>
+                                                                                                <?php
+
+                                                                                                if($row['lifecycleStateId'] == 1){
+                                                                                                    $labelCol = 'success';
+                                                                                                }else if($statusId == 2){
+                                                                                                    $labelCol = 'warning';
+                                                                                                }                                    ?>
+                                                                                                <td>
+                                                                                                <span class="label label-<?php echo $labelCol;?>">
+                                                                                                    <?php echo $crud->lifecycleString($row['lifecycleStateId']);?>
+                                                                                                </span>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <th>State updated by</th>
+                                                                                                <td><?php echo $row['lifecycleStatedByName'] ?></td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <th>State updated on</th>
+                                                                                                <td><?php echo date("F j, Y g:i:s A ", strtotime($row['lifecycleStatedOn']));?></td>
+                                                                                            </tr>
+                                                                                        <?php }?>
+                                                                                        <tr>
+                                                                                            <th>Created by</th>
+                                                                                            <td><?php echo $originalAuthor; ?></td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th>Created on</th>
+                                                                                            <td><?php echo date("F j, Y g:i:s A ", strtotime($timeFirstPosted)); ?></td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th>Content updated by</th>
+                                                                                            <td><?php echo $row['authorName']; ?></td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th>Content updated on</th>
+                                                                                            <td><?php echo date("F j, Y g:i:s A ", strtotime($row['lastUpdated']));?></td>
+                                                                                        </tr>
+                                                                                        <?php if($row['availabilityById'] != '' && $availability == '2') {  ?>
+                                                                                        <tr>
+                                                                                            <th>Currently checked out by</th>
+                                                                                            <td><?php echo $row['availabilityByName']; ?></td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th>Checked out on </th>
+                                                                                            <td><?php echo date("F j, Y g:i:s A ", strtotime($row['availabilityOn'])); ?></td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <?php } ?>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="alert alert-info">
+                                                                                Reverting only brings back older document content.
+                                                                                It will not bring back other information such as status, state, etc.
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label for=".radio"> Revert to old version as Version </label><br>
+                                                                                <?php
+                                                                                $trueNo = explode(" ",$versionNo);
+                                                                                $tempVerNo = explode(".", $trueNo[0]);
+                                                                                if($tempVerNo){
+                                                                                    $largeNum = $tempVerNo[0];
+                                                                                    $smallNum = $tempVerNo[1];
+                                                                                }else{
+                                                                                    $largeNum = $versionNo;
+                                                                                    $smallNum = '0';
+                                                                                }
+                                                                                ?>
+                                                                                <div class="radio">
+                                                                                    <label><input type="radio" name="newVersionNo" value="<?php echo $largeNum.'.'.(floatval($smallNum) + 1); ?> (rev. <?php echo $trueNo[0];?>)" checked><?php echo $largeNum.'.'.(floatval($smallNum) + 1); ?> (rev. <?php echo $trueNo[0];?>) (Minor Update)</label>
+                                                                                </div><br>
+                                                                                <div class="radio">
+                                                                                    <label><input type="radio" name="newVersionNo" value="<?php echo (floatval($largeNum) + 1).'.0';?> (rev. <?php echo $trueNo[0];?>)"><?php echo (floatval($largeNum) + 1).'.0'; ?> (rev. <?php echo $trueNo[0];?>) (Major Update)</label>
+                                                                                </div>
+                                                                            </div><br><br>
+                                                                            <div class="form-group">
+                                                                                <label for="remarks">Reason why I'm reverting back to this version</label>
+                                                                                <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="20" cols="48" required></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <div class="form-group">
+                                                                        <input type="hidden" name="documentId" value="<?php echo $documentId; ?>">
+                                                                        <input type="hidden" name="filePath" value="<?php echo $row['filePath']; ?>">
+                                                                        <input type="hidden" name="title" value="<?php echo $row['title']; ?>">
+                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                                        <input type="submit" name="btnRevert" class="btn btn-primary">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            <?php } ?>
                                             <a class="btn btn-sm fa fa-download"  href="<?php echo $filePath;?>" download="<?php echo $row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']);?>"></a>
                                         </td>
                                     </tr>
@@ -964,7 +1146,6 @@ include 'EDMS_SIDEBAR.php';
                             <input type="text" name="versionTitle" id="versionTitle" class="form-control" placeholder="Title" required value="<?php echo $title; ?>">
                         </div>
                         <div class="form-group">
-                            <label for=".radio"> Save New Version As </label>
                             <label for=".radio"> Save New Version As </label>
                             <?php
                             $tempVerNo = explode(".",$versionNo);

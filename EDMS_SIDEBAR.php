@@ -12,15 +12,6 @@
                     <li id="navSideItemWorkspace">
                         <a href="EDMS_MyDocuments.php"><i class="fa fa-fw fa-folder"></i> My Documents </a>
                     </li>
-                    <?php $rows = $crud->getUserGroups($_SESSION['idnum']);
-                    foreach((array) $rows AS $key => $row){ ?>
-                        <li id="navSideItemGroup<?php echo $row['id'];?>">
-                            <a href="EDMS_Groupspace.php?id=<?php echo $row['id'];?>"><i class="fa fa-fw fa-folder"></i> <?php echo $row['groupDesc'];?>
-                                <span class="label label-primary">14</span>
-                            </a>
-                        </li>
-                    <?php }
-                    ?>
                 </ul>
             </li>
 
