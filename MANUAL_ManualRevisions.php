@@ -343,18 +343,42 @@ include 'EDMS_SIDEBAR.php';
                             <div class="panel-heading">
                             </div>
                             <div class="panel-body" style="max-height:50rem; inherit;overflow-y: auto;">
+
                                 <?php
                                 $rows = $crud->getData("SELECT id, year, title, timePublished, publishedById 
-                                        FROM facultyassocnew.faculty_manual ORDER BY id DESC;");
-                                if(!empty($rows)){
-                                    foreach((array)$rows AS $key => $row){
-                                        echo '<div class="card" style="position: relative;">';
-                                        echo '<div class="card-body">';
-                                        echo $row['title'].' ('.$row['year'].')<br>';
-                                        echo '<a href="MANUAL_PrintManual.php?id='.$row['id'].'" target="_blank" class="btn btn-primary btn-sm" style="position: absolute; right: 2rem; top: 0.5rem;"><i class="fa fa-print"></i></a>';
-                                        echo '</div></div>';
-                                    }
-                                }else{
+                                        FROM facultyassocnew.faculty_manual ORDER BY id DESC;"); ?>
+                                <table class="table table-condensed table-responsive table-striped table-sm">
+                                    <thead>
+                                    <th>Year</th>
+                                    <th>Title</th>
+                                    <th>Published on</th>
+                                    <th>Published by</th>
+                                    <th>Action</th>
+                                    </thead>
+                                    <tbody>
+                                <?php if(!empty($rows)){
+                                    foreach((array)$rows AS $key => $row){ ?>
+                                        <tr>
+                                            <td>
+                                                <?php echo $row['year'];?>
+                                            </td>
+                                            <td>
+                                                <?php echo $row['title'];?>
+                                            </td>
+                                            <td>
+                                                <?php echo $crud->friendlyDate($row['timePublished']);?>
+                                            </td>
+                                            <td>
+                                                <?php echo $crud->getUserName($row['publishedById']);?>
+                                            </td>
+                                            <td>
+                                                <a href="MANUAL_PrintManual.php?id=<?php echo $row['id']?>" target="_blank" class="btn btn-primary btn-sm"><i class="fa fa-print"></i></a>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
+                                    </tbody>
+                                </table>
+                                <?php }else{
                                     echo 'You have no published manuals editions.';
                                 }
                                 ?>
