@@ -373,6 +373,7 @@ $userName = $rows[0]['name'];
 
     setInterval(function(){
         table.ajax.reload(null,false);
+        table2.ajax.reload(null,false);
     },5000)
 
 </script>

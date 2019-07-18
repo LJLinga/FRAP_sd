@@ -356,7 +356,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function removeStepGroup($stepId){
-        $this->execute("UPDATE steps SET gread= '1', gwrite='1', groute='1', gcomment='1', groupId = NULL WHERE id = '$stepId';");
+        $this->execute("UPDATE steps SET gwrite='1', groute='1', gcycle ='1', groupId = NULL WHERE id = '$stepId';");
     }
 
     public function removeStepRoute($routeId){
@@ -373,6 +373,10 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         }else {
             return false;
         }
+    }
+
+    public function auditColoriser($contentType, $actionType){
+       //Couldve thought of this sooner, when auditing just directly say the action, not make it look for it.
     }
 
     public function getNonAdminGroups(){
@@ -425,7 +429,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function getGroupWorkflows($groupId){
-        return $this->getData("SELECT p.*, s.*, s.gread AS `read`, s.gwrite AS `write`, s.gcomment AS `comment`, s.groute AS `route`, p.id AS processId, s.id AS stepId
+        return $this->getData("SELECT p.*, s.*, s.gwrite AS `write`, s.groute AS `route`, s.gcycle AS `cycle`, p.id AS processId, s.id AS stepId
                                         FROM steps s 
                                         JOIN process p on s.processId = p.id 
                                         WHERE s.groupId = '$groupId'
@@ -439,7 +443,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function getGroupDocWorkflows($groupId){
-        return $this->getData("SELECT p.*, s.*, s.gread AS `read`, s.gwrite AS `write`, s.gcomment AS `comment`, s.groute AS `route`, p.id FROM steps s 
+        return $this->getData("SELECT p.*, s.*, s.gwrite AS `write`, s.groute AS `route`, s.gcycle AS `cycle`, p.id FROM steps s 
                                         JOIN process p on s.processId = p.id 
                                         WHERE s.groupId = '$groupId' AND p.processForId = 1
                                         ORDER BY p.processForId, p.processName, s.stepNo ASC;");
@@ -466,7 +470,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function coloriseCycle($num){
-        $string = $this->assignStatusString($num);
+        $string = $this->lifecycleString($num);
         $color = '';
         if($num == '1') { $color = "success"; }
         else if($num == '2') { $color = "warning"; }
@@ -509,7 +513,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function getWorkflowGroups($processId){
-        return $this->getData("SELECT g.id, g.groupName, g.groupDesc, pg.read, pg.cycle, pg.write, pg.comment, pg.route 
+        return $this->getData("SELECT g.id, g.groupName, g.groupDesc, pg.cycle, pg.write, pg.route 
                                 FROM groups g JOIN process_groups pg on g.id = pg.groupId
                                                             WHERE pg.processId = '$processId'");
     }
@@ -593,7 +597,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function getStepGroupMemberPermissions($stepId, $userId){
-        return $this->getData("SELECT s.*, s.gcycle AS `cycle`,s.gread AS `read`, s.gwrite AS `write`, s.gcomment AS `comment`, s.groute AS route FROM user_groups ug 
+        return $this->getData("SELECT s.*, s.gcycle AS `cycle`, s.gwrite AS `write`, s.groute AS route FROM user_groups ug 
                                         JOIN groups g ON ug.groupId = g.id
                                         JOIN steps s ON g.id = s.groupId
                                         WHERE s.id = '$stepId' AND ug.userId = '$userId'

@@ -26,14 +26,12 @@ function permissionString($num){
 if(isset($_POST['btnUpdateGroup'])){
     $stepId = $_POST['stepId'];
     $groupId = $_POST['groupId'];
-    $read = 1; $write = 1; $route = 1; $comment = 1; $cycle = 1;
-    if(isset($_POST['read'])) { $read = 2; }
+    $write = 1; $route = 1; $cycle = 1;
     if(isset($_POST['write'])) { $write = 2; }
     if(isset($_POST['route'])) { $route = 2; }
     if(isset($_POST['cycle'])) { $cycle = 2; }
-    if(isset($_POST['comment'])) { $comment = 2; }
 
-    if($crud->execute("UPDATE steps SET gread= '$read', gcycle='$cycle', gwrite='$write', groute='$route', gcomment='$comment', groupId = '$groupId' WHERE id = '$stepId';")){
+    if($crud->execute("UPDATE steps SET gcycle='$cycle', gwrite='$write', groute='$route', groupId = '$groupId' WHERE id = '$stepId';")){
         echo 'success1';
     }else{
         echo 'Database error.';
@@ -53,14 +51,12 @@ if(isset($_POST['btnDeleteGroup'])){
 
 if(isset($_POST['btnUpdateCreator'])){
     $stepId = $_POST['stepId'];
-    $read = 1; $write = 1; $route = 1; $comment = 1; $cycle =1;
-    if(isset($_POST['read'])) { $read = 2; }
+    $write = 1; $route = 1; $cycle =1;
     if(isset($_POST['write'])) { $write = 2; }
     if(isset($_POST['route'])) { $route = 2; }
-    if(isset($_POST['comment'])) { $comment = 2; }
     if(isset($_POST['cycle'])) { $cycle = 2; }
 
-    if($crud->execute("UPDATE steps SET `read` = '$read', cycle='$cycle', `write`='$write', route='$route', `comment` ='$comment' WHERE id = '$stepId';")){
+    if($crud->execute("UPDATE steps SET cycle='$cycle', `write`='$write', route='$route' WHERE id = '$stepId';")){
         echo 'success1';
     }else{
         echo 'Database error.';
@@ -86,14 +82,10 @@ if(isset($_GET['id'])){
             $groupId = $row['groupId'];
             $groupName = $row['groupName'];
             $groupDesc = $row['groupDesc'];
-            $groupRead = $row['gread'];
             $groupWrite = $row['gwrite'];
-            $groupComment = $row['gcomment'];
             $groupCycle = $row['gcycle'];
             $groupRoute = $row['groute'];
-            $read = $row['read'];
             $route= $row['route'];
-            $comment = $row['comment'];
             $write = $row['write'];
             $cycle = $row['cycle'];
         }
@@ -149,8 +141,6 @@ include 'SYS_SIDEBAR.php';
                                 <tr>
                                     <th>Group Name</th>
                                     <th>Display Name</th>
-                                    <th>Read</th>
-                                    <th>Comment</th>
                                     <th>Write</th>
                                     <th>Cycle</th>
                                     <th>Route</th>
@@ -164,12 +154,6 @@ include 'SYS_SIDEBAR.php';
                                     </td>
                                     <td>
                                         <?php echo $groupDesc;?>
-                                    </td>
-                                    <td>
-                                        <?php echo permissionString($groupRead);?>
-                                    </td>
-                                    <td>
-                                        <?php echo permissionString($groupComment);?>
                                     </td>
                                     <td>
                                         <?php echo permissionString($groupWrite);?>
@@ -202,14 +186,6 @@ include 'SYS_SIDEBAR.php';
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="form-group">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" name="read" value="true" <?php if($groupRead == '2') { echo 'checked'; } ?>>
-                                                            <label class="form-check-label" >Read</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" name="comment" value="true" <?php if($groupComment == '2') { echo 'checked'; } ?>>
-                                                            <label class="form-check-label" >Comment</label>
-                                                        </div>
                                                         <div class="form-check">
                                                             <input type="checkbox" class="form-check-input" name="write" value="true" <?php if($groupWrite == '2') { echo 'checked'; } ?>>
                                                             <label class="form-check-label" >Write (Edit content) </label>
@@ -249,8 +225,6 @@ include 'SYS_SIDEBAR.php';
                         <table class="table table-responsive table-striped" align="center" id="dataTable">
                             <thead>
                             <tr>
-                                <th>Read</th>
-                                <th>Comment</th>
                                 <th>Write</th>
                                 <th>Cycle</th>
                                 <th>Route</th>
@@ -259,12 +233,6 @@ include 'SYS_SIDEBAR.php';
                             </thead>
                             <tbody>
                             <tr>
-                                <td>
-                                    <?php echo permissionString($read);?>
-                                </td>
-                                <td>
-                                    <?php echo permissionString($comment);?>
-                                </td>
                                 <td>
                                     <?php echo permissionString($write);?>
                                 </td>
@@ -291,14 +259,6 @@ include 'SYS_SIDEBAR.php';
                                             </div>
                                             <div class="modal-body">
                                                 <div class="form-group">
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" name="read" value="true" <?php if($read == '2') { echo 'checked'; } ?>>
-                                                        <label class="form-check-label" >Read</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" name="comment" value="true" <?php if($comment == '2') { echo 'checked'; } ?>>
-                                                        <label class="form-check-label" >Comment</label>
-                                                    </div>
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" name="write" value="true" <?php if($write == '2') { echo 'checked'; } ?>>
                                                         <label class="form-check-label" >Write (Update content) </label>
@@ -368,21 +328,18 @@ include 'SYS_SIDEBAR.php';
                     </div>
                     <div class="form-group">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="read" value="true">
-                            <label class="form-check-label" >Read</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="comment" value="true">
-                            <label class="form-check-label" >Comment</label>
-                        </div>
-                        <div class="form-check">
                             <input type="checkbox" class="form-check-input" name="write" value="true">
                             <label class="form-check-label" >Write (Update content) </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="cycle" value="true">
+                            <label class="form-check-label" >Cycle (Archive, restore) </label>
                         </div>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" name="route" value="true">
                             <label class="form-check-label" >Route (Move to step, approve, reject) </label>
                         </div>
+
                     </div>
                 </div>
                 <div class="modal-footer">

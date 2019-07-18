@@ -149,12 +149,11 @@ if(isset($_POST['btnRestore'])){
         if($lifecycleId == 2){
             $crud->execute("UPDATE sections SET lifecycleId = 1, remarks='$remarks', lifecycledById ='$userId' WHERE id = '$sectionId' ");
         }else{
-            $error='&alert=SECTIONS_RESTORE _FAIL';
+            $error='&alert=SECTIONS_RESTORE_FAIL';
         }
     }else{
         $error='&alert=SECTIONS_REVISIONS_CLOSED';
     }
-
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId.$error);
 }
 
@@ -213,10 +212,8 @@ if(isset($_GET['secId'])){
         $rows = $crud->getStepUserPermissions($currentStepId, $firstAuthorId, $userId);
         if(!empty($rows)){
             foreach((array) $rows AS $key => $row){
-                $read = $row['read'];
                 $write = $row['write'];
                 $route = $row['route'];
-                $comment = $row['comment'];
                 $cycle = $row['cycle'];
             }
         }else{
@@ -231,6 +228,12 @@ if(isset($_GET['secId'])){
             $write = '1';
         }
 
+        if($lifecycleId == '2'){
+            if($cycle != '2'){
+                header("Location:".$crud->redirectToPreviousWithAlert("SECTION_IS_ARCHIVED"));
+            }
+        }
+
         //Allowed to write
         if($write == '2'){
             //Locked
@@ -241,6 +244,7 @@ if(isset($_GET['secId'])){
                 else { $write = '1'; }
             }
         }
+
 
 
     }else{

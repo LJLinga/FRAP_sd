@@ -20,11 +20,15 @@ if(isset($_POST['requestType'])){
                 JOIN steps st ON st.id = s.stepId 
                 WHERE s.statusId = 2
                 AND s.lifecycleId = 1
-                AND s.stepId IN (SELECT s.id FROM user_groups ug
+                AND s.stepId IN (SELECT st.id FROM user_groups ug
                                                     JOIN groups g ON ug.groupId = g.id
-                                                    JOIN steps s ON g.id = s.groupId
-                                                    WHERE ug.userId = '$userId' AND (s.groute = 2 OR s.gwrite = 2))
+                                                    JOIN steps st ON g.id = st.groupId
+                                                    WHERE ug.userId = '$userId' AND (st.groute = 2 OR st.gwrite = 2)
+                                                    OR (st.route = 2 OR st.write = 2 AND s.firstAuthorId = '$userId'))
                 ORDER BY s.sectionNo;";
+
+        //First subquery condition => Displays data given that you are in the steps assigned group with w/r permissions.
+        //Second subquery condition => Displays data given that you are its creator and has creator w/r permissions.
 
         $rows = $crud->getData($query);
         $data = [];
@@ -85,9 +89,15 @@ if(isset($_POST['requestType'])){
 								JOIN process_groups pg ON pr.id = pg.processId 
                                 JOIN groups g ON pg.groupId = g.id
                                 JOIN user_groups ug ON g.id = ug.groupId 
-                                WHERE ug.userId = '$userId'
-                                AND pg.read = 2 OR pg.comment = 2)
+                                WHERE ug.userId = '$userId')
+                OR s.stepId IN (SELECT s.id FROM steps s
+                                JOIN groups g ON s.groupId = g.id 
+                                JOIN user_groups u on g.id = u.groupId
+                                WHERE u.userId = '$userId')
                 ORDER BY s.sectionNo;";
+
+        //First subquery checks if you are in process_groups
+        //Second subquery checks if you are in step_groups
 
         $rows = $crud->getData($query);
         $data = [];
@@ -111,10 +121,11 @@ if(isset($_POST['requestType'])){
                 FROM sections s 
                 JOIN steps st ON st.id = s.stepId 
                 WHERE s.lifecycleId = 1
-                AND s.stepId IN (SELECT s.id FROM user_groups ug
+                AND s.stepId IN (SELECT st.id FROM user_groups ug
                                                     JOIN groups g ON ug.groupId = g.id
-                                                    JOIN steps s ON g.id = s.groupId
-                                                    WHERE ug.userId = '$userId' AND (s.groute = 2 OR s.gwrite = 2))
+                                                    JOIN steps st ON g.id = st.groupId
+                                                    WHERE ug.userId = '$userId' 
+                                                    AND st.gwrite = 2 OR (st.write = 2 AND s.firstAuthorId = '$userId'))
                 AND s.availabilityId = '2' AND s.availabilityById = '$userId'
                 ORDER BY s.sectionNo;";
 

@@ -15,6 +15,76 @@ $edmsRole = $_SESSION['EDMS_ROLE'];
 $userId = $_SESSION['idnum'];
 $error = '';
 
+if(isset($_POST['btnUnlock'])){
+    $documentId= $_POST['btnUnlock'];
+    $crud->execute("UPDATE documents SET availabilityId='1', availabilityById='$userId' WHERE documentId='$documentId'");
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
+    exit;
+}
+
+
+if(isset($_POST['btnLock'])){
+    $documentId = $_POST['btnLock'];
+    $rows = $crud->getData("SELECT availabilityId FROM documents WHERE documentId = '$documentId'");
+    foreach((array) $rows as $key => $row){
+        $availability = $row['availabilityId'];
+    }
+    if($availability == '1'){
+        $crud->execute("UPDATE documents SET availabilityId='2', availabilityById='$userId' WHERE documentId='$documentId'");
+        $error = '&alert=DOC_LOCK_SUCCESS';
+    }else{
+        $error = '&alert=DOC_LOCK_FAIL';
+    }
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId.$error);
+    exit;
+}
+
+if(isset($_POST['btnRoute'])){
+    $documentId = $_POST['documentId'];
+    $nextStepId = $_POST['nextStepId'];
+    $statusId = $_POST['assignStatusId'];
+    $currentStatusId = $_POST['currentStatusId'];
+    $remarks = $_POST['remarks'];
+
+    if($statusId >= 5){
+        $statusId = $currentStatusId;
+    }
+    try{
+        if($statusId != $currentStatusId){
+            $crud->execute("UPDATE documents SET statusId = '$statusId', stepId='$nextStepId', statusedById='$userId', steppedById='$userId', remarks = '$remarks' WHERE documentId='$documentId'");
+        }else if($statusId == $currentStatusId){
+            $crud->execute("UPDATE documents SET stepId='$nextStepId', steppedById='$userId', remarks = '$remarks' WHERE documentId='$documentId'");
+        }
+    }catch(Exception $e){
+        $error='&alert=DATABASE_ERROR';
+    }
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId.$error);
+    exit;
+}
+
+if(isset($_POST['btnArchive'])){
+    $documentId = $_POST['documentId'];
+    $remarks = $crud->escape_string($_POST['remarks']);
+    try{
+        $crud->execute("UPDATE documents SET lifecycleStateId = 2, remarks='$remarks', lifecycleStatedById ='$userId' WHERE documentId = '$documentId' ");
+    }catch(Exception $e){
+        $error='&alert=DATABASE_ERROR';
+    }
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId.$error);
+}
+
+if(isset($_POST['btnRestore'])){
+    $documentId = $_POST['documentId'];
+    $remarks = $crud->escape_string($_POST['remarks']);
+    try{
+        $crud->execute("UPDATE documents SET lifecycleStateId = '1', remarks='$remarks', lifecycleStatedById ='$userId' WHERE documentId = '$documentId' ");
+    }catch(Exception $e){
+        $error='&alert=DATABASE_ERROR';
+    }
+    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId.$error);
+    exit;
+}
+
 if(isset($_GET['docId'])){
     $documentId = $_GET['docId'];
 
@@ -78,113 +148,40 @@ if(isset($_GET['docId'])){
         $rows = $crud->getStepUserPermissions($currentStepId, $firstAuthorId, $userId);
         if(!empty($rows)){
             foreach((array) $rows AS $key => $row){
-                $read = $row['read'];
                 $write = $row['write'];
                 $route = $row['route'];
-                $comment = $row['comment'];
                 $cycle = $row['cycle'];
             }
         }else{
             header("Location:".$crud->redirectToPreviousWithAlert("DOC_NO_PERMISSIONS"));
+            exit;
+        }
+
+        if($stateId == '2'){
+            $write = '1';
+            $route = '1';
+            if($cycle != '2'){
+                header("Location:".$crud->redirectToPreviousWithAlert("DOC_IS_ARCHIVED"));
+                exit;
+            }
         }
 
         if($availability == '2'){
-            $route = '1';
-            $cycle = '1';
-            if($availabilityById != $userId) $write = '1';
-            else $write = '2';
+            if($availabilityById != $userId){
+                $write = '1';
+                $route = '1';
+                $cycle = '1';
+            }
         }
+
     }else{
         header("Location:".$crud->redirectToPreviousWithAlert("DOC_NOT_LOAD"));
+        exit;
     }
 
 }else{
     header("Location:".$crud->redirectToPreviousWithAlert("DOC_NOT_LOAD"));
-}
-
-if(isset($_POST['btnUnlock'])){
-    $documentId= $_POST['btnUnlock'];
-    $crud->execute("UPDATE documents SET availabilityId='1' WHERE documentId='$documentId'");
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
-}
-
-
-if(isset($_POST['btnLock'])){
-    $documentId = $_POST['btnLock'];
-    $rows = $crud->getData("SELECT availabilityId FROM documents WHERE documentId = '$documentId'");
-    foreach((array) $rows as $key => $row){
-        $availability = $row['availabilityId'];
-    }
-    if($availability == '1'){
-        $crud->execute("UPDATE documents SET availabilityId='2', availabilityById='$userId' WHERE documentId='$documentId'");
-        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
-    }else{
-        header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId."&alert=DOC_LOCK_FAIL");
-    }
-}
-
-if(isset($_POST['btnDownload'])){
-    $filePath = $_POST['btnDownload'];
-    $name = str_replace('\'', '/', $filePath);
-    header('Content-Description: File Transfer');
-    header('Content-Type: application/force-download');
-    header("Content-Disposition: attachment; filename=\"" . basename($name) . "\";");
-    header('Content-Transfer-Encoding: binary');
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate');
-    header('Pragma: public');
-    header('Content-Length: ' . filesize($name));
-    ob_clean();
-    flush();
-    readfile($name);
-}
-
-if(isset($_POST['btnRoute'])){
-    $documentId = $_POST['documentId'];
-    $nextStepId = $_POST['nextStepId'];
-    $statusId = $_POST['assignStatusId'];
-    $currentStatusId = $_POST['currentStatusId'];
-    $remarks = $_POST['remarks'];
-    $rows = $crud->getData("SELECT availabilityId FROM documents WHERE documentId = '$documentId'");
-    foreach((array) $rows as $key => $row){
-        $availability = $row['availabilityId'];
-    }
-    if($statusId >= 5){
-        $statusId = $currentStatusId;
-    }
-    if($availability == '1'){
-        if($statusId != $currentStatusId){
-           $crud->execute("UPDATE documents SET statusId = '$statusId', stepId='$nextStepId', statusedById='$userId', steppedById='$userId', remarks = '$remarks' WHERE documentId='$documentId'");
-        }else if($statusId == $currentStatusId){
-            $crud->execute("UPDATE documents SET stepId='$nextStepId', steppedById='$userId', remarks = '$remarks' WHERE documentId='$documentId'");
-        }
-    }else{
-        $error = 'DOC_LOCKED';
-    }
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=" .$documentId);
-}
-
-if(isset($_POST['btnArchive'])){
-    $documentId = $_POST['documentId'];
-    $remarks = $crud->escape_string($_POST['remarks']);
-
-    $rows = $crud->getData("SELECT availabilityId FROM documents WHERE documentId = '$documentId'");
-    foreach((array) $rows as $key => $row){
-        $availability = $row['availabilityId'];
-    }
-    if($availability == '1'){
-        $crud->execute("UPDATE documents SET lifecycleStateId = 2, remarks='$remarks', lifecycleStatedById ='$userId' WHERE documentId = '$documentId' ");
-    }else{
-        $error='&alert=DOC_LOCKED';
-    }
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId.$error);
-}
-
-if(isset($_POST['btnRestore'])){
-    $documentId = $_POST['documentId'];
-    $remarks = $crud->escape_string($_POST['remarks']);
-    $crud->execute("UPDATE documents SET lifecycleStateId = 1, remarks='$remarks', lifecycleStatedById ='$userId' WHERE documentId = '$documentId' ");
-    header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/EDMS_ViewDocument.php?docId=".$documentId);
+    exit;
 }
 
 $page_title = $docType.' > '.$title;
@@ -296,7 +293,7 @@ include 'EDMS_SIDEBAR.php';
                                                 v.remarks,
                                                 v.lifecycleStateId, v.statusedById, v.lifecycleStatedById, v.availabilityById,
                                                 v.availabilityId, dt.type AS docType, v.lastUpdated,
-                                                s.statusname, v.statusId, p.processName, v.availabilityOn,
+                                                s.statusname, v.statusId, p.processName, v.availabilityOn, v.lifecycleStatedOn,
                                                 st.stepName, st.stepNo, v.statusedOn,
                                                 CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS name,
                                                 CONCAT(e1.LASTNAME,', ',e1.FIRSTNAME) AS authorName,
@@ -341,11 +338,14 @@ include 'EDMS_SIDEBAR.php';
                                             if($row['audit_action_type'] == 'LOCKED') { ?>
                                                 <?php echo $crud->coloriseAvailability($row['availabilityId']);?> the document.
                                             <?php }else if($row['audit_action_type'] == 'STATUSED') { ?>
-                                                <?php echo $crud->coloriseStatus($row['statusId']);?> status assigned to the document.
+                                                <?php echo $crud->coloriseStatus($row['statusId']);?> status assigned to the document.<br>
+                                                <span class="label label-default">CHECKED IN</span> the document.
                                             <?php }else if($row['audit_action_type'] == 'MOVED') { ?>
-                                                <?php echo $crud->coloriseStep();?> the document to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong>.
+                                                <?php echo $crud->coloriseStep();?> the document to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong>.<br>
+                                                <span class="label label-default">CHECKED IN</span> the document.
                                             <?php }else if($row['audit_action_type'] == 'CYCLED'){ ?>
-                                                <?php echo $crud->coloriseCycle($row['lifecycleStateId']);?>the document.
+                                                <?php echo $crud->coloriseCycle($row['lifecycleStateId']);?> the document.<br>
+                                                <span class="label label-default">CHECKED IN</span> the document.
                                             <?php }else if($row['audit_action_type'] == 'UPDATED' || $row['audit_action_type'] == 'CREATED') {
                                                 $labelCol = 'success'?>
                                                 <span class="label label-<?php echo $labelCol;?>"><?php echo $row['audit_action_type'];?></span> the document.<br>
@@ -353,7 +353,8 @@ include 'EDMS_SIDEBAR.php';
                                             <?php }else if($row['audit_action_type'] == 'STATUSED/MOVED') {
                                                 $labelCol = 'primary'?>
                                                 <?php echo $crud->coloriseStep();?> the document to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong>.<br>
-                                                <?php echo $crud->coloriseStatus($row['statusId']);?> status assigned to the document.
+                                                <?php echo $crud->coloriseStatus($row['statusId']);?> status assigned to the document.<br>
+                                                <span class="label label-default">CHECKED IN</span> the document.
                                             <?php }
                                             ?>
                                         </td>
@@ -776,20 +777,30 @@ include 'EDMS_SIDEBAR.php';
                     <div class="panel-body">
                         <div class="btn-group btn-group-vertical" style="width: 100%;">
                             <?php if($availability == '1'){ ?>
+                                <?php if($write=='2' || $route =='2' || $cycle == '2'){?>
+                                    <form method="POST" action="">
+                                        <button class="btn btn-primary" type="submit" name="btnLock" value="<?php echo $documentId;?>" style="text-align: left; width:100%;">Check Out for Processing</button>
+                                    </form>
+                                <?php }  ?>
+                            <?php } ?>
+                            <?php if($availability == '2'){ ?>
                                 <?php
-                                    if($route=='2') {
+                                if($route=='2') {
                                     $rows = $crud->getStepRoutes($currentStepId);
                                     if (!empty($rows)) {
                                         foreach ((array)$rows as $key => $row) {
                                             $btnClass = 'btn btn-primary';
+                                            $btnIcon = '';
                                             if($row['assignStatus'] == 3){
                                                 $btnClass = 'btn btn-success';
+                                                $btnIcon = 'fa fa-thumbs-up';
                                             }else if($row['assignStatus'] == 4){
                                                 $btnClass = 'btn btn-danger';
+                                                $btnIcon = 'fa fa-thumbs-down';
                                             }
-
                                             ?>
                                             <button class="<?php echo $btnClass;?>" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#modalRoute<?php echo $row['routeId'];?>">
+                                                <i class="<?php echo $btnIcon;?>"></i>
                                                 <?php echo $row['routeName'];?>
                                             </button>
                                             <div id="modalRoute<?php echo $row['routeId'];?>" class="modal fade" role="dialog">
@@ -824,23 +835,8 @@ include 'EDMS_SIDEBAR.php';
                                     }
                                 }
                                 ?>
-                            <?php if( $write=='2'){?>
-                            <form method="POST" action="">
-                                <button class="btn btn-default" type="submit" name="btnLock" value="<?php echo $documentId;?>" style="text-align: left; width:100%;">Check Out and Edit</button>
-                                </form>
-                                <?php }  ?>
-                            <?php } ?>
-
-                            <?php if($availability == '2'){ ?>
                                 <?php if($write=='2'){ ?>
-                                    <form method="POST" action="">
-                                        <button type="button" class="btn btn-primary" id="btnUpload" data-toggle="modal" data-target="#uploadModal" style="text-align: left; width: 100%;">Finish Editing</button>
-                                        <button class="btn btn-warning" type="submit" name="btnUnlock" id="btnUnlock" value="<?php echo $documentId;?>" style="text-align: left; width: 100%;">Cancel Editing</button>
-                                    </form>
-                                <?php } else { ?>
-                                    <div class="alert alert-warning">
-                                        The document has been checked out by <strong><?php echo $availabilityByName;?></strong> on <i><?php echo date("F j, Y g:i:s A ", strtotime($availabilityOn));?></i> which means most document actions are restricted.
-                                    </div>
+                                    <button type="button" class="btn btn-primary" id="btnUpload" data-toggle="modal" data-target="#uploadModal" style="text-align: left; width: 100%;"><i class="fa fa-upload"></i> Upload New Version</button>
                                 <?php } ?>
                                 <?php if( $cycle=='2'){?>
                                     <?php if($stateId == 1) { ?>
@@ -907,8 +903,16 @@ include 'EDMS_SIDEBAR.php';
                                         </div>
                                     <?php } ?>
                                 <?php } ?>
+                                <?php if($write!='2' && $route!='2' && $cycle!='2'){ ?>
+                                    <div class="alert alert-warning">
+                                        The document has been checked out for processing by <strong><?php echo $availabilityByName;?></strong> on <i><?php echo date("F j, Y g:i:s A ", strtotime($availabilityOn));?></i> which means editing, archiving, and approval actions are restricted.
+                                    </div>
+                                <?php } ?>
+                                <form method="POST" action="">
+                                    <button class="btn btn-secondary" type="submit" name="btnUnlock" id="btnUnlock" value="<?php echo $documentId;?>" style="text-align: left; width: 100%;">Check In</button>
+                                </form>
                             <?php } ?>
-                            <a href="<?php echo $filePath?>" download><button type="button" class="btn btn-default" style="text-align: left; width: 100%;">Download</button></a>
+                            <a href="<?php echo $filePath?>" download><button type="button" class="btn btn-default" style="text-align: left; width: 100%;"><i class="fa fa-download"></i> Download</button></a>
                         </div>
                     </div>
 

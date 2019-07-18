@@ -26,13 +26,16 @@ if(isset($_POST['requestType'])){
                 JOIN process pr ON pr.id = s.processId
                 WHERE t.isActive = 2 
                 AND d.lifecycleStateId = 1
+                AND d.statusId = 2
                 AND d.stepId IN (SELECT s.id FROM user_groups ug
                                                     JOIN groups g ON ug.groupId = g.id
                                                     JOIN steps s ON g.id = s.groupId
-                                                    WHERE ug.userId = '$userId' AND (s.groute = 2 OR s.gwrite = 2))
-                AND d.firstAuthorId != '$userId'
-                AND d.statusId = 2
+                                                    WHERE ug.userId = '$userId' AND (s.groute = 2 OR s.gwrite = 2)
+                                                    OR (s.route = 2 OR s.write = 2 AND d.firstAuthorId = '$userId'))
                 ORDER BY d.lastUpdated DESC;";
+
+        //First subquery condition => Displays data given that you are in the steps assigned group with w/r permissions.
+        //Second subquery condition => Displays data given that you are its creator and has creator w/r permissions.
 
         $rows = $crud->getData($query);
         $data = [];
@@ -219,9 +222,15 @@ if(isset($_POST['requestType'])){
                                                     JOIN groups g ON ug.groupId = g.id
                                                     JOIN process_groups pg ON g.id = pg.groupId
                                                     JOIN process pr ON pg.processId = pr.id
-                                                    WHERE ug.userId = '$userId' 
-                                                    AND (pg.read = 2 OR pg.comment = 2))
+                                                    WHERE ug.userId = '$userId')
+                OR d.stepId IN (SELECT s.id FROM steps s
+                                JOIN groups g ON s.groupId = g.id 
+                                JOIN user_groups u on g.id = u.groupId
+                                WHERE u.userId = '$userId')
                 ORDER BY d.lastUpdated DESC;";
+
+                //First subquery checks if you are in process_groups
+                //Second subquery checks if you are in step_groups
 
         $rows = $crud->getData($query);
         $data = [];
@@ -261,7 +270,7 @@ if(isset($_POST['requestType'])){
                                                     JOIN groups g ON ug.groupId = g.id
                                                     JOIN steps s ON g.id = s.groupId
                                                     WHERE ug.userId = '$userId' 
-                                                    AND (s.groute = 2 OR s.gwrite = 2))
+                                                    AND s.gwrite = 2 OR (s.write = 2 AND d.firstAuthorId = '$userId'))
                 AND d.availabilityId = '2' AND d.availabilityById = '$userId'
                 ORDER BY d.lastUpdated DESC;";
 
@@ -327,8 +336,7 @@ if(isset($_POST['requestType'])){
                                                     JOIN groups g ON ug.groupId = g.id
                                                     JOIN process_groups pg ON g.id = pg.groupId
                                                     JOIN process pr ON pg.processId = pr.id
-                                                    WHERE ug.userId = '$userId' 
-                                                    AND (pg.read = 2 OR pg.comment = 2))
+                                                    WHERE ug.userId = '$userId' AND pg.cycle = 2)
                 ORDER BY d.lastUpdated DESC;";
 
         $rows = $crud->getData($query);
