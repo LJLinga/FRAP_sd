@@ -16,14 +16,23 @@ $checkForHealthAidApplication = mysqli_fetch_array($checkForHealthAidApplication
 if(!empty($checkForHealthAidApplication)){
 
     if($checkForHealthAidApplication['APP_STATUS'] == 1 && $checkForHealthAidApplication['PICKED_UP_STATUS'] == 1){
+
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
+
     }else if($checkForHealthAidApplication['APP_STATUS'] == 2 && $checkForHealthAidApplication['PICKED_UP_STATUS'] == 1){
+
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
+
     }else if($checkForHealthAidApplication['APP_STATUS'] == 2 && $checkForHealthAidApplication['PICKED_UP_STATUS'] == 2){
+
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
 
     }
-//    else{
+//    else if($checkForHealthAidApplication['APP_STATUS'] == 4){ //for the draft status
+//
+//        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
+//    }
+////    else{
 //        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
 //
 //    }
@@ -83,7 +92,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
         <div class="container-fluid">
 
-            <form action="MEMBER_UploadDocument_HA.php" method="POST" enctype="multipart/form-data" >
+            <form action="MEMBER_UploadDocument_HA.php" method="POST" enctype="multipart/form-data" onsubmit="return confirm('Note: You will not be able to change the contents of your application unless you contact the Secretary. Would you like to proceed with your application?');">
 
                 <div class="row"> <!-- Title & Breadcrumb -->
 

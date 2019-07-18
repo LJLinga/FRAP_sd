@@ -240,9 +240,9 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                 while($queryRows = mysqli_fetch_assoc($resultCheckDocs)){
 
-                    if($queryRows['statusId'] == 2){ //check if rejected
+                    if($queryRows['statusId'] == 3){ //check if rejected
                         $numAccepted++;
-                    }else if($queryRows['statusId'] == 3){
+                    }else if($queryRows['statusId'] == 4){
                         $isThereRejected = true;
                     }
                 }
@@ -345,7 +345,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <tr>
                                             <td align='center'> <?php echo $row['REQ_TYPE']; ?></td>
                                             <td align='center'> <?php echo $row['statusName']; ?></td>
-                                            <td align='center'> <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>">
+                                            <td align='center'> <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>" target="_blank">
 
                                                     <button type="button" class="btn btn-success"><i class="fa fa-search" aria-hidden="true"></i></button></a></td>
                                         </tr>
@@ -407,61 +407,61 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                         </div>
                     </div>
-                    <?php if($numAccepted == 4){?>
-                    <div class="row">
-                        <div class="col-lg-12">
-
-
-                            <div class="panel panel-primary">
-
-                                <div class="panel-heading">
-
-                                    <b>Upload Receipt</b>
-
-                                </div>
-
-                                <div class="panel-body">
-
-                                <div class ="row">
-
-                                    <div class= "col-lg-12">
-
-
-
-                                        <div class="element">
-                                            <input type="file" name="upload_file[]" id="upload_file1" required/>
-                                        </div>
-
-                                        <div id="moreImageUpload">
-                                            <br>
-                                        </div>
-
-                                        <div class="clear">
-
-                                        </div>
-
-                                        <div id="moreImageUploadLink" style="display:none;margin-left: 10px;">
-                                            <i class="fa fa-plus"></i>   <a href="javascript:void(0);" id="attachMore">Attach another file</a>
-                                        </div>
-
-
-
-
-
-                                    </div>
-
-                                </div>
-
-
-                            </div>
-
-                        </div>
-
-
-                    </div>
-
-            </div>
-            <?php } ?>
+<!--                    --><?php //if($numAccepted == 4){?>
+<!--                    <div class="row">-->
+<!--                        <div class="col-lg-12">-->
+<!---->
+<!---->
+<!--                            <div class="panel panel-primary">-->
+<!---->
+<!--                                <div class="panel-heading">-->
+<!---->
+<!--                                    <b>Upload Receipt</b>-->
+<!---->
+<!--                                </div>-->
+<!---->
+<!--                                <div class="panel-body">-->
+<!---->
+<!--                                <div class ="row">-->
+<!---->
+<!--                                    <div class= "col-lg-12">-->
+<!---->
+<!---->
+<!---->
+<!--                                        <div class="element">-->
+<!--                                            <input type="file" name="upload_file[]" id="upload_file1" required/>-->
+<!--                                        </div>-->
+<!---->
+<!--                                        <div id="moreImageUpload">-->
+<!--                                            <br>-->
+<!--                                        </div>-->
+<!---->
+<!--                                        <div class="clear">-->
+<!---->
+<!--                                        </div>-->
+<!---->
+<!--                                        <div id="moreImageUploadLink" style="display:none;margin-left: 10px;">-->
+<!--                                            <i class="fa fa-plus"></i>   <a href="javascript:void(0);" id="attachMore">Attach another file</a>-->
+<!--                                        </div>-->
+<!---->
+<!---->
+<!---->
+<!---->
+<!---->
+<!--                                    </div>-->
+<!---->
+<!--                                </div>-->
+<!---->
+<!---->
+<!--                            </div>-->
+<!---->
+<!--                        </div>-->
+<!---->
+<!---->
+<!--                    </div>-->
+<!---->
+<!--            </div>-->
+<!--            --><?php //} ?>
         </div>
 
         <div class="row">
@@ -472,23 +472,26 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                     <!--                            put an if here that will stop them from accessing the Payment activity UNTIL the shit is accepted.-->
                     <?php
 
-                    if($isThereRejected){ //check first if there are rejected
-                        echo "<input type='submit' class='btn btn-success'  value ='Accept Application' name='accept' disabled>&nbsp&nbsp&nbsp";
-                        echo "<input type='submit' class='btn btn-danger'  value ='Reject Application' name='reject'>";
+                    if($ans['APP_STATUS'] == 1 || $ans['APP_STATUS'] == 5){
 
-                    }else if($numAccepted == 4){ //then check if the num accepted are all goods
 
-                        echo "<input type='submit' class='btn btn-success'  value ='Accept Application' name='accept'>&nbsp&nbsp&nbsp";
-                        echo "<input type='submit' class='btn btn-danger'  value ='Reject Application' name='reject'>";
+                        if($isThereRejected){ //check first if there are rejected
+                            echo "<input type='submit' class='btn btn-success'  value ='Accept Application' name='accept' disabled>&nbsp&nbsp&nbsp";
+                            echo "<input type='submit' class='btn btn-danger'  value ='Reject Application' name='reject'>";
 
-                    }else{ //if none, then disable both buttons.
+                        }else if($numAccepted == 4){ //then check if the num accepted are all goods
 
-                        echo "<input type='submit' class='btn btn-success' name='accept' value ='Accept Application' disabled>&nbsp&nbsp&nbsp";
-                        echo "<input type='submit' class='btn btn-danger' name='reject' value ='Reject Application' disabled>";
+                            echo "<input type='submit' class='btn btn-success'  value ='Accept Application' name='accept'>&nbsp&nbsp&nbsp";
+                            echo "<input type='submit' class='btn btn-danger'  value ='Reject Application' name='reject'>";
+
+                        }else{ //if none, then disable both buttons.
+
+                            echo "<input type='submit' class='btn btn-success' name='accept' value ='Accept Application' disabled>&nbsp&nbsp&nbsp";
+                            echo "<input type='submit' class='btn btn-danger' name='reject' value ='Reject Application' disabled>";
+
+                        }
 
                     }
-
-
                     ?>
                 </div>
 

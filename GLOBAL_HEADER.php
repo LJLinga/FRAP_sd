@@ -130,9 +130,9 @@
                     ?>
                 <li class="dropdown sideicons">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-money"><span class="badge count"></span></i></a>
+                        <i class="fa fa-money"><span id="frap_count" class="label label-danger"></span></i></a>
                     <ul class="dropdown-menu alert-dropdown">
-                        <div class="notifications"></div>
+                        <li  id ="frap_notifs" ></li>
                         <li class="divider"></li>
                         <li>
                             <a href="FRAP_ALL_NOTIFS.php">View All</a>
@@ -214,12 +214,11 @@
                             method:"POST",
                             data:{idnum:idnum},
                             dataType:"json",
-                            success:function(data)
-                            {
-                                $('.notifications').html(data.notification);
+                            success:function(data) {
+                                $('#frap_notifs').html(data.notification);
                                 if(data.unseen_notification > 0)
                                 {
-                                    $('.counts').html(data.unseen_notification);
+                                    $('#frap_count').html(data.unseen_notification);
                                 }
                             }
                         });
@@ -264,9 +263,9 @@
 
                     setInterval(function(){
 
-                        //load_notifications();
-                        //load_cms_notifications(temp);
-                        //load_unseen_notification(temp); // this will run after every 1 second
+                        load_notifications();
+                        load_cms_notifications(temp);
+                        load_unseen_notification(temp); // this will run after every 1 second
                     }, 1000);
 
 

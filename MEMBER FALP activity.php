@@ -5,7 +5,7 @@
     include 'GLOBAL_USER_TYPE_CHECKING.php';
 
 
-    $query = "SELECT * from loans where member_id = {$_SESSION['idnum']} && loan_status != 3 && app_status != 3 ORDER BY LOAN_ID DESC LIMIT 1";
+    $query = "SELECT * from loans where member_id = {$_SESSION['idnum']} && loan_status != 3 && loan_status != 4 && app_status != 3 ORDER BY LOAN_ID DESC LIMIT 1";
     $result = mysqli_query($dbc,$query);
     $row = mysqli_fetch_assoc($result);
 
@@ -21,7 +21,7 @@
 
         } else if($row['LOAN_STATUS'] == 2 ) { //checks if you have a loan that is ongoing.
 
-//            if ($row['PAYMENT_TERMS'] > $row['PAYMENTS_MADE']){ //checks if the loan is 50%
+//            if (($row['PAYMENT_TERMS']/2) > $row['PAYMENTS_MADE']){ //checks if the loan is 50%
 //
 //
 //                $_SESSION['GLOBAL_MESSAGE'] = ' Your Loan has not been paid to 50% yet.  ';

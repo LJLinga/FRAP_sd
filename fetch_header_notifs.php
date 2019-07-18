@@ -1,10 +1,18 @@
 <?php
-
+session_start();
 include('mysql_connect_FA.php');
 
 if(isset($_POST['idnum'])){
 
-    $query = "SELECT * FROM txn_reference WHERE MEMBER_ID = {$_POST['idnum']} ORDER BY TXN_ID  DESC LIMIT 5 ";
+    $query = "";
+
+    if($_SESSION['FRAP_ROLE'] == 1){
+        $query = "SELECT * FROM txn_reference WHERE MEMBER_ID = {$_POST['idnum']} ORDER BY TXN_ID  DESC LIMIT 5 ";
+    }else{
+        $query = "SELECT * FROM txn_reference ORDER BY TXN_ID  DESC LIMIT 5 ";
+    }
+
+//    $query = "SELECT * FROM txn_reference WHERE MEMBER_ID = {$_POST['idnum']} ORDER BY TXN_ID  DESC LIMIT 5 ";
     $result = mysqli_query($dbc, $query);
     $outputs = '';
 
@@ -12,7 +20,23 @@ if(isset($_POST['idnum'])){
         while($row = mysqli_fetch_array($result))
         {
             //if statements here, to know if they are
-            if($row['SERVICE_ID'] == 4){
+            if($row['SERVICE_ID'] == 4 && $row['MEMBER_ID'] != $_SESSION['idnum']){
+                $outputs .= '
+                  <li>
+                  <span class="label label-info">Loans</span>
+                    <a href="ADMIN%20FALP%20applications.php">'."New FALP Application!".' </a>
+                    '.date("F j, Y g:i:s A ", strtotime($row["TXN_DATE"])).'
+                  </li><br>
+                  ';
+            }else  if($row['SERVICE_ID'] == 2 && $row['MEMBER_ID'] != $_SESSION['idnum']){
+                $outputs .= '
+                  <li>
+                  <span class="label label-info">Health Aid</span>
+                    <a href="ADMIN%20HEALTHAID%20applications.php">'."New Health Aid Application!".' </a>
+                    '.date("F j, Y g:i:s A ", strtotime($row["TXN_DATE"])).'
+                  </li><br>
+                  ';
+            }else if($row['SERVICE_ID'] == 4){
                 $outputs .= '
                   <li>
                   <span class="label label-info">Loans</span>
@@ -20,7 +44,7 @@ if(isset($_POST['idnum'])){
                     '.date("F j, Y g:i:s A ", strtotime($row["TXN_DATE"])).'
                   </li><br>
                   ';
-            }else  if($row['SERVICE_ID'] == 2){
+            }else  if($row['SERVICE_ID'] == 2 ){
                 $outputs .= '
                   <li>
                   <span class="label label-info">Health Aid</span>

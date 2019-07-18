@@ -44,25 +44,25 @@ $fileExtensions = ['jpeg','jpg','png','ppt','doc','docx','pptx','pdf']; // Get a
 if(!empty($_FILES['upload_file'])){
 
     //insert query for health aid and save the record id for transactions
-    $recordID = $crud->executeGetKey("INSERT INTO HEALTH_AID (MEMBER_ID, AMOUNT_TO_BORROW, MESSAGE) 
-                                                            VALUES({$_SESSION['idnum']}, {$_POST['amount']},'{$_POST['message']}')");
+    $recordID = $crud->executeGetKey("INSERT INTO HEALTH_AID (MEMBER_ID, AMOUNT_TO_BORROW, MESSAGE, APP_STATUS) 
+                                                            VALUES({$_SESSION['idnum']}, {$_POST['amount']},'{$_POST['message']}', 1)");
 
-    $crud->execute("INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, HA_REF, SERVICE_ID) 
+    $crud->execute("INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, HA_REF, SERVICE_ID)
                           VALUES({$_SESSION['idnum']}, 1, 'Health Aid Application Sent!', 0.00 , {$recordID}, 2)");
 
 
 
 
-    foreach($_FILES['upload_file']['tmp_name'] as $key => $tmp_name){
+    foreach ($_FILES['upload_file']['tmp_name'] as $key => $tmp_name) {
 
         $userId = $_SESSION['idnum'];
-        $title = $userId."_".$recordID."_".$_FILES['upload_file']['name'][$key];
-        $typeId = 4; // check the db for what type is needed for this. 3 is for Health aid
+        $title = $_FILES['upload_file']['name'][$key];
+        $typeId = 5; // check the db for what type is needed for this. 5 is for Health aid
 
         $file_name = $_FILES['upload_file']['name'][$key];
-        $file_size =$_FILES['upload_file']['size'][$key];
-        $file_tmp =$_FILES['upload_file']['tmp_name'][$key];
-        $file_type=$_FILES['upload_file']['type'][$key];
+        $file_size = $_FILES['upload_file']['size'][$key];
+        $file_tmp = $_FILES['upload_file']['tmp_name'][$key];
+        $file_type = $_FILES['upload_file']['type'][$key];
 
         $string = explode('.', $file_name);
         $fileExtension = strtolower(end($string));
@@ -81,45 +81,56 @@ if(!empty($_FILES['upload_file'])){
             $errors[] = "This file is more than 25MB. Sorry, it has to be less than or equal to 25MB";
         }
 
-        if (empty($errors)) {
-            $didUpload = move_uploaded_file($file_tmp, $uploadPath);
+        $didUpload = move_uploaded_file($file_tmp, $uploadPath);
+        $reqType++;
 
-            if ($didUpload) {
+        if ($didUpload) {
 
-                $stepId = '999'; $statusId = '99';
-                $rows = $crud->getData("SELECT s.id FROM steps s 
-                                  JOIN process pr ON s.processId = pr.id JOIN doc_type t ON t.processId = pr.id 
-                                  WHERE t.id = '$typeId' AND s.stepNo = 1 LIMIT 1;");
-                if(!empty($rows)) {
-                    foreach ((array)$rows as $keys => $row) {
-                        $stepId = $row['id'];
-                    }
-                    if($stepId != '999'){
-                        $statusId = '1';
-                    }
+
+            $stepId = '1';
+            $rows = $crud->getFirstStepIdOfDocType($typeId);
+            if (!empty($rows)) {
+                foreach ((array)$rows as $key2 => $row) {
+                    $stepId = $row['id'];
                 }
 
+                if ($insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, authorId, stepId, typeId, filePath, title) VALUES ('$userId','$userId','$stepId','$typeId','$uploadPath','$title')")) {
 
-                //insert query for the docs
-                $insertDocument = $crud->executeGetKey("INSERT INTO documents (firstAuthorId, authorId, stepId, typeId, statusId, versionNo, filePath, title) VALUES ('$userId','$userId','$stepId','$typeId','$statusId','1.0','$uploadPath','$title')");
-                echo $insertDocument;
-                //insert query for the reference documents
-                $crud->execute("INSERT INTO ref_document_healthaid(RECORD_ID, DOC_ID) VALUES ({$recordID},{$insertDocument}) ");
+
+                    $crud->execute("INSERT INTO ref_document_healthaid(RECORD_ID, DOC_ID) VALUES ({$recordID},{$insertDocument})");
+
+                    $msg = array(
+                        'success' => '1',
+                        'id' => $insertDocument
+                    );
+                    echo json_encode($msg);
+
+                } else {
+                    $errors[] = "Cannot insert to database.";
+                    echo passErrors($errors);
+
+                }
 
             } else {
-                echo "An error occurred somewhere. Try again or contact the admin";
+                $errors[] = "Invalid workflow or step.";
+                echo passErrors($errors);
             }
+
+        } else {
+            $errors[] = "File upload error.";
+            echo passErrors($errors);
 
         }
 
     }
-    //which means it twas a sucess!
+
+
     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
+    //which means it twas a sucess!
 
-
-
-}else{ //ono, theres some failure apparently
-
+}else{
+    $errors[] = "One of the variables is not set.";
+    echo passErrors($errors);
+    exit;
     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
-
 }
