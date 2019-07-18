@@ -218,18 +218,12 @@ if(isset($_POST['requestType'])){
                 JOIN process pr ON pr.id = s.processId
                 WHERE t.isActive = 2
                 AND d.lifecycleStateId = 1
-                AND pr.id IN (SELECT pr.id FROM user_groups ug
-                                                    JOIN groups g ON ug.groupId = g.id
-                                                    JOIN process_groups pg ON g.id = pg.groupId
-                                                    JOIN process pr ON pg.processId = pr.id
-                                                    WHERE ug.userId = '$userId')
-                OR d.stepId IN (SELECT s.id FROM steps s
+                AND d.stepId IN (SELECT s.id FROM steps s
                                 JOIN groups g ON s.groupId = g.id 
                                 JOIN user_groups u on g.id = u.groupId
                                 WHERE u.userId = '$userId')
                 ORDER BY d.lastUpdated DESC;";
 
-                //First subquery checks if you are in process_groups
                 //Second subquery checks if you are in step_groups
 
         $rows = $crud->getData($query);
@@ -266,6 +260,7 @@ if(isset($_POST['requestType'])){
                 JOIN process pr ON pr.id = s.processId
                 WHERE t.isActive = 2 
                 AND d.lifecycleStateId = 1
+                
                 AND d.stepId IN (SELECT s.id FROM user_groups ug
                                                     JOIN groups g ON ug.groupId = g.id
                                                     JOIN steps s ON g.id = s.groupId
@@ -332,11 +327,11 @@ if(isset($_POST['requestType'])){
                 JOIN process pr ON pr.id = s.processId
                 WHERE t.isActive = 2
                 AND d.lifecycleStateId = 2
-                AND pr.id IN (SELECT pr.id FROM user_groups ug
+                AND d.stepId IN (SELECT s.id FROM user_groups ug
                                                     JOIN groups g ON ug.groupId = g.id
-                                                    JOIN process_groups pg ON g.id = pg.groupId
-                                                    JOIN process pr ON pg.processId = pr.id
-                                                    WHERE ug.userId = '$userId' AND pg.cycle = 2)
+                                                    JOIN steps s ON g.id = s.groupId
+                                                    WHERE ug.userId = '$userId' AND (s.gcycle = 2)
+                                                    OR (s.cycle = 2 AND d.firstAuthorId = '$userId'))
                 ORDER BY d.lastUpdated DESC;";
 
         $rows = $crud->getData($query);

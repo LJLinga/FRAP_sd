@@ -52,13 +52,11 @@ if(isset($_POST['requestType'])){
                 FROM sections s 
                 JOIN steps st ON st.id = s.stepId 
                 WHERE s.lifecycleId = 2
-                AND s.stepId IN (SELECT s2.id FROM steps s2 
-								JOIN process pr ON s2.processId = pr.id
-								JOIN process_groups pg ON pr.id = pg.processId 
-                                JOIN groups g ON pg.groupId = g.id
-                                JOIN user_groups ug ON g.id = ug.groupId 
-                                WHERE ug.userId = '$userId'
-                                AND pg.read = 2 OR pg.comment = 2)
+                AND s.stepId IN (SELECT st.id FROM user_groups ug
+                                                    JOIN groups g ON ug.groupId = g.id
+                                                    JOIN steps st ON g.id = st.groupId
+                                                    WHERE ug.userId = '$userId' AND (st.gcycle = 2)
+                                                    OR (st.cycle = 2 AND s.firstAuthorId = '$userId'))
                 ORDER BY s.sectionNo;";
 
         $rows = $crud->getData($query);
@@ -84,14 +82,8 @@ if(isset($_POST['requestType'])){
                 JOIN steps st ON st.id = s.stepId 
                 WHERE
                 s.lifecycleId = 1
-                AND s.stepId IN (SELECT s2.id FROM steps s2 
-								JOIN process pr ON s2.processId = pr.id
-								JOIN process_groups pg ON pr.id = pg.processId 
-                                JOIN groups g ON pg.groupId = g.id
-                                JOIN user_groups ug ON g.id = ug.groupId 
-                                WHERE ug.userId = '$userId')
-                OR s.stepId IN (SELECT s.id FROM steps s
-                                JOIN groups g ON s.groupId = g.id 
+                AND s.stepId IN (SELECT st.id FROM steps st
+                                JOIN groups g ON st.groupId = g.id 
                                 JOIN user_groups u on g.id = u.groupId
                                 WHERE u.userId = '$userId')
                 ORDER BY s.sectionNo;";

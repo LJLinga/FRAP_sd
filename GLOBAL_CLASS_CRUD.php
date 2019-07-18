@@ -597,7 +597,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function getStepGroupMemberPermissions($stepId, $userId){
-        return $this->getData("SELECT s.*, s.gcycle AS `cycle`, s.gwrite AS `write`, s.groute AS route FROM user_groups ug 
+        return $this->getData("SELECT s.gcycle AS `cycle`, s.gwrite AS `write`, s.groute AS `route` FROM user_groups ug 
                                         JOIN groups g ON ug.groupId = g.id
                                         JOIN steps s ON g.id = s.groupId
                                         WHERE s.id = '$stepId' AND ug.userId = '$userId'
@@ -634,12 +634,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         if ($userId == $creatorId) {
             return $this->getStep($stepId);
         } else {
-            $rows = $this->getStepGroupMemberPermissions($stepId, $userId);
-            if(empty($rows)){
-                return $this->getStepProcessGroupMemberPermissions($stepId, $userId);
-            }else{
-                return $rows;
-            }
+            return $this->getStepGroupMemberPermissions($stepId, $userId);
         }
     }
 
@@ -679,15 +674,15 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         return $this->getData($query);
     }
 
-    public function getStepProcessGroupMemberPermissions($stepId, $userId){
-        return $this->getData("SELECT pg.* FROM process_groups pg
-                                        JOIN process p ON pg.processId = p.id
-                                        JOIN steps s ON p.id = s.processId
-                                        JOIN groups g ON pg.groupId = g.id
-                                        JOIN user_groups ug ON g.id = ug.groupId
-                                        WHERE s.id = '$stepId'
-                                        AND ug.userId = '$userId';");
-    }
+//    public function getStepProcessGroupMemberPermissions($stepId, $userId){
+//        return $this->getData("SELECT pg.* FROM process_groups pg
+//                                        JOIN process p ON pg.processId = p.id
+//                                        JOIN steps s ON p.id = s.processId
+//                                        JOIN groups g ON pg.groupId = g.id
+//                                        JOIN user_groups ug ON g.id = ug.groupId
+//                                        WHERE s.id = '$stepId'
+//                                        AND ug.userId = '$userId';");
+//    }
 
     public function getProcessIdOfDocType($docTypeId){
         return $this->getData("SELECT pr.id FROM process pr JOIN doc_type dt on pr.id = dt.processId

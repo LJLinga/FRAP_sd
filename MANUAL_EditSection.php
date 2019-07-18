@@ -13,7 +13,6 @@ $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
-//include('GLOBAL_CMS_ADMIN_CHECKING.php');
 
 $edmsRole= $_SESSION['EDMS_ROLE'];
 $userId = $_SESSION['idnum'];
@@ -28,6 +27,7 @@ if(!empty($rows)){
 }
 
 $error='';
+$edit='2';
 
 if(isset($_POST['btnFinish'])){
     $sectionId = $_POST['section_id'];
@@ -58,7 +58,6 @@ if(isset($_POST['btnLock'])){
 
     if($revisions == 'open'){
         if($availability == '1'){
-            $userId = $_POST['userId'];
             $crud->execute("UPDATE sections SET availabilityId='2', availabilityById='$userId' WHERE id='$sectionId'");
         }else{
             $error='&alert=SECTION_LOCKED';
@@ -84,14 +83,10 @@ if(isset($_POST['btnRoute'])){
         $statusId = $currentStatusId;
     }
     if($revisions == 'open') {
-        if ($availability == '1') {
-            if ($statusId != $currentStatusId) {
-                $crud->execute("UPDATE sections SET statusId = '$statusId', stepId='$nextStepId', statusedById='$userId', steppedById='$userId', remarks = '$remarks' WHERE id='$sectionId'");
-            } else if ($statusId == $currentStatusId) {
-                $crud->execute("UPDATE sections SET stepId='$nextStepId', steppedById='$userId', remarks = '$remarks' WHERE id='$sectionId'");
-            }
-        } else {
-            $error = '&alert=SECTION_LOCKED';
+        if ($statusId != $currentStatusId) {
+            $crud->execute("UPDATE sections SET statusId = '$statusId', stepId='$nextStepId', statusedById='$userId', steppedById='$userId', remarks = '$remarks' WHERE id='$sectionId'");
+        } else if ($statusId == $currentStatusId) {
+            $crud->execute("UPDATE sections SET stepId='$nextStepId', steppedById='$userId', remarks = '$remarks' WHERE id='$sectionId'");
         }
     }else{
         $error='&alert=SECTION_REVISIONS_CLOSED';
@@ -107,7 +102,7 @@ if(isset($_POST['btnSave'])){
     $versionNo = $_POST['newVersionNo'];
     $sectionId = $_POST['sectionId'];
     if($revisions == 'open'){
-        $crud->execute("UPDATE sections SET versionNo='$versionNo', title='$title', sectionNo='$sectionNo', content='$content', authorId='$userId', availabilityId='1', availabilityById='$userId', remarks='$remarks' WHERE id='$sectionId';");
+        $crud->execute("UPDATE sections SET versionNo='$versionNo', title='$title', sectionNo='$sectionNo', content='$content', authorId='$userId', remarks='$remarks' WHERE id='$sectionId';");
     }else{
         $error='&alert=SECTIONS_REVISIONS_CLOSED';
     }
@@ -118,21 +113,11 @@ if(isset($_POST['btnArchive'])){
     $sectionId = $_POST['sectionId'];
     $remarks = $crud->escape_string($_POST['remarks']);
 
-    $rows = $crud->getData("SELECT availabilityId FROM sections WHERE id = '$sectionId'");
-    foreach((array) $rows as $key => $row){
-        $availability = $row['availabilityId'];
-    }
-
     if($revisions == 'open'){
-        if($availability == '1'){
-            $crud->execute("UPDATE sections SET lifecycleId = 2, remarks='$remarks', lifecycledById ='$userId' WHERE id = '$sectionId' ");
-        }else{
-            $error='&alert=SECTION_LOCKED';
-        }
+        $crud->execute("UPDATE sections SET lifecycleId = '2', remarks='$remarks', lifecycledById ='$userId' WHERE id = '$sectionId' ");
     }else{
         $error='&alert=SECTIONS_REVISIONS_CLOSED';
     }
-
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId.$error);
 }
 
@@ -140,17 +125,8 @@ if(isset($_POST['btnRestore'])){
     $sectionId = $_POST['sectionId'];
     $remarks = $crud->escape_string($_POST['remarks']);
 
-    $rows = $crud->getData("SELECT lifecycleId FROM sections WHERE id = '$sectionId'");
-    foreach((array) $rows as $key => $row){
-        $lifecycleId = $row['lifecycleId'];
-    }
-
     if($revisions == 'open'){
-        if($lifecycleId == 2){
-            $crud->execute("UPDATE sections SET lifecycleId = 1, remarks='$remarks', lifecycledById ='$userId' WHERE id = '$sectionId' ");
-        }else{
-            $error='&alert=SECTIONS_RESTORE_FAIL';
-        }
+        $crud->execute("UPDATE sections SET lifecycleId = '1', remarks='$remarks', lifecycledById ='$userId' WHERE id = '$sectionId' ");
     }else{
         $error='&alert=SECTIONS_REVISIONS_CLOSED';
     }
@@ -217,7 +193,8 @@ if(isset($_GET['secId'])){
                 $cycle = $row['cycle'];
             }
         }else{
-            header("Location:".$crud->redirectToPreviousWithAlert("SECTION_NO_PERMISSIONS"));
+            echo 'THIS->>>'.$currentStepId.','.$firstAuthorId.','.$userId;
+            //header("Location:".$crud->redirectToPreviousWithAlert("SECTION_NO_PERMISSIONS"));
         }
 
         $edit = '2';
@@ -234,18 +211,13 @@ if(isset($_GET['secId'])){
             }
         }
 
-        //Allowed to write
-        if($write == '2'){
-            //Locked
-            if($availability == '2'){
-                $route = '1'; //Not allowed to route
-                $cycle = '1'; //Not allowed to archive/restore
-                if($availabilityById == $userId) { $edit = '1'; } //Display FORM inputs instead of the text preview. Lock add reference buttons.
-                else { $write = '1'; }
+        if($availability == '2'){
+            if($availabilityById != $userId){
+                $write = '1';
+                $route = '1';
+                $cycle = '1';
             }
         }
-
-
 
     }else{
         header("Location:".$crud->redirectToPreviousWithAlert("SECTION_NOT_LOAD"));
@@ -253,6 +225,10 @@ if(isset($_GET['secId'])){
 
 }else{
     header("Location:".$crud->redirectToPreviousWithAlert("SECTION_NOT_LOAD"));
+}
+
+if(isset($_POST['btnEdit'])) {
+    $edit = '1';
 }
 
 $page_title = 'Faculty Manual - Edit Section';
@@ -327,8 +303,8 @@ include 'EDMS_SIDEBAR.php';
                             </div>
                             <div class="panel-footer">
                                 <form method="POST" action="">
+                                    <button type="submit" class="btn btn-secondary">Cancel Editing</button>
                                     <button type="button" class="btn btn-primary" id="btnSave" data-toggle="modal" data-target="#modalConfirmSave">Finish Editing</button>
-                                    <button type="submit" class="btn btn-warning" name="btnUnlock" id="btnUnlock" value="<?php echo $sectionId;?>">Cancel Editing</button>
                                 </form>
                             </div>
 
@@ -650,7 +626,7 @@ include 'EDMS_SIDEBAR.php';
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <b>References</b>
-                                        <?php if($edit == '1'){ ?>
+                                        <?php if($availability == '2' && $write == '2'){ ?>
                                         <button id="btnRefModal" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modalRED"><i class="fa fa-fw fa-link"></i>Add</button>
                                         <?php } ?>
                                         <button class="btn btn-default btn-sm fa fa-expand" type="button" data-toggle="collapse" data-target="#collapseReferences" style="position: absolute; top: 0px; right: 15px;">
@@ -896,151 +872,164 @@ include 'EDMS_SIDEBAR.php';
                             </div>
                         </div>
                         <?php } ?>
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <b>Section Actions</b>
-                            </div>
-                            <div class="panel-body">
-                                <?php if($revisions != 'open') { ?>
-                                    <div class="alert alert-danger">
-                                        <strong>Revisions are currently closed. All section modification actions are restricted. </strong>
-                                    </div>
-                                <?php }else{ ?>
-                                    <?php if($availability == '1'){ ?>
-                                        <?php if($route=='2') {
-                                            $rows = $crud->getStepRoutes($currentStepId);
-                                            if (!empty($rows)) {
-                                                foreach ((array)$rows as $key => $row) {
-                                                    $btnClass = 'btn btn-primary';
-                                                    if($row['assignStatus'] == 3){
-                                                        $btnClass = 'btn btn-success';
-                                                    }else if($row['assignStatus'] == 4){
-                                                        $btnClass = 'btn btn-danger';
-                                                    }
+                        <?php if($edit == '2') { ?>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <b>Section Actions</b>
+                                </div>
+                                <div class="panel-body">
+                                    <?php if($revisions != 'open') { ?>
+                                        <div class="alert alert-danger">
+                                            <strong>Revisions are currently closed. All section modification actions are restricted. </strong>
+                                        </div>
+                                    <?php }else{ ?>
+                                        <?php if($availability == '1'){ ?>
+                                            <?php if($write=='2' || $route =='2' || $cycle == '2'){?>
+                                                <form method="POST" action="">
+                                                    <button class="btn btn-primary" type="submit" name="btnLock" value="<?php echo $sectionId;?>" style="text-align: left; width:100%;"><i class="fa fa-lock"></i> Check Out for Processing</button>
+                                                </form>
+                                            <?php }  ?>
+                                        <?php } ?>
+                                        <?php if($availability == '2') { ?>
+                                            <?php if($route=='2') {
+                                                $rows = $crud->getStepRoutes($currentStepId);
+                                                if (!empty($rows)) {
+                                                    foreach ((array)$rows as $key => $row) {
+                                                        $btnClass = 'btn btn-primary';
+                                                        $btnIcon = 'fa fa-arrow-right';
+                                                        if($row['assignStatus'] == 3){
+                                                            $btnClass = 'btn btn-success';
+                                                            $btnIcon = 'fa fa-thumbs-up';
+                                                        }else if($row['assignStatus'] == 4){
+                                                            $btnClass = 'btn btn-danger';
+                                                            $btnIcon = 'fa fa-thumbs-down';
+                                                        }
 
-                                                    $dispStat = '';
+                                                        $dispStat = '';
 
-                                                    if($row['assignStatus'] < 5){
-                                                        $dispStat = 'with '.$crud->coloriseStatus($row['assignStatus']);
+                                                        if($row['assignStatus'] < 5){
+                                                            $dispStat = 'with '.$crud->coloriseStatus($row['assignStatus']);
+                                                        }
+                                                        ?>
+                                                        <button class="<?php echo $btnClass;?>" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#modalRoute<?php echo $row['routeId'];?>">
+                                                            <i class="<?php echo $btnIcon;?>"></i> <?php echo $row['routeName'];?>
+                                                        </button>
+                                                        <div id="modalRoute<?php echo $row['routeId'];?>" class="modal fade" role="dialog">
+                                                            <div class="modal-dialog">
+                                                                <form method="POST" action="">
+                                                                    <input type="hidden" name="sectionId" value="<?php echo $sectionId; ?>">
+                                                                    <input type="hidden" name="assignStatusId" value="<?php echo $row['assignStatus'];?>">
+                                                                    <input type="hidden" name="nextStepId" value="<?php echo $row['nextStepId'];?>">
+                                                                    <input type="hidden" name="currentStatusId" value="<?php echo $statusId;?>">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <strong>Confirm '<?php echo $row['routeName'];?>'?</strong>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <div class="form-group">
+                                                                                <p>Reason I'm moving this to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong> <?php echo $dispStat;?> status</p>
+                                                                                <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <div class="form-group">
+                                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                                <button class="btn btn-primary" type="submit" name="btnRoute">Confirm</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                        <?php
                                                     }
-                                                    ?>
-                                                    <button class="<?php echo $btnClass;?>" style="text-align: left; width: 100%" type="button" data-toggle="modal" data-target="#modalRoute<?php echo $row['routeId'];?>">
-                                                        <?php echo $row['routeName'];?>
-                                                    </button>
-                                                    <div id="modalRoute<?php echo $row['routeId'];?>" class="modal fade" role="dialog">
+                                                }
+                                            }?>
+                                            <?php if( $write=='2' && $edit == '2'){?>
+                                                <form method="POST" action="">
+                                                    <button class="btn btn-primary" type="submit" name="btnEdit" style="text-align: left; width:100%;"><i class="fa fa-edit"></i> Edit Content</button>
+                                                </form>
+                                            <?php } ?>
+                                            <?php if( $cycle=='2'){?>
+                                                <?php if($lifecycleId == '1') { ?>
+                                                    <button type="button" data-toggle="modal" data-target="#modalArchive" class="btn btn-warning" style="text-align: left; width: 100%;"><i class="fa fa-archive"></i> Archive</button>
+                                                    <div id="modalArchive" class="modal fade" role="dialog">
                                                         <div class="modal-dialog">
-                                                            <form method="POST" action="">
-                                                                <input type="hidden" name="sectionId" value="<?php echo $sectionId; ?>">
-                                                                <input type="hidden" name="assignStatusId" value="<?php echo $row['assignStatus'];?>">
-                                                                <input type="hidden" name="nextStepId" value="<?php echo $row['nextStepId'];?>">
-                                                                <input type="hidden" name="currentStatusId" value="<?php echo $statusId;?>">
-                                                                <div class="modal-content">
+                                                            <!-- Modal content-->
+                                                            <div class="modal-content">
+                                                                <form method="POST" action="">
                                                                     <div class="modal-header">
-                                                                        <strong>Confirm '<?php echo $row['routeName'];?>'?</strong>
+                                                                        <strong>Confirm Archive?</strong>
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <div class="form-group">
-                                                                            <p>Reason I'm moving this to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong> <?php echo $dispStat;?></p>
-                                                                            <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
+                                                                            <label>Reason I'm archiving this section</label>
+                                                                            <textarea name="remarks" class="form-control" rows="10" required></textarea>
+                                                                        </div>
+
+                                                                        <div class="alert alert-warning">
+                                                                            <strong>Archiving this section will mean that it will not get published in any manual edition until it is restored.
+                                                                                It will also remain read-only to other users except for those who have edit permissions in this current step.
+                                                                                Are you sure you want to archive?</strong>
                                                                         </div>
                                                                     </div>
                                                                     <div class="modal-footer">
+                                                                        <input type="hidden" name="sectionId" value="<?php echo $sectionId;?>">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        <button type="submit" name="btnArchive" class="btn btn-primary">Yes, I'm sure</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php }else if($lifecycleId == '2'){?>
+                                                    <button type="button" data-toggle="modal" data-target="#modalRestore" class="btn btn-info" style="text-align: left; width: 100%;"><i class="fa fa-archive"></i> Restore</button>
+                                                    <div id="modalRestore" class="modal fade" role="dialog">
+                                                        <div class="modal-dialog">
+                                                            <!-- Modal content-->
+                                                            <div class="modal-content">
+                                                                <form method="POST" action="">
+                                                                    <div class="modal-header">
+                                                                        <strong>Confirm Restore?</strong>
+                                                                    </div>
+                                                                    <div class="modal-body">
                                                                         <div class="form-group">
-                                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                                            <button class="btn btn-primary" type="submit" name="btnRoute">Confirm</button>
+                                                                            <label>Reason I'm restoring this section</label>
+                                                                            <textarea name="remarks" class="form-control" rows="10" required></textarea>
+                                                                        </div>
+
+                                                                        <div class="alert alert-info">
+                                                                            <strong>Restoring this section will put it back into the the process.
+                                                                                The original section permissions will be restored to the participants of the Manual Revisions process.
+                                                                                Are you sure you want to restore?</strong>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </form>
+                                                                    <div class="modal-footer">
+                                                                        <input type="hidden" name="sectionId" value="<?php echo $sectionId;?>">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        <button type="submit" name="btnRestore" class="btn btn-primary">Yes, I'm sure</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <?php
-                                                }
-                                            }
-                                        }?>
-                                        <?php if( $write=='2'){?>
-                                            <form method="POST" action="">
-                                                <input type="hidden" name="userId" value="<?php echo $userId;?>">
-                                                <button class="btn btn-default" type="submit" name="btnLock" value="<?php echo $sectionId;?>" style="text-align: left; width:100%;"><i class="fa fa-edit"></i> Check Out and Edit</button>
-                                            </form>
-                                        <?php } ?>
-                                        <?php if( $cycle=='2'){?>
-                                            <?php if($lifecycleId == 1) { ?>
-                                                <button type="button" data-toggle="modal" data-target="#modalArchive" class="btn btn-warning" style="text-align: left; width: 100%;"><i class="fa fa-archive"></i> Archive</button>
-                                                <div id="modalArchive" class="modal fade" role="dialog">
-                                                    <div class="modal-dialog">
-                                                        <!-- Modal content-->
-                                                        <div class="modal-content">
-                                                            <form method="POST" action="">
-                                                                <div class="modal-header">
-                                                                    <strong>Confirm Archive?</strong>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <div class="form-group">
-                                                                        <label>Reason I'm archiving this section</label>
-                                                                        <textarea name="remarks" class="form-control" rows="10" required></textarea>
-                                                                    </div>
-
-                                                                    <div class="alert alert-warning">
-                                                                        <strong>Archiving this section will mean that it will not get published in any manual edition until it is restored.
-                                                                            It will also remain read-only to other users except for those who have edit permissions in this current step.
-                                                                            Are you sure you want to archive?</strong>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <input type="hidden" name="sectionId" value="<?php echo $sectionId;?>">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                    <button type="submit" name="btnArchive" class="btn btn-primary">Yes, I'm sure</button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
+                                                <?php } ?>
+                                            <?php } ?>
+                                            <?php if($write!='2' && $route!='2' && $cycle!='2'){ ?>
+                                                <div class="alert alert-warning">
+                                                    The section has been checked out by <strong><?php echo $availabilityByName;?></strong> on <i><?php echo date("F j, Y g:i:s A ", strtotime($availabilityOn));?></i> which means editing, archiving, and approval actions are restricted.
                                                 </div>
-                                            <?php }else if($lifecycleId == 2){?>
-                                                <button type="button" data-toggle="modal" data-target="#modalRestore" class="btn btn-info" style="text-align: left; width: 100%;"><i class="fa fa-archive"></i> Restore</button>
-                                                <div id="modalRestore" class="modal fade" role="dialog">
-                                                    <div class="modal-dialog">
-                                                        <!-- Modal content-->
-                                                        <div class="modal-content">
-                                                            <form method="POST" action="">
-                                                                <div class="modal-header">
-                                                                    <strong>Confirm Restore?</strong>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <div class="form-group">
-                                                                        <label>Reason I'm restoring this section</label>
-                                                                        <textarea name="remarks" class="form-control" rows="10" required></textarea>
-                                                                    </div>
-
-                                                                    <div class="alert alert-info">
-                                                                        <strong>Restoring this section will put it back into the the process.
-                                                                            The original section permissions will be restored to the participants of the Manual Revisions process.
-                                                                            Are you sure you want to restore?</strong>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <input type="hidden" name="sectionId" value="<?php echo $sectionId;?>">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                    <button type="submit" name="btnRestore" class="btn btn-primary">Yes, I'm sure</button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            <?php }else{ ?>
+                                                <form method="POST" action="">
+                                                    <button class="btn btn-secondary" type="submit" name="btnUnlock" id="btnUnlock" value="<?php echo $sectionId;?>" style="text-align: left; width: 100%;"><i class="fa fa-unlock"></i> Check In</button>
+                                                </form>
                                             <?php } ?>
                                         <?php } ?>
                                     <?php } ?>
-                                    <?php if($availability == '2' && ($availabilityById != $userId)) { ?>
-                                        <div class="alert alert-warning">
-                                            The section has been checked out by <i><?php echo $availabilityByName;?></i> on <i><?php echo date("F j, Y g:i:s A ", strtotime($availabilityOn));?></i> which means most section actions are restricted.
-                                        </div>
-                                    <?php } ?>
-
-
-                                <?php } ?>
-                                <a href="MANUAL_PrintOneSection.php?sectionId=<?php echo $sectionId;?>" target="_blank" class="btn btn-default" style="text-align: left; width: 100%;"><i class="fa fa-print"></i> Print</a>
+                                    <a href="MANUAL_PrintOneSection.php?sectionId=<?php echo $sectionId;?>" target="_blank" class="btn btn-default" style="text-align: left; width: 100%;"><i class="fa fa-print"></i> Print</a>
+                                </div>
                             </div>
-                        </div>
+                        <?php }?>
                     </div>
                 </div>
 
@@ -1109,11 +1098,11 @@ include 'EDMS_SIDEBAR.php';
 
         </div>
     </div>
-    <script>tinymce.init({selector:'#sectionContent'});</script>
     <script>
+    </script>
+    <script>
+        tinymce.init({selector:'#sectionContent'});
         $(document).ready( function(){
-
-
 
             let tableHistory = $('#tblHistory').DataTable( {
                 bLengthChange: false,

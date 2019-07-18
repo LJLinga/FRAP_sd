@@ -31,7 +31,6 @@ if(isset($_POST['btnLock'])){
     }
     if($availability == '1'){
         $crud->execute("UPDATE documents SET availabilityId='2', availabilityById='$userId' WHERE documentId='$documentId'");
-        $error = '&alert=DOC_LOCK_SUCCESS';
     }else{
         $error = '&alert=DOC_LOCK_FAIL';
     }
@@ -784,8 +783,7 @@ include 'EDMS_SIDEBAR.php';
                                 <?php }  ?>
                             <?php } ?>
                             <?php if($availability == '2'){ ?>
-                                <?php
-                                if($route=='2') {
+                                <?php if($route=='2') {
                                     $rows = $crud->getStepRoutes($currentStepId);
                                     if (!empty($rows)) {
                                         foreach ((array)$rows as $key => $row) {
@@ -833,12 +831,11 @@ include 'EDMS_SIDEBAR.php';
                                             <?php
                                         }
                                     }
-                                }
-                                ?>
-                                <?php if($write=='2'){ ?>
+                                } ?>
+                                <?php if($write=='2') { ?>
                                     <button type="button" class="btn btn-primary" id="btnUpload" data-toggle="modal" data-target="#uploadModal" style="text-align: left; width: 100%;"><i class="fa fa-upload"></i> Upload New Version</button>
                                 <?php } ?>
-                                <?php if( $cycle=='2'){?>
+                                <?php if( $cycle=='2') {?>
                                     <?php if($stateId == 1) { ?>
                                         <button type="button" data-toggle="modal" data-target="#modalArchive" class="btn btn-warning" style="text-align: left; width: 100%;"><i class="fa fa-archive"></i> Archive</button>
                                         <div id="modalArchive" class="modal fade" role="dialog">
@@ -907,10 +904,11 @@ include 'EDMS_SIDEBAR.php';
                                     <div class="alert alert-warning">
                                         The document has been checked out for processing by <strong><?php echo $availabilityByName;?></strong> on <i><?php echo date("F j, Y g:i:s A ", strtotime($availabilityOn));?></i> which means editing, archiving, and approval actions are restricted.
                                     </div>
+                                <?php }else{ ?>
+                                    <form method="POST" action="">
+                                        <button class="btn btn-secondary" type="submit" name="btnUnlock" id="btnUnlock" value="<?php echo $documentId;?>" style="text-align: left; width: 100%;">Check In</button>
+                                    </form>
                                 <?php } ?>
-                                <form method="POST" action="">
-                                    <button class="btn btn-secondary" type="submit" name="btnUnlock" id="btnUnlock" value="<?php echo $documentId;?>" style="text-align: left; width: 100%;">Check In</button>
-                                </form>
                             <?php } ?>
                             <a href="<?php echo $filePath?>" download><button type="button" class="btn btn-default" style="text-align: left; width: 100%;"><i class="fa fa-download"></i> Download</button></a>
                         </div>
@@ -1069,8 +1067,9 @@ include 'EDMS_SIDEBAR.php';
         table = $('#tblHistory').DataTable( {
             bLengthChange: false,
             pageLength: 10,
-            bSort: false,
+            bSort:true,
             search: {regex: true},
+            aaSorting: [],
             initComplete: function () {
 
                 var columnVer = this.api().column(1);
