@@ -16,20 +16,7 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 $userId = $_SESSION['idnum'];
 
 
-if(isset($_GET['id'])){
-    $processId = $_GET['id'];
-    $rows = $crud->getData("SELECT processName, editableId, processForId FROM process WHERE id = '$processId' LIMIT 1");
-    if(!empty($rows)){
-        foreach((array)$rows AS $key => $row){
-            $processName = $row['processName'];
-            $editableId = $row['editableId'];
-            $processForId = $row['processForId'];
-        }
-    }else{
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflows.php");
-    }
 
-}
 
 if(isset($_POST['btnUpdateStep'])){
     $processId = $_POST['processId'];
@@ -83,7 +70,7 @@ if(isset($_POST['btnAddGroup'])){
     }else{
         echo 'Database error.';
     }
-    //header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflow_Settings.php?id=".$processId);
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflow_Settings.php?id=".$processId);
 }
 
 if (isset($_POST['btnUpdateGroup'])) {
@@ -118,6 +105,21 @@ if(isset($_POST['btnDeleteGroup'])){
         echo 'Database error.';
     }
     header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflow_Settings.php?id=".$processId);
+}
+
+if(isset($_GET['id'])){
+    $processId = $_GET['id'];
+    $rows = $crud->getData("SELECT processName, editableId, processForId FROM process WHERE id = '$processId' LIMIT 1");
+    if(!empty($rows)){
+        foreach((array)$rows AS $key => $row){
+            $processName = $row['processName'];
+            $editableId = $row['editableId'];
+            $processForId = $row['processForId'];
+        }
+    }else{
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflows.php");
+    }
+
 }
 
 $page_title = 'Configuration - Process';
