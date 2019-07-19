@@ -28,16 +28,21 @@
 
     if(!empty($row)){
 
+            if($row['LOAN_STATUS'] == 4){
+
+                header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP reviewapp.php");
+
+            }
+
             if($row['LOAN_STATUS'] == 1){ //checks if you have a pending loan
 
                 header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
 
             } else if($row['LOAN_STATUS'] == 2 ) { //checks if you have a loan that is ongoing.
 
-                if ($row['PAYMENT_TERMS'] > $row['PAYMENTS_MADE']){ //checks if the loan is 50%
+                if (($row['PAYMENT_TERMS']/2) > $row['PAYMENTS_MADE']){ //checks if the loan is 50%
 
                     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
-
 
                 }
 
@@ -63,9 +68,26 @@
                 <!-- Page Heading -->
 
 
+                <!---- ALERTS OVER HERE! -->
+
+
                 <div class="row">
-                
+                <div class="row">
+                    <br>
+
+
                     <div class="col-lg-12">
+
+                        <div class="col-lg-12" id="alertLocation" >
+
+                                <div id="message" class="alert alert-danger collapse">
+                                    <strong>
+                                      <span id="messageAlert"></span>
+                                    </strong>
+
+                                </div>
+
+                        </div>
 
                         <h1 class="page-header">FALP Application</h1>
                         <ol class="breadcrumb">
@@ -104,7 +126,7 @@
                                     $userStatusResult = mysqli_query($dbc,$userStatus);
                                     $userStatusRow= mysqli_fetch_assoc($userStatusResult);
 
-                                    if($userStatusRow['USER_STATUS'] = 1) { // this means the user is a full time.
+                                    if($userStatusRow['USER_STATUS'] == 1) { // this means the user is a full time.
 
                                         echo "₱ 5,000.00 to ₱ 25,000.00";
 
@@ -152,7 +174,7 @@
 
                             <div class="panel-body">
                                 <?php
-                                    if($userStatusRow['USER_STATUS'] = 1){
+                                    if($userStatusRow['USER_STATUS'] == 1){
                                         echo "5 Months";
                                     }else{
                                         echo "3 Months";
@@ -178,7 +200,7 @@
 
                             <div class="panel-body">
                                 <?php
-                                if($userStatusRow['USER_STATUS'] = 1){
+                                if($userStatusRow['USER_STATUS'] == 1){
                                     echo "Full-Time";
                                 }else{
                                     echo "Part-Time";
@@ -223,6 +245,8 @@
 
                         <div class="panel panel-default">
 
+                            <form action="" method="POST" name ="nextPageURL" id="nextPageURL" >
+
                             <div class="panel-heading">
 
                                 <b>Loan Calculator</b>
@@ -231,7 +255,6 @@
 
                             <div class="panel-body">
 
-                            <form method="POST" id = "formA" action="MEMBER FALP requirements.php" onSubmit="return checkform()"> <!-- SERVERSELF, REDIRECT TO NEXT PAGE -->
 
                                 <div class="row">
 
@@ -257,7 +280,7 @@
                                             <select class="form-control" name = "terms" id = "terms">
 
                                                 <?php
-                                                    if($userStatusRow['USER_STATUS'] = 1) {
+                                                    if($userStatusRow['USER_STATUS'] == 1) {
                                                         ?>
 
                                                         <option value=1>1</option>
@@ -286,7 +309,7 @@
 
                                     <div class="col-lg-2 col-3">
 
-                                        <input type="button" name="compute" class="btn btn-primary" value="Compute" id="falpcompute">
+                                        <input type="button" name="compute" class="btn btn-primary" value="Compute" id="falpcompute" >
 
                                     </div>
 
@@ -324,7 +347,7 @@
                                         <div align="center">
 
 
-                                        <input type="submit" name="apply" class="btn btn-success" value="Submit">
+                                        <input type="submit" name="apply" class="btn btn-success" value="Submit" id="submitCheck" >
                                         <a href="MEMBER dashboard.php" class="btn btn-default" role="button">Go Back</a>
 
                                         </div>
@@ -335,10 +358,8 @@
 
                                 </div>
 
-                            </form>
-
                         </div>
-
+                    </form>
                     </div>
 
                     <div class="col-lg-2 col-3">
@@ -354,40 +375,81 @@
 
         </div>
 
-<script>
+<script type="text/javascript">
 
-    $(document).ready(function(){
-
+    $(document).ready(function () {
 
         let userType = <?php echo json_encode($userStatusType); ?>;
 
+        $('#submitCheck').click(function () {
 
-        document.getElementById("falpcompute").onclick = function() {
-            checkform();
-        };
+            document.getElementById("messageAlert").innerHTML = '';
 
+            let elemAmount = document.getElementById("amount");
+            let elemTerms = document.getElementById("terms");
 
+            let amount = parseFloat(elemAmount.value);
+            let terms = parseFloat(elemTerms.value);
 
-
-        function calculate(){
-            let amount = parseFloat(document.getElementById("amount").value);
-            let terms = parseFloat(document.getElementById("terms").value);
-            let interest = 0;
+            let amountLimit;
+            let termMax;
 
             if(userType = 1){
-                interest = 500;
+                amountLimit = 25000;
+                termMax = 5;
             }else{
-                interest = 300;
+                amountLimit = 15000;
+                termMax = 3;
             }
 
-            document.getElementById("totalI").innerHTML ="<b>Total Interest Payable: </b>₱"+ parseFloat((interest)).toFixed(2);
-            document.getElementById("totalP").innerHTML ="<b>Total Amount Payable: </b> ₱"+ parseFloat((amount+interest)).toFixed(2);
-            document.getElementById("PerP").innerHTML ="<b>Per Payment Period Payable: </b> ₱ "+ parseFloat(((amount+interest)/(terms*2))).toFixed(2);
-            document.getElementById("Monthly").innerHTML ="<b>Monthly Payable: </b> ₱"+ parseFloat(((amount+interest)/(terms))).toFixed(2);
+            elemAmount.setAttribute("max",amountLimit+"");
+            elemTerms.setAttribute("max",termMax+"");
+            let errorMessage = "";
 
-        }
+            if(amount<5000){
+                errorMessage = "Amount entered is below minimum. Please enter amount within the range.";
+                appendMessage(errorMessage);
+                $('#message').show('fade');
+                setTimeout(function () {
+                    $('#message').hide('fade');
+                }, 5000);
+                return false;
+            }
+            else if(amount > amountLimit){
+                errorMessage = "Amount entered is above maximum. Please enter amount within the range.";
+                appendMessage(errorMessage);
+                $('#message').show('fade');
+                setTimeout(function () {
+                    $('#message').hide('fade');
+                }, 5000);
+                return false;
+            }
+            else if(terms  < 0){ // if terms are below 3, deins dapat to
+                errorMessage = "Terms entered is below minimum . Please enter amount within the range.";
+                appendMessage(errorMessage);
+                $('#message').show('fade');
+                setTimeout(function () {
+                    $('#message').hide('fade');
+                }, 5000);
+                return false;
+            }else if(terms > termMax) {
+                errorMessage ="Terms entered is above maximum . Please enter amount within the range.";
+                appendMessage(errorMessage);
+                $('#message').show('fade');
+                setTimeout(function () {
+                    $('#message').hide('fade');
+                }, 5000);
+                return false;
+            }else if(isNaN(amount)){
+                return false;
+            }
 
-        function checkform(){
+        });
+
+
+        $('#falpcompute').click(function () {
+
+            document.getElementById("messageAlert").innerHTML = '';
 
             let elemAmount = document.getElementById("amount");
             let elemTerms = document.getElementById("terms");
@@ -409,38 +471,100 @@
             elemAmount.setAttribute("max",amountLimit+"");
             elemTerms.setAttribute("max",termMax+"");
 
+            let errorMessage = "";
 
             if(amount<5000){
-                alert("Amount entered is below minimum. Please enter amount within the range.");
+                errorMessage = "Amount entered is below minimum. Please enter amount within the range.";
+                appendMessage(errorMessage);
+                $('#message').show('fade');
+                setTimeout(function () {
+                    $('#message').hide('fade');
+                }, 5000);
                 return false;
             }
             else if(amount > amountLimit){
-                alert("Amount entered is above maximum. Please enter amount within the range.");
+                errorMessage = "Amount entered is above maximum. Please enter amount within the range.";
+                appendMessage(errorMessage);
+                $('#message').show('fade');
+                setTimeout(function () {
+                    $('#message').hide('fade');
+                }, 5000);
                 return false;
             }
             else if(terms  < 0){ // if terms are below 3, deins dapat to
-                alert("Terms entered is below minimum . Please enter amount within the range.");
+                errorMessage = "Terms entered is below minimum . Please enter amount within the range.";
+                appendMessage(errorMessage);
+                $('#message').show('fade');
+                setTimeout(function () {
+                    $('#message').hide('fade');
+                }, 5000);
                 return false;
             }else if(terms > termMax) {
-                alert("Terms entered is above maximum . Please enter amount within the range.");
+                errorMessage ="Terms entered is above maximum . Please enter amount within the range.";
+                appendMessage(errorMessage);
+                $('#message').show('fade');
+                setTimeout(function () {
+                    $('#message').hide('fade');
+                }, 5000);
+
                 return false;
-            } else if(isNaN(amount)){
-                alert("Invalid Input");
+            }else if(isNaN(amount)) {
+                errorMessage ="No amount inputted.";
+                appendMessage(errorMessage);
+                $('#message').show('fade');
+                setTimeout(function () {
+                    $('#message').hide('fade');
+                }, 5000);
+
                 return false;
-            }else if (isNaN(terms)){
-                alert("No Terms");
-                return false;
-            } else{
+
+
+            }else{
+                document.nextPageURL.action = "MEMBER%20FALP%20requirements.php";
                 calculate();
                 return true;
             }
 
+
+
+        });
+
+        function calculate(){
+
+            let amount = parseFloat(document.getElementById("amount").value);
+            let terms = parseFloat(document.getElementById("terms").value);
+            let interest = 0;
+
+            if(userType = 1){
+                interest = 500;
+            }else{
+                interest = 300;
+            }
+
+            document.getElementById("totalI").innerHTML ="<b>Total Interest Payable: </b>₱"+ parseFloat((interest)).toFixed(2);
+            document.getElementById("totalP").innerHTML ="<b>Total Amount Payable: </b> ₱"+ parseFloat((amount+interest)).toFixed(2);
+            document.getElementById("PerP").innerHTML ="<b>Per Payment Period Payable: </b> ₱ "+ parseFloat(((amount+interest)/(terms*2))).toFixed(2);
+            document.getElementById("Monthly").innerHTML ="<b>Monthly Payable: </b> ₱"+ parseFloat(((amount+interest)/(terms))).toFixed(2);
         }
+
+        function appendMessage(message){
+            let alertdiv = document.getElementById("messageAlert");
+            alertdiv.textContent= message;
+        }
+
+
+
+
+
+
+
+
+
+
     });
-
-
-
 </script>
+
+
         <!-- /#page-wrapper -->
 <?php include 'GLOBAL_FOOTER.php' ?>
 

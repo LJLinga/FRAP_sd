@@ -219,12 +219,11 @@ class PDF_HTML extends FPDF
         $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
     }
 
-
     public function writeSection($sectionNo, $sectionTitle, $sectionContent){
         $this->setTitle('Section '.$sectionNo.' - '.$sectionTitle);
         $this->SetFont('Helvetica','B',16);
         $this->Cell(0,10,'Section '.$sectionNo.' - '.$sectionTitle,0,1);
-        //$this->Ln(5);
+        $this->Ln(5);
         $this->SetFont('Helvetica','',10);
         $this->WriteHTML($sectionContent);
         $this->Ln(10);

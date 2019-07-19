@@ -21,12 +21,20 @@
     //then check if the guy has currently a pending loan - which brings the dude to the summary page.
 
 
+
+
     //then check if the guy has paid 50% of the Loan.... shit. we actually have a screen that keeps track of TWO Loans at the fucking same time jesus fucking christ
 
 
 
 
     if(!empty($row)){
+
+            if($row['LOAN_STATUS'] == 4){
+
+                header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP reviewapp.php");
+
+            }
 
             if($row['LOAN_STATUS'] == 1){ //checks if you have a pending loan
 
@@ -51,6 +59,11 @@
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
 
     }
+
+
+
+
+
 
 
     $page_title = 'Loans - FALP Requirements';
@@ -262,14 +275,14 @@
                                 <tr>
 
                                 <td><b>Amount to Borrow</td>
-                                <td>₱ <?php echo $_POST['amount'];?></td>
+                                <td>₱ <?php echo number_format($_POST['amount'],2);?></td>
 
                                 </tr>
 
                                 <tr>
 
                                 <td><b>Amount Payable</td>
-                                <td>₱ <?php echo $_POST['amount']+500;?></td>
+                                <td>₱ <?php echo number_format($_POST['amount']+500,2);?></td>
 
                                 </tr>
 
@@ -283,7 +296,7 @@
                                 <tr>
 
                                 <td><b>Monthly Deduction</td>
-                                <td>₱ <?php echo ($_POST['amount']+500)/$_POST['terms'] ;?></td>
+                                <td>₱ <?php echo number_format(($_POST['amount']+500)/$_POST['terms'],2 );?></td>
 
                                 </tr>
 
@@ -297,7 +310,7 @@
                                 <tr>
 
                                 <td><b>Per Payment Deduction</td>
-                                <td>₱ <?php echo  ($_POST['amount']+500)/($_POST['terms']*2) ;?></td>
+                                <td>₱ <?php echo  number_format(($_POST['amount']+500)/($_POST['terms']*2),2) ;?></td>
 
                                 </tr>
 
@@ -337,7 +350,6 @@
 
                         <div class="col-lg-12">
 
-                            &nbsp;
 
                         </div>
 

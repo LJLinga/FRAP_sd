@@ -58,7 +58,7 @@ if(!empty($_POST['documentId']) && !empty($_POST['newVersionNo']) && !empty($_PO
         $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
 
         if ($didUpload) {
-            if($crud->execute("UPDATE documents SET authorId='$userId', availabilityId='1', availabilityById='$userId', remarks='$remarks',
+            if($crud->execute("UPDATE documents SET authorId='$userId', remarks='$remarks',
                                     versionNo='$versionNo', title='$title',filePath='$uploadPath' WHERE documentId='$documentId';")){
                 $msg = array(
                     'success' => 1

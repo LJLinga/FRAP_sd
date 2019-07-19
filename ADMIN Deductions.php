@@ -26,13 +26,17 @@
                             Pending FALP Deductions
                         </h1>
                     </div>
-                    
+                    <div class="col-lg-12">
+
+                        <div class="well">The Deductions button is only available during the 10th and 25th of the month to signify the cutoff dates of the AFED Inc. This can be changed however, simply contact your website administrator.</div>
+                    </div>
+
                 </div>
                 <!-- alert -->
                 <?php
                     if(isset($_POST['toDeductID'])){
                         echo "
-                            <div class='alert alert-info'>
+                            <div class='alert alert-success'>
                                 Deducted succesfully!
                             </div>
                         ";
@@ -139,6 +143,9 @@
                                             AND td.HAS_PAID = 1
                                             ";
                                             $result = mysqli_query($dbc, $query);
+
+                                        $today = date("d");
+
                                             
                                             foreach ($result as $resultRow) {
                                         ?>
@@ -146,11 +153,15 @@
                                         <tr>
 
                                         <td align="center"><?php echo $resultRow['MEMBER_ID']; ?></td>
-                                        <td align="center"><?php echo $resultRow['FIRSTNAME'] ." ". $resultRow['LASTNAME']; ?></td>
+                                        <td align="center"><?php echo $resultRow['FIRSTNAME'] ." ". $resultRow['LASTNAME'];  ?> </td>
                                         <td align="center"><?php echo date('Y, M d', strtotime($resultRow['DEDUCTION_DATE'])); ?></td>
                                         <td align="center">₱ <?php echo number_format($resultRow['PER_PAYMENT'],2)."<br>"; ?></td>
-                                        <td align="center"><button type='submit' class='btn btn-warning' name='toDeductID' value='<?php echo $resultRow['ID']; ?>'>Deduct</button>&nbsp;&nbsp;&nbsp;</td>
+                                            <?php if($today == '10' || $today == '25'){ //this is for when the date is not the same as the Deduction Periods?>
+                                        <td align="center"><button type='submit' class='btn btn-warning' name='toDeductID' value='<?php echo $resultRow['ID']; ?>'>Deduct  </button>&nbsp;&nbsp;&nbsp;</td>
+                                                <?php }else{ //this is when the date is the deduction period?>
+                                                <td align="center"><button type='submit' class='btn btn-warning' name='toDeductID' value='<?php echo $resultRow['ID']; ?>' disabled>Deduct </button>&nbsp;&nbsp;&nbsp;</td>
 
+                                            <?php } ?>
                                         </tr>
 
                                         <?php }?>

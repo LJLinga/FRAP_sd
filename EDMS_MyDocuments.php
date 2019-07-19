@@ -35,62 +35,113 @@ $userName = $rows[0]['name'];
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-lg-4">
-                                <div class="form-inline">
-                                    <label for="sel1">Document Type</label>
-                                    <select class="form-control" id="selectedType">
+                <ul class="nav nav-tabs" role="tablist">
 
-                                        <option value="" selected>All</option>
-                                        <?php
-                                        $rows = $crud->getUserDocTypes($userId);
-                                        foreach((array)$rows as $key => $row){
-                                            echo '<option value="'.$row['type'].'">'.$row['type'].'</option>';
-                                        }
-                                        ?>
-                                    </select>
+                    <li role="presentation" class="active"><a href="#editing" aria-controls="profile" role="tab" data-toggle="tab">I'm currently editing</a></li>
+                    <li role="presentation"><a href="#access" aria-controls="messages" role="tab" data-toggle="tab">All my documents</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="editing">
+                        <div class="panel panel-secondary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Document Type</label>
+                                            <select class="form-control" id="selectedType2">
+                                                <option value="" selected>All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Status</label>
+                                            <select class="form-control" id="selectedStatus2" name="selectedAction">
+                                                <option value="" selected>ALL</option>
+                                                <option value="draft">DRAFT</option>
+                                                <option value="pending">PENDING</option>
+                                                <option value="approved">APPROVED</option>
+                                                <option value="rejected">REJECTED</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Search</label>
+                                            <input type="text" id="searchField2" class="form-control">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
-                                <div class="form-inline">
-                                    <label for="sel1">Status</label>
-                                    <select class="form-control" id="selectedStatus" name="selectedAction">
-                                        <option value="">ALL</option>
-                                        <option value="draft" selected>DRAFT</option>
-                                        <option value="pending">PENDING</option>
-                                        <option value="approved">APPROVED</option>
-                                        <option value="rejected">REJECTED</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="form-inline">
-                                    <label for="sel1">Search</label>
-                                    <input type="text" id="searchField" class="form-control">
-                                </div>
+                            <div class="panel-body">
+                                <table id="myTable2" class="table table-striped table-condensed table-sm" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Category</th>
+                                        <th>Version</th>
+                                        <th>Submitted on</th>
+                                        <th>Status</th>
+                                        <th>Last updated by</th>
+                                        <th>Last updated on</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                </table>
                             </div>
                         </div>
                     </div>
-                    <div class="panel-body">
-                        <table id="myTable1" class="table table-striped table-condensed table-sm" cellspacing="0" width="100%">
-                            <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Category</th>
-                                <th>Version</th>
-                                <th>Submitted on</th>
-                                <th>Status</th>
-                                <th>Last updated by</th>
-                                <th>Last updated on</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                        </table>
+                    <div role="tabpanel" class="tab-pane" id="access">
+                        <div class="panel panel-secondary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Document Type</label>
+                                            <select class="form-control" id="selectedType">
+                                                <option value="" selected>All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Status</label>
+                                            <select class="form-control" id="selectedStatus" name="selectedAction">
+                                                <option value="" selected>ALL</option>
+                                                <option value="draft">DRAFT</option>
+                                                <option value="pending">PENDING</option>
+                                                <option value="approved">APPROVED</option>
+                                                <option value="rejected">REJECTED</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-inline">
+                                            <label for="sel1">Search</label>
+                                            <input type="text" id="searchField" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table id="myTable1" class="table table-striped table-condensed table-sm" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Category</th>
+                                        <th>Version</th>
+                                        <th>Submitted on</th>
+                                        <th>Status</th>
+                                        <th>Last updated by</th>
+                                        <th>Last updated on</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -196,10 +247,16 @@ $userName = $rows[0]['name'];
                 processData: false,
                 contentType: false,
                 data: new FormData(this),
-                dataType: 'json',
                 success: function(response){
-                    if(JSON.parse(response).success == '1'){ location.href = "http://localhost/FRAP_sd/EDMS_ViewDocument.php?docId="+JSON.parse(response).id }
-                    else { $("#err").html('<div class="alert alert-info">'+JSON.parse(response).html+'</div>'); };
+                    if(JSON.parse(response).success === '1'){
+                        window.open(
+                            "EDMS_ViewDocument.php?docId="+JSON.parse(response).id,
+                            '_blank' // <- This is what makes it open in a new window.
+                        );
+                        $('#documentUploadForm')[0].reset();
+                        $('#myModal').modal('toggle');
+                    }
+                    else { $("#err").html('<div class="alert alert-warning">'+JSON.parse(response).html+'</div>'); };
                 },
                 error: function(){
                     alert("Error");
@@ -212,6 +269,10 @@ $userName = $rows[0]['name'];
 
     let mode = '<?php echo $userId; ?>';
 
+    $('[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
+        $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+    } );
+
     let table = $('#myTable1').DataTable( {
         bSort: true,
         bLengthChange: false,
@@ -219,7 +280,7 @@ $userName = $rows[0]['name'];
         pageResize: true,
         pageLength: 10,
         scrollX: true,
-        order: [[3, 'desc']],
+        aaSorting: [],
         "ajax": {
             "url":"EDMS_AJAX_FetchDocuments.php",
             "type":"POST",
@@ -243,11 +304,60 @@ $userName = $rows[0]['name'];
             var selectType = $('#selectedType').on( 'change', function () {
                 columnType.search($('#selectedType').val()).draw();
             } );
+            columnType.data().unique().sort().each( function ( d, j ) {
+                selectType.append( '<option value="'+d+'">'+d+'</option>' )
+            } );
 
             var columnStatus = this.api().column(4);
             var selectStatus = $('#selectedStatus').on( 'change', function () {
                 columnStatus.search($('#selectedStatus').val()).draw();
             } );
+
+
+        }
+    });
+
+    let table2 = $('#myTable2').DataTable( {
+        bSort: true,
+        bLengthChange: false,
+        destroy: true,
+        pageResize: true,
+        pageLength: 10,
+        scrollX: true,
+        aaSorting: [],
+        "ajax": {
+            "url":"EDMS_AJAX_FetchDocuments.php",
+            "type":"POST",
+            "dataSrc": '',
+            "data": {
+                requestType: 'MYDOCUMENTS_EDITING'
+            },
+        },
+        columns: [
+            { data: "title" },
+            { data: "type" },
+            { data: "vers"},
+            { data: "timeCreated"},
+            { data: "status"},
+            { data: "modified_by"},
+            { data: "lastUpdated"},
+            { data: "actions"}
+        ],
+        initComplete: function(){
+            var columnType = this.api().column(1);
+            var selectType = $('#selectedType2').on( 'change', function () {
+                columnType.search($('#selectedType2').val()).draw();
+            } );
+            columnType.data().unique().sort().each( function ( d, j ) {
+                selectType.append( '<option value="'+d+'">'+d+'</option>' )
+            } );
+
+            var columnStatus = this.api().column(4);
+            var selectStatus = $('#selectedStatus2').on( 'change', function () {
+                columnStatus.search($('#selectedStatus2').val()).draw();
+            } );
+
+
         }
     });
 
@@ -256,9 +366,14 @@ $userName = $rows[0]['name'];
         table.search($('#searchField').val()).draw();
     });
 
+    $('#searchField2').keyup(function(){
+        table2.search($('#searchField2').val()).draw();
+    });
+
 
     setInterval(function(){
         table.ajax.reload(null,false);
+        table2.ajax.reload(null,false);
     },5000)
 
 </script>

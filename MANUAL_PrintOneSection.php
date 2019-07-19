@@ -15,10 +15,11 @@ if(isset($_GET['versionId'])){
     if(!empty($rows)){
         foreach((array) $rows AS $key => $row){
             $pdf->addPage();
-            $pdf->setTitle($row['sectionNo']);
+            $pdf->setTitle($row['sectionNo'].' - '.$row['title']);
             $pdf->writeSection($row['sectionNo'], $row['title'], $row['content']);
-            $pdf->Output();
+
         }
+        $pdf->Output();
     }
 }else if(isset($_GET['sectionId'])){
     $sectionId = $_GET['sectionId'];
@@ -26,7 +27,7 @@ if(isset($_GET['versionId'])){
     if(!empty($rows)){
         foreach((array) $rows AS $key => $row){
             $pdf->addPage();
-            $pdf->setTitle($row['sectionNo']);
+            $pdf->setTitle($row['sectionNo'].' - '.$row['title']);
             $pdf->writeSection($row['sectionNo'], $row['title'], $row['content']);
         }
         $pdf->Output();

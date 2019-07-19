@@ -96,7 +96,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                     JOIN user_groups ug ON g.id = ug.groupId
                     WHERE ug.userId='$userId' AND ug.groupId = '$groupId' 
                     LIMIT 1;";
-        $rows = getData($query);
+        $rows = $this->getData($query);
         if(!empty($rows)){
             return true;
         }else {
@@ -356,7 +356,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function removeStepGroup($stepId){
-        $this->execute("UPDATE steps SET gread= '1', gwrite='1', groute='1', gcomment='1', groupId = NULL WHERE id = '$stepId';");
+        $this->execute("UPDATE steps SET gwrite='1', groute='1', gcycle ='1', groupId = NULL WHERE id = '$stepId';");
     }
 
     public function removeStepRoute($routeId){
@@ -373,6 +373,10 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         }else {
             return false;
         }
+    }
+
+    public function auditColoriser($contentType, $actionType){
+       //Couldve thought of this sooner, when auditing just directly say the action, not make it look for it.
     }
 
     public function getNonAdminGroups(){
@@ -399,6 +403,10 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                                         ORDER BY ug.isAdmin DESC, name ASC;");
     }
 
+    public function friendlyDate($date){
+        return date("F j, Y g:i:s A ", strtotime($date));
+    }
+
     public function deactivateGroup($groupId){
         return $this->execute("UPDATE groups SET isActive = '1' WHERE id = '$groupId'");
     }
@@ -421,11 +429,30 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function getGroupWorkflows($groupId){
-        return $this->getData("SELECT p.*, sg.*, s.*, p.id FROM steps s 
+        return $this->getData("SELECT p.*, s.*, s.gwrite AS `write`, s.groute AS `route`, s.gcycle AS `cycle`, p.id AS processId, s.id AS stepId
+                                        FROM steps s 
                                         JOIN process p on s.processId = p.id 
-                                        JOIN step_groups sg on s.id = sg.stepId
-                                        WHERE sg.groupId = '$groupId'
+                                        WHERE s.groupId = '$groupId'
                                         ORDER BY p.processForId, p.processName, s.stepNo ASC;");
+    }
+
+    public function getGroupWorkflowsSpectate($groupId){
+        return $this->getData("SELECT p.*, pg.*, p.id FROM process p JOIN process_groups pg on p.id = pg.processId 
+                                        WHERE pg.groupId = '$groupId'
+                                        ORDER BY p.processForId, p.processName ASC;");
+    }
+
+    public function getGroupDocWorkflows($groupId){
+        return $this->getData("SELECT p.*, s.*, s.gwrite AS `write`, s.groute AS `route`, s.gcycle AS `cycle`, p.id FROM steps s 
+                                        JOIN process p on s.processId = p.id 
+                                        WHERE s.groupId = '$groupId' AND p.processForId = 1
+                                        ORDER BY p.processForId, p.processName, s.stepNo ASC;");
+    }
+
+    public function getGroupDocWorkflowsSpectate($groupId){
+        return $this->getData("SELECT p.*, pg.*, p.id FROM process p JOIN process_groups pg on p.id = pg.processId 
+                                        WHERE pg.groupId = '$groupId' AND p.processForId = 1
+                                        ORDER BY p.processName ASC;");
     }
 
     public function coloriseStatus($num){
@@ -443,7 +470,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function coloriseCycle($num){
-        $string = $this->assignStatusString($num);
+        $string = $this->lifecycleString($num);
         $color = '';
         if($num == '1') { $color = "success"; }
         else if($num == '2') { $color = "warning"; }
@@ -486,7 +513,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function getWorkflowGroups($processId){
-        return $this->getData("SELECT g.id, g.groupName, g.groupDesc, pg.read, pg.write, pg.comment, pg.route 
+        return $this->getData("SELECT g.id, g.groupName, g.groupDesc, pg.cycle, pg.write, pg.route 
                                 FROM groups g JOIN process_groups pg on g.id = pg.groupId
                                                             WHERE pg.processId = '$processId'");
     }
@@ -553,12 +580,52 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                 ORDER BY d.lastUpdated DESC;");
     }
 
+    public function getPersonalDocumentsEditing($userId){
+        return $this->getData("SELECT d.documentId, d.statusId, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName, 
+                d.filePath, d.title, d.versionNo, d.timeCreated, d.lastUpdated,
+                s.stepNo, s.stepName, t.type,
+                pr.processName, 
+                (SELECT CONCAT(e.FIRSTNAME,', ',e.LASTNAME) FROM employee e2 WHERE e2.EMP_ID = d.firstAuthorId) AS firstAuthorName 
+                FROM facultyassocnew.documents d 
+                JOIN employee e ON e.EMP_ID = d.authorId
+                JOIN doc_type t ON t.id = d.typeId
+                JOIN steps s ON s.id = d.stepId
+                JOIN process pr ON pr.id = s.processId
+                WHERE t.isActive = 2 AND (d.firstAuthorId = '$userId' OR d.authorId = '$userId')
+                AND d.availabilityById = '$userId' AND d.availabilityId = '2'
+                ORDER BY d.lastUpdated DESC;");
+    }
+
     public function getStepGroupMemberPermissions($stepId, $userId){
-        return $this->getData("SELECT s.* FROM user_groups ug 
+        return $this->getData("SELECT s.gcycle AS `cycle`, s.gwrite AS `write`, s.groute AS `route` FROM user_groups ug 
                                         JOIN groups g ON ug.groupId = g.id
                                         JOIN steps s ON g.id = s.groupId
                                         WHERE s.id = '$stepId' AND ug.userId = '$userId'
                                         LIMIT 1;");
+    }
+
+    public function getNeedsMyAttentionDocumentsCount($userId){
+        return $this->getData("SELECT COUNT(d.documentId) FROM documents d
+                JOIN doc_type t ON t.id = d.typeId
+                WHERE t.isActive = 2 AND d.stepId IN (SELECT s.id FROM user_groups ug
+                                                    JOIN groups g ON ug.groupId = g.id
+                                                    JOIN steps s ON g.id = s.groupId
+                                                    WHERE ug.userId = '$userId' AND (s.groute = 2 OR s.gwrite = 2))
+                AND d.firstAuthorId != '$userId'
+                AND d.statusId = '2'
+                ORDER BY d.lastUpdated DESC;");
+    }
+
+    public function getEditingByMeDocumentsCount($userId){
+        return $this->getData("SELECT COUNT(d.documentId) FROM documents d
+                JOIN doc_type t ON t.id = d.typeId
+                WHERE t.isActive = 2 AND d.stepId IN (SELECT s.id FROM user_groups ug
+                                                    JOIN groups g ON ug.groupId = g.id
+                                                    JOIN steps s ON g.id = s.groupId
+                                                    WHERE ug.userId = '$userId' AND (s.groute = 2 OR s.gwrite = 2))
+                AND d.firstAuthorId != '$userId'
+                AND d.statusId = '2'
+                ORDER BY d.lastUpdated DESC;");
     }
 
     // ONE GROUP PER STEP ONLY, CHANGE OF DESIGN
@@ -567,13 +634,12 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         if ($userId == $creatorId) {
             return $this->getStep($stepId);
         } else {
-            $rows = $this->getStepGroupMemberPermissions($stepId, $userId);
-            if(empty($rows)){
-                return $this->getStepProcessGroupMemberPermissions($stepId, $userId);
-            }else{
-                return $rows;
-            }
+            return $this->getStepGroupMemberPermissions($stepId, $userId);
         }
+    }
+
+    public function getPublishableSections($manualId){
+
     }
 
     public function getManualReferencableDocuments($sectionId){
@@ -583,7 +649,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                     (SELECT MAX(v2.versionId) FROM doc_versions v2 
                         WHERE (v2.audit_action_type = 'STATUSED'OR v2.audit_action_type = 'STATUSED/MOVED') 
                         AND v2.statusId = 3 
-                        AND (v2.typeId = 1 OR v2.typeId = 5 OR v2.typeId = 6)
+                        AND (v2.typeId = 4 OR v2.typeId = 5 OR v2.typeId = 6)
                         GROUP BY v2.documentId 
                         ORDER BY v2.statusedOn DESC) 
                     AND v.versionId NOT IN
@@ -608,15 +674,15 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         return $this->getData($query);
     }
 
-    public function getStepProcessGroupMemberPermissions($stepId, $userId){
-        return $this->getData("SELECT pg.* FROM process_groups pg
-                                        JOIN process p ON pg.processId = p.id
-                                        JOIN steps s ON p.id = s.processId
-                                        JOIN groups g ON pg.groupId = g.id
-                                        JOIN user_groups ug ON g.id = ug.groupId
-                                        WHERE s.id = '$stepId'
-                                        AND ug.userId = '$userId';");
-    }
+//    public function getStepProcessGroupMemberPermissions($stepId, $userId){
+//        return $this->getData("SELECT pg.* FROM process_groups pg
+//                                        JOIN process p ON pg.processId = p.id
+//                                        JOIN steps s ON p.id = s.processId
+//                                        JOIN groups g ON pg.groupId = g.id
+//                                        JOIN user_groups ug ON g.id = ug.groupId
+//                                        WHERE s.id = '$stepId'
+//                                        AND ug.userId = '$userId';");
+//    }
 
     public function getProcessIdOfDocType($docTypeId){
         return $this->getData("SELECT pr.id FROM process pr JOIN doc_type dt on pr.id = dt.processId

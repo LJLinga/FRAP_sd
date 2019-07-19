@@ -24,7 +24,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
         <div id="page-wrapper">
 
             <div class="container-fluid">
-
+ 
                 <div class="row">
                 
                     <div class="col-lg-12">
@@ -87,7 +87,6 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                            on m.USER_STATUS = u.STATUS_ID
                                                            where m.membership_status = 2";
                                                         $result2 = mysqli_query($dbc,$query2);
-
 
                                                 foreach ($result2 as $row2) {
 

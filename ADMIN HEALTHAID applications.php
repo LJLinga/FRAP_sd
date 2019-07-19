@@ -132,7 +132,7 @@ $page_title = 'Loans - Health Applications';
                                                       ON M.MEMBER_ID = HA.MEMBER_ID 
                                                       JOIN REF_DEPARTMENT RD 
                                                       ON M.DEPT_ID = RD.DEPT_ID 
-                                                      WHERE HA.APP_STATUS != 3 && HA.PICKED_UP_STATUS != 4 ;";
+                                                      WHERE HA.APP_STATUS != 3 && HA.APP_STATUS != 4 && HA.PICKED_UP_STATUS != 4 ;";
 
                                             $result = mysqli_query($dbc, $query);
                                             

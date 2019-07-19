@@ -236,58 +236,58 @@ include 'FRAP_USER_SIDEBAR.php';
                             </div>
                         </div>
 
-                            <?php if($rows['APP_STATUS'] = 1){?>
-                                <div class="panel panel-default" style="margin-top: 1rem;">
-
-                                    <div class="panel-heading">
-
-                                        <b>Receipt for Health Aid</b>
-
-                                    </div>
-
-                                    <div class="panel-body">
-
-                                        <div class ="row">
-
-                                            <div class= "col-lg-12">
-
-                                                <?php
-                                                //gets the document ids and their
-                                                $query = "SELECT d.documentId, dv.title, ds.statusName
-                                                 from ref_document_healthaid rdh
-                                                 join documents d 
-                                                 ON rdh.DOC_ID = d.documentId
-                                                 join doc_versions dv
-                                                 on d.documentId = dv.documentId
-                                                 join doc_status ds
-                                                 on d.statusId = ds.id
-                                                 WHERE rdh.RECORD_ID = {$checkForHealthAidApplication['RECORD_ID']}
-                                                 AND rdh.DOC_REF_TYPE = 2";
-                                                 $rows = $crud->getData($query);
-
-
-                                                foreach((array) $rows as $key => $row){   ?>
-
-                                                    <div class="row">
-                                                        <div class="col-lg-2"></div>
-                                                        <div class="col-lg-8" align="center">
-                                                            <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>">
-                                                                <button type="button" class="btn btn-info"><?php echo $row['title'] ?></button></a>
-                                                            <br>
-                                                            <br>
-                                                        </div>
-                                                        <div class="col-lg-2"></div>
-
-                                                    </div>
-
-
-
-                                                <?php }?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php }?>
+<!--                            --><?php //if($rows['APP_STATUS'] = 1){?>
+<!--                                <div class="panel panel-default" style="margin-top: 1rem;">-->
+<!---->
+<!--                                    <div class="panel-heading">-->
+<!---->
+<!--                                        <b>Receipt for Health Aid</b>-->
+<!---->
+<!--                                    </div>-->
+<!---->
+<!--                                    <div class="panel-body">-->
+<!---->
+<!--                                        <div class ="row">-->
+<!---->
+<!--                                            <div class= "col-lg-12">-->
+<!---->
+<!--                                                --><?php
+//                                                //gets the document ids and their
+//                                                $query = "SELECT d.documentId, dv.title, ds.statusName
+//                                                 from ref_document_healthaid rdh
+//                                                 join documents d
+//                                                 ON rdh.DOC_ID = d.documentId
+//                                                 join doc_versions dv
+//                                                 on d.documentId = dv.documentId
+//                                                 join doc_status ds
+//                                                 on d.statusId = ds.id
+//                                                 WHERE rdh.RECORD_ID = {$checkForHealthAidApplication['RECORD_ID']}
+//                                                 AND rdh.DOC_REF_TYPE = 2";
+//                                                 $rows = $crud->getData($query);
+//
+//
+//                                                foreach((array) $rows as $key => $row){   ?>
+<!---->
+<!--                                                    <div class="row">-->
+<!--                                                        <div class="col-lg-2"></div>-->
+<!--                                                        <div class="col-lg-8" align="center">-->
+<!--                                                            <a href ="EDMS_ViewDocument.php?docId=--><?php //echo $row['documentId'];?><!--">-->
+<!--                                                                <button type="button" class="btn btn-info">--><?php //echo $row['title'] ?><!--</button></a>-->
+<!--                                                            <br>-->
+<!--                                                            <br>-->
+<!--                                                        </div>-->
+<!--                                                        <div class="col-lg-2"></div>-->
+<!---->
+<!--                                                    </div>-->
+<!---->
+<!---->
+<!---->
+<!--                                                --><?php //}?>
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            --><?php //}?>
 
 
 

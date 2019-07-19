@@ -34,7 +34,6 @@ include 'SYS_SIDEBAR.php';
                                 <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th width="200px">EDMS</th>
                                     <th width="200px">CMS</th>
                                     <th width="200px">Loans</th>
                                     <th width="100px">Save</th>
@@ -47,14 +46,6 @@ include 'SYS_SIDEBAR.php';
                                     if(!empty($rows)){
                                         foreach((array) $rows as $key => $row){
                                             $cmsArray[] = $row;
-                                        }
-                                    }
-
-                                    $rows = $crud->getData("SELECT id, roleName FROM edms_roles;");
-                                    $edmsArray = [];
-                                    if(!empty($rows)){
-                                        foreach((array) $rows as $key => $row){
-                                            $edmsArray[] = $row;
                                         }
                                     }
 
@@ -75,17 +66,6 @@ include 'SYS_SIDEBAR.php';
                                                 <td>
                                                     <b><?php echo $row['name']?></b>
                                                     <input type="hidden" class="userId" value="<?php echo $row['EMP_ID']?>">
-                                                </td>
-                                                <td>
-                                                    <select class="form-control select_edms">
-                                                        <?php foreach((array) $edmsArray as $key2 => $row2){
-                                                            if($row['EDMS_ROLE'] == $row2['id']) { ?>
-                                                                <option value="<?php echo $row2['id'];?>" selected><?php echo $row2['roleName'];?></option>
-                                                            <?php }else{ ?>
-                                                                <option value="<?php echo $row2['id'];?>"><?php echo $row2['roleName'];?></option>
-                                                            <?php } ?>
-                                                        <?php } ?>
-                                                    </select>
                                                 </td>
                                                 <td>
                                                     <select class="form-control select_cms">
@@ -135,11 +115,10 @@ include 'SYS_SIDEBAR.php';
             placeholder: 'Select or search...'
         });
     });
-</script>
 
     function saveRoles(element){
         var userId = $(element).closest('tr').find('.userId').val();
-        var edms = $(element).closest('tr').find('.select_edms').val();
+        //var edms = $(element).closest('tr').find('.select_edms').val();
         var cms = $(element).closest('tr').find('.select_cms').val();
         var frap = $(element).closest('tr').find('.select_frap').val();
         $(element).closest('tr').children('td, th').css('background-color','#5CB85C');

@@ -194,9 +194,9 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
         while($row = mysqli_fetch_assoc($resultCheckDocs)){
 
-            if($row['statusId'] == 2){ //check if rejected
+            if($row['statusId'] == 3){ //check if rejected
                 $numAccepted++;
-            }else if($row['statusId'] == 3){
+            }else if($row['statusId'] == 4){
                 $isThereRejected = true;
             }
         }
@@ -355,53 +355,53 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                             </div>
                         </div>
                     </div>
-                    <?php if(!$isThereRejected){?>
-                        <div class="panel panel-primary">
-
-                            <div class="panel-heading">
-
-                                <b>Upload Receipt for Health Aid</b>
-
-                            </div>
-
-                            <div class="panel-body">
-
-                                <div class ="row">
-
-                                    <div class= "col-lg-12">
-
-
-
-                                       <div class="element">
-                                        <input type="file" name="upload_file[]" id="upload_file1" required/>
-                                    </div>
-
-                                    <div id="moreImageUpload">
-                                        <br>
-                                    </div>
-
-                                    <div class="clear">
-
-                                    </div>
-
-                                    <div id="moreImageUploadLink" style="display:none;margin-left: 10px;">
-                                        <i class="fa fa-plus"></i>   <a href="javascript:void(0);" id="attachMore">Attach another file</a>
-                                    </div>
-
-
-
-
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            </div>
-
-                        </div>
-                    <?php }?>
+<!--                    --><?php //if(!$isThereRejected){?>
+<!--                        <div class="panel panel-primary">-->
+<!---->
+<!--                            <div class="panel-heading">-->
+<!---->
+<!--                                <b>Upload Receipt for Health Aid</b>-->
+<!---->
+<!--                            </div>-->
+<!---->
+<!--                            <div class="panel-body">-->
+<!---->
+<!--                                <div class ="row">-->
+<!---->
+<!--                                    <div class= "col-lg-12">-->
+<!---->
+<!---->
+<!---->
+<!--                                       <div class="element">-->
+<!--                                        <input type="file" name="upload_file[]" id="upload_file1" required/>-->
+<!--                                    </div>-->
+<!---->
+<!--                                    <div id="moreImageUpload">-->
+<!--                                        <br>-->
+<!--                                    </div>-->
+<!---->
+<!--                                    <div class="clear">-->
+<!---->
+<!--                                    </div>-->
+<!---->
+<!--                                    <div id="moreImageUploadLink" style="display:none;margin-left: 10px;">-->
+<!--                                        <i class="fa fa-plus"></i>   <a href="javascript:void(0);" id="attachMore">Attach another file</a>-->
+<!--                                    </div>-->
+<!---->
+<!---->
+<!---->
+<!---->
+<!---->
+<!--                                    </div>-->
+<!---->
+<!--                                </div>-->
+<!---->
+<!--                            </div>-->
+<!---->
+<!--                            </div>-->
+<!---->
+<!--                        </div>-->
+<!--                    --><?php //}?>
 
 
                 </form>
