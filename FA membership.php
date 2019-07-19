@@ -43,7 +43,9 @@ function submitModal() {
         var sex =   document.getElementsByName('sex')[0].value +"</br>";
         var aDate  = document.getElementsByName('aYear')[0].value +" "+document.getElementsByName('aMonth')[0].options[ document.getElementsByName('aMonth')[0].value-1].text+" "+document.getElementsByName('aDay')[0].value+"</br>";
         var appDate  = document.getElementsByName('appYear')[0].value +" "+document.getElementsByName('appMonth')[0].options[ document.getElementsByName('appMonth')[0].value-1].text+" "+document.getElementsByName('appDay')[0].value+"</br>";
-        var empStat =    document.getElementsByName('empStat')[0].options[ document.getElementsByName('empStat')[0].value-1].text +"</br>";
+        var empStat =    $("input[name='empStat']:checked").parent('label').text() +"</br>";
+        var empType =    $("input[name='empType']:checked").parent('label').text() +"</br>";
+        var empStatus =    $("input[name='empStatus']:checked").parent('label').text() +"</br>";
         var hDate  = document.getElementsByName('hYear')[0].value +" "+document.getElementsByName('hMonth')[0].options[ document.getElementsByName('hMonth')[0].value-1].text+" "+document.getElementsByName('hDay')[0].value+"</br>";
         var honum =    document.getElementsByName('honum')[0].value +"</br>";
         var bunum =    document.getElementsByName('bunum')[0].value +"</br>";
@@ -76,7 +78,9 @@ function submitModal() {
         "<b>Member Since:</b> "+aDate+
         "<b>Date applied:</b> "+appDate+
         "<br><b style = 'font-size:20px;'>Employment Information</b>"+
-        "</br><b>Employment Status:</b> "+empStat+
+        "</br><b>Employment Category:</b> "+empStat+
+        "<b>Employment Type:</b> "+empType+
+        "<b>Employment Status:</b> "+empStatus+
         "<b>Hired Date:</b> "+hDate+
         "<br><b style = 'font-size:20px;'>Contact Information</b></br>"+
         "<b>Home Number:</b> "+honum+
@@ -714,30 +718,60 @@ $success = null;
                                         <div class="col-lg-2">
 
                                                 <label class="memfieldlabel">Employment Category</label>
-                                                <select class="form-control" name ="empStat" >
+                                                <div class="radio">
+                                                <label><input type="radio" name="empStat" value = 1 required <?php if(isset($_POST['empStat'])){
+                                                    if($_POST['empStat']==1)
+                                                        echo "checked";
 
-                                                    
-                                                        <option value = 1>Full-Time</option>
-                                                        <option value = 2>Part-Time</option>
-                                        
-                                                </select>
+                                                } ?>>Full Time</label>
+                                            </div>
+
+                                             <div class="radio">
+                                                <label><input type="radio" name="empStat" value = 2 required <?php if(isset($_POST['empStat'])){
+                                                    if($_POST['empStat']==2)
+                                                        echo "checked";
+
+                                                } ?>>Part Time</label>
+                                            </div>
                                                 <label class="memfieldlabel">Employment Type</label>
-                                                <select class="form-control" name ="empType" >
+                                                <div class="radio">
+                                                <label><input type="radio" name="empType" value = "Teaching" required <?php if(isset($_POST['empType'])){
+                                                    if($_POST['empType']=="Teaching")
+                                                        echo "checked";
 
-                                                    
-                                                        <option value = "Teaching">Teaching</option>
-                                                        <option value = "ASF">Academic Service Faculty</option>
-    
-                                                </select>
+                                                } ?>>Teaching</label>
+                                            </div>
+
+                                             <div class="radio">
+                                                <label><input type="radio" name="empType" value = "ASF" required <?php if(isset($_POST['empType'])){
+                                                    if($_POST['empType']=="ASF")
+                                                        echo "checked";
+
+                                                } ?>>Academic Service Faculty</label>
+                                            </div>
+
                                                 <label class="memfieldlabel">Employment Status</label>
-                                                <select class="form-control" name ="empStatus" >
+                                                <div class="radio">
+                                                <label><input type="radio" name="empStatus" value = "Permanent" required <?php if(isset($_POST['empStatus'])){
+                                                    if($_POST['empStatus']=="Permanent")
+                                                        echo "checked";
 
-                                                    
-                                                        <option value = "Permanent">Permanent</option>
-                                                        <option value = "Probationary">Probationary</option>
-                                                        <option value = "Contractual">Contractual</option>
-                                                        
-                                                </select>
+                                                } ?>>Permanent</label>
+                                                    </div>
+                                                <div class="radio">
+                                                <label><input type="radio" name="empStatus" value = "Probationary" required <?php if(isset($_POST['empStatus'])){
+                                                    if($_POST['empStatus']=="Probationary")
+                                                        echo "checked";
+
+                                                } ?>>Probationary</label>
+                                                    </div>
+                                                <div class="radio">
+                                                <label><input type="radio" name="empStatus" value = "Contractual" required <?php if(isset($_POST['empStatus'])){
+                                                    if($_POST['empStatus']=="Contractual")
+                                                        echo "checked";
+
+                                                } ?>>Contractual</label>
+                                                    </div>
 
                                         </div>
 
