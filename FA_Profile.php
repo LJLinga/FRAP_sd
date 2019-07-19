@@ -326,7 +326,6 @@ include 'FRAP_USER_SIDEBAR.php';
 
                         <h1 class="page-header">
                             Add Member
-
                         </h1>
                     
                     </div>
@@ -645,7 +644,7 @@ include 'FRAP_USER_SIDEBAR.php';
                                                     $selected = $rowMember['EMP_TYPE'];
                                                     ?>
                                                         <option value = 1 <?php if($selected ==1)echo "selected";?>>Full-Time</option>
-                                                        <option value = 2 <?php if($selected ==1)echo "selected";?>>Part-Time</option>
+                                                        <option value = 2 <?php if($selected ==2)echo "selected";?>>Part-Time</option>
                                         
                                                 </select>
                                                 <label class="memfieldlabel">Employment Type</label>

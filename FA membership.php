@@ -407,7 +407,7 @@ $success = null;
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
-                            Add Member 
+                            Add Member
 
                         </h1>
                     
@@ -727,7 +727,7 @@ $success = null;
                                             </div>
 
                                              <div class="radio">
-                                                <label><input type="radio" name="empStat" value = 2 required <?php if(isset($_POST['empStat'])){
+                                                <label><input type="radio" name="empStat" value = 2  <?php if(isset($_POST['empStat'])){
                                                     if($_POST['empStat']==2)
                                                         echo "checked";
 
@@ -743,7 +743,7 @@ $success = null;
                                             </div>
 
                                              <div class="radio">
-                                                <label><input type="radio" name="empType" value = "ASF" required <?php if(isset($_POST['empType'])){
+                                                <label><input type="radio" name="empType" value = "ASF"  <?php if(isset($_POST['empType'])){
                                                     if($_POST['empType']=="ASF")
                                                         echo "checked";
 
@@ -759,14 +759,14 @@ $success = null;
                                                 } ?>>Permanent</label>
                                                     </div>
                                                 <div class="radio">
-                                                <label><input type="radio" name="empStatus" value = "Probationary" required <?php if(isset($_POST['empStatus'])){
+                                                <label><input type="radio" name="empStatus" value = "Probationary"  <?php if(isset($_POST['empStatus'])){
                                                     if($_POST['empStatus']=="Probationary")
                                                         echo "checked";
 
                                                 } ?>>Probationary</label>
                                                     </div>
                                                 <div class="radio">
-                                                <label><input type="radio" name="empStatus" value = "Contractual" required <?php if(isset($_POST['empStatus'])){
+                                                <label><input type="radio" name="empStatus" value = "Contractual"  <?php if(isset($_POST['empStatus'])){
                                                     if($_POST['empStatus']=="Contractual")
                                                         echo "checked";
 

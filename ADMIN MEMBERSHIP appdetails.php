@@ -12,8 +12,7 @@ use PHPMailer\PHPMailer\Exception;
 
 
 
-    $queryMem = "SELECT M.MEMBER_ID, M.LASTNAME, M.FIRSTNAME, M.MIDDLENAME, C.STATUS, M.DATE_HIRED, D.DEPT_NAME, M.HOME_ADDRESS, 
-                 M.BUSINESS_ADDRESS, M.HOME_NUM, M.BUSINESS_NUM, M.BIRTHDATE, M.SEX,M.email
+    $queryMem = "SELECT *
                  FROM MEMBER AS M
                  JOIN REF_DEPARTMENT AS D
                  ON M.DEPT_ID = D.DEPT_ID
@@ -201,7 +200,15 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         </div>
 
                                         <div class="panel-body"><p>
-
+                                            <b>Employee Category:</b> 
+                                            <?php if($rowMem['EMP_TYPE']==1)
+                                                    echo "Full Time";
+                                                    else
+                                                        echo "Part Time";
+                                            ?> <p>
+                                            <b>Employee TYPE:</b> <?php echo $rowMem['TYPE']?> <p>
+                                            <b>Employee Status:</b> <?php echo $rowMem['EMP_STATUS']?> <p>
+                                            
                                             <b>Date of Hiring: </b><?php echo date('Y, M d', strtotime($rowMem['DATE_HIRED'])); ?> <p>
                                             <b>Department: </b><?php echo $rowMem['DEPT_NAME']; ?> <p>
 

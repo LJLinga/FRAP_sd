@@ -95,7 +95,9 @@
                                         </div>
 
                                         <div class="panel-body"><p>
-
+                                            <b>Employee Category: <?php echo $ans['EMP_TYPE']?></b> <p>
+                                            <b>Employee Category: <?php echo $ans['TYPE']?></b> <p>
+                                            <b>Employee Status: <?php echo $ans['EMP_STATUS']?></b> <p>
                                             <b>Date of Hiring: <?php echo $ans['DATE_HIRED']?></b> <p>
                                             <b>Department: <?php echo $ans['DEPT_NAME']?></b> <p>
 
