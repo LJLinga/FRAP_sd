@@ -407,7 +407,7 @@ $success = null;
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
-                            Add Member
+                            Register Account
 
                         </h1>
                     

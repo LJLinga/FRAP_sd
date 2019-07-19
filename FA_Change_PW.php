@@ -54,7 +54,9 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
     if (isset($_POST['submit'])) {
 
             $query = "UPDATE employee SET pass_word = password('{$_POST['pass']}'), FIRST_CHANGE_PW = 2 WHERE MEMBER_ID = {$_SESSION['idnum']}";
+            $queryMP = "UPDATE member_account SET password = password('{$_POST['pass']}'), FIRST_CHANGE_PW = 2 WHERE MEMBER_ID = {$_SESSION['idnum']}";
             mysqli_query($dbc,$query);
+            mysqli_query($dbc,$queryMP);
             session_destroy();
             header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
     
@@ -108,7 +110,7 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
                         
                         <!--Insert success page--> 
                         
-                        <form method="POST" action="FA_Change_PW.php" onSubmit="return checkform()">
+                        <form method="POST" action="FA_Change_PW.php" onSubmit="return checkform()" id ="my_form">
 
                             <div class="panel panel-green" name = "personalInfo">
 
@@ -249,12 +251,9 @@ $_SESSION['currentFolderID']="1HyfFzGW48DJfK26lN_cYtKBhRCrQJbso";
         document.getElementById("submit").disabled = false;
               
     $('#submit').click (function (e) {
-        e.preventDefault(); //will stop the link href to call the blog page
+        //will stop the link href to call the blog page
         document.getElementById("chk").innerHTML = '<font  color = "green"><b>Password has been changed </b></font>';
-        setTimeout(function () {
-
-            window.location.href = "index.php"; //will redirect to your blog page (an ex: blog.html)
-            }, 2000); //will call the function after 2 secs.
+         //will call the function after 2 secs.
 
 });
          
