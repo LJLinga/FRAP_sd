@@ -194,7 +194,7 @@ if(isset($_GET['secId'])){
             }
         }else{
             echo 'THIS->>>'.$currentStepId.','.$firstAuthorId.','.$userId;
-            //header("Location:".$crud->redirectToPreviousWithAlert("SECTION_NO_PERMISSIONS"));
+            header("Location:".$crud->redirectToPreviousWithAlert("SECTION_NO_PERMISSIONS"));
         }
 
         $edit = '2';
@@ -1076,7 +1076,7 @@ include 'EDMS_SIDEBAR.php';
                     <strong class="modal-title">Reference Document</strong>
                 </div>
                 <div class="modal-body">
-                    <table class="table table-striped table-sm" id="tblAddReferences">
+                    <table class="table table-striped table-sm table-responsive table-condense" cellspacing="0" width="100%" id="tblAddReferences">
                         <thead>
                         <tr>
                             <th> Title </th>
@@ -1147,8 +1147,6 @@ include 'EDMS_SIDEBAR.php';
             $(".dataTables_filter").hide();
         });
 
-        let edit  = "<?php echo $edit;?>";
-
         let tableAddRef = $('#tblAddReferences').DataTable( {
             bSort: true,
             bLengthChange: false,
@@ -1162,8 +1160,7 @@ include 'EDMS_SIDEBAR.php';
                 "dataSrc": '',
                 "data": {
                     requestType: 'MANUAL_REFERENCES',
-                    sectionId: "<?php echo $sectionId;?>",
-                    edit: edit
+                    sectionId: "<?php echo $sectionId;?>"
                 },
             },
             columns: [
@@ -1198,7 +1195,7 @@ include 'EDMS_SIDEBAR.php';
                 "data": {
                     requestType: 'ADDED_MANUAL_REFERENCES',
                     sectionId: "<?php echo $sectionId;?>",
-                    edit: edit
+                    write: "<?php echo $write;?>"
                 },
             },
             columns: [

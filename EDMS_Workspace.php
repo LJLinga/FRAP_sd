@@ -220,9 +220,9 @@ $groups = $crud->getUserGroups($userId);
                                         <th>Category</th>
                                         <th>Version</th>
                                         <th>Submitted by</th>
-                                        <th>Submitted on</th>
                                         <th>Status</th>
-                                        <th>Last modified on</th>
+                                        <th>Archived by</th>
+                                        <th>Archived on</th>
                                         <th>Action</th>
                                     </tr>
                                     </thead>
@@ -539,9 +539,9 @@ $groups = $crud->getUserGroups($userId);
             { data: "type" },
             { data: "vers"},
             { data: "submitted_by"},
-            { data: "submitted_on"},
             { data: "status"},
-            { data: "timestamp"},
+            { data: "archived_by"},
+            { data: "archived_on"},
             { data: "actions"}
         ],
         initComplete: function () {
@@ -579,6 +579,7 @@ $groups = $crud->getUserGroups($userId);
         table.ajax.reload(null,false);
         table2.ajax.reload(null,false);
         table3.ajax.reload(null,false);
+        table4.ajax.reload(null,false);
     },5000)
 </script>
 <?php include_once 'GLOBAL_FOOTER.php';?>

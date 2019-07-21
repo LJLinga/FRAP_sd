@@ -292,11 +292,11 @@ include 'EDMS_SIDEBAR.php';
                         </div>
                         <table id="tblHistory" class="table table-condensed table-sm table-striped" cellspacing="0" width="100%">
                             <thead>
-                            <th>Timestamp </th>
+                            <th>Timestamp</th>
                             <th>Ver. No.</th>
-                            <th>User </th>
-                            <th>Action </th>
-                            <th></th>
+                            <th>User</th>
+                            <th>Description</th>
+                            <th>Action</th>
                             </thead>
                             <tbody>
                             <?php
@@ -443,22 +443,8 @@ include 'EDMS_SIDEBAR.php';
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <th>Status</th>
-                                                                                        <?php
-
-                                                                                        if($statusId == 3){
-                                                                                            $labelCol = 'success';
-                                                                                        }else if($statusId == 4){
-                                                                                            $labelCol = 'danger';
-                                                                                        }else if($statusId == 2){
-                                                                                            $labelCol = 'primary';
-                                                                                        }else if($statusId == 1){
-                                                                                            $labelCol = 'info';
-                                                                                        }
-                                                                                        ?>
                                                                                         <td>
-                                                                                            <span class="label label-<?php echo $labelCol;?>">
-                                                                                                <?php echo $statusName;?>
-                                                                                            </span>
+                                                                                            <?php echo $crud->coloriseStatus($row['statusId'])?>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <?php if($row['statusedById'] != ''){?>
@@ -475,17 +461,8 @@ include 'EDMS_SIDEBAR.php';
                                                                                     <?php if($row['lifecycleStatedById'] != ''){ ?>
                                                                                         <tr>
                                                                                             <th>State</th>
-                                                                                            <?php
-
-                                                                                            if($row['lifecycleStateId'] == 1){
-                                                                                                $labelCol = 'success';
-                                                                                            }else if($statusId == 2){
-                                                                                                $labelCol = 'warning';
-                                                                                            }                                    ?>
                                                                                             <td>
-                                                                                                <span class="label label-<?php echo $labelCol;?>">
-                                                                                                    <?php echo $crud->lifecycleString($row['lifecycleStateId']);?>
-                                                                                                </span>
+                                                                                                <?php echo $crud->coloriseCycle($row['lifecycleStateId']);?>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
@@ -544,8 +521,10 @@ include 'EDMS_SIDEBAR.php';
                                                     </div>
                                                 </div>
                                             <?php }?>
-                                            <?php if($row['audit_action_type'] == 'UPDATED' || $row['audit_action_type'] == 'CREATED') { ?>
+                                            <?php if($row['audit_action_type'] != 'LOCKED') { ?>
                                                 <a class="btn btn-sm" data-toggle="modal" data-target="#modalRevert<?php echo $row['versionId'];?>"><i class="fa fa-refresh"></i></a>
+                                                <a class="btn btn-sm fa fa-download"  href="<?php echo $filePath;?>" download="<?php echo $row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']);?>"></a>
+
                                                 <div id="modalRevert<?php echo $row['versionId'];?>" class="modal fade" role="dialog">
                                                     <div class="modal-dialog modal-lg">
                                                         <form method="POST" action="">
@@ -717,8 +696,7 @@ include 'EDMS_SIDEBAR.php';
                                                     </div>
                                                 </div>
                                             <?php } ?>
-                                            <a class="btn btn-sm fa fa-download"  href="<?php echo $filePath;?>" download="<?php echo $row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']);?>"></a>
-                                        </td>
+                                            </td>
                                     </tr>
                                 <?php }
                             }?>
@@ -767,22 +745,8 @@ include 'EDMS_SIDEBAR.php';
                             </tr>
                             <tr>
                                 <th>Status</th>
-                                <?php
-
-                                if($statusId == 3){
-                                    $labelCol = 'success';
-                                }else if($statusId == 4){
-                                    $labelCol = 'danger';
-                                }else if($statusId == 2){
-                                    $labelCol = 'primary';
-                                }else if($statusId == 1){
-                                    $labelCol = 'info';
-                                }
-                                ?>
                                 <td>
-                                    <span class="label label-<?php echo $labelCol;?>">
-                                        <?php echo $statusName;?>
-                                    </span>
+                                    <?php echo $crud->coloriseStatus($statusId);?>
                                 </td>
                             </tr>
                             <?php if($statusUpdaterName != ''){?>
@@ -799,17 +763,8 @@ include 'EDMS_SIDEBAR.php';
                             <?php if($stateUpdaterName != '' && $stateId == '2'){ ?>
                                 <tr>
                                     <th>State</th>
-                                    <?php
-
-                                    if($statusId == 1){
-                                        $labelCol = 'success';
-                                    }else if($statusId == 2){
-                                        $labelCol = 'warning';
-                                    }                                    ?>
                                     <td>
-                                    <span class="label label-<?php echo $labelCol;?>">
-                                        <?php echo $stateName;?>
-                                    </span>
+                                    <?php echo $crud->coloriseCycle($stateId); ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -867,32 +822,22 @@ include 'EDMS_SIDEBAR.php';
                     <div class="panel-body" style="max-height: 20rem; overflow-y: scroll;">
                         <b><?php echo $remarkedByName;?></b> on <i><?php echo date("F j, Y g:i:s A ", strtotime($remarkedOn));?></i><br>
                         <?php
-                        if($remarkType == 'STATUSED') {
-                            if($statusId ==  1) { $labelCol = 'info'; }
-                            else if($statusId ==  2) { $labelCol = 'primary'; }
-                            else if($statusId  ==  3) { $labelCol = 'success'; }
-                            else if($statusId  ==  4) { $labelCol = 'danger'; } ?>
-                            <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->assignStatusString($statusId);?></span> status assigned to the document.
-                        <?php }else if($remarkType == 'MOVED') {
-                            $labelCol = 'primary'?>
-                            <span class="label label-<?php echo $labelCol;?>">MOVED</span> the document to <strong><?php echo $stepName ;?></strong>.
-                        <?php }else if($remarkType == 'CYCLED'){
-                            if($row['lifecycleStateId'] ==  1) $labelCol = 'info';
-                            if($row['lifecycleStateId'] ==  2) $labelCol = 'warning';?>
-                            <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->lifecycleString($stateId);?></span> the document.
-                        <?php }else if($remarkType == 'UPDATED' || $remarkType == 'CREATED') {
-                            $labelCol = 'success'?>
-                            <span class="label label-<?php echo $labelCol;?>"><?php echo $remarkType;?></span> the document.<br>
+                        if($remarkType == 'STATUSED') {?>
+                            <?php echo $crud->coloriseStatus($statusId);?> status assigned to the document.<br>
                             <span class="label label-default">CHECKED IN</span> the document.
-                        <?php }else if($remarkType == 'STATUSED/MOVED') {
-                            $labelCol = 'primary'?>
-                            <span class="label label-<?php echo $labelCol;?>">MOVED</span> the document to <strong><?php echo $stepName ;?></strong>.<br>
-                            <?php if($statusId  ==  1) { $labelCol = 'info'; }
-                            else if($statusId  ==  2) { $labelCol = 'primary'; }
-                            else if($statusId  ==  3) { $labelCol = 'success'; }
-                            else if($statusId  ==  4) { $labelCol = 'danger'; }
-                            ?>
-                            <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->assignStatusString($statusId);?></span> status assigned to the document.
+                        <?php }else if($remarkType == 'MOVED') { ?>
+                            <span class="label label-primary">MOVED</span> the document to <strong><?php echo $stepName ;?></strong>.<br>
+                            <span class="label label-default">CHECKED IN</span> the document.
+                        <?php }else if($remarkType == 'CYCLED'){ ?>
+                            <?php echo $crud->coloriseCycle($stateId);?> the document.<br>
+                            <span class="label label-default">CHECKED IN</span> the document.
+                        <?php }else if($remarkType == 'UPDATED' || $remarkType == 'CREATED') { ?>
+                            <span class="label label-success"><?php echo $remarkType;?></span> the document.<br>
+                            <span class="label label-default">CHECKED IN</span> the document.
+                        <?php }else if($remarkType == 'STATUSED/MOVED') { ?>
+                            <span class="label label-primary">MOVED</span> the document to <strong><?php echo $stepName ;?></strong>.<br>
+                            <?php echo $crud->coloriseStatus($statusId);?> status assigned to the document.<br>
+                            <span class="label label-default">CHECKED IN</span> the document.
                         <?php }
                         ?>
                         <br><br>
@@ -909,32 +854,22 @@ include 'EDMS_SIDEBAR.php';
                                 <div class="modal-body">
                                     <b><?php echo $remarkedByName;?></b> on <i><?php echo date("F j, Y g:i:s A ", strtotime($remarkedOn));?></i><br>
                                     <?php
-                                    if($remarkType == 'STATUSED') {
-                                        if($statusId ==  1) { $labelCol = 'info'; }
-                                        else if($statusId ==  2) { $labelCol = 'primary'; }
-                                        else if($statusId  ==  3) { $labelCol = 'success'; }
-                                        else if($statusId  ==  4) { $labelCol = 'danger'; } ?>
-                                        <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->assignStatusString($statusId);?></span> status assigned to the document.
-                                    <?php }else if($remarkType == 'MOVED') {
-                                        $labelCol = 'primary'?>
-                                        <span class="label label-<?php echo $labelCol;?>">MOVED</span> the document to <strong><?php echo $stepName ;?></strong>.
-                                    <?php }else if($remarkType == 'CYCLED'){
-                                        if($row['lifecycleStateId'] ==  1) $labelCol = 'info';
-                                        if($row['lifecycleStateId'] ==  2) $labelCol = 'warning';?>
-                                        <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->lifecycleString($stateId);?></span> the document.
-                                    <?php }else if($remarkType == 'UPDATED' || $remarkType == 'CREATED') {
-                                        $labelCol = 'success'?>
-                                        <span class="label label-<?php echo $labelCol;?>"><?php echo $remarkType;?></span> the document.<br>
+                                    if($remarkType == 'STATUSED') {?>
+                                        <?php echo $crud->coloriseStatus($statusId);?> status assigned to the document.<br>
                                         <span class="label label-default">CHECKED IN</span> the document.
-                                    <?php }else if($remarkType == 'STATUSED/MOVED') {
-                                        $labelCol = 'primary'?>
-                                        <span class="label label-<?php echo $labelCol;?>">MOVED</span> the document to <strong><?php echo $stepName ;?></strong>.<br>
-                                        <?php if($statusId  ==  1) { $labelCol = 'info'; }
-                                        else if($statusId  ==  2) { $labelCol = 'primary'; }
-                                        else if($statusId  ==  3) { $labelCol = 'success'; }
-                                        else if($statusId  ==  4) { $labelCol = 'danger'; }
-                                        ?>
-                                        <span class="label label-<?php echo $labelCol;?>"><?php echo $crud->assignStatusString($statusId);?></span> status assigned to the document.
+                                    <?php }else if($remarkType == 'MOVED') { ?>
+                                        <span class="label label-primary">MOVED</span> the document to <strong><?php echo $stepName ;?></strong>.<br>
+                                        <span class="label label-default">CHECKED IN</span> the document.
+                                    <?php }else if($remarkType == 'CYCLED'){ ?>
+                                        <?php echo $crud->coloriseCycle($stateId);?> the document.<br>
+                                        <span class="label label-default">CHECKED IN</span> the document.
+                                    <?php }else if($remarkType == 'UPDATED' || $remarkType == 'CREATED') { ?>
+                                        <span class="label label-success"><?php echo $remarkType;?></span> the document.<br>
+                                        <span class="label label-default">CHECKED IN</span> the document.
+                                    <?php }else if($remarkType == 'STATUSED/MOVED') { ?>
+                                        <span class="label label-primary">MOVED</span> the document to <strong><?php echo $stepName ;?></strong>.<br>
+                                        <?php echo $crud->coloriseStatus($statusId);?> status assigned to the document.<br>
+                                        <span class="label label-default">CHECKED IN</span> the document.
                                     <?php }
                                     ?>
                                 </div>

@@ -125,15 +125,11 @@ if(isset($_POST['requestType'])){
 
     }else if ($_POST['requestType'] == 'MANUAL_REFERENCES'){
         $sectionId = $_POST['sectionId'];
-        $edit = $_POST['edit'];
 
         $rows = $crud->getManualReferencableDocuments($sectionId);
         $data = [];
         foreach ((array) $rows as $key => $row) {
-            $buttons = '';
-            if($edit == '1') {
-                $buttons = '<button type="button" class="btn btn-success btn-sm fa fa-plus add_doc_ref" onclick="addRef(' . $row['versionId'] . ')" data-toggle="tooltip" title="Add"></button>';
-            }
+            $buttons = '<button type="button" class="btn btn-success btn-sm fa fa-plus add_doc_ref" onclick="addRef(' . $row['versionId'] . ')" data-toggle="tooltip" title="Add"></button>';
             //$buttons = '<a class="btn btn-info" data-toggle="tooltip" title="View document" name="documentId" href="EDMS_ViewDocument.php?docId='.$row['documentId'].'"><i class="fa fa-eye"></i></a>';
             $buttons .= ' <a class="btn btn-secondary btn-sm fa fa-download" data-toggle="tooltip" title="Download document" href="'.$row['filePath'].'" download="'.$row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']).'"></a>';
 
@@ -165,7 +161,7 @@ if(isset($_POST['requestType'])){
         exit;
     }else if ($_POST['requestType'] == 'ADDED_MANUAL_REFERENCES'){
         $sectionId = $_POST['sectionId'];
-        $edit = $_POST['edit'];
+        $write = $_POST['write'];
 
         $rows = $crud->getData("SELECT ref.*, dv.*, dt.type  FROM section_ref_versions ref
                                         JOIN doc_versions dv on ref.versionId = dv.versionId
@@ -175,7 +171,7 @@ if(isset($_POST['requestType'])){
         if(!empty($rows)){
             foreach((array) $rows AS $key => $row){
                 $buttons = '';
-                if($edit == '1'){
+                if($write == '2'){
                     $buttons = '<button type="button" class="btn btn-sm btn-danger fa fa-trash" data-toggle="tooltip" onclick="removeRef('.$row['versionId'].')" title="Remove"></button>';
                 }
                //$buttons = '<a class="btn btn-info" data-toggle="tooltip" title="View document" name="documentId" href="EDMS_ViewDocument.php?docId='.$row['documentId'].'"><i class="fa fa-eye"></i></a>';
@@ -317,9 +313,10 @@ if(isset($_POST['requestType'])){
     }else if ($_POST['requestType'] == 'WORKSPACE_ARCHIVED'){
 
         $query = "SELECT d.documentId, d.statusId, pr.processName, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName,
-                d.filePath, d.title, d.versionNo, d.timeCreated, d.lastUpdated,
+                d.filePath, d.title, d.versionNo, d.timeCreated, d.lastUpdated, d.lifecycleStatedOn,
                 s.stepNo, s.stepName, t.type, pr.processName,
-                (SELECT CONCAT(e.FIRSTNAME,', ',e.LASTNAME) FROM employee e2 WHERE e2.EMP_ID = d.firstAuthorId) AS firstAuthorName 
+                (SELECT CONCAT(e2.FIRSTNAME,', ',e2.LASTNAME) FROM employee e2 WHERE e2.EMP_ID = d.firstAuthorId) AS firstAuthorName,
+                (SELECT CONCAT(e3.FIRSTNAME,', ',e3.LASTNAME) FROM employee e3 WHERE e3.EMP_ID = d.lifecycleStatedById) AS lifecycleStatedByName
                 FROM documents d 
                 LEFT JOIN employee e ON e.EMP_ID = d.authorId
                 JOIN doc_type t ON t.id = d.typeId
@@ -330,7 +327,7 @@ if(isset($_POST['requestType'])){
                 AND d.stepId IN (SELECT s.id FROM user_groups ug
                                                     JOIN groups g ON ug.groupId = g.id
                                                     JOIN steps s ON g.id = s.groupId
-                                                    WHERE ug.userId = '$userId' AND (s.gcycle = 2)
+                                                    WHERE ug.userId = '$userId' AND s.gcycle = 2
                                                     OR (s.cycle = 2 AND d.firstAuthorId = '$userId'))
                 ORDER BY d.lastUpdated DESC;";
 
@@ -347,7 +344,8 @@ if(isset($_POST['requestType'])){
                 'submitted_by' => $row['firstAuthorName'],
                 'submitted_on' => date("F j, Y g:i:s A ", strtotime($row['timeCreated'])),
                 'status' => $crud->coloriseStatus($row['statusId']),
-                'timestamp' => date("F j, Y g:i:s A ", strtotime($row['lastUpdated'])),
+                'archived_by' => $row['lifecycleStatedByName'],
+                'archived_on' => date("F j, Y g:i:s A ", strtotime($row['lifecycleStatedOn'])),
                 'actions' => $buttons
             );
 
