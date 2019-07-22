@@ -521,10 +521,8 @@ include 'EDMS_SIDEBAR.php';
                                                     </div>
                                                 </div>
                                             <?php }?>
-                                            <?php if($row['audit_action_type'] != 'LOCKED') { ?>
+                                            <?php if($row['audit_action_type'] != 'LOCKED' && $write == '2') { ?>
                                                 <a class="btn btn-sm" data-toggle="modal" data-target="#modalRevert<?php echo $row['versionId'];?>"><i class="fa fa-refresh"></i></a>
-                                                <a class="btn btn-sm fa fa-download"  href="<?php echo $filePath;?>" download="<?php echo $row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']);?>"></a>
-
                                                 <div id="modalRevert<?php echo $row['versionId'];?>" class="modal fade" role="dialog">
                                                     <div class="modal-dialog modal-lg">
                                                         <form method="POST" action="">
@@ -564,22 +562,8 @@ include 'EDMS_SIDEBAR.php';
                                                                                         </tr>
                                                                                         <tr>
                                                                                             <th>Status</th>
-                                                                                            <?php
-
-                                                                                            if($statusId == 3){
-                                                                                                $labelCol = 'success';
-                                                                                            }else if($statusId == 4){
-                                                                                                $labelCol = 'danger';
-                                                                                            }else if($statusId == 2){
-                                                                                                $labelCol = 'primary';
-                                                                                            }else if($statusId == 1){
-                                                                                                $labelCol = 'info';
-                                                                                            }
-                                                                                            ?>
                                                                                             <td>
-                                                                                            <span class="label label-<?php echo $labelCol;?>">
-                                                                                                <?php echo $statusName;?>
-                                                                                            </span>
+                                                                                            <?php echo $crud->coloriseStatus($row['statusId']) ;?>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <?php if($row['statusedById'] != ''){?>
@@ -596,17 +580,8 @@ include 'EDMS_SIDEBAR.php';
                                                                                         <?php if($row['lifecycleStatedById'] != ''){ ?>
                                                                                             <tr>
                                                                                                 <th>State</th>
-                                                                                                <?php
-
-                                                                                                if($row['lifecycleStateId'] == 1){
-                                                                                                    $labelCol = 'success';
-                                                                                                }else if($statusId == 2){
-                                                                                                    $labelCol = 'warning';
-                                                                                                }                                    ?>
                                                                                                 <td>
-                                                                                                <span class="label label-<?php echo $labelCol;?>">
-                                                                                                    <?php echo $crud->lifecycleString($row['lifecycleStateId']);?>
-                                                                                                </span>
+                                                                                                <?php echo $crud->coloriseCycle($row['lifecycleStateId']);?>
                                                                                                 </td>
                                                                                             </tr>
                                                                                             <tr>
@@ -659,6 +634,7 @@ include 'EDMS_SIDEBAR.php';
                                                                                 <label for=".radio"> Revert to old version as Version </label><br>
                                                                                 <?php
                                                                                 $trueNo = explode(" ",$versionNo);
+                                                                                $rowNo = explode(" ",$row['versionNo'])[0];
                                                                                 $tempVerNo = explode(".", $trueNo[0]);
                                                                                 if($tempVerNo){
                                                                                     $largeNum = $tempVerNo[0];
@@ -669,10 +645,10 @@ include 'EDMS_SIDEBAR.php';
                                                                                 }
                                                                                 ?>
                                                                                 <div class="radio">
-                                                                                    <label><input type="radio" name="newVersionNo" value="<?php echo $largeNum.'.'.(floatval($smallNum) + 1); ?> (rev. <?php echo $trueNo[0];?>)" checked><?php echo $largeNum.'.'.(floatval($smallNum) + 1); ?> (rev. <?php echo $trueNo[0];?>) (Minor Update)</label>
+                                                                                    <label><input type="radio" name="newVersionNo" value="<?php echo $largeNum.'.'.(floatval($smallNum) + 1); ?> (rev. <?php echo $rowNo;?>)" checked><?php echo $largeNum.'.'.(floatval($smallNum) + 1); ?> (rev. <?php echo $rowNo;?>) (Minor Update)</label>
                                                                                 </div><br>
                                                                                 <div class="radio">
-                                                                                    <label><input type="radio" name="newVersionNo" value="<?php echo (floatval($largeNum) + 1).'.0';?> (rev. <?php echo $trueNo[0];?>)"><?php echo (floatval($largeNum) + 1).'.0'; ?> (rev. <?php echo $trueNo[0];?>) (Major Update)</label>
+                                                                                    <label><input type="radio" name="newVersionNo" value="<?php echo (floatval($largeNum) + 1).'.0';?> (rev. <?php echo $rowNo;?>)"><?php echo (floatval($largeNum) + 1).'.0'; ?> (rev. <?php echo $rowNo;?>) (Major Update)</label>
                                                                                 </div>
                                                                             </div><br><br>
                                                                             <div class="form-group">
@@ -696,7 +672,10 @@ include 'EDMS_SIDEBAR.php';
                                                     </div>
                                                 </div>
                                             <?php } ?>
-                                            </td>
+                                            <?php if($row['audit_action_type'] != 'LOCKED') { ?>
+                                            <a class="btn btn-sm fa fa-download"  href="<?php echo $filePath;?>" download="<?php echo $row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']);?>"></a>
+                                            <?php } ?>
+                                        </td>
                                     </tr>
                                 <?php }
                             }?>
