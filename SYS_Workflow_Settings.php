@@ -16,8 +16,6 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 $userId = $_SESSION['idnum'];
 
 
-
-
 if(isset($_POST['btnUpdateStep'])){
     $processId = $_POST['processId'];
     $stepId = $_POST['stepId'];
@@ -65,10 +63,10 @@ if(isset($_POST['btnAddGroup'])){
     if (isset($_POST['cycle'])) {
         $cycle = 2;
     }
-    if ($crud->execute("INSERT INTO `process_groups` (`groupId`,`processId`, `write`, `cycle`,`route`) VALUES ('$groupId','$processId','$write','$cycle','$route');")) {
-        echo 'success2';
-    }else{
-        echo 'Database error.';
+    try{
+        $crud->execute("UPDATE process SET groupId='$groupId', `write`='$write', `route`='$route', `cycle`='$cycle' WHERE id='$processId'");
+    }catch (Exception $e){
+        $error = 'DATABASE_ERROR';
     }
     header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflow_Settings.php?id=".$processId);
 }
@@ -98,8 +96,7 @@ if (isset($_POST['btnUpdateGroup'])) {
 
 if(isset($_POST['btnDeleteGroup'])){
     $processId = $_POST['processId'];
-    $groupId = $_POST['groupId'];
-    if($crud->execute("DELETE FROM process_groups WHERE groupId = '$groupId' AND processId = '$processId';")){
+    if($crud->removeProcessGroup($processId)){
         echo 'success3';
     }else{
         echo 'Database error.';
@@ -109,12 +106,18 @@ if(isset($_POST['btnDeleteGroup'])){
 
 if(isset($_GET['id'])){
     $processId = $_GET['id'];
-    $rows = $crud->getData("SELECT processName, editableId, processForId FROM process WHERE id = '$processId' LIMIT 1");
+    $rows = $crud->getData("SELECT p.*, g.id AS groupId, g.groupDesc, g.groupName FROM process p LEFT JOIN groups g ON p.groupId = g.id  WHERE p.id = '$processId' LIMIT 1");
     if(!empty($rows)){
         foreach((array)$rows AS $key => $row){
             $processName = $row['processName'];
             $editableId = $row['editableId'];
             $processForId = $row['processForId'];
+            $groupId = $row['groupId'];
+            $groupName = $row['groupName'];
+            $groupDesc = $row['groupDesc'];
+            $route= $row['route'];
+            $write = $row['write'];
+            $cycle = $row['cycle'];
         }
     }else{
         header("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/SYS_Workflows.php");
@@ -252,24 +255,23 @@ include 'SYS_SIDEBAR.php';
                 <div class="panel panel-info">
                     <div class="panel-body">
                         <small>
-                            <strong>Process Groups</strong>: Groups that are added directly to the process, besides being able to view the content, will be able to interact with the content with the given process-wide permissions.
-                            However, if there are step specific permissions assigned to the group, these step-wide permissions will be prioritized.
+                            <strong>Process Admin Group</strong>: A group that is assigned directly to the process will be able to interact with the content with the given process-wide permissions.
+                            However, if there are step specific permissions assigned to the group in a particular step, these step-wide permissions will be prioritized. Also, in special workflows,
+                            process admins are the ones capable of using the controls beyond the extent of the process configurability.
                         </small>
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="form-inline">
-                            <b>Group Permissions</b>
-                            <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modalAddGroup">Add Group to Process</button>
+                            <b>Process Admin Group</b>
+                            <?php if($groupId == '') { ?>
+                                <button class="btn btn-primary" type = "button" data-toggle="modal" data-target="#modalAddGroup" > Assign a group </button >
+                            <?php } ?>
                         </div>
                     </div>
                     <div class="panel-body">
-                        <?php
-                        $rows = $crud->getWorkflowGroups($processId);
-
-
-                        if(!empty($rows)) {?>
+                        <?php if($groupId != '') {?>
                             <table class="table table-responsive table-striped" align="center" id="dataTable">
                                 <thead>
                                 <tr>
@@ -282,30 +284,27 @@ include 'SYS_SIDEBAR.php';
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php
-                                foreach ((array)$rows as $key => $row) {
-                                    ?>
                                     <tr>
                                         <td>
-                                            <?php echo $row['groupName'];?>
+                                            <?php echo $groupName;?>
                                         </td>
                                         <td>
-                                            <?php echo $row['groupDesc'];?>
+                                            <?php echo $groupDesc;?>
                                         </td>
                                         <td>
-                                            <?php echo $crud->permissionString($row['write']);?>
+                                            <?php echo $crud->permissionString($write);?>
                                         </td>
                                         <td>
-                                            <?php echo $crud->permissionString($row['cycle']); ?>
+                                            <?php echo $crud->permissionString($cycle); ?>
                                         </td>
                                         <td>
-                                            <?php echo $crud->permissionString($row['route']);?>
+                                            <?php echo $crud->permissionString($route);?>
                                         </td>
                                         <td>
                                             <form action="" method="POST">
-                                                <input type="hidden" name="groupId" value="<?php echo $row['id'];?>"/>
+                                                <input type="hidden" name="groupId" value="<?php echo $groupId;?>"/>
                                                 <input type="hidden" name="processId" value="<?php echo $processId;?>"/>
-                                                <button type="button" data-toggle="modal" data-target="#modalEditGroup<?php echo $row['id'];?>"
+                                                <button type="button" data-toggle="modal" data-target="#modalEditGroup"
                                                         class="btn btn-default"><i class="fa fa-edit"></i>Group
                                                 </button>
                                                 <button type="submit" class="btn btn-danger" name="btnDeleteGroup"><i class="fa fa-trash"></i> Delete</button>
@@ -313,10 +312,10 @@ include 'SYS_SIDEBAR.php';
                                         </td>
                                     </tr>
 
-                                    <div class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog" id="modalEditGroup<?php echo $row['id'];?>">
+                                    <div class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog" id="modalEditGroup">
                                         <div class="modal-dialog">
                                             <form method="POST" action="">
-                                                <input type="hidden" name="groupId" value="<?php echo $row['id'];?>"/>
+                                                <input type="hidden" name="groupId" value="<?php echo $groupId;?>"/>
                                                 <input type="hidden" name="processId" value="<?php echo $processId;?>"/>
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -351,7 +350,6 @@ include 'SYS_SIDEBAR.php';
                                             </form>
                                         </div>
                                     </div>
-                                <?php } ?>
                                 </tbody>
                             </table>
                             <?php
@@ -417,8 +415,7 @@ include 'SYS_SIDEBAR.php';
                         <select class="form-control" name="groupId">
                             <?php
 
-                            $rows = $crud->getData("SELECT g.id, g.groupName, g.groupDesc FROM groups g
-                                                            WHERE g.id NOT IN (SELECT pg.groupId FROM process_groups pg WHERE pg.processId = '$processId');");
+                            $rows = $crud->getData("SELECT g.id, g.groupName, g.groupDesc FROM groups g;");
                             if(!empty($rows)){
                                 foreach((array)$rows AS $key => $row){
                                     ?>

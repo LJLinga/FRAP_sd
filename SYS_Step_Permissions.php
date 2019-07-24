@@ -187,15 +187,15 @@ include 'SYS_SIDEBAR.php';
                                                 <div class="modal-body">
                                                     <div class="form-group">
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" name="write" value="true" <?php if($groupWrite == '2') { echo 'checked'; } ?>>
+                                                            <input type="checkbox" class="form-check-input" name="write" value="true" <?php if($write == '2') { echo 'checked'; } ?>>
                                                             <label class="form-check-label" >Write (Edit content) </label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" name="cycle" value="true" <?php if($groupCycle == '2') { echo 'checked'; } ?>>
+                                                            <input type="checkbox" class="form-check-input" name="cycle" value="true" <?php if($cycle == '2') { echo 'checked'; } ?>>
                                                             <label class="form-check-label" >Cycle (Archive/Restore) </label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" name="route" value="true" <?php if($groupRoute == '2') { echo 'checked'; } ?>>
+                                                            <input type="checkbox" class="form-check-input" name="route" value="true" <?php if($route == '2') { echo 'checked'; } ?>>
                                                             <label class="form-check-label" >Route (Move to step, approve, reject) </label>
                                                         </div>
                                                     </div>

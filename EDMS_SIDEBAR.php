@@ -22,8 +22,7 @@
 <!--            </li>-->
 
             <?php
-            $rows = $crud->doesUserHaveWorkflow($_SESSION['idnum'],7);
-            if(!empty($rows)){?>
+            if($crud->doesUserHaveWorkflow($_SESSION['idnum'],7)){?>
                 <li>
                     <a href="MANUAL_ManualRevisions.php"><i class="fa fa-fw fa-pencil"></i> Manual Revisions</a>
                 </li>

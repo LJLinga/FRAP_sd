@@ -864,7 +864,7 @@ include 'EDMS_SIDEBAR.php';
                             <?php if($availability == '1'){ ?>
                                 <?php if($write=='2' || $route =='2' || $cycle == '2'){?>
                                     <form method="POST" action="">
-                                        <button class="btn btn-primary" type="submit" name="btnLock" value="<?php echo $documentId;?>" style="text-align: left; width:100%;">Check Out for Processing</button>
+                                        <button class="btn btn-primary" type="submit" name="btnLock" value="<?php echo $documentId;?>" style="text-align: left; width:100%;"><i class="fa fa-lock"></i> Check Out for Processing</button>
                                     </form>
                                 <?php }  ?>
                             <?php } ?>
@@ -874,7 +874,7 @@ include 'EDMS_SIDEBAR.php';
                                     if (!empty($rows)) {
                                         foreach ((array)$rows as $key => $row) {
                                             $btnClass = 'btn btn-primary';
-                                            $btnIcon = '';
+                                            $btnIcon = 'fa fa-arrow-right';
                                             if($row['assignStatus'] == 3){
                                                 $btnClass = 'btn btn-success';
                                                 $btnIcon = 'fa fa-thumbs-up';
@@ -992,7 +992,7 @@ include 'EDMS_SIDEBAR.php';
                                     </div>
                                 <?php }else{ ?>
                                     <form method="POST" action="">
-                                        <button class="btn btn-secondary" type="submit" name="btnUnlock" id="btnUnlock" value="<?php echo $documentId;?>" style="text-align: left; width: 100%;">Check In</button>
+                                        <button class="btn btn-secondary" type="submit" name="btnUnlock" id="btnUnlock" value="<?php echo $documentId;?>" style="text-align: left; width: 100%;"><i class="fa fa-unlock"></i> Check In</button>
                                     </form>
                                 <?php } ?>
                             <?php } ?>

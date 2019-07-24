@@ -15,7 +15,6 @@ require_once('mysql_connect_FA.php');
 session_start();
 require_once('GLOBAL_USER_TYPE_CHECKING.php');
 
-$edmsRole= $_SESSION['EDMS_ROLE'];
 $userId = $_SESSION['idnum'];
 //Buttons
 
@@ -291,7 +290,7 @@ include 'EDMS_SIDEBAR.php';
                                             <div class="modal-footer">
                                                 <div class="form-group">
                                                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                    <input type="submit" name="btnSave" id="btnSave" class="btn btn-primary">
+                                                    <input type="submit" name="btnSave" class="btn btn-primary">
                                                 </div>
                                             </div>
                                         </div>
@@ -303,6 +302,7 @@ include 'EDMS_SIDEBAR.php';
                                 <form method="POST" action="">
                                     <button type="submit" class="btn btn-secondary">Cancel Editing</button>
                                     <button type="button" class="btn btn-primary" id="btnSave" data-toggle="modal" data-target="#modalConfirmSave">Finish Editing</button>
+                                    <span id="change_warning" class="label label-warning">You haven't made any changes yet.</span>
                                 </form>
                             </div>
 
@@ -314,7 +314,7 @@ include 'EDMS_SIDEBAR.php';
                                 </div>
                             </div>
                             <div class="panel panel-default">
-                                <div class="panel-body" style="height: 50rem; overflow-y: auto;">
+                                <div class="panel-body" style="min-height: 50rem; max-height: 80rem; overflow-y: auto;">
                                     <p style="text-align: justify;"><?php echo nl2br($content); ?></p>
                                 </div>
                             </div>
@@ -1192,8 +1192,27 @@ include 'EDMS_SIDEBAR.php';
     <script>
     </script>
     <script>
-        tinymce.init({selector:'#sectionContent'});
         $(document).ready( function(){
+
+            $('#btnSave').attr("disabled", true);
+            tinymce.init({selector:'#sectionContent',
+                setup:function(ed) {
+                    let init_cont =  ed.getContent();
+                    ed.on('change', function(e) {
+                        let cont = ed.getContent();
+                        if(cont !== '' && init_cont !== cont){
+                            $('#btnSave').attr("disabled", false);
+                            $('#change_warning').removeClass('label-warning label-danger').addClass('label-info').html('You can now save your changes.');
+                        }else if(cont === '') {
+                            $('#btnSave').attr("disabled", true);
+                            $('#change_warning').removeClass('label-info').addClass('label-danger').html('Content cannot be empty.');
+                        }else if(cont === init_cont){
+                            $('#btnSave').attr("disabled", true);
+                            $('#change_warning').removeClass('label-info').addClass('label-warning').html('You have not made any changes.');
+                        }
+                        console.log('triggered');
+                    });
+                }});
 
             let tableHistory = $('#tblHistory').DataTable( {
                 bLengthChange: false,
@@ -1399,13 +1418,13 @@ include 'EDMS_SIDEBAR.php';
             font-family: monospace;
         }
         .removed-text{
-            background-color: lightsalmon;
+            background-color: #ffd3c2;
             white-space: pre;
             white-space: pre-wrap;
             font-family: monospace;
         }
         .added-text{
-            background-color: lightgreen;
+            background-color: #c2f5c2;
             white-space: pre;
             white-space: pre-wrap;
             font-family: monospace;

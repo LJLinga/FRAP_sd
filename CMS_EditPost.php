@@ -214,8 +214,7 @@ if(isset($_POST['btnSubmit'])) {
             $crud->execute("UPDATE posts SET publisherId='$userId' WHERE id='$postId';");
             $result = $crud->execute("SELECT permalink FROM posts WHERE id='$postId' AND permalink IS NULL");
             if(empty($result[0]['permalink'])) {
-                include('CMS_FUNCTION_Permalink.php');
-                $permalink = generate_permalink($title);
+                $permalink = $crud->generate_permalink($title);
                 $crud->execute("UPDATE posts SET permalink='$permalink' WHERE id='$postId' AND permalink IS NULL");
             }
         }else if($status=='5'){

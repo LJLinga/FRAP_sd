@@ -359,6 +359,10 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         $this->execute("UPDATE steps SET gwrite='1', groute='1', gcycle ='1', groupId = NULL WHERE id = '$stepId';");
     }
 
+    public function removeProcessGroup($processId){
+        $this->execute("UPDATE process SET `write`='1', route='1', cycle ='1', groupId = NULL WHERE id = '$processId';");
+    }
+
     public function removeStepRoute($routeId){
         $this->execute("DELETE FROM step_routes WHERE id = '$routeId';");
     }
@@ -510,12 +514,6 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                                         JOIN user_groups ug on g.id = ug.groupId
                                         WHERE ug.userId = '$userId' GROUP BY dt.id
                                         ORDER BY dt.type ASC;");
-    }
-
-    public function getWorkflowGroups($processId){
-        return $this->getData("SELECT g.id, g.groupName, g.groupDesc, pg.cycle, pg.write, pg.route 
-                                FROM groups g JOIN process_groups pg on g.id = pg.groupId
-                                                            WHERE pg.processId = '$processId'");
     }
 
     public function getDistinctGroupWorkflows($groupId){
@@ -703,13 +701,18 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function doesUserHaveWorkflow($userId, $processId){
-        return $this->getData("SELECT pr.id FROM process pr 
-                                        JOIN process_groups pg ON pr.id = pg.processId
-                                        JOIN groups g ON pg.groupId = g.id 
+        $rows = $this->getData("SELECT pr.id FROM process pr 
+                                        JOIN steps s ON s.processId = pr.id
+                                        JOIN groups g ON s.groupId = g.id 
                                         JOIN user_groups ug on g.id = ug.groupId
                                         WHERE ug.userId = '$userId'
                                         AND pr.id = '$processId'
                                         LIMIT 1; ");
+        if(!empty($rows)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 
@@ -785,6 +788,17 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
 
     // TO DO: notificaTIONS thread
     // TO DO: Catch link when not logged in, redirect to correct page AFTER login
+
+    public function generate_permalink($string){
+        if($string !== mb_convert_encoding( mb_convert_encoding($string, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32') )
+            $string = mb_convert_encoding($string, 'UTF-8', mb_detect_encoding($string));
+        $string = htmlentities($string, ENT_NOQUOTES, 'UTF-8');
+        $string = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\\1', $string);
+        $string = html_entity_decode($string, ENT_NOQUOTES, 'UTF-8');
+        $string = preg_replace(array('`[^a-z0-9]`i','`[-]+`'), '-', $string);
+        $string = strtolower( trim($string, '-') );
+        return $string;
+    }
 
 }
 

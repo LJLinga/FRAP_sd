@@ -59,18 +59,20 @@ include 'EDMS_SIDEBAR.php';
     <div id="content-wrapper">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-8">
                     <h3 class="page-header">
                         Create New Section
                     </h3>
                     <div class="panel panel-default">
                         <form method="POST" action="">
                             <div class="panel-body">
-                                <div class="form-group form-inline">
+                                <div class="form-group">
                                     <label for="sectionNo">Section Marker</label>
-                                    <input id="sectionNo" name="sectionNo" type="text" class="form-control input-md" style="width:10%;" required>
+                                    <input id="sectionNo" name="sectionNo" type="text" class="form-control input-md" required>
+                                </div>
+                                <div class="form-group">
                                     <label for="sectionTitle">Title</label>
-                                    <input id="sectionTitle" name="sectionTitle" type="text" class="form-control input-md" style="width: 60%;" required>
+                                    <input id="sectionTitle" name="sectionTitle" type="text" class="form-control input-md" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="sectionContent">Content</label>
@@ -78,13 +80,30 @@ include 'EDMS_SIDEBAR.php';
                                 </div>
                             </div>
                             <div class="panel-footer">
+                                <button type="button" class="btn btn-secondary" onclick="javascript:window.close()">Cancel</button>
                                 <button type="submit" name="btnSubmit" id="btnSubmit" class="btn btn-primary">Submit </button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <!--Insert success page--
         </div>
     </div>
 <?php include 'GLOBAL_FOOTER.php' ?>
+<script>
+    $(document).ready(function(){
+        $('#btnSubmit').hide();
+        tinymce.init({selector:'#sectionContent', height: 720,
+            setup:function(ed) {
+                ed.on('change', function(e) {
+                    let cont = ed.getContent();
+                    if(cont !== ''){
+                        $('#btnSubmit').show();
+                    }else{
+                        $('#btnSubmit').hide();
+                    }
+                    console.log('triggered');
+                });
+            }});
+    });
+</script>

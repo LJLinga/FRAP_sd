@@ -11,17 +11,12 @@ $crud = new GLOBAL_CLASS_CRUD();
 require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
-//include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
 $userId = $_SESSION['idnum'];
 $revisions = 'closed';
 
-$rows = $crud->doesUserHaveWorkflow($_SESSION['idnum'],7);
-
-$boolInGroup = false;
-if(!empty($rows)){
-    $boolInGroup = true;
-}
+$boolInGroup = $crud->doesUserHaveWorkflow($userId,7); // Checks if user is in AFED Manual Revisions Process
+$boolPres = $crud->isUserInGroupName($userId,"GRP_PRESIDENT"); // Checks if user is President, replace with "isUserInProcessAdminGroup"
 
 if(isset($_POST['btnPrint'])){
     //$crud->execute("INSERT INTO revisions (initiatedById, statusId) VALUES ('$userId','2')");
@@ -68,8 +63,6 @@ if(!empty($rows)){
         $revisionsId = $row['id'];
     }
 }
-
-$boolPres = $crud->isUserInGroupName($userId,"GRP_PRESIDENT");
 
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
