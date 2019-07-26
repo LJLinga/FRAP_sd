@@ -11,7 +11,6 @@ require_once('mysql_connect_FA.php');
 session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 
-$edmsRole = $_SESSION['EDMS_ROLE'];
 $userId = $_SESSION['idnum'];
 $error = '';
 
@@ -201,7 +200,6 @@ if(isset($_GET['docId'])){
 
 $page_title = $docType.' > '.$title;
 
-include 'GLOBAL_ALERTS.php';
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
 ?>
@@ -241,11 +239,10 @@ include 'EDMS_SIDEBAR.php';
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-lg-12">
-                                <b class="panel-title">Document History</b>
+                                <strong>Document History</strong>
                                 <button class="btn btn-default btn-sm fa fa-expand" type="button" data-toggle="collapse" data-target="#collapseHistory" style="position: absolute; top: 0px; right: 15px;">
                             </div>
                         </div>
-
                     </div>
                     <div class="panel-body" id="collapseHistory">
                         <div class="row">
@@ -784,11 +781,9 @@ include 'EDMS_SIDEBAR.php';
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="row">
-                            <div class="col-lg-10">
-                                <b>Most Recent Remark</b>
-                            </div>
-                            <div class="col-lg-2">
-                                <a class="btn btn-sm fa fa-eye" id="btnComfyView" data-toggle="modal" data-target="#modalComfyView" title="Comfy view"></a>
+                            <div class="col-lg-12">
+                                <strong>Most Recent Remark</strong>
+                                <a class="btn btn-sm fa fa-eye" id="btnComfyView" data-toggle="modal" data-target="#modalComfyView" title="Comfy view" style="position: absolute; top: 0px; right: 15px;"></a>
                             </div>
                         </div>
                     </div>
@@ -857,7 +852,56 @@ include 'EDMS_SIDEBAR.php';
                 <?php } ?>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <b>Document Actions</b>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <strong>Document Actions</strong>
+                                <a class="btn btn-sm fa fa-info" id="btnPermissionsInfo" data-toggle="modal" data-target="#modalPermissionsInfo" title="Your permissions" style="position: absolute; top: 0px; right: 15px;"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="modalPermissionsInfo" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <strong class="modal-title">Your permissions</strong>
+                                </div>
+                                <div class="modal-body">
+                                    <?php
+                                    $infoPermissions = "You don't have permissions in this step.";
+                                    if($userId == $firstAuthorId) {
+                                        $infoPermissions = 'You are the creator of this document, therefore creator permissions granted in this stage will apply to you: ';
+                                    }else{
+                                        $stepGroupDetails = $crud->getStepGroupDetails($currentStepId);
+                                        if(!empty($stepGroupDetails)){
+                                            foreach((array) $stepGroupDetails AS $key => $row){
+                                                $infoPermissions = 'This step is assigned to the '.$row['groupDesc'].' ('.$row['groupName'].') group. As a member of this group, the following permissions apply to you.';
+                                            }
+                                        }
+                                    }
+
+                                    if($write == '2' || $cycle == '2' || $route == '2'){
+                                        if($write == '2'){
+                                            $infoPermissions.= '<br><strong>WRITE</strong> (Upload new document, revert to previous version)';
+                                        }
+                                        if($cycle == '2'){
+                                            $infoPermissions.= '<br><strong>CYCLE</strong> (Archive or restore document)';
+                                        }
+                                        if($route == '2'){
+                                            $infoPermissions.= '<br><strong>ROUTE</strong> (Move to a stage, assign status)';
+                                        }
+                                    }else{
+                                        $infoPermissions.='<br><strong>READ-ONLY</strong> (No special permissions granted)';
+                                    }
+                                    ?>
+                                    <div class="alert alert-info">
+                                        <?php echo $infoPermissions;?>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="panel-body">
                         <div class="btn-group btn-group-vertical" style="width: 100%;">
@@ -999,7 +1043,6 @@ include 'EDMS_SIDEBAR.php';
                             <a href="<?php echo $filePath?>" download><button type="button" class="btn btn-default" style="text-align: left; width: 100%;"><i class="fa fa-download"></i> Download</button></a>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

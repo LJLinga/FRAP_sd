@@ -30,7 +30,7 @@ if(isset($_POST['requestType'])){
                 AND d.stepId IN (SELECT s.id FROM user_groups ug
                                                     JOIN groups g ON ug.groupId = g.id
                                                     JOIN steps s ON g.id = s.groupId
-                                                    WHERE ug.userId = '$userId' AND (s.groute = 2 OR s.gwrite = 2)
+                                                    WHERE (ug.userId = '$userId' AND (s.groute = 2 OR s.gwrite = 2) AND d.firstAuthorId != '$userId')
                                                     OR (s.route = 2 OR s.write = 2 AND d.firstAuthorId = '$userId'))
                 ORDER BY d.lastUpdated DESC;";
 

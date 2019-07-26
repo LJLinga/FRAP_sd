@@ -23,7 +23,7 @@ if(isset($_POST['requestType'])){
                 AND s.stepId IN (SELECT st.id FROM user_groups ug
                                                     JOIN groups g ON ug.groupId = g.id
                                                     JOIN steps st ON g.id = st.groupId
-                                                    WHERE ug.userId = '$userId' AND (st.groute = 2 OR st.gwrite = 2)
+                                                    WHERE (ug.userId = '$userId' AND (st.groute = 2 OR st.gwrite = 2) AND s.firstAuthorId != '$userId')
                                                     OR (st.route = 2 OR st.write = 2 AND s.firstAuthorId = '$userId'))
                 ORDER BY s.sectionNo;";
 

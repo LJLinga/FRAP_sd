@@ -311,7 +311,7 @@ include 'SYS_SIDEBAR.php';
                         <select class="form-control" name="groupId">
                             <?php
 
-                            $rows = $crud->getWorkflowGroups($processId);
+                            $rows = $crud->getGroups();
                             if(!empty($rows)){
                                 foreach((array)$rows AS $key => $row){
                                     ?>

@@ -121,6 +121,40 @@ if(isset($_POST['btnArchive'])){
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId.$error);
 }
 
+if(isset($_POST['btnRevert'])){
+    $sectionId = $_POST['sectionId'];
+    $remarks = $_POST['remarks'];
+    $versionNo = $_POST['newVersionNo'];
+    $versionId = $_POST['versionId'];
+
+    echo 'Section Id '.$sectionId;
+    echo 'Remarks '.$remarks;
+    echo 'versionNo '.$versionNo;
+    echo 'versionId '.$versionId;
+    echo 'userId'.$userId;
+
+    if($revisions == 'open'){
+        $rows = $crud->getData("SELECT content, title, sectionNo FROM section_versions WHERE versionId = '$versionId'");
+        if(!empty($rows)){
+            foreach((array) $rows AS $key => $row){
+                $content = $crud->esc($row['content']);
+                $title = $row['title'];
+                $sectionNo = $row['sectionNo'];
+                echo 'content==>'.$row['content'];
+                echo 'title==>'.$row['title'];
+                echo 'sectionNo==>'.$row['sectionNo'];
+            }
+            $crud->execute("UPDATE sections SET versionNo='$versionNo', title='$title', sectionNo='$sectionNo', content='$content', authorId='$userId', remarks='$remarks' WHERE id='$sectionId';");
+        }else{
+            $error='&alert=DATABASE_ERROR';
+        }
+    }else{
+        $error='&alert=SECTIONS_REVISIONS_CLOSED';
+    }
+    //header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_EditSection.php?secId=".$sectionId.$error);
+    //exit;
+}
+
 if(isset($_POST['btnRestore'])){
     $sectionId = $_POST['sectionId'];
     $remarks = $crud->escape_string($_POST['remarks']);
@@ -229,8 +263,6 @@ if(isset($_POST['btnEdit'])) {
 }
 
 $page_title = 'Faculty Manual - Edit Section';
-
-include 'GLOBAL_ALERTS.php';
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
 ?>
@@ -569,8 +601,8 @@ include 'EDMS_SIDEBAR.php';
                                                                                         <table class="table-striped table-condensed table-responsive table-sm" cellspacing="0" width="100%">
                                                                                             <thead>
                                                                                             <td></td>
-                                                                                            <td><i>Previous</i></td>
-                                                                                            <td><i>Current</i></td>
+                                                                                            <td><i>Previous Version</i></td>
+                                                                                            <td><i>This Version</i></td>
                                                                                             </thead>
                                                                                             <tbody>
                                                                                             <tr><th>Ver.No.</th><th><?php echo $row['old_versionNo']?></th><th><?php echo $row['versionNo']?></th></tr>
@@ -587,9 +619,9 @@ include 'EDMS_SIDEBAR.php';
                                                                                         <strong>Legend</strong>
                                                                                     </div>
                                                                                     <div class="panel-body">
-                                                                                        <span class="removed-text">Removed content</span>
-                                                                                        <span class="added-text">Added content</span>
-                                                                                        <span class="unmodified-text">Unchanged content</span>
+                                                                                        <span class="removed-text">Old content</span>
+                                                                                        <br><span class="added-text">New content</span>
+                                                                                        <br><span class="unmodified-text">Unchanged content</span>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -610,6 +642,7 @@ include 'EDMS_SIDEBAR.php';
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <?php if($write == '1'){ ?>
                                                         <a class="btn btn-sm fa fa-refresh" data-toggle="modal" data-target="#modalRevert<?php echo $row['versionId'];?>"></a>
                                                         <div id="modalRevert<?php echo $row['versionId'];?>" class="modal fade" role="dialog">
                                                             <div class="modal-dialog modal-lg">
@@ -735,9 +768,8 @@ include 'EDMS_SIDEBAR.php';
                                                                         </div>
                                                                         <div class="modal-footer">
                                                                             <div class="form-group">
-                                                                                <input type="hidden" name="documentId" value="<?php echo $documentId; ?>">
-                                                                                <input type="hidden" name="filePath" value="<?php echo $row['filePath']; ?>">
-                                                                                <input type="hidden" name="title" value="<?php echo $row['title']; ?>">
+                                                                                <input type="hidden" name="sectionId" value="<?php echo $sectionId; ?>">
+                                                                                <input type="hidden" name="versionId" value="<?php echo $row['versionId'];?>">
                                                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                                                                 <input type="submit" name="btnRevert" class="btn btn-primary">
                                                                             </div>
@@ -746,6 +778,7 @@ include 'EDMS_SIDEBAR.php';
                                                                 </form>
                                                             </div>
                                                         </div>
+                                                        <?php } ?>
                                                         <a href="MANUAL_PrintOneSection.php?versionId=<?php echo $row['versionId'];?>" target="_blank" class="btn btn-sm btn-secondary fa fa-print"></a>
                                                     <?php }?>
                                                 </td>
@@ -966,7 +999,56 @@ include 'EDMS_SIDEBAR.php';
                         <?php if($edit == '2') { ?>
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <b>Section Actions</b>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <strong>Section Actions</strong>
+                                            <a class="btn btn-sm fa fa-info" id="btnPermissionsInfo" data-toggle="modal" data-target="#modalPermissionsInfo" title="Your permissions" style="position: absolute; top: 0px; right: 15px;"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="modalPermissionsInfo" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <strong class="modal-title">Your permissions</strong>
+                                            </div>
+                                            <div class="modal-body">
+                                                <?php
+                                                $infoPermissions = "You don't have permissions in this step.";
+                                                if($userId == $firstAuthorId) {
+                                                    $infoPermissions = 'You are the creator of this document, therefore creator permissions granted in this stage will apply to you: ';
+                                                }else{
+                                                    $stepGroupDetails = $crud->getStepGroupDetails($currentStepId);
+                                                    if(!empty($stepGroupDetails)){
+                                                        foreach((array) $stepGroupDetails AS $key => $row){
+                                                            $infoPermissions = 'This step is assigned to the '.$row['groupDesc'].' ('.$row['groupName'].') group. As a member of this group, the following permissions apply to you.';
+                                                        }
+                                                    }
+                                                }
+
+                                                if($write == '2' || $cycle == '2' || $route == '2'){
+                                                    if($write == '2'){
+                                                        $infoPermissions.= '<br><strong>WRITE</strong> (Upload new document, revert to previous version)';
+                                                    }
+                                                    if($cycle == '2'){
+                                                        $infoPermissions.= '<br><strong>CYCLE</strong> (Archive or restore document)';
+                                                    }
+                                                    if($route == '2'){
+                                                        $infoPermissions.= '<br><strong>ROUTE</strong> (Move to a stage, assign status)';
+                                                    }
+                                                }else{
+                                                    $infoPermissions.='<br><strong>READ-ONLY</strong> (No special permissions granted)';
+                                                }
+                                                ?>
+                                                <div class="alert alert-info">
+                                                    <?php echo $infoPermissions;?>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="panel-body">
                                     <?php if($revisions != 'open') { ?>

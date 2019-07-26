@@ -1,4 +1,6 @@
 <?php
+//This is where you write your alerts. To make it easier for everyone, I've integrated it to GLOBAL_HEADER
+//The JS and alert styling can be found in GLOBAL_FOOTER
 
 if(isset($_GET['alert'])){
     $alertType = $_GET['alert'];
@@ -18,6 +20,7 @@ if(isset($_GET['alert'])){
     else if($alertType == 'SECTION_REVISIONS_CLOSED'){ $alertColor = 'danger'; $alertMessage = 'Action failed because revisions are closed. Sorry.'; }
     else if($alertType == 'SECTION_RESTORE_FAIL'){ $alertColor = 'warning'; $alertMessage = 'Another user has already restored this document. '; }
     else if($alertType == 'DATABASE_ERROR'){ $alertColor = 'danger'; $alertMessage = 'Cannot complete transaction due to database error. Please contact your system administrator.'; }
+    else if($alertType == 'MODULE_NO_ACCESS'){ $alertColor = 'danger'; $alertMessage = 'You have no access to the system module.';}
 }
 
 ?>

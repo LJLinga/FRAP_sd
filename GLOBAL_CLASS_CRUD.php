@@ -203,11 +203,23 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         }
     }
 
-
+    // 2 == Process for Manual Revisions
     public function getManualRevisionsFirstStep(){
         return $this->getData("SELECT s.id FROM steps s 
                                   JOIN process pr ON s.processId = pr.id 
                                   WHERE pr.processForId = 2 AND s.stepTypeId = 1 LIMIT 1;");
+    }
+
+    // 3 == Process for Post Publication
+    public function getPostPublicationFirstStep(){
+        return $this->getData("SELECT s.id FROM steps s 
+                                  JOIN process pr ON s.processId = pr.id 
+                                  WHERE pr.processForId = 3 AND s.stepTypeId = 1 LIMIT 1;");
+    }
+
+    public function getWorkflowFirstStep($processId){
+        return $this->getData("SELECT s.id FROM steps s JOIN process pr ON s.processId = pr.id 
+                                     WHERE pr.id = '$processId' AND s.stepTypeId = 1 LIMIT 1;");
     }
 
     public function permissionString($num){
@@ -600,6 +612,13 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                                         JOIN steps s ON g.id = s.groupId
                                         WHERE s.id = '$stepId' AND ug.userId = '$userId'
                                         LIMIT 1;");
+    }
+
+
+    public function getStepGroupDetails($stepId){
+        return $this->getData("SELECT g.id AS groupId, g.groupName, g.groupDesc
+                                    FROM steps s JOIN groups g ON s.groupId = g.id
+                                    WHERE s.id = ' $stepId'");
     }
 
     public function getNeedsMyAttentionDocumentsCount($userId){

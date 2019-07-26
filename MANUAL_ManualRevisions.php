@@ -18,6 +18,10 @@ $revisions = 'closed';
 $boolInGroup = $crud->doesUserHaveWorkflow($userId,7); // Checks if user is in AFED Manual Revisions Process
 $boolPres = $crud->isUserInGroupName($userId,"GRP_PRESIDENT"); // Checks if user is President, replace with "isUserInProcessAdminGroup"
 
+if(!$boolInGroup){
+    header("Location:".$crud->redirectToPreviousWithAlert("MODULE_NO_ACCESS"));
+}
+
 if(isset($_POST['btnPrint'])){
     //$crud->execute("INSERT INTO revisions (initiatedById, statusId) VALUES ('$userId','2')");
     header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/MANUAL_PrintManual.php");

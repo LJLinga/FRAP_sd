@@ -1,4 +1,4 @@
-<?php ?>
+<?php include_once 'GLOBAL_ALERTS.php'; ?>
 <!DOCTYPE html>
 <html>
 <head>
