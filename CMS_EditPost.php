@@ -26,7 +26,7 @@ if(!empty($_GET['postId'])){
 
     $postId = $_GET['postId'];
 
-    $rows = $crud->getData("SELECT p.authorId, p.reviewedById, p.restoredById, p.publisherId, p.archivedById, p.lockedById, p.availabilityId, p.statusId FROM posts p WHERE p.id = '$postId'");
+    $rows = $crud->getData("SELECT p.authorId, p.reviewedById, p.restoredById, p.remark_user_id, p.publisherId, p.archivedById, p.lockedById, p.availabilityId, p.statusId FROM posts p WHERE p.id = '$postId'");
     foreach((array) $rows as $key => $row){
         $authorId = $row['authorId'];
         $status = $row['statusId'];
@@ -36,6 +36,7 @@ if(!empty($_GET['postId'])){
         $publisherId = $row['publisherId'];
         $archivedById = $row['archivedById'];
         $restoredById = $row['restoredById'];
+        $remarkedById = $row['remark_user_id'];
     }
 
     if(($status == '1' && $authorId == $userId) || ($status == '2' && $cmsRole == '3') || (($status == '3' || $status == '4') && $cmsRole == '4' ) || ($status == '5' && $archivedById == $userId)){
@@ -66,7 +67,7 @@ if(!empty($_GET['postId'])){
             p.lastUpdated,
             p.statusId,
             p.previousStatusId,
-            s.description
+            s.description, p.remarks
         FROM
             employee u
                 JOIN
@@ -86,6 +87,7 @@ if(!empty($_GET['postId'])){
         $firstPosted = $row['firstCreated'];
         $lastUpdated = $row['lastUpdated'];
         $statusDesc = $row['description'];
+        $remarks = $row['remarks'];
     }
 
     if($status == '3'){
@@ -127,6 +129,7 @@ if(isset($_POST['btnSubmit'])) {
 
     $title = $crud->escape_string($_POST['post_title']);
     $body = $crud->escape_string($_POST['post_content']);
+    $remarks = $crud->escape_string($_POST['remarks']);
     $status = $_POST['btnSubmit'];
 
     if(isset($_POST['toRemoveDocRefs'])) {
@@ -202,8 +205,8 @@ if(isset($_POST['btnSubmit'])) {
     }
 
     if(empty($status)){
-        $crud->execute("UPDATE posts SET title='$title', body='$body' WHERE id='$postId';");
-    }else if($crud->execute("UPDATE posts SET title='$title', body='$body', statusId='$status' WHERE id='$postId';")) {
+        $crud->execute("UPDATE posts SET title='$title', body='$body', remark_user_id='$userId', remarks='$remarks' WHERE id='$postId';");
+    }else if($crud->execute("UPDATE posts SET title='$title', body='$body', statusId='$status', remarks='$remarks' WHERE id='$postId';")) {
         if($status=='3'){
             // we can add an UNPUBLISHERID in the future;
             $crud->execute("UPDATE posts SET reviewedById='$userId' WHERE id='$postId';");
@@ -240,6 +243,10 @@ include 'CMS_SIDEBAR.php';
         $('#btnUpdate').hide();
         $('#form :input').on('keyup', function(){
             $('#btnUpdate').show();
+        });
+
+        $('#btnUnlock').on('click', function(){
+            $('#remarks').removeAttr('required');
         });
 
         content.froalaEditor({
@@ -501,7 +508,7 @@ include 'CMS_SIDEBAR.php';
                     <?php
                         if(!isset($pollId)) echo '<button type="button" id="btnAddQuestion" class="btn btn-default" onclick="addPoll(this)"><i class="fa fa-fw fa-plus"></i>Add Question</button>';
                     ?>
-                    <div class="card" style="margin-top: 1rem;">
+                    <div class="card" style="margin-top: 1rem; display: none">
                         <div class="card-body">
                             <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
                             <span id="comment_message"></span>
@@ -573,7 +580,19 @@ include 'CMS_SIDEBAR.php';
                             }
                         ?>
                     </div>
-
+                    <div class="card" style="margin-bottom: 1rem;">
+                        <div class="card-header">
+                            <strong>Recent Remarks</strong>
+                        </div>
+                        <div class="card-body">
+                            Remarks made by <strong><?php echo $crud->getUserName($remarkedById);?></strong>
+                            <br>on <strong><i><?php echo $crud->friendlyDate($lastUpdated);?></i></strong>
+                            <br><br>
+                            <div class="alert alert-info" style="max-height: 20rem; overflow-y: auto;">
+                                <i>"<?php echo $remarks;?>"</i>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card" style="margin-bottom: 1rem;">
                         <div class="card-body" >
                             Author: <b><?php echo $author; ?></b><br>
@@ -593,8 +612,12 @@ include 'CMS_SIDEBAR.php';
 
                         <div class="card-footer">
                             <?php
-                            if($mode == 'edit'){
-                                echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnUpdate" hidden>Save</button> ';
+                            if($mode == 'edit'){ ?>
+                                <div class="form-group">
+                                    <label for="remarks">Please provide remarks first before submitting.</label>
+                                    <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
+                                </div>
+                                <?php echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnUpdate" hidden>Save</button> ';
                                 if($cmsRole == '4') {
                                     if($status == '1'){
                                         echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';

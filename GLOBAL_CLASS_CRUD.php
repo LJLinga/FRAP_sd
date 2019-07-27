@@ -619,7 +619,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
 
     public function error404(){
         http_response_code(404);
-        include('resource_not_found.html'); // provide your own HTML for the error page
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/resource_not_found.html");
         die();
     }
 
