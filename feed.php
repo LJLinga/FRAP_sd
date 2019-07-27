@@ -201,9 +201,9 @@ include 'GLOBAL_HEADER.php';
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <?php if(!empty($rows[0]['permalink'])) { ?>
-                                <a href="<?php echo "http://localhost/FRAP_sd/feed.php?lastTimeStamp=".$lastTimeStamp ?>" >Load More</a>
+                                <a href="feed.php?lastTimeStamp=<?php echo $lastTimeStamp ?>">Load More</a>
                             <?php } else { ?>
-                                <a href="<?php echo "http://localhost/FRAP_sd/feed.php"?>" >No More Posts. Go Back</a>
+                                <a href="feed.php" >No More Posts. Go Back</a>
                             <?php }  ?>
                         </div>
                     </div>

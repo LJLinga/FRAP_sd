@@ -195,7 +195,8 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
 
     public function redirectToPreviousWithAlert ($alertType){
         $previousHTTP = $_SERVER['HTTP_REFERER'];
-        //$previousHTTP = strtok($previousHTTP, 'alert=');
+        $previousHTTP = explode($previousHTTP, '&');
+        $previousHTTP = $previousHTTP[0];
         if (strpos($previousHTTP, '?') == true) {
             return $previousHTTP.'&alert='.$alertType;
         }else if(strpos($previousHTTP, '?') != true){
@@ -614,6 +615,11 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                                         LIMIT 1;");
     }
 
+    public function error404(){
+        http_response_code(404);
+        include('resource_not_found.html'); // provide your own HTML for the error page
+        die();
+    }
 
     public function getStepGroupDetails($stepId){
         return $this->getData("SELECT g.id AS groupId, g.groupName, g.groupDesc

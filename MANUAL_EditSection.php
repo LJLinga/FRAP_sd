@@ -170,6 +170,8 @@ if(isset($_POST['btnRestore'])){
 if(isset($_GET['secId'])){
     $sectionId = $_GET['secId'];
 
+    header("Location:".$crud->redirectToPreviousWithAlert("SECTION_IS_ARCHIVED"));
+
     $rows = $crud->getData("SELECT s.*, st.stepNo, st.stepName FROM sections s 
                                     JOIN steps st ON s.stepId = st.id
                                     WHERE s.id = '$sectionId';");
@@ -251,11 +253,11 @@ if(isset($_GET['secId'])){
         }
 
     }else{
-        header("Location:".$crud->redirectToPreviousWithAlert("SECTION_NOT_LOAD"));
+        $crud->error404();
     }
 
 }else{
-    header("Location:".$crud->redirectToPreviousWithAlert("SECTION_NOT_LOAD"));
+    $crud->error404();
 }
 
 if(isset($_POST['btnEdit'])) {

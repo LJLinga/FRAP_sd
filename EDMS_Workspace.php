@@ -42,7 +42,7 @@ $groups = $crud->getUserGroups($userId);
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Needs attention</a></li>
                     <li role="presentation"><a href="#editing" aria-controls="editing" role="tab" data-toggle="tab">I'm currently editing</a></li>
-                    <li role="presentation"><a href="#access" aria-controls="access" role="tab" data-toggle="tab">I can access</a></li>
+                    <li role="presentation"><a href="#access" aria-controls="access" role="tab" data-toggle="tab">Active</a></li>
                     <li role="presentation"><a href="#archived" aria-controls="archived" role="tab" data-toggle="tab">Archived</a></li>
                 </ul>
 
