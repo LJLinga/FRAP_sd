@@ -12,6 +12,8 @@ $alertMessage = '';
 $alertType = '';
 $alertColor = 'info';
 include_once 'GLOBAL_CLASS_Database.php';
+require_once __DIR__ . '/vendor/autoload.php';
+
 class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
 
     public function __construct(){
@@ -192,7 +194,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
             return 'RESTORED';
         }
     }
-
+    //Later
     public function redirectToPreviousWithAlert ($alertType){
         $previousHTTP = $_SERVER['HTTP_REFERER'];
         $previousHTTP = explode($previousHTTP, '&');
@@ -825,6 +827,137 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         return $string;
     }
 
+
+    public function getCalendarClient(){
+        $client = new Google_Client();
+        $client->setApplicationName('LapDoc Event Scheduler');
+        $client->setScopes(Google_Service_Calendar::CALENDAR);
+        $client->setAuthConfig('credentials.json');
+        $client->setAccessType('offline');
+        $client->setPrompt('select_account consent');
+
+        // Load previously authorized token from a file, if it exists.
+        // The file token.json stores the user's access and refresh tokens, and is
+        // created automatically when the authorization flow completes for the first
+        // time.
+        $tokenPath = 'token.json';
+        if (file_exists($tokenPath)) {
+            $accessToken = json_decode(file_get_contents($tokenPath), true);
+            $client->setAccessToken($accessToken);
+        }
+
+// If there is no previous token or it's expired.
+        if ($client->isAccessTokenExpired()) {
+// Refresh the token if possible, else fetch a new one.
+            if ($client->getRefreshToken()) {
+                $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+            } else {
+// Request authorization from the user.
+                $authUrl = $client->createAuthUrl();
+                printf("Open the following link in your browser:\n%s\n", $authUrl);
+                print 'Enter verification code: ';
+                $authCode = trim(fgets(STDIN));
+
+// Exchange authorization code for an access token.
+                $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
+                $client->setAccessToken($accessToken);
+
+// Check to see if there was an error.
+                if (array_key_exists('error', $accessToken)) {
+                    throw new Exception(join(', ', $accessToken));
+                }
+            }
+// Save the token to a file.
+            if (!file_exists(dirname($tokenPath))) {
+                mkdir(dirname($tokenPath), 0700, true);
+            }
+            file_put_contents($tokenPath, json_encode($client->getAccessToken()));
+        }
+        return $client;
+    }
+
+    public function getCalendarService(){
+        $client = $this->getCalendarClient();
+        return new Google_Service_Calendar($client);
+    }
+
+    public function insertCalendarEvent($userId, $title, $description, $startTime, $endTime, $email_array, $freq, $freqCount){
+        foreach((array) $email_array as $key=>$value) {
+            $data[] = array('email'=>$value);
+        }
+
+        $service = $this->getCalendarService();
+
+        $event = new Google_Service_Calendar_Event(array(
+            'summary' => $title,
+            'location' => 'Manila',
+            'description' => $description,
+            'start' => array(
+                'dateTime' => $startTime,
+                'timeZone' => 'Asia/Manila',
+            ),
+            'end' => array(
+                'dateTime' => $endTime,
+                'timeZone' => 'Asia/Manila',
+            ),
+            'recurrence' => array(
+                'RRULE:FREQ='.$freq.';COUNT='.$freqCount
+            ),
+            'attendees' => $data,
+            'reminders' => array(
+                'useDefault' => TRUE
+            )
+        ));
+
+        $calendarId = 'primary';
+        $event = $service->events->insert($calendarId, $event);
+        $eventId = $event->getId();
+        $eventLink = $event->htmlLink;
+
+        if($eventLink !== ''){
+            $id = $this->executeGetKey("INSERT INTO events (title, description, posterId, startTime, endTime, GOOGLE_EVENTID, GOOGLE_EVENTLINK) values ('$title', '$description','$userId','$startTime','$endTime','$eventId','$eventLink')");
+
+            if(isset($id)){
+                if(!empty($email_array)){
+                    foreach((array) $email_array as $key=>$value) {
+                        $this->insertCalendarEventEmail($id, $value);
+                    }
+                }
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+
+    public function updateCalendarEvent(){
+
+    }
+
+    public function deleteCalendarEvent($eventId){
+        $bool = $this->execute("DELETE FROM event_emails WHERE eventId = '$eventId'");
+        if($bool){
+            $rows = $this->getData("SELECT GOOGLE_EVENTID from events WHERE id = '$eventId' LIMIT 1;");
+            if(!empty($rows)){
+                foreach((array) $rows AS $key => $row){
+                    $googleEventId = $row['GOOGLE_EVENTID'];
+                }
+
+            }else{
+                return false;
+            }
+        }
+    }
+
+    public function insertCalendarEventEmail($eventId, $email){
+        $this->execute("INSERT INTO event_emails (eventId, email) VALUES ('$eventId','$email')");
+    }
+
+    public function removeCalendarEventEmail($eventId, $email){
+        $this->execute("DELETE FROM event_emails WHERE eventId = '$eventId' AND email = '$email';");
+    }
 }
 
 ?>

@@ -1,7 +1,6 @@
 <?php
 
-function getClient()
-{
+function getClient(){
 $client = new Google_Client();
 $client->setApplicationName('LapDoc System Scheduler');
 $client->setScopes(Google_Service_Calendar::CALENDAR);

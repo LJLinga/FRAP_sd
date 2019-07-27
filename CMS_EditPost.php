@@ -26,7 +26,7 @@ if(!empty($_GET['postId'])){
 
     $postId = $_GET['postId'];
 
-    $rows = $crud->getData("SELECT p.authorId, p.reviewedById, p.publisherId, p.archivedById, p.lockedById, p.availabilityId, p.statusId FROM posts p WHERE p.id = '$postId'");
+    $rows = $crud->getData("SELECT p.authorId, p.reviewedById, p.restoredById, p.publisherId, p.archivedById, p.lockedById, p.availabilityId, p.statusId FROM posts p WHERE p.id = '$postId'");
     foreach((array) $rows as $key => $row){
         $authorId = $row['authorId'];
         $status = $row['statusId'];
@@ -35,6 +35,7 @@ if(!empty($_GET['postId'])){
         $lockedById = $row['lockedById'];
         $publisherId = $row['publisherId'];
         $archivedById = $row['archivedById'];
+        $restoredById = $row['restoredById'];
     }
 
     if(($status == '1' && $authorId == $userId) || ($status == '2' && $cmsRole == '3') || (($status == '3' || $status == '4') && $cmsRole == '4' ) || ($status == '5' && $archivedById == $userId)){
@@ -59,7 +60,7 @@ if(!empty($_GET['postId'])){
 
     $rows = $crud->getData("SELECT 
             p.title,
-            CONCAT(u.firstName,' ', u.lastName) AS author,
+            CONCAT(u.lastName,', ', u.firstName) AS author,
             p.body, p.permalink,
             p.firstCreated,
             p.lastUpdated,
@@ -88,33 +89,9 @@ if(!empty($_GET['postId'])){
     }
 
     if($status == '3'){
-        $pubQuery= $crud->getData(" 
-            SELECT 
-                CONCAT(pub.firstName,' ',pub.lastName) AS reviewer
-            FROM
-                posts p
-                    JOIN
-                employee pub ON pub.EMP_ID = p.reviewedById
-            WHERE
-                p.id = '$postId' ;
-        ");
-        foreach((array) $pubQuery as $key => $row){
-            $reviewer = $row['reviewer'];
-        }
+        $reviewer = $crud->getUserName($reviewerId);
     }else if($status == '4'){
-        $pubQuery= $crud->getData(" 
-            SELECT 
-                CONCAT(pub.firstName,' ',pub.lastName) AS publisher
-            FROM
-                posts p
-                    JOIN
-                employee pub ON pub.EMP_ID = p.publisherId
-            WHERE
-                p.id = '$postId';
-        ");
-        foreach((array) $pubQuery as $key => $row){
-            $publisher = $row['publisher'];
-        }
+        $publisher = $crud->getUserName($publisherId);
     }
 
     $head = "Edit: ".$title;
@@ -143,7 +120,7 @@ if(isset($_POST['btnUnlock'])){
 
 if(isset($_POST['btnRestore'])){
     $status = $_POST['btnRestore'];
-    $crud->execute("UPDATE posts SET statusId = '$status' WHERE id='$postId';");
+    $crud->execute("UPDATE posts SET statusId = '$status', restoredById='$userId' WHERE id='$postId';");
 }
 
 if(isset($_POST['btnSubmit'])) {
@@ -176,6 +153,17 @@ if(isset($_POST['btnSubmit'])) {
         }
     }
 
+    if(isset($_POST['toRemoveResponse'])) {
+        $toRemoveResponse = $_POST['toRemoveResponse'];
+        foreach((array) $toRemoveResponse AS $key => $ref){
+            $query = "DELETE FROM  WHERE id = '$ref'";
+            $bool = $crud->execute("DELETE FROM poll_responses WHERE responseId = '$ref' ");
+            if($bool){
+                $crud->execute("DELETE FROM poll_options WHERE optionId = '$ref'");
+            }
+        }
+    }
+
     if(isset($_POST['toUpdatePollId']) && isset($_POST['toUpdatePollQuestion']) && isset($_POST['toUpdateTypeId'])){
         $typeId = '1';
         $question = $_POST['toUpdatePollQuestion'];
@@ -190,6 +178,15 @@ if(isset($_POST['btnSubmit'])) {
         foreach((array) $toUpdateContent AS $key => $ref){
             $optionId = $toUpdateId[$key];
             $crud->execute("UPDATE poll_options SET response = '$ref' WHERE pollId = '$pollId' AND optionId = '$optionId';");
+        }
+    }
+
+    if(isset($_POST['toAddResponse'])) {
+        $options = $_POST['toAddResponse'];
+        $pollId = $_POST['toUpdatePollId'];
+        foreach((array) $options AS $key => $ref){
+            $query = "INSERT INTO poll_options(pollId,response) VALUES ('$pollId','$ref');";
+            $crud->execute($query);
         }
     }
 
@@ -259,6 +256,7 @@ include 'CMS_SIDEBAR.php';
             $('.btn').attr("disabled", false);
             $('.removePoll').attr("disabled", true);
             $('#btnAddQuestion').attr("disabled", true);
+            $('.btn-danger').attr("disabled",true);
         }
 
         content.on('froalaEditor.contentChanged', function (e, editor) {
@@ -364,16 +362,24 @@ include 'CMS_SIDEBAR.php';
     }
     function removePoll(element, pollId){
         $(element).closest('div.card').remove();
+        $('#btnUpdate').show();
         $('#questionCardArea').append("<button type=\"button\" class=\"btn btn-default\" onclick=\"addPoll(this)\"><i class=\"fa fa-fw fa-plus\"></i>Add Question</button>");
         $('#toRemovePolls').append('<input type="hidden" name="toRemovePolls[]" value="'+pollId+'">');
     }
     function removeResponse(element){
         $(element).closest('.fieldRow').remove();
+        $('#btnUpdate').show();
+    }
+    function removeOldResponse(element,responseId){
+        $(element).closest('.fieldRow').remove();
+        $('#btnUpdate').show();
+        $('#toRemoveResponse').append('<input type="hidden" name="toRemoveResponse[]" value="'+responseId+'">');
     }
     function addResponse(element){
+        $('#btnUpdate').show();
         $('.fieldRow').last().after('<div class="row fieldRow"><br>\n' +
             '                                        <div class="col-lg-10">\n' +
-            '                                            <input name="option[]" type="text" class="form-control input-md option-input" placeholder="Add an answer" required>\n' +
+            '                                            <input name="toAddResponse[]" type="text" class="form-control input-md option-input" placeholder="Add an answer" required>\n' +
             '                                        </div>\n' +
             '                                        <div class="col-lg-2">\n' +
             '                                            <button type="button" class="btn btn-danger" onclick="removeResponse(this)"><i class="fa fa-trash"></i></button>\n' +
@@ -477,6 +483,9 @@ include 'CMS_SIDEBAR.php';
                                                             <input type="hidden" name="toUpdateOptionId[]" value="'.$row2['optionId'].'">
                                                             <input type="text" name="toUpdateOptionContent[]" class="form-control input-md option-input" placeholder="Add an answer" value="'.$row2['response'].'" required>
                                                         </div>
+                                                        <div class="col-lg-2">
+                                                            <button type="button" class="btn btn-danger" onclick="removeOldResponse(this,'.$row2['optionId'].')"><i class="fa fa-trash"></i></button>
+                                                        </div>
                                                     </div>
                                                     <br>';
                                         }
@@ -488,7 +497,7 @@ include 'CMS_SIDEBAR.php';
                         ?>
                     </span>
                     <span id="toRemovePolls"></span>
-
+                    <span id="toRemoveResponse"></span>
                     <?php
                         if(!isset($pollId)) echo '<button type="button" id="btnAddQuestion" class="btn btn-default" onclick="addPoll(this)"><i class="fa fa-fw fa-plus"></i>Add Question</button>';
                     ?>
@@ -576,6 +585,8 @@ include 'CMS_SIDEBAR.php';
                             <br>
                             <?php if(!empty($reviewer)){ echo "Reviewed by: <b>".$reviewer."</b><br>"; }?>
                             <?php if($status == '4'  && !empty($publisher)){ echo "Publisher: <b>".$publisher."</b><br>"; }?>
+                            <?php if($status != '5'  && !empty($crud->getUserName($restoredById))){ echo "Restored by: <b>".$crud->getUserName($restoredById)."</b><br>"; }?>
+                            <?php if($status == '5'  && !empty($crud->getUserName($archivedById))){ echo "Archived by: <b>".$crud->getUserName($archivedById)."</b><br>"; }?>
                             <i>Last updated: <b><?php  echo date("F j, Y g:i:s A ", strtotime($lastUpdated));?></b></i>
                             <input type="hidden" id="post_id" name="post_id" value="<?php if(isset($postId)){ echo $postId;}; ?>">
                         </div>
