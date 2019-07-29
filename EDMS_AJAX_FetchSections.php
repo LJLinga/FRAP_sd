@@ -125,7 +125,7 @@ if(isset($_POST['requestType'])){
                                                     JOIN steps st ON g.id = st.groupId
                                                     JOIn process p ON st.processId = p.id
                                                     WHERE ug.userId = '$userId' 
-                                                    AND st.gwrite = 2 OR (st.write = 2 AND s.firstAuthorId = '$userId'))
+                                                    AND (st.gwrite = 2 OR st.groute = 2 OR st.gcycle) OR ((st.write = 2 OR st.route = 2 OR st.cycle) AND s.firstAuthorId = '$userId'))
                 AND s.availabilityId = '2' AND s.availabilityById = '$userId'
                 ORDER BY s.sectionNo;";
 
