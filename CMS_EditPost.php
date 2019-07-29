@@ -834,7 +834,7 @@ include 'CMS_SIDEBAR.php';
                     <?php if($cmsRole == '4' && $status == '4'){ ?>
                     <div class="card">
                         <div class="card-header">
-                            <strong>Attach an event</strong>
+                            <strong>Associated Events</strong>
                             <button type="button" id="btnAddEvent" data-toggle="modal" data-target="#modalAddEvent" class="btn btn-primary btn-sm">Add Event</button>
                         </div>
                         <div class="card-body">

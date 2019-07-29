@@ -68,6 +68,8 @@ $cmsRole = $_SESSION['CMS_ROLE'];
             aaSorting: []
         });
 
+        load_cms_notifications(userId);
+
         setInterval(function(){
             load_cms_notifications(userId);
             table.ajax.reload(null, false);

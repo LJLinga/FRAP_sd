@@ -604,7 +604,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                 JOIN doc_type t ON t.id = d.typeId
                 JOIN steps s ON s.id = d.stepId
                 JOIN process pr ON pr.id = s.processId
-                WHERE t.isActive = 2 AND (d.firstAuthorId = '$userId' OR d.authorId = '$userId')
+                WHERE t.isActive = 2 AND (d.firstAuthorId = '$userId')
                 AND d.availabilityById = '$userId' AND d.availabilityId = '2'
                 ORDER BY d.lastUpdated DESC;");
     }
