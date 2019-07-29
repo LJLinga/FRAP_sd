@@ -215,7 +215,9 @@ include 'SYS_SIDEBAR.php';
                                                 <a class="btn btn-default"  href="SYS_Step_Permissions.php?id=<?php echo $row['id'];?>"><i class="fa fa-group"></i>
                                                     Permissions
                                                 </a>
+                                                <?php if ($row['stepTypeId'] == '2'){ ?>
                                                 <button type="submit" class="btn btn-danger" name="btnDeleteStep"><i class="fa fa-trash"></i> Delete</button>
+                                                <?php }?>
                                             </form>
                                         </td>
                                         <div class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog" id="modalEditStep<?php echo $row['id'];?>">

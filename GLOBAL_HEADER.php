@@ -261,6 +261,10 @@
                         });
                     }
 
+                    load_notifications();
+                    load_cms_notifications(temp);
+                    load_unseen_notification(temp);
+
                     setInterval(function(){
 
                         load_notifications();

@@ -137,14 +137,14 @@ if(isset($_POST['btnRevert'])){
         $rows = $crud->getData("SELECT content, title, sectionNo FROM section_versions WHERE versionId = '$versionId'");
         if(!empty($rows)){
             foreach((array) $rows AS $key => $row){
-                $content = $crud->esc($row['content']);
+                $content = $row['content'];
                 $title = $row['title'];
                 $sectionNo = $row['sectionNo'];
                 echo 'content==>'.$row['content'];
                 echo 'title==>'.$row['title'];
                 echo 'sectionNo==>'.$row['sectionNo'];
             }
-            $crud->execute("UPDATE sections SET versionNo='$versionNo', title='$title', sectionNo='$sectionNo', content='$content', authorId='$userId', remarks='$remarks' WHERE id='$sectionId';");
+            $crud->execute("UPDATE sections SET versionNo='$versionNo', title='$title', sectionNo='$sectionNo', content={{$content}}, authorId='$userId', remarks='$remarks' WHERE id='$sectionId';");
         }else{
             $error='&alert=DATABASE_ERROR';
         }
@@ -663,7 +663,7 @@ include 'EDMS_SIDEBAR.php';
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <?php if($write == '1'){ ?>
+                                                        <?php if($write == '3'){ ?>
                                                         <a class="btn btn-sm fa fa-refresh" data-toggle="modal" data-target="#modalRevert<?php echo $row['versionId'];?>"></a>
                                                         <div id="modalRevert<?php echo $row['versionId'];?>" class="modal fade" role="dialog">
                                                             <div class="modal-dialog modal-lg">
