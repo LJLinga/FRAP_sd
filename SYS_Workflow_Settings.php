@@ -319,25 +319,25 @@ include 'SYS_SIDEBAR.php';
                                                 <input type="hidden" name="processId" value="<?php echo $processId;?>"/>
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h4 class="modal-title">Update Permissions for: <?php echo $row['groupName'].' ('.$row['groupDesc'].')';?></h4>
+                                                        <h4 class="modal-title">Update Permissions for: <?php echo $groupName.' ('.$groupDesc.')';?></h4>
                                                     </div>
                                                     <div class="modal-body">
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input" name="write" value="true" <?php if($row['write'] == '2') { echo 'checked'; } ?>>
+                                                                <input type="checkbox" class="form-check-input" name="write" value="true" <?php if($write == '2') { echo 'checked'; } ?>>
                                                                 <label class="form-check-label" >Write (Update content) </label>
                                                             </div>
                                                             <div class="form-check">
                                                                 <input type="checkbox" class="form-check-input"
                                                                        name="cycle"
-                                                                       value="true" <?php if ($row['cycle'] == '2') {
+                                                                       value="true" <?php if ($cycle == '2') {
                                                                     echo 'checked';
                                                                 } ?>>
                                                                 <label class="form-check-label">Cycle
                                                                     (Archive/Restore) </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input" name="route" value="true" <?php if($row['route'] == '2') { echo 'checked'; } ?>>
+                                                                <input type="checkbox" class="form-check-input" name="route" value="true" <?php if($route == '2') { echo 'checked'; } ?>>
                                                                 <label class="form-check-label" >Route (Move to step, approve, reject) </label>
                                                             </div>
                                                         </div>

@@ -181,17 +181,20 @@ include 'GLOBAL_HEADER.php';
             <div class="column col-lg-6 col-lg-offset-2" style="margin-top: 1rem; margin-bottom: 1rem;">
                 <div class="panel panel-default" style="margin-top: 1rem;">
                     <div class="panel-body">
-                        <a href="<?php echo "http://localhost/FRAP_sd/feed.php"?>" ><i class="fa fa-arrow-left"></i> Back to Newsfeed</a>
+                        <a href="feed.php" ><i class="fa fa-arrow-left"></i> Back to Newsfeed</a>
                     </div>
                 </div>
-                <div class="panel panel-default" style="margin-top: 1rem;">
+                <div class="panel panel-default">
                     <div class="panel-body">
                         <h4 class="panel-title"><b><?php echo $page_title;?></b></h4>
                         <h5 class="card-text">by <?php echo $author;?> | <?php echo date("F j, Y g:i A ", strtotime($lastUpdated)) ;?></h5>
                         <br><p class="card-text"><?php echo $body ?></p>
-                        <?php
+                    </div>
+                </div>
 
-                            $rows = $crud->getData("SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName, 
+                <?php
+
+                $rows = $crud->getData("SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS authorName, 
                                                                 v.filePath, v.title, v.versionNo, v.timeCreated, d.lastUpdated,
                                                                 stat.statusName, s.stepNo, s.stepName, t.type,
                                                                 pr.processName, v.versionId AS vid,
@@ -206,119 +209,90 @@ include 'GLOBAL_HEADER.php';
                                                                 JOIN process pr ON pr.id = s.processId
                                                                 WHERE ref.postId = $postId");
 
-                            if(!empty($rows)) {
-                                echo '<div class="panel panel-secondary" style="margin-top: 1rem;">
+                if(!empty($rows)) {
+                    echo '<div class="panel panel-default">
                                         <div class="panel-heading"><b>Document References</b></div>
                                         <div class="panel-body">';
-                                foreach ((array)$rows as $key => $row) {
-                                    $title = $row['title'];
-                                    $versionNo = $row['versionNo'];
-                                    $originalAuthor = $row['firstAuthorName'];
-                                    $currentAuthor = $row['authorName'];
-                                    $processName = $row['processName'];
-                                    $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
-                                    $filePath = $row['filePath'];
-                                    $fileName = $title.'_ver'.$versionNo.'_'.basename($filePath);
-                                    echo '<div class="card" style="position: relative;">';
-                                    echo '<input type="hidden" class="refDocuments" value="'.$row['vid'].'">';
-                                    echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
-                                    echo '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >';
-                                    echo '<a class="btn fa fa-download"  href="'.$filePath.'" download="'.$fileName.'"></a>';
-                                    echo '</div>';
-                                    echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
-                                    echo '<div class="card-body">';
-                                    echo 'Process: ' . $processName . '<br>';
-                                    echo 'Created by: ' . $originalAuthor . '<br>';
-                                    echo 'Modified by: ' . $currentAuthor . '<br>';
-                                    echo 'on: <i>' . $updatedOn . '</i><br>';
-                                    echo '</div></div></div>';
-                                }
-                                echo '</div></div>';
-                            }
-                            $rows = $crud->getData("SELECT pl.id, pl.typeId, pl.question 
-                                              FROM polls pl WHERE pl.postId='$postId';");
-                            if(!empty($rows)) {
-                                foreach ((array)$rows as $key => $row) {
-                                    $pollId = $row['id'];
-                                    echo '<div class="panel panel-secondary" style="margin-top: 1rem;">
-                                                <div class="panel-heading"><b>Question: '.$row['question'].'</b></div>
-                                                <div class="panel-body">';
-                                    $rowsIfAnswered = $crud->getData("SELECT pr.responderId, po.response 
-                                                          FROM poll_options po JOIN poll_responses pr ON pr.responseId = po.optionId
-                                                          WHERE po.pollId = '$pollId' AND pr.responderId = '$userId' LIMIT 1;");
-                                    if(empty($rowsIfAnswered)) {
-                                        $rows2 = $crud->getData("SELECT optionId, response FROM poll_options WHERE pollId = '$pollId';");
-                                        if (!empty($rows)) {
-                                            echo '<form id="submitResponse">';
-                                            echo '<input type="hidden" name="userId" value="' . $userId . '">';
-                                            foreach ((array)$rows2 as $key2 => $row2) {
-                                                if (empty($rowsIfAnswered)) {
-                                                    echo '<div class="form-check">
-                                                          <input class="form-check-input" type="radio" name="responseId" value="' . $row2['optionId'] . '" checked>
-                                                          <label class="form-check-label" for="response">' . $row2['response'] . '</label>
-                                                        </div>';
-                                                }
-                                            }
-                                            echo '<button type="button" class="btn btn-default btn-sm" onclick="respond(this,&quot;' . $pollId . '&quot;)">Submit Response</button>';
-                                            echo '</form>';
-                                        }
-                                    }else{
-                                        echo '<div><span class="badge badge-success">You responded "'.$rowsIfAnswered[0]['response'].'"</span></div>';
-                                    }
-                                    echo '<span id="loadResults">';
-                                    $rows3 = $crud->getData("SELECT COUNT(DISTINCT(pr.responderId))  as responseCount, pr.responseId, po.response
-                                        FROM facultyassocnew.poll_responses pr
-                                        JOIN poll_options po ON pr.responseId = po.optionId
-                                        JOIN polls p ON po.pollId = p.id WHERE p.id='$pollId' GROUP BY po.optionId;");
-                                    $data = '';
-                                    $total = 0;
-                                    if(!empty($rows3)) {
-                                        foreach ((array)$rows3 as $key3 => $row3) {
-                                            $total = $total + (int) $row3['responseCount'];
-                                        }
-                                        foreach ((array)$rows3 as $key3 => $row3) {
-                                            $percent = (int) $row3['responseCount'] / $total * 100;
-                                            $percent = round($percent, 2);
-                                            $data .= '<label>'.$row3['response'].'</label>';
-                                            $data .= ' ('.$row3['responseCount'].' out of '.$total.' votes)';
-                                            $data .= '<div class="progress">';
-                                            $data .= '<div class="progress-bar progress-bar-success" role="progressbar" style="width: '.$percent.'%;" aria-valuenow="'.$percent.'" aria-valuemin="0" aria-valuemax="100">'.$percent.'%</div>';
-                                            $data .= '</div>';
-                                        }
-                                    }
-                                    echo $data;
-                                    echo '</span>';
-                                    echo '</div></div>';
-                                }
-                            }
-                        ?>
-                    </div>
-                </div>
-                <?php
-                    $query = "SELECT timeStamp, CONCAT(e.LASTNAME,', ',e.FIRSTNAME) as name 
-                    FROM post_views v JOIN employee e ON e.EMP_ID = v.viewerId 
-                    WHERE typeId = 2 AND id = '$postId' GROUP BY v.viewerId ORDER BY timestamp DESC;";
+                    foreach ((array)$rows as $key => $row) {
+                        $title = $row['title'];
+                        $versionNo = $row['versionNo'];
+                        $originalAuthor = $row['firstAuthorName'];
+                        $currentAuthor = $row['authorName'];
+                        $processName = $row['processName'];
+                        $updatedOn = date("F j, Y g:i:s A ", strtotime($row['timeCreated']));
+                        $filePath = $row['filePath'];
+                        $fileName = $title.'_ver'.$versionNo.'_'.basename($filePath);
+                        echo '<div class="card" style="position: relative;">';
+                        echo '<input type="hidden" class="refDocuments" value="'.$row['vid'].'">';
+                        echo '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' . $row['vid'] . '" aria-expanded="true" aria-controls="collapse' . $row['vid'] . '"><b>' . $title . ' </b><span class="badge">' . $versionNo . '</span></a>';
+                        echo '<div class="btn-group" style="position: absolute; right: 2px; top: 2px;" >';
+                        echo '<a class="btn fa fa-download"  href="'.$filePath.'" download="'.$fileName.'"></a>';
+                        echo '</div>';
+                        echo '<div id="collapse' . $row['vid'] . '" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
+                        echo '<div class="card-body">';
+                        echo 'Process: ' . $processName . '<br>';
+                        echo 'Created by: ' . $originalAuthor . '<br>';
+                        echo 'Modified by: ' . $currentAuthor . '<br>';
+                        echo 'on: <i>' . $updatedOn . '</i><br>';
+                        echo '</div></div></div>';
+                    }
+                    echo '</div></div>';
+                }
+
+                ?>
+
+                <span id="loadPoll">
+                    <?php
+
+                    $query = "SELECT pl.id AS pollId, pl.question, ps.authorId FROM polls pl 
+                    JOIN posts ps ON pl.postId = ps.id
+                    WHERE pl.id NOT IN (SELECT pl.id FROM polls pl
+                    JOIN poll_options po ON pl.id = po.pollId
+                    JOIN poll_responses res ON po.optionId = res.responseId
+                    WHERE res.responderId = '$userId') 
+                    AND pl.postId = '$postId'
+                    GROUP BY pl.id;";
 
                     $rows = $crud->getData($query);
-                    $html = '';
-                    $output = '';
-                    $count = 0;
-                    if(!empty($rows)){
-                        foreach ((array) $rows as $key => $row) {
-                            $html .= '<b>'.$row['name'].'</b> ('.date("F j, Y g:i:s A ", strtotime($row['timeStamp'])).')<br>';
-                            $count++;
-                        }
-                        $output .= '<div class="panel panel-default" style="margin-top: 1rem;">';
-                        $output .= '<div class="panel-body">';
-                        $output .= '<a style="text-align: left" data-toggle="collapse" data-target="#collapse_seen" aria-expanded="true" aria-controls="collapse_seen">Seen by '.$count.' people.</a><br>';
-                        $output .= '<div id="collapse_seen" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">';
-                        $output .= $html;
-                        $output .= '</div></div></div>';
 
+                    if(!empty($rows)){
+                        foreach((array) $rows AS $key => $row) {
+                            $pollId = $row['pollId'];
+                            if ($userId !== $row['authorId']) {
+                                ?>
+                                <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <strong>Question: </strong><?php echo $row['question']; ?>
+                                </div>
+                                <div class="panel-body">
+                                    <?php
+                                    $rows2 = $crud->getData("SELECT optionId, response FROM poll_options WHERE pollId = '$pollId';");
+                                    if (!empty($rows)) {
+                                        echo '<form id="submitResponse">';
+                                        echo '<input type="hidden" name="userId" value="' . $userId . '">';
+                                        foreach ((array)$rows2 as $key2 => $row2) {
+                                            if (empty($rowsIfAnswered)) {
+                                                echo '<div class="form-check">
+                                                              <input class="form-check-input" type="radio" name="responseId" value="' . $row2['optionId'] . '" checked>
+                                                              <label class="form-check-label" for="response">' . $row2['response'] . '</label>
+                                                            </div>';
+                                            }
+                                        }
+                                        echo '<button type="button" class="btn btn-default btn-sm" onclick="respond(this,&quot;' . $pollId . '&quot;)">Submit Response</button>';
+                                        echo '</form>';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                            <?php }
+                        }
                     }
-                    echo $output;
-                ?>
-                <div class="panel panel-default" style="margin-top: 1rem;">
+                    ?>
+                </span>
+                <span id="loadResults"></span>
+                <span id="loadSeen"></span>
+
+                <div class="panel panel-default">
                     <div class="panel-body">
                         <button type="button" class="btn btn-primary fa fa-comment" data-toggle="modal" data-target="#myModal" name="addComment" id="addComment"> Comment </button>
                         <span id="comment_message"></span>
@@ -368,13 +342,18 @@ include 'GLOBAL_HEADER.php';
         </form>
     </div>
 </div>
+
+
 <script>
+
+    let isPaused = false;
+    let isSeenPaused = false;
+    let postId = "<?php echo $postId?>";
+
     $(document).ready(function(){
 
         $('.reply').click(function(){
         });
-
-        let postId = "<?php echo $postId?>";
 
         $('#comment_form').on('submit', function(event){
             event.preventDefault();
@@ -417,35 +396,6 @@ include 'GLOBAL_HEADER.php';
         });
 
 
-        setInterval(function() {
-            load_comment(postId);
-            load_views(postId);
-        }, 1000); //5
-
-        function load_comment(postId)
-        {
-            $.ajax({
-                url:"CMS_AJAX_FetchComments.php",
-                method:"POST",
-                data:{postId: postId},
-                success:function(data)
-                {
-                    $('#display_comment').html(data);
-                }
-            })
-        }
-
-        // function load_views(postId) {
-        //     $.ajax({
-        //         url:"CMS_AJAX_FetchViewers.php",
-        //         method:"POST",
-        //         data:{postId: postId},
-        //         success:function(data)
-        //         {
-        //             $('#display_view').html(data);
-        //         }
-        //     })
-        // }
 
 
         $(document).on('click', '.reply', function(){
@@ -454,28 +404,78 @@ include 'GLOBAL_HEADER.php';
             $('#comment_name').focus();
         });
 
-        //$('#loadResults').hide();
-        loadResults($('#loadResults'), '<?php echo $pollId; ?>');
-
-
+        loadResults(postId);
+        load_comment(postId);
+        loadSeen(postId);
     });
-    function loadResults(element,pollId){
-        setInterval(function(){
-            $.ajax({
-                url:"read_AJAX_LoadResults.php",
-                method:"POST",
-                data:{pollId: pollId},
-                success:function(data)
-                {
-                    $(element).html(data);
-                }
-            });
-        }, 5000);
+
+    setInterval(function(){
+        if(!isPaused){
+            loadResults(postId);
+        }
+        if(!isSeenPaused){
+            loadSeen(postId);
+        }
+        load_comment(postId);
+    }, 5000);
+
+    function load_comment(postId)
+    {
+        $.ajax({
+            url:"CMS_AJAX_FetchComments.php",
+            method:"POST",
+            data:{postId: postId},
+            success:function(data)
+            {
+                $('#display_comment').html(data);
+            }
+        })
     }
+
+    function loadSeen(postId){
+        $.ajax({
+            url:"read_AJAX_LoadResults.php",
+            method:"POST",
+            data:{requestType: 'POST_SEEN', postId: postId},
+            success:function(data)
+            {
+                $('#loadSeen').html(data);
+            }
+        });
+    }
+
+    function loadResults(postId){
+        $.ajax({
+            url:"read_AJAX_LoadResults.php",
+            method:"POST",
+            data:{requestType: 'ANSWERED_POLLS', postId: postId},
+            success:function(data)
+            {
+                $('#loadResults').html(data);
+            }
+        });
+    }
+
+    function pauseResults(){
+        isPaused = true;
+    }
+
+    function resumeResults(){
+        isPaused = false;
+    }
+
+    function toggleSeen(){
+        if(isSeenPaused){
+            isSeenPaused = false;
+        }else{
+            isSeenPaused = true;
+        }
+    }
+
     function respond(element, pollId){
         var form = $(element).closest('form').serialize();
-        var span = $(element).closest('div.card-body').find('span.loadResults');
         $(element).closest('form').remove();
+        $(element).closest('span').html('');
         $.ajax({
             url:"read_AJAX_Respond.php",
             method:"POST",
@@ -483,7 +483,7 @@ include 'GLOBAL_HEADER.php';
             dataType: "JSON",
             success:function(data)
             {
-                //loadResults(span,pollId);
+               loadResults(postId);
             }
         });
     }
