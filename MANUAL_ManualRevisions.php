@@ -109,7 +109,7 @@ include 'EDMS_SIDEBAR.php';
                 </div>
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Needs attention</a></li>
-                    <li role="presentation"><a href="#editing" aria-controls="editing" role="tab" data-toggle="tab">I'm currently editing</a></li>
+                    <li role="presentation"><a href="#editing" aria-controls="editing" role="tab" data-toggle="tab">Checked out by me</a></li>
                     <li role="presentation"><a href="#active" aria-controls="active" role="tab" data-toggle="tab">Active</a></li>
                     <li role="presentation"><a href="#archived" aria-controls="archived" role="tab" data-toggle="tab">Archived</a></li>
                     <li role="presentation"><a href="#published" aria-controls="published" role="tab" data-toggle="tab">Manual Editions</a></li>

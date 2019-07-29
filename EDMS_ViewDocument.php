@@ -159,16 +159,33 @@ if(isset($_GET['docId'])){
             $remarkType = $row['remark_action_type'];
         }
 
-        $rows = $crud->getStepUserPermissions($currentStepId, $firstAuthorId, $userId);
+        $rows = $crud->getStep($currentStepId);
         if(!empty($rows)){
-            foreach((array) $rows AS $key => $row){
-                $write = $row['write'];
-                $route = $row['route'];
-                $cycle = $row['cycle'];
+            $groupId = $rows[0]['groupId'];
+            $boolInGroup = $crud->isUserInGroup($userId, $groupId);
+            if($boolInGroup){
+                $write = $rows[0]['gwrite'];
+                $route = $rows[0]['groute'];
+                $cycle = $rows[0]['gcycle'];
+                $rows = $crud->getGroup($groupId);
+                if(!empty($rows)){
+                    $groupDesc = $rows[0]['groupDesc'];
+                    $groupName = $rows[0]['groupName'];
+                }
+            }else if($userId == $firstAuthorId){
+                $write = $rows[0]['write'];
+                $route = $rows[0]['route'];
+                $cycle = $rows[0]['cycle'];
+            }else{
+                $boolInWorkflow = $crud->isUserInWorkflow($userId, $currentStepId);
+                if($boolInWorkflow){
+                    $write = '1';
+                    $route = '1';
+                    $cycle = '1';
+                }else{
+                    header("Location:".$crud->redirectToPreviousWithAlert("DOC_NO_PERMISSIONS"));
+                }
             }
-        }else{
-            header("Location:".$crud->redirectToPreviousWithAlert("DOC_NO_PERMISSIONS"));
-            exit;
         }
 
         if($stateId == '2'){
@@ -868,15 +885,10 @@ include 'EDMS_SIDEBAR.php';
                                 <div class="modal-body">
                                     <?php
                                     $infoPermissions = "You don't have permissions in this step.";
-                                    if($userId == $firstAuthorId) {
+                                    if($boolInGroup){
+                                        $infoPermissions = 'This step is assigned to the <strong>'.$groupDesc.' ('.$groupName.')</strong> group. As a member of this group, the following permissions apply to you.';
+                                    }else if($userId == $firstAuthorId) {
                                         $infoPermissions = 'You are the creator of this document, therefore creator permissions granted in this stage will apply to you: ';
-                                    }else{
-                                        $stepGroupDetails = $crud->getStepGroupDetails($currentStepId);
-                                        if(!empty($stepGroupDetails)){
-                                            foreach((array) $stepGroupDetails AS $key => $row){
-                                                $infoPermissions = 'This step is assigned to the '.$row['groupDesc'].' ('.$row['groupName'].') group. As a member of this group, the following permissions apply to you.';
-                                            }
-                                        }
                                     }
 
                                     if($write == '2' || $cycle == '2' || $route == '2'){

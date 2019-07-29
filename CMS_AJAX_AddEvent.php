@@ -20,7 +20,7 @@ $crud = new GLOBAL_CLASS_CRUD();
     $endTime = preg_replace('/\s+/', 'T', $endTime);
 
     $bool = $crud->insertCalendarEvent($userId, $title, $body, $startTime, $endTime, $email_array, 'DAILY','1');
-    if(!$bool){
+    if($bool == false){
         echo 'Adding event failed.';
     }else{
         echo 'success';

@@ -167,7 +167,7 @@ if(isset($_POST['btnSubmit'])) {
         }
     }
 
-    if(isset($_POST['toUpdatePollId']) && isset($_POST['toUpdatePollQuestion']) && isset($_POST['toUpdateTypeId'])){
+    if(isset($_POST['toUpdatePollId']) && isset($_POST['toUpdatePollQuestion'])){
         $typeId = '1';
         $question = $_POST['toUpdatePollQuestion'];
         $pollId = $_POST['toUpdatePollId'];
@@ -231,22 +231,124 @@ include 'GLOBAL_HEADER.php';
 include 'CMS_SIDEBAR.php';
 ?>
 <style>
-
+    .pull-left{
+        float: left !important;
+    }
 </style>
     <script>
     $(document).ready( function(){
+
+        $("#modalAddEvent").on("show.bs.modal", function() {
+            $('#err').html('');
+            removeAllEmails();
+            $('#datetimepicker1').datetimepicker( {
+                minDate: moment(),
+                locale: moment().local('ph'),
+                defaultDate: moment().add(5,'minutes'),
+                format: 'YYYY-MM-DD HH:mm:ss'
+            });
+            $('#datetimepicker2').datetimepicker( {
+                minDate: moment().add(15, 'minutes'),
+                locale: moment().local('ph'),
+                defaultDate: moment().add(20, 'minutes'),
+                format: 'YYYY-MM-DD HH:mm:ss'
+            });
+        });
+
+
+        let table = $('#tblEvents').DataTable( {
+            bSort: true,
+            bFilter: false,
+            destroy: true,
+            pageLength: 3,
+            lengthChange: false,
+            aaSorting: [],
+            "ajax": {
+                "url":"CMS_AJAX_FetchEvents.php",
+                "type":"POST",
+                "dataSrc": '',
+                "data":{requestType: 'POST_ATTACHED_EVENTS', postId: '<?php echo $postId;?>' }
+            },
+            columns: [
+                { data: "event" }
+            ],
+            fnDrawCallback: function() {
+                $("#tblEvents thead").remove();
+            }
+        });
 
         let mode = '<?php echo $mode; ?>';
         let postId = "<?php echo $postId?>";
         let content = $('#post_content');
 
-        $('#btnUpdate').hide();
-        $('#form :input').on('keyup', function(){
-            $('#btnUpdate').show();
+        $('#btnUpdate').attr("disabled",true);
+        $('#form :input').not('#remarks').on('keyup', function(){
+            $('#btnUpdate').attr("disabled",false);
+        });
+
+        $('#btnUpdate').on('click', function(){
+           $('#modalAction').html($('#btnUpdate').html());
+           $('#btnModalSubmit').val($('#btnUpdate').val());
+        });
+
+        $('#btnPublication').on('click', function(){
+            $('#modalAction').html('Submit for Publication');
+            $('#btnModalSubmit').val('3');
+        });
+
+        $('#btnTrash').on('click', function(){
+            $('#modalAction').html('Trash');
+            $('#btnModalSubmit').val('5');
+        });
+
+        $('#btnUnpublish').on('click', function(){
+            $('#modalAction').html('Unpublish');
+            $('#btnModalSubmit').val('3');
+        });
+
+        $('#btnReview').on('click', function(){
+            $('#modalAction').html('For Review');
+            $('#btnModalSubmit').val('2');
+        });
+
+        $('#btnReject').on('click', function(){
+            $('#modalAction').html('Reject');
+            $('#btnModalSubmit').val('1');
+        });
+
+        $('#btnPublish').on('click', function(){
+            $('#modalAction').html('Publish');
+            $('#btnModalSubmit').val('4');
         });
 
         $('#btnUnlock').on('click', function(){
             $('#remarks').removeAttr('required');
+        });
+
+        $("#addEventForm").on('submit', function(e){
+            e.preventDefault();
+            //$('#myModal').modal({backdrop: 'static', keyboard: false});
+            $.ajax({
+                type: "POST",
+                url: "CMS_AJAX_FetchEvents.php",
+                cache: false,
+                processData: false,
+                contentType: false,
+                data: new FormData(this),
+                success: function(response){
+                    if(response === 'success'){
+                        $('#modalAddEvent').modal('toggle');
+                    }else{
+                        $('#err').append('<div class="alert alert-warning"><strong> Adding of event unsuccessful: </strong>'+response+'</div>');
+                    }
+                    table.ajax.reload();
+                },
+                error: function(){
+                    $('#modalAddEvent').modal('toggle');
+                    table.ajax.reload();
+                }
+            });
+            return false;
         });
 
         content.froalaEditor({
@@ -267,7 +369,7 @@ include 'CMS_SIDEBAR.php';
         }
 
         content.on('froalaEditor.contentChanged', function (e, editor) {
-            $('#btnUpdate').show();
+            $('#btnUpdate').attr("disabled",false);
         });
 
         content.froalaEditor('html.set', '<?php echo $body?>');
@@ -322,13 +424,40 @@ include 'CMS_SIDEBAR.php';
         });
 
     });
+
+    function addAllEmails(){
+        $('#btnInviteAll').attr('disabled',true);
+        $('#btnRemoveAll').attr('disabled',false);
+        $('.btn_remove_email').click();
+        $('.btn_add_email').click();
+    }
+    function removeAllEmails(){
+        $('#btnInviteAll').attr('disabled',false);
+        $('#btnRemoveAll').attr('disabled',true);
+        $('.btn_remove_email').click();
+    }
+
+    function addEmail(element, email, name){
+        $(element).hide()
+        let element_id = $(element).attr('id');
+        $('#addEmails').append('<div class="btn btn-success btn-sm btn_remove_email" onclick="removeEmail(this,&quot;'+element_id+'&quot;,&quot;'+email+'&quot;,&quot;'+name+'&quot;)" style="text-align: left;"><b>'+name+' ('+email+')</b>' +
+            '<input type="hidden" name="toAddEmails[]" value="'+email+'"></div>');
+    }
+    function removeEmail(element,id, email, name){
+        $(element).remove();
+        $('#btnInviteAll').attr('disabled',false);
+        $('#'+id).show();
+    }
+
     function reloadDataTable(){
         let loadedRefs = [];
         $(".refDocuments").each(function() {
             loadedRefs.push($(this).val());
         });
-        $('table').dataTable({
+        $('#dataTable').dataTable({
             destroy: true,
+            bSort: true,
+            aaSorting: [],
             "pageLength": 3,
             "ajax": {
                 "url":"CMS_AJAX_LoadToAddReferences.php",
@@ -580,19 +709,21 @@ include 'CMS_SIDEBAR.php';
                             }
                         ?>
                     </div>
-                    <div class="card" style="margin-bottom: 1rem;">
-                        <div class="card-header">
-                            <strong>Recent Remarks</strong>
-                        </div>
-                        <div class="card-body">
-                            Remarks made by <strong><?php echo $crud->getUserName($remarkedById);?></strong>
-                            <br>on <strong><i><?php echo $crud->friendlyDate($lastUpdated);?></i></strong>
-                            <br><br>
-                            <div class="alert alert-info" style="max-height: 20rem; overflow-y: auto;">
-                                <i>"<?php echo $remarks;?>"</i>
+                    <?php if($remarkedById != ''){ ?>
+                        <div class="card" style="margin-bottom: 1rem;">
+                            <div class="card-header">
+                                <strong>Recent Remarks</strong>
+                            </div>
+                            <div class="card-body">
+                                Remarks made by <strong><?php echo $crud->getUserName($remarkedById);?></strong>
+                                <br>on <strong><i><?php echo $crud->friendlyDate($lastUpdated);?></i></strong>
+                                <br><br>
+                                <div class="alert alert-info" style="max-height: 20rem; overflow-y: auto;">
+                                    <i>"<?php echo $remarks;?>"</i>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    <?php }?>
                     <div class="card" style="margin-bottom: 1rem;">
                         <div class="card-body" >
                             Author: <b><?php echo $author; ?></b><br>
@@ -613,61 +744,78 @@ include 'CMS_SIDEBAR.php';
                         <div class="card-footer">
                             <?php
                             if($mode == 'edit'){ ?>
-                                <div class="form-group">
-                                    <label for="remarks">Please provide remarks first before submitting.</label>
-                                    <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
+                                <div id="modalConfirm" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title"><strong>Confirm '<span id="modalAction"></span>'?</strong></h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <p>Please provide remarks first.</p>
+                                                    <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div class="form-group">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                    <button class="btn btn-primary" type="submit" name="btnSubmit" id="btnModalSubmit">Confirm</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <?php echo '<button type="submit" class="btn btn-primary" name="btnSubmit" id="btnUpdate" hidden>Save</button> ';
+                                <?php echo '<button class="btn btn-primary" data-toggle="modal" data-target="#modalConfirm" id="btnUpdate" hidden>Save</button> ';
                                 if($cmsRole == '4') {
                                     if($status == '1'){
-                                        echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
-                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                        echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnSubmit" value="4">Publish</button> ';
+                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     }else if ($status == '3') {
-                                        echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
-                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                        echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublish" value="4">Publish</button> ';
+                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReview" value="2">For Review</button> ';
+                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReject" value="1">Reject</button> ';
+                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     } else if ($status == '4') {
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="3">Unpublish</button> ';
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
-                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnUnpublish" value="3">Unpublish</button> ';
+                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReview" value="2">For Review</button> ';
+                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReject" value="1">Reject</button> ';
+                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     }
                                 }else if($cmsRole == '3') {
                                     if($status == '1'){
-                                        echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="3">Submit for Publication</button> ';
-                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                        echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublication" value="3">Submit for Publication</button> ';
+                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnSubmit" value="5">Trash</button> ';
                                     } else if ($status == '2') {
-                                        echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="3">Submit for Publication</button> ';
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
-                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                        echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublication" value="3">Submit for Publication</button> ';
+                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReject" value="1">Reject</button> ';
+                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     }
                                 }else if($cmsRole == '2'){
                                     if ($status == '1') {
-                                        echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="2">Submit for Review</button> ';
-                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                        echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnReview" value="2">Submit for Review</button> ';
+                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     }
                                 }else if($cmsRole == '5'){
                                     if($status == '1'){
-                                        echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
-                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                        echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublish" value="4">Publish</button> ';
+                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     }else if ($status == '3') {
-                                        echo '<button type="submit" class="btn btn-success" name="btnSubmit" id="btnSubmit" value="4">Publish</button> ';
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
-                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                        echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublish" value="4">Publish</button> ';
+                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReview" value="2">For Review</button> ';
+                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReject" value="1">Reject</button> ';
+                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     } else if ($status == '4') {
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="3">Unpublish</button> ';
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="2">For Review</button> ';
-                                        echo '<button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit" value="1">Reject</button> ';
-                                        echo '<button type="submit" class="btn btn-danger" name="btnSubmit" id="btnSubmit" value="5">Trash</button> ';
+                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnUnpublish" value="3">Unpublish</button> ';
+                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReview" value="2">For Review</button> ';
+                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReject" value="1">Reject</button> ';
+                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     }
                                 }
                                 echo '<button type="submit" class="btn btn-primary" name="btnUnlock" id="btnUnlock"> Exit </button> ';
                             }else if($availability == '2'){
                                 if($mode == 'view_with_button'){
                                     if($status == '5'){
-                                        echo '<button type="submit" class="btn btn-success" name="btnRestore" id="btnSubmit" value="' . $prevStatus . '">Restore</button> ';
+                                        echo '<button type="submit" class="btn btn-success" name="btnRestore" id="btnRestore" value="' . $prevStatus . '">Restore</button> ';
                                     }else{
                                         echo '<button type="submit" class="btn btn-primary" name="btnEdit" id="btnEdit"> Lock and Edit </button> ';
                                     }
@@ -681,6 +829,21 @@ include 'CMS_SIDEBAR.php';
                             ?>
                         </div>
                     </div>
+                    <?php if($cmsRole == '4' && $status == '4'){ ?>
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>Attach an event</strong>
+                            <button type="button" id="btnAddEvent" data-toggle="modal" data-target="#modalAddEvent" class="btn btn-primary btn-sm">Add Event</button>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-responsive table-condensed" id="tblEvents">
+                                <thead>
+                                    <th></th>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <?php }?>
                     </div>
 
             </div>
@@ -741,6 +904,81 @@ include 'CMS_SIDEBAR.php';
                 </div>
             </div>
 
+        </div>
+    </div>
+    <div id="modalAddEvent" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content" id="myModalContent">
+                <form method="POST" id="addEventForm">
+                    <input type="hidden" name="userId" value="<?php echo $userId; ?>">
+                    <input type="hidden" name="requestType" value="ADD_POST_EVENT">
+                    <input type="hidden" name="postId" value="<?php echo $postId;?>">
+                    <div class="modal-header">
+                        <b>Add Event</b>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="eventTitle">Name</label>
+                            <input type="text" name="event_title" id="eventTitle" class="form-control" value="<?php echo $title;?>" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="eventStart">Start Date</label>
+                                    <div class="input-group date" id="datetimepicker1">
+                                        <input id="event_start" name="event_start" type="text" class="form-control">
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="eventEnd">End Date</label>
+                                    <div class="input-group date" id="datetimepicker2">
+                                        <input id="event_end" name="event_end" type="text" class="form-control">
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="event_desc">Description</label>
+                            <textarea name="event_content" id="eventDescription" class="form-control" rows="5" required>For more details, refer to this post: http://localhost/FRAP_sd/read.php?pl=<?php echo $permalink;?></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="event_desc">Invite Members</label>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-success" id="btnInviteAll" onclick="addAllEmails()">Invite All</button>
+                                <button type="button" class="btn btn-sm btn-warning" id="btnRemoveAll" onclick="removeAllEmails()" disabled>Remove All</button>
+                            </div>
+                            <div class="card" style="min-height: 10rem; max-height: 10rem; overflow: auto;" id="addEmails">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="card" style="min-height: 10rem; max-height: 10rem; overflow: auto;" id="toAddEmails">
+                                <?php
+                                $rows = $crud->getData("SELECT CONCAT(e.LASTNAME,', ',e.LASTNAME) as name, e.EMAIL, e.MEMBER_ID FROM MEMBER e;");
+                                foreach((array)$rows as $key=>$row){
+                                    echo '<div class="btn btn-default btn-sm btn_add_email" id="email'.$row['MEMBER_ID'].'" onclick="addEmail(this,&quot;'.$row['EMAIL'].'&quot;,&quot;'.$row['name'].'&quot;)" style="text-align: left;"><b>'.$row['name'].' ('.$row['EMAIL'].')</b></div>';
+                                }
+                                ?>
+                            </div>
+                        </div>
+                        <span id="err"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <input type="submit" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 <?php include 'GLOBAL_FOOTER.php' ?>

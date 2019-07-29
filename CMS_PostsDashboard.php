@@ -57,6 +57,7 @@ $cmsRole = $_SESSION['CMS_ROLE'];
         }
 
         let table = $('table.table').DataTable( {
+            bSort: true,
             "ajax": {
                 "url":"CMS_AJAX_FetchPosts.php",
                 "type":"POST",
@@ -64,14 +65,14 @@ $cmsRole = $_SESSION['CMS_ROLE'];
                 "dataSrc": ''
             },
             columns: columns,
-            rowReorder: false
+            aaSorting: []
         });
 
         setInterval(function(){
             load_cms_notifications(userId);
             table.ajax.reload(null, false);
             $('.card-footer').html('Updated on '+table.cell(0,d).data());
-        },1000);
+        },5000);
 
         displayTable(table,'');
         displayTable(table,forMe,s, d);
@@ -113,7 +114,7 @@ $cmsRole = $_SESSION['CMS_ROLE'];
     });
 
     function displayTable(table, searchText, statusColumn, dateColumn){
-        table.column(statusColumn).search(searchText).column(dateColumn).order('desc').draw();
+        table.column(statusColumn).search(searchText).draw();
     }
 
     function load_cms_notifications(userId)
@@ -226,15 +227,6 @@ $cmsRole = $_SESSION['CMS_ROLE'];
                     </div>
                     <div class="card-body" style="max-height: 20rem; overflow: auto;">
                         <div id="activityStream"></div>
-                    </div>
-                </div>
-
-                <div class="card" style="margin-top: 1rem;">
-                    <div class="card-header">
-                        <b> Post Activity (Comments, Status Changes)</b>
-                    </div>
-                    <div class="card-body" style="max-height: 20rem; overflow: auto;">
-
                     </div>
                 </div>
             </div>

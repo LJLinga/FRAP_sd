@@ -656,15 +656,43 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     // ONE GROUP PER STEP ONLY, CHANGE OF DESIGN
     public function getStepUserPermissions($stepId, $creatorId, $userId)
     {
-        if ($userId == $creatorId) {
+        //Before: creator permissions before group permissions;
+        //After: group permissions first before creator;
+        $rows = $this->getStepGroupMemberPermissions($stepId, $userId);
+        if(!empty($rows)){
+            return $rows;
+        }else if($userId === $creatorId){
             return $this->getStep($stepId);
-        } else {
-            return $this->getStepGroupMemberPermissions($stepId, $userId);
         }
+        $rows = $this->getStep($stepId);
+        if(!empty($rows)){
+            $groupId = $rows[0]['groupId'];
+            $bool = $this->isUserInGroup($userId, $groupId);
+            if($bool){
+
+            }
+        }
+        $this->isUserInGroup();
     }
 
     public function getPublishableSections($manualId){
 
+    }
+
+    public function isUserInWorkflow($userId, $stepId){
+        $rows = $this->getData("SELECT pr.id FROM process pr 
+                                        JOIN steps s ON pr.id = s.processId
+                                        WHERE s.id = '$stepId' AND pr.id IN (SELECT p.id FROM process p 
+                                                        JOIN steps s on p.id = s.processId
+                                                        JOIN groups g ON s.groupId = g.id
+                                                        JOIN user_groups ug on g.id = ug.groupId
+                                                        WHERE ug.userId = '$userId')
+                                        LIMIT 1;");
+        if(!empty($rows)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public function getManualReferencableDocuments($sectionId){
@@ -923,7 +951,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                         $this->insertCalendarEventEmail($id, $value);
                     }
                 }
-                return true;
+                return $id;
             }else{
                 return false;
             }
@@ -932,6 +960,9 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         }
     }
 
+    public function insertTentativeEvent(){
+
+    }
     public function updateCalendarEvent(){
 
     }
