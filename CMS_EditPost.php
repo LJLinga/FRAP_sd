@@ -328,6 +328,8 @@ include 'CMS_SIDEBAR.php';
         $("#addEventForm").on('submit', function(e){
             e.preventDefault();
             //$('#myModal').modal({backdrop: 'static', keyboard: false});
+            $('#btnSubmitEvent').attr('disabled',true);
+            $('#err').html('<div class="alert alert-info">Adding event into Google Calendar. Please wait. </div>');
             $.ajax({
                 type: "POST",
                 url: "CMS_AJAX_FetchEvents.php",
@@ -339,13 +341,15 @@ include 'CMS_SIDEBAR.php';
                     if(response === 'success'){
                         $('#modalAddEvent').modal('toggle');
                     }else{
-                        $('#err').append('<div class="alert alert-warning"><strong> Adding of event unsuccessful: </strong>'+response+'</div>');
+                        $('#err').html('<div class="alert alert-warning"><strong> Adding of event unsuccessful: </strong>'+response+'</div>');
                     }
+                    $('#btnSubmitEvent').attr('disabled',false);
                     table.ajax.reload();
                 },
                 error: function(){
                     $('#modalAddEvent').modal('toggle');
                     table.ajax.reload();
+                    $('#btnSubmitEvent').attr('disabled',false);
                 }
             });
             return false;
@@ -475,11 +479,11 @@ include 'CMS_SIDEBAR.php';
     function removeRef(element, verId){
         $(element).closest('div.card').remove();
         $('#toRemoveDocRefs').append('<input type="hidden" name="toRemoveDocRefs[]" value="'+verId+'">');
-        $('#btnUpdate').show();
+        $('#btnUpdate').attr('disabled',false);
     }
     function addRef(element, verId, oA, cA, vN, uO, t, pN, fP, fN){
         $('#noRefsYet').remove();
-        $('#btnUpdate').show();
+        $('#btnUpdate').attr('disabled',false);
         $('#refDocuments').append('<div class="card" style="background-color: #e2fee2; position: relative;">'+
             '<input type="hidden" name="toAddDocRefs[]" class="refDocuments" value="'+verId+'">'+
             '<a style="text-align: left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse'+verId+'" aria-expanded="true" aria-controls="collapse'+verId+'"><b>'+t+'</b> <span class="badge">'+vN+'</span></a>'+
@@ -498,21 +502,21 @@ include 'CMS_SIDEBAR.php';
     }
     function removePoll(element, pollId){
         $(element).closest('div.card').remove();
-        $('#btnUpdate').show();
+        $('#btnUpdate').attr('disabled',false);
         $('#questionCardArea').append("<button type=\"button\" class=\"btn btn-default\" onclick=\"addPoll(this)\"><i class=\"fa fa-fw fa-plus\"></i>Add Question</button>");
         $('#toRemovePolls').append('<input type="hidden" name="toRemovePolls[]" value="'+pollId+'">');
     }
     function removeResponse(element){
         $(element).closest('.fieldRow').remove();
-        $('#btnUpdate').show();
+        $('#btnUpdate').attr('disabled',false);
     }
     function removeOldResponse(element,responseId){
         $(element).closest('.fieldRow').remove();
-        $('#btnUpdate').show();
+        $('#btnUpdate').attr('disabled',false);
         $('#toRemoveResponse').append('<input type="hidden" name="toRemoveResponse[]" value="'+responseId+'">');
     }
     function addResponse(element){
-        $('#btnUpdate').show();
+        $('#btnUpdate').attr('disabled',false);
         $('.fieldRow').last().after('<div class="row fieldRow"><br>\n' +
             '                                        <div class="col-lg-10">\n' +
             '                                            <input name="toAddResponse[]" type="text" class="form-control input-md option-input" placeholder="Add an answer" required>\n' +
@@ -524,6 +528,7 @@ include 'CMS_SIDEBAR.php';
     }
     function addPoll(element){
         $(element).remove();
+        $('#btnUpdate').attr('disabled',false);
         $('#questionCardArea').append("<div class=\"card\" id=\"questionCard\">\n" +
             "                            <div class=\"card-header\">\n" +
             "                                <div class=\"row fieldRow\">\n" +
@@ -693,9 +698,6 @@ include 'CMS_SIDEBAR.php';
                                     echo '</div></div></div>';
                                 }
                             }
-                            else{
-                                    echo 'No References';
-                                }
                             ?>
                             </span>
                             <span id="toRemoveDocRefs"></span>
@@ -974,7 +976,7 @@ include 'CMS_SIDEBAR.php';
                     <div class="modal-footer">
                         <div class="form-group">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            <input type="submit" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
+                            <input type="submit" name="btnSubmit" id="btnSubmitEvent" class="btn btn-primary">
                         </div>
                     </div>
                 </form>

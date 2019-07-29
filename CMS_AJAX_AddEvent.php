@@ -15,13 +15,18 @@ $crud = new GLOBAL_CLASS_CRUD();
     $startTime =  $_POST['event_start'];
     $endTime =  $_POST['event_end'];
     $userId =  $_POST['userId'];
-    $email_array = $_POST['toAddEmails'];
+    $email_array = [];
+    if(isset($_POST['toAddEmails'])){
+        $email_array = $_POST['toAddEmails'];
+    }
+
     $startTime = preg_replace('/\s+/', 'T', $startTime);
     $endTime = preg_replace('/\s+/', 'T', $endTime);
 
     $bool = $crud->insertCalendarEvent($userId, $title, $body, $startTime, $endTime, $email_array, 'DAILY','1');
-    if($bool == false){
-        echo 'Adding event failed.';
-    }else{
+
+    if(is_numeric($bool)){
         echo 'success';
+    }else{
+        echo $bool;
     }

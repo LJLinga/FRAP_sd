@@ -190,6 +190,8 @@ include 'CMS_SIDEBAR.php';
     $("#addEventForm").on('submit', function(e){
         e.preventDefault();
         //$('#myModal').modal({backdrop: 'static', keyboard: false});
+        $('#btnSubmit').attr('disabled',true);
+        $('#err').html('<div class="alert alert-info">Adding event into Google Calendar. Please wait.</div>');
         $.ajax({
             type: "POST",
             url: "CMS_AJAX_AddEvent.php",
@@ -201,13 +203,15 @@ include 'CMS_SIDEBAR.php';
                 if(response === 'success'){
                     $('#myModal').modal('toggle');
                 }else{
-                    $('#err').append('<div class="alert alert-warning"><strong> Adding of event unsuccessful: </strong>'+response+'</div>');
+                    $('#err').html('<div class="alert alert-warning"><strong> Adding of event unsuccessful: </strong>'+response+'</div>');
                 }
+                $('#btnSubmit').attr('disabled',false);
                 table.ajax.reload();
             },
             error: function(){
                 $('#myModal').modal('toggle');
                 table.ajax.reload();
+                $('#btnSubmit').attr('disabled',false);
             }
         });
         return false;

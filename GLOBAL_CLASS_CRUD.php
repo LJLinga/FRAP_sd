@@ -910,37 +910,46 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function insertCalendarEvent($userId, $title, $description, $startTime, $endTime, $email_array, $freq, $freqCount){
-        foreach((array) $email_array as $key=>$value) {
-            $data[] = array('email'=>$value);
+        $data = [];
+        if(!empty($email_array)){
+            foreach((array) $email_array as $key=>$value) {
+                $data[] = array('email'=>$value);
+            }
         }
 
-        $service = $this->getCalendarService();
+        try{
+            $service = $this->getCalendarService();
 
-        $event = new Google_Service_Calendar_Event(array(
-            'summary' => $title,
-            'location' => 'Manila',
-            'description' => $description,
-            'start' => array(
-                'dateTime' => $startTime,
-                'timeZone' => 'Asia/Manila',
-            ),
-            'end' => array(
-                'dateTime' => $endTime,
-                'timeZone' => 'Asia/Manila',
-            ),
-            'recurrence' => array(
-                'RRULE:FREQ='.$freq.';COUNT='.$freqCount
-            ),
-            'attendees' => $data,
-            'reminders' => array(
-                'useDefault' => TRUE
-            )
-        ));
+            $event = new Google_Service_Calendar_Event(array(
+                'summary' => $title,
+                'location' => 'Manila',
+                'description' => $description,
+                'start' => array(
+                    'dateTime' => $startTime,
+                    'timeZone' => 'Asia/Manila',
+                ),
+                'end' => array(
+                    'dateTime' => $endTime,
+                    'timeZone' => 'Asia/Manila',
+                ),
+                'recurrence' => array(
+                    'RRULE:FREQ='.$freq.';COUNT='.$freqCount
+                ),
+                'attendees' => $data,
+                'reminders' => array(
+                    'useDefault' => TRUE
+                )
+            ));
 
-        $calendarId = 'primary';
-        $event = $service->events->insert($calendarId, $event);
-        $eventId = $event->getId();
-        $eventLink = $event->htmlLink;
+            $calendarId = 'primary';
+            $event = $service->events->insert($calendarId, $event);
+            $eventId = $event->getId();
+            $eventLink = $event->htmlLink;
+
+
+        }catch(Exception $e){
+            return 'Google Calendar service did not respond.';
+        }
 
         if($eventLink !== ''){
             $id = $this->executeGetKey("INSERT INTO events (title, description, posterId, startTime, endTime, GOOGLE_EVENTID, GOOGLE_EVENTLINK) values ('$title', '$description','$userId','$startTime','$endTime','$eventId','$eventLink')");
@@ -953,11 +962,12 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                 }
                 return $id;
             }else{
-                return false;
+                return 'Cannot insert event into database.';
             }
         }else{
-            return false;
+            return 'Event link not found.';
         }
+
     }
 
     public function insertTentativeEvent(){

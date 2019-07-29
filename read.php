@@ -303,10 +303,14 @@ include 'GLOBAL_HEADER.php';
             <div id="calendarColumn" class="column col-lg-4 col-lg-offset-8" style="margin-top: 1rem; margin-bottom: 2rem; position: fixed;">
                 <div class="panel panel-default" style="margin-top: 1rem;">
                     <div class="panel-heading">
-                        <b> Events </b>
+                        <strong>Associated Events</strong>
                     </div>
-                    <div class="panel-body" >
-                        <iframe src="https://calendar.google.com/calendar/b/3/embed?showTitle=0&amp;showCalendars=0&amp;mode=AGENDA&amp;height=800&amp;wkst=2&amp;bgcolor=%23ffffff&amp;src=noreply.lapdoc%40gmail.com&amp;color=%231B887A&amp;src=en.philippines%23holiday%40group.v.calendar.google.com&amp;color=%23125A12&amp;ctz=Asia%2FManila" style="border-width:0" width="480" height="360" frameborder="0" scrolling="no"></iframe>
+                    <div class="card-body">
+                        <table class="table table-responsive table-condensed" id="tblEvents">
+                            <thead>
+                            <th></th>
+                            </thead>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -455,6 +459,27 @@ include 'GLOBAL_HEADER.php';
             }
         });
     }
+
+    let table = $('#tblEvents').DataTable( {
+        bSort: true,
+        bFilter: false,
+        destroy: true,
+        pageLength: 3,
+        lengthChange: false,
+        aaSorting: [],
+        "ajax": {
+            "url":"CMS_AJAX_FetchEvents.php",
+            "type":"POST",
+            "dataSrc": '',
+            "data":{requestType: 'POST_ATTACHED_EVENTS', postId: '<?php echo $postId;?>' }
+        },
+        columns: [
+            { data: "event" }
+        ],
+        fnDrawCallback: function() {
+            $("#tblEvents thead").remove();
+        }
+    });
 
     function pauseResults(){
         isPaused = true;

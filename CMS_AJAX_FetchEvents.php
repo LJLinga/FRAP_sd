@@ -90,20 +90,22 @@ if(isset($_POST['requestType'])){
         $startTime =  $_POST['event_start'];
         $endTime =  $_POST['event_end'];
         $userId =  $_POST['userId'];
-        $email_array = $_POST['toAddEmails'];
+
+        $email_array = [];
+
+        if(isset($_POST['toAddEmails'])){
+            $email_array = $_POST['toAddEmails'];
+        }
+
         $startTime = preg_replace('/\s+/', 'T', $startTime);
         $endTime = preg_replace('/\s+/', 'T', $endTime);
 
         $bool = $crud->insertCalendarEvent($userId, $title, $body, $startTime, $endTime, $email_array, 'DAILY','1');
-        if($bool == false){
-            echo 'Adding event failed.';
+        $bool2 = $crud->executeGetKey("INSERT INTO post_ref_events (postId, eventId) VALUES('$postId','$bool')");
+        if($bool2 != false){
+            echo 'success';
         }else{
-            $bool2 = $crud->executeGetKey("INSERT INTO post_ref_events (postId, eventId) VALUES('$postId','$bool')");
-            if($bool2 != false){
-                echo 'success';
-            }else{
-                echo 'Event added but failed to associate with post.';
-            }
+            echo $bool;
         }
     }
 }
