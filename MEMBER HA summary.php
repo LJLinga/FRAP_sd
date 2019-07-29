@@ -15,6 +15,14 @@ if(empty($checkForHealthAidApplication)){
 
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
 
+}else if($checkForHealthAidApplication['APP_STATUS'] == 3 || $checkForHealthAidApplication['APP_STATUS'] == 6){
+
+    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
+
+}else if($checkForHealthAidApplication['APP_STATUS'] == 4){
+
+    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA review.php");
+
 }
 
 
@@ -139,7 +147,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                 </div>
 
-            <?php if($checkForHealthAidApplication['APP_STATUS'] != 1){?>
+            <?php if($checkForHealthAidApplication['APP_STATUS'] != 1 && $checkForHealthAidApplication['APP_STATUS'] != 4 ){?>
 
                 <div class="col-lg-12">
                 <?php if($checkForHealthAidApplication['APP_STATUS'] == 2){?>

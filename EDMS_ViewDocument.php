@@ -686,6 +686,59 @@ include 'EDMS_SIDEBAR.php';
 
             <div class="col-lg-4">
 
+                <?php /**
+                 * This is where the Table for the Loan details is. Basically it gets the document type, and adjusts the table
+                 * as it sees fit.
+                 *
+                 *
+                 */
+                        $documentType = $crud->getData("SELECT typeId FROM documents WHERE DOC_ID = '$documentId'");
+
+
+                        if($documentType == 2){ // checks kung FALP
+                            $rows = $crud->getData("SELECT * FROM ref_document_loans WHERE LOAN_ID = {$_SESSION['LOAN_ID']} AND DOC_ID = '$documentId'");
+
+                            ?>
+
+
+
+
+
+
+
+
+                    <?php    }else if($documentType == 3){ // checks if Health Aid ?>
+
+
+                        }
+
+                        if(!empty($rows)){ ?>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                        <b>Loan Details</b>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-responsive table-striped table-condensed table-sm">
+                            <thead>
+
+                            </thead>
+                            <tbody>
+                            <?php foreach((array) $rows AS $key => $row){ ?>
+                                <tr>
+                                    <th>
+
+                                    </th>
+                                    <td>
+
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <?php }
+                ?>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <b>Document Details</b>

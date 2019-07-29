@@ -92,7 +92,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
         <div class="container-fluid">
 
-            <form action="MEMBER_UploadDocument_HA.php" method="POST" enctype="multipart/form-data" onsubmit="return confirm('Note: You will not be able to change the contents of your application unless you contact the Secretary. Would you like to proceed with your application?');">
+            <form action="MEMBER_UploadDocument_HA.php" method="POST" enctype="multipart/form-data">
 
                 <div class="row"> <!-- Title & Breadcrumb -->
 

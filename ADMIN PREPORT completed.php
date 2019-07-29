@@ -35,11 +35,11 @@ else {
    $dateStart = $_POST['event_start'];
             
             $yearStart = substr($dateStart,0,strpos($dateStart," "));
-            $monthStart = substr($dateStart,strpos($dateStart," ")+1);
+            $monthStart = date('m', strtotime(substr($dateStart,strpos($dateStart," ")+1)));
             if(!empty($_POST['event_end'])){
                 $dateEnd = $_POST['event_end'];
                 $yearEnd = substr($dateEnd,0,strpos($dateEnd," "));
-                $monthEnd = substr($dateEnd,strpos($dateEnd," ")+1);
+                $monthEnd = date('m', strtotime(substr($dateEnd,strpos($dateEnd," ")+1)));
             }
     if(!isset($yearEnd)){
         $query = "SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID,l.amount as 'Amount'
