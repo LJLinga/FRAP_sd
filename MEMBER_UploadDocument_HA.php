@@ -45,10 +45,10 @@ if(!empty($_FILES['upload_file'])){
 
     //insert query for health aid and save the record id for transactions
     $recordID = $crud->executeGetKey("INSERT INTO HEALTH_AID (MEMBER_ID, AMOUNT_TO_BORROW, MESSAGE, APP_STATUS) 
-                                                            VALUES({$_SESSION['idnum']}, {$_POST['amount']},'{$_POST['message']}', 1)");
-
-    $crud->execute("INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, HA_REF, SERVICE_ID)
-                          VALUES({$_SESSION['idnum']}, 1, 'Health Aid Application Sent!', 0.00 , {$recordID}, 2)");
+                                                            VALUES({$_SESSION['idnum']}, {$_POST['amount']},'{$_POST['message']}', 4)");
+//
+//    $crud->execute("INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, HA_REF, SERVICE_ID)
+//                          VALUES({$_SESSION['idnum']}, 1, 'Health Aid Application Sent!', 0.00 , {$recordID}, 2)");
 
 
 
@@ -57,7 +57,8 @@ if(!empty($_FILES['upload_file'])){
 
         $userId = $_SESSION['idnum'];
         $title = $_FILES['upload_file']['name'][$key];
-        $typeId = 5; // check the db for what type is needed for this. 5 is for Health aid
+        $typeId = 3; // check the db for what type is needed for this. 3 is for Health aid, 2 for loans
+
 
         $file_name = $_FILES['upload_file']['name'][$key];
         $file_size = $_FILES['upload_file']['size'][$key];

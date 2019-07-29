@@ -20,7 +20,7 @@ if(isset($_POST['idnum'])){
         while($row = mysqli_fetch_array($result))
         {
             //if statements here, to know if they are
-            if($row['SERVICE_ID'] == 4 && $row['MEMBER_ID'] != $_SESSION['idnum']){
+            if($row['SERVICE_ID'] == 4 && $row['MEMBER_ID'] != $_SESSION['idnum'] && $row['TXN_TYPE'] == 1){
                 $outputs .= '
                   <li>
                   <span class="label label-info">Loans</span>
@@ -28,7 +28,7 @@ if(isset($_POST['idnum'])){
                     '.date("F j, Y g:i:s A ", strtotime($row["TXN_DATE"])).'
                   </li><br>
                   ';
-            }else  if($row['SERVICE_ID'] == 2 && $row['MEMBER_ID'] != $_SESSION['idnum']){
+            }else  if($row['SERVICE_ID'] == 2 && $row['MEMBER_ID'] != $_SESSION['idnum'] && $row['TXN_TYPE'] == 1){
                 $outputs .= '
                   <li>
                   <span class="label label-info">Health Aid</span>

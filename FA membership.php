@@ -1177,6 +1177,8 @@ $success = null;
     <?php if (!empty($success)) {
         
         echo "<script type='text/javascript'>alert('Success!');</script>";
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/index.php");
         
     }
     else if(empty($success) && isset($_POST['submit'])){

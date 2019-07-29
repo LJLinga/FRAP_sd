@@ -12,7 +12,7 @@
     $queryMem = "SELECT M.MEMBER_ID, M.LASTNAME, M.FIRSTNAME, M.MIDDLENAME, M.DATE_APPLIED, D.DEPT_NAME FROM MEMBER AS M
                  JOIN REF_DEPARTMENT AS D
                  ON M.DEPT_ID = D.DEPT_ID
-                 WHERE USER_STATUS = '1' AND MEMBERSHIP_STATUS = '1';";
+                 WHERE  MEMBERSHIP_STATUS = '1';";
 
     $resultMem = mysqli_query($dbc, $queryMem);
 

@@ -31,12 +31,12 @@ having count(TXN_ID)=0;";
        
             $dateStart = $_POST['event_start'];
             
-            $yearStart = substr($dateStart,0,strpos($dateStart,"-"));
-            $monthStart = substr($dateStart,strpos($dateStart,"-")+1);
+            $yearStart = substr($dateStart,0,strpos($dateStart," "));
+            $monthStart =date('m', strtotime(substr($dateStart,strpos($dateStart," ")+1)));
             if(!empty($_POST['event_end'])){
                 $dateEnd = $_POST['event_end'];
-                $yearEnd = substr($dateEnd,0,strpos($dateEnd,"-"));
-                $monthEnd = substr($dateEnd,strpos($dateEnd,"-")+1);
+                $yearEnd = substr($dateEnd,0,strpos($dateEnd," "));
+                $monthEnd = date('m', strtotime(substr($dateEnd,strpos($dateEnd," ")+1)));
             }
 
        

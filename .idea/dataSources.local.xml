@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal">
-    <data-source name="facultyassocnew@localhost" uuid="42e24e7b-a75e-43fd-bfe4-4b3f05c9c788">
-      <database-info product="MySQL" version="5.7.26-log" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-java-8.0.15 (Revision: 79a4336f140499bd22dd07f02b708e163844e3d5)" dbms="MYSQL" exact-version="5.7.26" exact-driver-version="8.0">
+    <data-source name="facultyassocnew@localhost" uuid="edc0b0c1-5c65-4f32-98f3-5e1edc15ddb0">
+      <database-info product="MySQL" version="5.7.24-log" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.46 ( Revision: 9cc87a48e75c2d2e87c1a293b2862ce651cb256e )">
         <extra-name-characters>#@</extra-name-characters>
         <identifier-quote-string>`</identifier-quote-string>
       </database-info>
       <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower" />
       <secret-storage>master_key</secret-storage>
       <user-name>root</user-name>
-      <introspection-schemas>*:@</introspection-schemas>
+      <introspection-schemas>*:facultyassocnew</introspection-schemas>
     </data-source>
   </component>
 </project>
