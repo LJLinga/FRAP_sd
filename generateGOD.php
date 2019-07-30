@@ -21,7 +21,7 @@ function Header()
     $this->SetFont('Arial','B',10);
     // Move to the right
 	$this->Cell(25);
-	 $this->Cell(55,10,'Faculty Association,Inc.',0,0,'C');
+	 $this->Cell(55,10,'AFED Inc.',0,0,'C');
 	 $this->Ln(5);
 	 $this->Cell(29);
 	 $this->SetFont('Arial','',10);
@@ -42,7 +42,7 @@ function Footer()
     $this->Cell(0,5,'Page '.$this->PageNo().' of {nb}',0,0,'C');
 	$this->ln();
 	 $this->SetFont('Arial','',8);
-	$this->Cell(0,5,'FACULTY ASSOCIATION',0,1,'C');
+	$this->Cell(0,5,'AFED INC.',0,1,'C');
 	$this->Cell(0,5,'2401 Taft Avenue, Malate, Manila Philippines',0,1,'C');
 	$this->Cell(0,5,'(632) 524-4611 Ext. 332',0,1,'C');
 }
