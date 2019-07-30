@@ -261,12 +261,16 @@
                         });
                     }
 
+                    load_notifications();
+                    load_cms_notifications(temp);
+                    load_unseen_notification(temp);
+
                     setInterval(function(){
 
                         load_notifications();
                         load_cms_notifications(temp);
                         load_unseen_notification(temp); // this will run after every 1 second
-                    }, 1000);
+                    }, 5000);
 
 
                 });

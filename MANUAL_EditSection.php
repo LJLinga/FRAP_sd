@@ -137,14 +137,14 @@ if(isset($_POST['btnRevert'])){
         $rows = $crud->getData("SELECT content, title, sectionNo FROM section_versions WHERE versionId = '$versionId'");
         if(!empty($rows)){
             foreach((array) $rows AS $key => $row){
-                $content = $crud->esc($row['content']);
+                $content = $row['content'];
                 $title = $row['title'];
                 $sectionNo = $row['sectionNo'];
                 echo 'content==>'.$row['content'];
                 echo 'title==>'.$row['title'];
                 echo 'sectionNo==>'.$row['sectionNo'];
             }
-            $crud->execute("UPDATE sections SET versionNo='$versionNo', title='$title', sectionNo='$sectionNo', content='$content', authorId='$userId', remarks='$remarks' WHERE id='$sectionId';");
+            $crud->execute("UPDATE sections SET versionNo='$versionNo', title='$title', sectionNo='$sectionNo', content={{$content}}, authorId='$userId', remarks='$remarks' WHERE id='$sectionId';");
         }else{
             $error='&alert=DATABASE_ERROR';
         }
@@ -170,7 +170,7 @@ if(isset($_POST['btnRestore'])){
 if(isset($_GET['secId'])){
     $sectionId = $_GET['secId'];
 
-    header("Location:".$crud->redirectToPreviousWithAlert("SECTION_IS_ARCHIVED"));
+    //header("Location:".$crud->redirectToPreviousWithAlert("SECTION_IS_ARCHIVED"));
 
     $rows = $crud->getData("SELECT s.*, st.stepNo, st.stepName FROM sections s 
                                     JOIN steps st ON s.stepId = st.id
@@ -218,16 +218,34 @@ if(isset($_GET['secId'])){
             $versionNo = $row['versionNo'];
         }
 
-        $rows = $crud->getStepUserPermissions($currentStepId, $firstAuthorId, $userId);
+
+        $rows = $crud->getStep($currentStepId);
         if(!empty($rows)){
-            foreach((array) $rows AS $key => $row){
-                $write = $row['write'];
-                $route = $row['route'];
-                $cycle = $row['cycle'];
+            $groupId = $rows[0]['groupId'];
+            $boolInGroup = $crud->isUserInGroup($userId, $groupId);
+            if($boolInGroup){
+                $write = $rows[0]['gwrite'];
+                $route = $rows[0]['groute'];
+                $cycle = $rows[0]['gcycle'];
+                $rows = $crud->getGroup($groupId);
+                if(!empty($rows)){
+                    $groupDesc = $rows[0]['groupDesc'];
+                    $groupName = $rows[0]['groupName'];
+                }
+            }else if($userId == $firstAuthorId){
+                $write = $rows[0]['write'];
+                $route = $rows[0]['route'];
+                $cycle = $rows[0]['cycle'];
+            }else{
+                $boolInWorkflow = $crud->isUserInWorkflow($userId, $currentStepId);
+                if($boolInWorkflow){
+                    $write = '1';
+                    $route = '1';
+                    $cycle = '1';
+                }else{
+                    header("Location:".$crud->redirectToPreviousWithAlert("SECTION_NO_PERMISSIONS"));
+                }
             }
-        }else{
-            echo 'THIS->>>'.$currentStepId.','.$firstAuthorId.','.$userId;
-            header("Location:".$crud->redirectToPreviousWithAlert("SECTION_NO_PERMISSIONS"));
         }
 
         $edit = '2';
@@ -251,6 +269,7 @@ if(isset($_GET['secId'])){
                 $cycle = '1';
             }
         }
+
 
     }else{
         $crud->error404();
@@ -448,7 +467,7 @@ include 'EDMS_SIDEBAR.php';
                                                         <span class="label label-primary">MOVED</span> the section to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong>.
                                                         <br><span class="label label-default">CHECKED IN</span> the section.
                                                     <?php }else if($row['audit_action_type'] == 'CYCLED'){ ?>
-                                                        <?php echo $crud->lifecycleString($row['lifecycleId']);?> the section.
+                                                        <?php echo $crud->coloriseCycle($row['lifecycleId']);?> the section.
                                                     <?php }else if($row['audit_action_type'] == 'UPDATED' || $row['audit_action_type'] == 'CREATED') { ?>
                                                         <span class="label label-success"><?php echo $row['audit_action_type'];?></span> the section.
                                                     <?php }else if($row['audit_action_type'] == 'STATUSED/MOVED') { ?>
@@ -644,7 +663,7 @@ include 'EDMS_SIDEBAR.php';
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <?php if($write == '1'){ ?>
+                                                        <?php if($write == '3'){ ?>
                                                         <a class="btn btn-sm fa fa-refresh" data-toggle="modal" data-target="#modalRevert<?php echo $row['versionId'];?>"></a>
                                                         <div id="modalRevert<?php echo $row['versionId'];?>" class="modal fade" role="dialog">
                                                             <div class="modal-dialog modal-lg">
@@ -1017,15 +1036,10 @@ include 'EDMS_SIDEBAR.php';
                                             <div class="modal-body">
                                                 <?php
                                                 $infoPermissions = "You don't have permissions in this step.";
-                                                if($userId == $firstAuthorId) {
+                                                if($boolInGroup){
+                                                    $infoPermissions = 'This step is assigned to the <strong>'.$groupDesc.' ('.$groupName.')</strong> group. As a member of this group, the following permissions apply to you.';
+                                                }else if($userId == $firstAuthorId) {
                                                     $infoPermissions = 'You are the creator of this document, therefore creator permissions granted in this stage will apply to you: ';
-                                                }else{
-                                                    $stepGroupDetails = $crud->getStepGroupDetails($currentStepId);
-                                                    if(!empty($stepGroupDetails)){
-                                                        foreach((array) $stepGroupDetails AS $key => $row){
-                                                            $infoPermissions = 'This step is assigned to the '.$row['groupDesc'].' ('.$row['groupName'].') group. As a member of this group, the following permissions apply to you.';
-                                                        }
-                                                    }
                                                 }
 
                                                 if($write == '2' || $cycle == '2' || $route == '2'){

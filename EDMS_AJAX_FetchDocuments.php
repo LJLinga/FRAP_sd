@@ -30,8 +30,8 @@ if(isset($_POST['requestType'])){
                 AND d.stepId IN (SELECT s.id FROM user_groups ug
                                                     JOIN groups g ON ug.groupId = g.id
                                                     JOIN steps s ON g.id = s.groupId
-                                                    WHERE (ug.userId = '$userId' AND (s.groute = 2 OR s.gwrite = 2) AND d.firstAuthorId != '$userId')
-                                                    OR (s.route = 2 OR s.write = 2 AND d.firstAuthorId = '$userId'))
+                                                    WHERE (ug.userId = '$userId' AND (s.groute = 2 OR s.gwrite = 2))
+                                                    OR (s.route = 2 OR s.`write` = 2 AND d.firstAuthorId = '$userId'))
                 ORDER BY d.lastUpdated DESC;";
 
         //First subquery condition => Displays data given that you are in the steps assigned group with w/r permissions.
@@ -214,10 +214,11 @@ if(isset($_POST['requestType'])){
                 JOIN process pr ON pr.id = s.processId
                 WHERE t.isActive = 2
                 AND d.lifecycleStateId = 1
-                AND d.stepId IN (SELECT s.id FROM steps s
-                                JOIN groups g ON s.groupId = g.id 
-                                JOIN user_groups u on g.id = u.groupId
-                                WHERE u.userId = '$userId')
+                AND pr.id IN (SELECT p.id FROM user_groups ug
+                                                    JOIN groups g ON ug.groupId = g.id
+                                                    JOIN steps st ON g.id = st.groupId
+                                                    JOIN process p on st.processId = p.id
+                                                    WHERE ug.userId = '$userId')
                 ORDER BY d.lastUpdated DESC;";
 
                 //Second subquery checks if you are in step_groups
@@ -256,12 +257,10 @@ if(isset($_POST['requestType'])){
                 JOIN process pr ON pr.id = s.processId
                 WHERE t.isActive = 2 
                 AND d.lifecycleStateId = 1
-                
                 AND d.stepId IN (SELECT s.id FROM user_groups ug
                                                     JOIN groups g ON ug.groupId = g.id
                                                     JOIN steps s ON g.id = s.groupId
-                                                    WHERE ug.userId = '$userId' 
-                                                    AND s.gwrite = 2 OR (s.write = 2 AND d.firstAuthorId = '$userId'))
+                                                    WHERE (ug.userId = '$userId' AND (s.gwrite = 2 OR s.gcycle = 2 OR s.groute = 2)))
                 AND d.availabilityId = '2' AND d.availabilityById = '$userId'
                 ORDER BY d.lastUpdated DESC;";
 
@@ -324,11 +323,11 @@ if(isset($_POST['requestType'])){
                 JOIN process pr ON pr.id = s.processId
                 WHERE t.isActive = 2
                 AND d.lifecycleStateId = 2
-                AND d.stepId IN (SELECT s.id FROM user_groups ug
+                AND pr.id IN (SELECT p.id FROM user_groups ug
                                                     JOIN groups g ON ug.groupId = g.id
-                                                    JOIN steps s ON g.id = s.groupId
-                                                    WHERE ug.userId = '$userId' AND s.gcycle = 2
-                                                    OR (s.cycle = 2 AND d.firstAuthorId = '$userId'))
+                                                    JOIN steps st ON g.id = st.groupId
+                                                    JOIN process p on st.processId = p.id
+                                                    WHERE ug.userId = '$userId')
                 ORDER BY d.lastUpdated DESC;";
 
         $rows = $crud->getData($query);

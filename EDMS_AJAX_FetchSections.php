@@ -18,13 +18,15 @@ if(isset($_POST['requestType'])){
         $query = "SELECT s.*, st.stepNo, st.stepName
                 FROM sections s 
                 JOIN steps st ON st.id = s.stepId 
+                JOIn process p ON st.processId = p.id
                 WHERE s.statusId = 2
                 AND s.lifecycleId = 1
-                AND s.stepId IN (SELECT st.id FROM user_groups ug
+                AND p.id IN (SELECT p.id FROM user_groups ug
                                                     JOIN groups g ON ug.groupId = g.id
                                                     JOIN steps st ON g.id = st.groupId
+                                                    JOIN process p ON st.processId = p.id
                                                     WHERE (ug.userId = '$userId' AND (st.groute = 2 OR st.gwrite = 2) AND s.firstAuthorId != '$userId')
-                                                    OR (st.route = 2 OR st.write = 2 AND s.firstAuthorId = '$userId'))
+                                                    OR ((st.route = 2 OR st.write = 2) AND s.firstAuthorId = '$userId'))
                 ORDER BY s.sectionNo;";
 
         //First subquery condition => Displays data given that you are in the steps assigned group with w/r permissions.
@@ -51,11 +53,13 @@ if(isset($_POST['requestType'])){
         $query = "SELECT s.*, st.stepNo, st.stepName
                 FROM sections s 
                 JOIN steps st ON st.id = s.stepId 
+                JOIN process pr ON st.processId = pr.id
                 WHERE s.lifecycleId = 2
-                AND s.stepId IN (SELECT st.id FROM user_groups ug
+                AND pr.id IN (SELECT p.id FROM user_groups ug
                                                     JOIN groups g ON ug.groupId = g.id
                                                     JOIN steps st ON g.id = st.groupId
-                                                    WHERE ug.userId = '$userId' AND (st.gcycle = 2)
+                                                    JOIN process p on st.processId = p.id
+                                                    WHERE (ug.userId = '$userId' AND st.gcycle = 2)
                                                     OR (st.cycle = 2 AND s.firstAuthorId = '$userId'))
                 ORDER BY s.sectionNo;";
 
@@ -80,9 +84,11 @@ if(isset($_POST['requestType'])){
         $query = "SELECT s.*, st.stepNo, st.stepName
                 FROM sections s 
                 JOIN steps st ON st.id = s.stepId 
+                JOIN process pr ON st.processId = pr.id
                 WHERE
                 s.lifecycleId = 1
-                AND s.stepId IN (SELECT st.id FROM steps st
+                AND pr.id IN (SELECT pr.id FROM steps st
+                                JOIN process pr ON st.processId = pr.id
                                 JOIN groups g ON st.groupId = g.id 
                                 JOIN user_groups u on g.id = u.groupId
                                 WHERE u.userId = '$userId')
@@ -111,13 +117,15 @@ if(isset($_POST['requestType'])){
     }else if($requestType == 'MANUAL_SECTIONS_EDITING'){
         $query = "SELECT s.*, st.stepNo, st.stepName
                 FROM sections s 
-                JOIN steps st ON st.id = s.stepId 
+                JOIN steps st ON st.id = s.stepId
+                JOIN process p on st.processId = p.id
                 WHERE s.lifecycleId = 1
-                AND s.stepId IN (SELECT st.id FROM user_groups ug
+                AND p.id IN (SELECT p.id FROM user_groups ug
                                                     JOIN groups g ON ug.groupId = g.id
                                                     JOIN steps st ON g.id = st.groupId
+                                                    JOIn process p ON st.processId = p.id
                                                     WHERE ug.userId = '$userId' 
-                                                    AND st.gwrite = 2 OR (st.write = 2 AND s.firstAuthorId = '$userId'))
+                                                    AND (st.gwrite = 2 OR st.groute = 2 OR st.gcycle) OR ((st.write = 2 OR st.route = 2 OR st.cycle) AND s.firstAuthorId = '$userId'))
                 AND s.availabilityId = '2' AND s.availabilityById = '$userId'
                 ORDER BY s.sectionNo;";
 

@@ -73,8 +73,26 @@ include 'EDMS_SIDEBAR.php';
 ?>
 
 <div id="content-wrapper">
+
     <div class="container-fluid">
         <div class="row">
+            <?php $query = "SELECT COUNT(DISTINCT(ug.userId)) as num, g.groupName, g.groupDesc FROM groups g
+LEFT JOIN user_groups ug ON g.id = ug.groupId 
+JOIN steps s ON g.id = s.groupId 
+JOIN process pr ON s.processId = pr.id
+WHERE pr.id = 7
+GROUP BY g.id" ;
+
+            $rows = $crud->getData($query);
+            $text = '';
+            if(!empty($rows)){
+                foreach((array) $rows AS $key => $row){
+                    if($row['num'] == '0'){
+                        $text.='<br>'.$row['groupDesc'].' ('.$row['groupName'].')';
+                    }
+                }
+            }
+            ?>
             <div class="col-lg-12">
                 <h3 class="page-header"> Manual Revisions
                     <?php if($revisions == 'open' && $boolInGroup) echo '<a class="btn btn-primary" target="_blank" href="MANUAL_AddSection.php">Add Section</a>'; ?>
@@ -107,9 +125,15 @@ include 'EDMS_SIDEBAR.php';
                         </form>
                     </div>
                 </div>
+                <?php if($text != ''){ ?>
+                    <div class="alert alert-warning" id="modalGroupsAlert">
+                        The following groups still has no members, please contact the system administrator to at least assign a group admin in each one:
+                        <strong><?php echo $text;?></strong>
+                    </div>
+                <?php }?>
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Needs attention</a></li>
-                    <li role="presentation"><a href="#editing" aria-controls="editing" role="tab" data-toggle="tab">I'm currently editing</a></li>
+                    <li role="presentation"><a href="#editing" aria-controls="editing" role="tab" data-toggle="tab">Checked out by me</a></li>
                     <li role="presentation"><a href="#active" aria-controls="active" role="tab" data-toggle="tab">Active</a></li>
                     <li role="presentation"><a href="#archived" aria-controls="archived" role="tab" data-toggle="tab">Archived</a></li>
                     <li role="presentation"><a href="#published" aria-controls="published" role="tab" data-toggle="tab">Manual Editions</a></li>
@@ -474,9 +498,10 @@ include 'EDMS_SIDEBAR.php';
 
     </div>
 </div>
+</div>
 <script>
-
     $(document).ready(function(){
+
         $('#datetimepicker1').datetimepicker( {
             locale: moment().local('ph'),
             defaultDate: moment(),

@@ -63,7 +63,7 @@ class PDF_HTML extends FPDF
     function Header()
     {
         // Logo
-        $this->Image('FA Logo.jpg',10,10,20);
+        $this->Image('images/iafedlogo normal Edited.png',10,10,20);
         // Arial bold 15
         $this->SetFont('Arial','B',10);
         // Move to the right

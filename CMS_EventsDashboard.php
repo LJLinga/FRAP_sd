@@ -27,7 +27,7 @@ include 'CMS_SIDEBAR.php';
     <div class="container-fluid">
 
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <h3 class="page-header">
                     Events
                     <button name="btnAddEvent" id="btnAddEvent" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Add Event</button>
@@ -40,6 +40,9 @@ include 'CMS_SIDEBAR.php';
                                 <th align="left" width="200px"><b>Event</b></th>
                                 <th align="left" width="200px"><b>Start</b></th>
                                 <th align="left" width="200px"><b>End</b></th>
+                                <th align="left" width="200px"><b>Created by</b></th>
+                                <th align="left" width="200px"><b>Created on</b></th>
+                                <th align="left" width="200px"><b>Attached to Post</b></th>
                                 <th align="left" width="200px"><b>Action</b></th>
                             </tr>
                             </thead>
@@ -48,6 +51,9 @@ include 'CMS_SIDEBAR.php';
                                 <th align="left" width="200px"><b>Event</b></th>
                                 <th align="left" width="200px"><b>Start</b></th>
                                 <th align="left" width="200px"><b>End</b></th>
+                                <th align="left" width="200px"><b>Created by</b></th>
+                                <th align="left" width="200px"><b>Created on</b></th>
+                                <th align="left" width="200px"><b>Attached to Post</b></th>
                                 <th align="left" width="200px"><b>Action</b></th>
                             </tr>
                             </tfoot>
@@ -56,7 +62,6 @@ include 'CMS_SIDEBAR.php';
                 </div>
             </div>
         </div>
-
 
     </div>
     <!-- /.container-fluid -->
@@ -67,142 +72,85 @@ include 'CMS_SIDEBAR.php';
 
 </div>
 <!-- /#wrapper -->
-<div id="myModal" class="modal fade" role="dialog">
+<div id="myModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content" id="myModalContent">
                 <form method="POST" id="addEventForm">
                     <input type="hidden" name="userId" value="<?php echo $userId; ?>">
-                <div class="modal-header">
-                    <b>Add Event</b>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="eventTitle">Name</label>
-                        <input type="text" name="event_title" id="eventTitle" class="form-control" placeholder="Name your event..." required>
+                    <div class="modal-header">
+                        <b>Add Event</b>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="eventStart">Start Date</label>
-                                <div class="input-group date" id="datetimepicker1">
-                                    <input id="event_start" name="event_start" type="text" class="form-control">
-                                    <span class="input-group-addon">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="eventTitle">Name</label>
+                            <input type="text" name="event_title" id="eventTitle" class="form-control" placeholder="Name your event..." required>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="eventStart">Start Date</label>
+                                    <div class="input-group date" id="datetimepicker1">
+                                        <input id="event_start" name="event_start" type="text" class="form-control">
+                                        <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="eventEnd">End Date</label>
+                                    <div class="input-group date" id="datetimepicker2">
+                                        <input id="event_end" name="event_end" type="text" class="form-control">
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="eventEnd">End Date</label>
-                                <div class="input-group date" id="datetimepicker2">
-                                    <input id="event_end" name="event_end" type="text" class="form-control">
-                                    <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
-                                </div>
+                        <div class="form-group">
+                            <label for="event_desc">Description</label>
+                            <textarea name="event_content" id="eventDescription" class="form-control" rows="5" placeholder="Describe your event..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="event_desc">Invite Members</label>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-success" id="btnInviteAll" onclick="addAllEmails()">Invite All</button>
+                                <button type="button" class="btn btn-sm btn-warning" id="btnRemoveAll" onclick="removeAllEmails()" disabled>Remove All</button>
+                            </div>
+                            <div class="card" style="min-height: 10rem; max-height: 10rem; overflow: auto;" id="addEmails">
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="event_desc">Description</label>
-                        <textarea name="event_content" id="eventDescription" class="form-control" rows="5" placeholder="Describe your event..." required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="event_desc">Invite Members</label>
-                        <div class="card" style="min-height: 10rem; max-height: 10rem; overflow: auto;" id="addEmails">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="card" style="min-height: 10rem; max-height: 10rem; overflow: auto;" id="toAddEmails">
-                            <?php
-                                $rows = $crud->getData("SELECT CONCAT(e.LASTNAME,', ',e.LASTNAME) as name, e.EMAIL FROM MEMBER e;");
+                        <div class="form-group">
+                            <div class="card" style="min-height: 10rem; max-height: 10rem; overflow: auto;" id="toAddEmails">
+                                <?php
+                                $rows = $crud->getData("SELECT CONCAT(e.LASTNAME,', ',e.LASTNAME) as name, e.EMAIL, e.MEMBER_ID FROM MEMBER e;");
                                 foreach((array)$rows as $key=>$row){
-                                    echo '<div class="btn btn-default btn-sm" onclick="addEmail(this,&quot;'.$row['EMAIL'].'&quot;,&quot;'.$row['name'].'&quot;)" style="text-align: left;"><b>'.$row['name'].' ('.$row['EMAIL'].')</b></div>';
+                                    echo '<div class="btn btn-default btn-sm btn_add_email" id="email'.$row['MEMBER_ID'].'" onclick="addEmail(this,&quot;'.$row['EMAIL'].'&quot;,&quot;'.$row['name'].'&quot;)" style="text-align: left;"><b>'.$row['name'].' ('.$row['EMAIL'].')</b></div>';
                                 }
-                            ?>
+                                ?>
+                            </div>
+                        </div>
+                        <span id="err"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <input type="submit" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
                         </div>
                     </div>
-                    <span id="err"></span>
-                </div>
-                <div class="modal-footer">
-                    <div class="form-group">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <input type="submit" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
-                    </div>
-                </div>
                 </form>
             </div>
     </div>
 </div>
-<div id="modalContentCopy" class="modal-content" style="display:none">
-    <form method="POST" id="addEventForm">
-        <input type="hidden" name="userId" value="<?php echo $userId; ?>">
-        <div class="modal-header">
-            <b>Add Event</b>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label for="eventTitle">Name</label>
-                <input type="text" name="event_title" id="eventTitle" class="form-control" placeholder="Name your event..." required>
-            </div>
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label for="eventStart">Start Date</label>
-                        <div class="input-group date" id="datetimepicker1">
-                            <input id="event_start" name="event_start" type="text" class="form-control">
-                            <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label for="eventEnd">End Date</label>
-                        <div class="input-group date" id="datetimepicker2">
-                            <input id="event_end" name="event_end" type="text" class="form-control">
-                            <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="event_desc">Description</label>
-                <textarea name="event_content" id="eventDescription" class="form-control" rows="5" placeholder="Describe your event..." required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="event_desc">Invite Members</label>
-                <div class="card" style="min-height: 10rem; max-height: 10rem; overflow: auto;" id="addEmails">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="card" style="min-height: 10rem; max-height: 10rem; overflow: auto;" id="toAddEmails">
-                    <?php
-                    $rows = $crud->getData("SELECT CONCAT(e.LASTNAME,', ',e.LASTNAME) as name, e.EMAIL FROM MEMBER e;");
-                    foreach((array)$rows as $key=>$row){
-                        echo '<div class="btn btn-default btn-sm" onclick="addEmail(this,&quot;'.$row['EMAIL'].'&quot;,&quot;'.$row['name'].'&quot;)" style="text-align: left;"><b>'.$row['name'].' ('.$row['EMAIL'].')</b></div>';
-                    }
-                    ?>
-                </div>
-            </div>
-            <span id="err"></span>
-        </div>
-        <div class="modal-footer">
-            <div class="form-group">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <input type="submit" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
-            </div>
-        </div>
-    </form>
-</div>
 <script>
-    $("#myModal").on("hidden.bs.modal", function() {
-        $('#myModalContent').html($('#modalContentCopy').html());
+    $("#myModal").on("show.bs.modal", function() {
+        $('#eventTitle').val('');
+        $('#eventDescription').val('');
+        $('#err').html('');
+        removeAllEmails();
         $('#datetimepicker1').datetimepicker( {
             minDate: moment(),
             locale: moment().local('ph'),
@@ -220,7 +168,7 @@ include 'CMS_SIDEBAR.php';
     let table = $('#tblAllEvents').DataTable( {
         bSort: true,
         destroy: true,
-        pageLength: 5,
+        pageLength: 10,
         aaSorting: [],
         "ajax": {
             "url":"CMS_AJAX_FetchEvents.php",
@@ -232,26 +180,18 @@ include 'CMS_SIDEBAR.php';
             { data: "event" },
             { data: "start" },
             { data: "end"},
+            { data: "added_by"},
+            { data: "added_on"},
+            { data: "permalink"},
             { data: "action"}
         ]
     });
 
-    $('#datetimepicker1').datetimepicker( {
-        minDate: moment(),
-        locale: moment().local('ph'),
-        defaultDate: moment().add(5,'minutes'),
-        format: 'YYYY-MM-DD HH:mm:ss'
-    });
-    $('#datetimepicker2').datetimepicker( {
-        minDate: moment().add(15, 'minutes'),
-        locale: moment().local('ph'),
-        defaultDate: moment().add(20, 'minutes'),
-        format: 'YYYY-MM-DD HH:mm:ss'
-    });
-
     $("#addEventForm").on('submit', function(e){
         e.preventDefault();
-        $('#myModal').modal({backdrop: 'static', keyboard: false});
+        //$('#myModal').modal({backdrop: 'static', keyboard: false});
+        $('#btnSubmit').attr('disabled',true);
+        $('#err').html('<div class="alert alert-info">Adding event into Google Calendar. Please wait.</div>');
         $.ajax({
             type: "POST",
             url: "CMS_AJAX_AddEvent.php",
@@ -263,26 +203,41 @@ include 'CMS_SIDEBAR.php';
                 if(response === 'success'){
                     $('#myModal').modal('toggle');
                 }else{
-                    $('#err').append(response);
+                    $('#err').html('<div class="alert alert-warning"><strong> Adding of event unsuccessful: </strong>'+response+'</div>');
                 }
+                $('#btnSubmit').attr('disabled',false);
                 table.ajax.reload();
             },
             error: function(){
                 $('#myModal').modal('toggle');
                 table.ajax.reload();
+                $('#btnSubmit').attr('disabled',false);
             }
         });
         return false;
     });
+    function addAllEmails(){
+        $('#btnInviteAll').attr('disabled',true);
+        $('#btnRemoveAll').attr('disabled',false);
+        $('.btn_remove_email').click();
+        $('.btn_add_email').click();
+    }
+    function removeAllEmails(){
+        $('#btnInviteAll').attr('disabled',false);
+        $('#btnRemoveAll').attr('disabled',true);
+        $('.btn_remove_email').click();
+    }
+
     function addEmail(element, email, name){
-        $(element).remove();
-        $('#addEmails').append('<div class="btn btn-success btn-sm" onclick="removeEmail(this,&quot;'+email+'&quot;,&quot;'+name+'&quot;)" style="text-align: left;"><b>'+name+' ('+email+')</b>' +
+        $(element).hide()
+        let element_id = $(element).attr('id');
+        $('#addEmails').append('<div class="btn btn-success btn-sm btn_remove_email" onclick="removeEmail(this,&quot;'+element_id+'&quot;,&quot;'+email+'&quot;,&quot;'+name+'&quot;)" style="text-align: left;"><b>'+name+' ('+email+')</b>' +
             '<input type="hidden" name="toAddEmails[]" value="'+email+'"></div>');
     }
-    function removeEmail(element, email, name){
+    function removeEmail(element,id, email, name){
         $(element).remove();
-        $('#toAddEmails').append('<div class="btn btn-default btn-sm" onclick="addEmail(this,&quot;'+email+'&quot;,&quot;'+name+'&quot;)" style="text-align: left;"><b>'+name+' ('+email+')</b></div>');
-        //$('#toRemoveDocRefs').append('<input type="hidden" name="toRemoveDocRefs[]" value="'+verId+'">');
+        $('#btnInviteAll').attr('disabled',false);
+        $('#'+id).show();
     }
 </script>
 <?php include 'GLOBAL_FOOTER.php'?>

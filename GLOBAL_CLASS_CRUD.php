@@ -604,7 +604,7 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                 JOIN doc_type t ON t.id = d.typeId
                 JOIN steps s ON s.id = d.stepId
                 JOIN process pr ON pr.id = s.processId
-                WHERE t.isActive = 2 AND (d.firstAuthorId = '$userId' OR d.authorId = '$userId')
+                WHERE t.isActive = 2 AND (d.firstAuthorId = '$userId')
                 AND d.availabilityById = '$userId' AND d.availabilityId = '2'
                 ORDER BY d.lastUpdated DESC;");
     }
@@ -656,15 +656,43 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     // ONE GROUP PER STEP ONLY, CHANGE OF DESIGN
     public function getStepUserPermissions($stepId, $creatorId, $userId)
     {
-        if ($userId == $creatorId) {
+        //Before: creator permissions before group permissions;
+        //After: group permissions first before creator;
+        $rows = $this->getStepGroupMemberPermissions($stepId, $userId);
+        if(!empty($rows)){
+            return $rows;
+        }else if($userId === $creatorId){
             return $this->getStep($stepId);
-        } else {
-            return $this->getStepGroupMemberPermissions($stepId, $userId);
         }
+        $rows = $this->getStep($stepId);
+        if(!empty($rows)){
+            $groupId = $rows[0]['groupId'];
+            $bool = $this->isUserInGroup($userId, $groupId);
+            if($bool){
+
+            }
+        }
+        $this->isUserInGroup();
     }
 
     public function getPublishableSections($manualId){
 
+    }
+
+    public function isUserInWorkflow($userId, $stepId){
+        $rows = $this->getData("SELECT pr.id FROM process pr 
+                                        JOIN steps s ON pr.id = s.processId
+                                        WHERE s.id = '$stepId' AND pr.id IN (SELECT p.id FROM process p 
+                                                        JOIN steps s on p.id = s.processId
+                                                        JOIN groups g ON s.groupId = g.id
+                                                        JOIN user_groups ug on g.id = ug.groupId
+                                                        WHERE ug.userId = '$userId')
+                                        LIMIT 1;");
+        if(!empty($rows)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public function getManualReferencableDocuments($sectionId){
@@ -882,37 +910,46 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
     }
 
     public function insertCalendarEvent($userId, $title, $description, $startTime, $endTime, $email_array, $freq, $freqCount){
-        foreach((array) $email_array as $key=>$value) {
-            $data[] = array('email'=>$value);
+        $data = [];
+        if(!empty($email_array)){
+            foreach((array) $email_array as $key=>$value) {
+                $data[] = array('email'=>$value);
+            }
         }
 
-        $service = $this->getCalendarService();
+        try{
+            $service = $this->getCalendarService();
 
-        $event = new Google_Service_Calendar_Event(array(
-            'summary' => $title,
-            'location' => 'Manila',
-            'description' => $description,
-            'start' => array(
-                'dateTime' => $startTime,
-                'timeZone' => 'Asia/Manila',
-            ),
-            'end' => array(
-                'dateTime' => $endTime,
-                'timeZone' => 'Asia/Manila',
-            ),
-            'recurrence' => array(
-                'RRULE:FREQ='.$freq.';COUNT='.$freqCount
-            ),
-            'attendees' => $data,
-            'reminders' => array(
-                'useDefault' => TRUE
-            )
-        ));
+            $event = new Google_Service_Calendar_Event(array(
+                'summary' => $title,
+                'location' => 'Manila',
+                'description' => $description,
+                'start' => array(
+                    'dateTime' => $startTime,
+                    'timeZone' => 'Asia/Manila',
+                ),
+                'end' => array(
+                    'dateTime' => $endTime,
+                    'timeZone' => 'Asia/Manila',
+                ),
+                'recurrence' => array(
+                    'RRULE:FREQ='.$freq.';COUNT='.$freqCount
+                ),
+                'attendees' => $data,
+                'reminders' => array(
+                    'useDefault' => TRUE
+                )
+            ));
 
-        $calendarId = 'primary';
-        $event = $service->events->insert($calendarId, $event);
-        $eventId = $event->getId();
-        $eventLink = $event->htmlLink;
+            $calendarId = 'primary';
+            $event = $service->events->insert($calendarId, $event);
+            $eventId = $event->getId();
+            $eventLink = $event->htmlLink;
+
+
+        }catch(Exception $e){
+            return 'Google Calendar service did not respond.';
+        }
 
         if($eventLink !== ''){
             $id = $this->executeGetKey("INSERT INTO events (title, description, posterId, startTime, endTime, GOOGLE_EVENTID, GOOGLE_EVENTLINK) values ('$title', '$description','$userId','$startTime','$endTime','$eventId','$eventLink')");
@@ -923,15 +960,19 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
                         $this->insertCalendarEventEmail($id, $value);
                     }
                 }
-                return true;
+                return $id;
             }else{
-                return false;
+                return 'Cannot insert event into database.';
             }
         }else{
-            return false;
+            return 'Event link not found.';
         }
+
     }
 
+    public function insertTentativeEvent(){
+
+    }
     public function updateCalendarEvent(){
 
     }

@@ -151,33 +151,28 @@ $userName = $rows[0]['name'];
     <div class="modal-dialog">
         <div class="panel panel-green">
             <div class="panel-heading">
-                <b> As
-                    <?php
-                    $rows = $crud->getData("SELECT roleName FROM edms_roles WHERE id = ".$_SESSION['EDMS_ROLE']." LIMIT 1;");
-                    echo $rows[0]['roleName'];
-                    ?>
-                </b> your workflows are
+                <strong>My Groups</strong>
             </div>
             <div class="panel-body">
+                <div class="alert alert-info">
+                    Go to your groups page to see your workflow involvements.
+                </div>
                 <?php
-                    $rows = $crud->getData("SELECT  pr.processName, s.stepNo, s.stepName AS name 
-                                                    FROM employee e 
-                                                    JOIN edms_roles er ON e.EDMS_ROLE = er.id 
-                                                    JOIN step_roles sr ON sr.roleId = er.id
-                                                    JOIN steps s ON s.id = sr.stepId
-                                                    JOIN process pr ON pr.id = s.processId
-                                                    WHERE e.EMP_ID = '$userId'
-                                                    ORDER BY pr.processName, s.stepNo");
-                    if(!empty($rows)){
-                        foreach((array)$rows AS $key => $row){
-                            echo '<div class="card" style="margin-top: 1rem;">';
-                            echo '<div class="card-body">';
-                            echo $row['processName'].' <i class="fa fa-arrow-right"></i> Step '.$row['stepNo'].' - '.$row['name'].'<br>';
-                            echo '</div></div>';
-                        }
-                    }else{
-                        echo 'You have no workflows but is still able to submit documents to their respective workflows.';
-                    }
+
+                $groups = $crud->getUserGroups($userId);
+                if(!empty($groups)){ ?>
+                    <table class="table table-condensed table-responsive table-striped">
+                        <tbody>
+                        <?php foreach((array) $groups AS $key => $row){ ?>
+                            <tr>
+                                <th><?php echo $row['groupDesc'];?></th>
+                                <td width="20px"><a class="btn btn-sm btn-default" href="GRP_Group_Settings.php?id=<?php echo $row['id'];?>" target="_blank">Go to group</a></td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                    <?php
+                }
                 ?>
             </div>
             <div class="panel-footer">
