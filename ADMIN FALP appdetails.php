@@ -58,7 +58,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
         </div>
 
-            <div class="col-lg-8">
+            <div class="col-lg-6">
 
                 <div class="col-lg-6">
 
@@ -296,7 +296,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
             <!--                        Containsthe Statuses + Receipt-->
 
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <div class="row">
                     <div class="col-lg-12">
 
@@ -318,6 +318,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                         <td align="center"><b>Document Name</b></td>
                                         <td align="center"><b>Status</b></td>
+                                        <td align="center"><b>Remarks</b></td>
                                         <td align="center"><b>Link to Doc</b></td>
 
                                     </tr>
@@ -328,7 +329,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                     <?php
                                     //gets the document ids and their
-                                    $query = "SELECT d.documentId, d.title, ds.statusName, rdlrq.REQ_TYPE
+                                    $query = "SELECT d.documentId, d.title,d.remarks, ds.statusName, rdlrq.REQ_TYPE
                                              from ref_document_loans rdl
                                              join documents d 
                                              ON rdl.DOC_ID = d.documentId
@@ -345,9 +346,10 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <tr>
                                             <td align='center'> <?php echo $row['REQ_TYPE']; ?></td>
                                             <td align='center'> <?php echo $row['statusName']; ?></td>
+                                            <td align='center'> <?php echo $row['remarks']; ?></td>
                                             <td align='center'> <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>" target="_blank">
 
-                                                    <button type="button" class="btn btn-success"><i class="fa fa-search" aria-hidden="true"></i></button></a></td>
+                                                    <button type="button" class="btn btn-success"><i class="fa fa-file" aria-hidden="true"></i></button></a></td>
                                         </tr>
                                     <?php }?>
 

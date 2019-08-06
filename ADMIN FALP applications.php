@@ -221,7 +221,7 @@ $crud = new GLOBAL_CLASS_CRUD();
                                                       ON RDL.DOC_ID = D.documentId
                                                       JOIN steps S
                                                       ON D.stepId = S.id
-                                                      WHERE L.LOAN_STATUS != 3 && L.LOAN_STATUS != 4 && L.LOAN_STATUS != 5
+                                                      WHERE L.LOAN_STATUS != 3 && L.LOAN_STATUS != 4 && L.LOAN_STATUS != 6
                                                       AND L.PICKUP_STATUS != 3
                                                       AND RDL.DOC_REQ_TYPE = 1;";
                                             $result = mysqli_query($dbc, $query);

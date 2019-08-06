@@ -27,6 +27,14 @@ if(!empty($checkForHealthAidApplication)){
 
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
 
+    }else if($checkForHealthAidApplication['APP_STATUS'] == 4){
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA review.php");
+
+    }else if($checkForHealthAidApplication['APP_STATUS'] == 5){
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
+
     }
 //    else if($checkForHealthAidApplication['APP_STATUS'] == 4){ //for the draft status
 //

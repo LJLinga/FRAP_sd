@@ -101,11 +101,16 @@ if(isset($_POST['requestType'])){
         $endTime = preg_replace('/\s+/', 'T', $endTime);
 
         $bool = $crud->insertCalendarEvent($userId, $title, $body, $startTime, $endTime, $email_array, 'DAILY','1');
-        $bool2 = $crud->executeGetKey("INSERT INTO post_ref_events (postId, eventId) VALUES('$postId','$bool')");
-        if($bool2 != false){
-            echo 'success';
+        if(is_numeric($bool)){
+            $bool2 = $crud->executeGetKey("INSERT INTO post_ref_events (postId, eventId) VALUES('$postId','$bool')");
+            if($bool2 != false){
+                echo 'success';
+            }else{
+                echo $bool2;
+            }
         }else{
             echo $bool;
         }
+
     }
 }

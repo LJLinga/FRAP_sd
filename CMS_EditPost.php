@@ -770,7 +770,7 @@ include 'CMS_SIDEBAR.php';
                                 <?php echo '<button class="btn btn-primary" data-toggle="modal" data-target="#modalConfirm" id="btnUpdate" hidden>Save</button> ';
                                 if($cmsRole == '4') {
                                     if($status == '1'){
-                                        echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnSubmit" value="4">Publish</button> ';
+                                        echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublish" value="4">Publish</button> ';
                                         echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     }else if ($status == '3') {
                                         echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublish" value="4">Publish</button> ';
@@ -786,7 +786,7 @@ include 'CMS_SIDEBAR.php';
                                 }else if($cmsRole == '3') {
                                     if($status == '1'){
                                         echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublication" value="3">Submit for Publication</button> ';
-                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnSubmit" value="5">Trash</button> ';
+                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     } else if ($status == '2') {
                                         echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublication" value="3">Submit for Publication</button> ';
                                         echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReject" value="1">Reject</button> ';

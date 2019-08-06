@@ -2,7 +2,13 @@
 <project version="4">
   <component name="dataSourceStorageLocal">
     <data-source name="facultyassocnew@localhost" uuid="edc0b0c1-5c65-4f32-98f3-5e1edc15ddb0">
-      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MYSQL" exact-version="0" />
+      <database-info product="MySQL" version="5.7.24-log" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.46 ( Revision: 9cc87a48e75c2d2e87c1a293b2862ce651cb256e )">
+        <extra-name-characters>#@</extra-name-characters>
+        <identifier-quote-string>`</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>root</user-name>
       <introspection-schemas>*:@</introspection-schemas>
     </data-source>
   </component>

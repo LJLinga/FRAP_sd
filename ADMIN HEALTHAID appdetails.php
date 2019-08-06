@@ -88,7 +88,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
         <div class = "row" style="margin-top: 5px;">
 
-            <div class="col-lg-8">
+            <div class="col-lg-6">
 
                 <div class="panel panel-green">
 
@@ -127,7 +127,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
 
 
-            <div class= "col-lg-4">
+            <div class= "col-lg-6">
 
                 <div class="panel panel-green">
 
@@ -139,9 +139,26 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                     <div class="panel-body">
 
+                        <table id="table" name="table" class="table table-bordered table-striped">
+
+                            <thead>
+
+                            <tr>
+
+                                <td align="center"><b>Document Name</b></td>
+                                <td align="center"><b>Status</b></td>
+                                <td align="center"><b>Remarks</b></td>
+                                <td align="center"><b>View Doc</b></td>
+
+                            </tr>
+
+                            </thead>
+
+                            <tbody>
+
                         <?php
                         //gets the document ids and their
-                        $query = "SELECT d.documentId, d.title, d.statusId,ds.statusName
+                        $query = "SELECT d.documentId, d.title, d.statusId,ds.statusName, d.remarks
                                          from ref_document_healthaid rdh
                                          join documents d 
                                          ON rdh.DOC_ID = d.documentId
@@ -153,15 +170,21 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
 
                         foreach((array) $rows as $key => $row){   ?>
+                            <tr>
+                                <td align='center'> <?php echo $row['title'] ?></td>
+                                <td align='center'> <?php echo $row['statusName'] ?></td>
+                                <td align='center'> <?php echo $row['remarks'] ?></td>
+                                <td align='center'> <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>">
 
-                            <a href ="EDMS_ViewDocument.php?docId=<?php echo $row['documentId'];?>">
+                                        <button type="button" class="btn btn-info"><i class="fa fa-file" aria-hidden="true"></i></button></a></td>
 
-                                <button type="button" class="btn btn-success"><?php echo $row['title'] ?></button></a>
-
-                            <?php echo $row['statusName'] ?>
-
+                            </tr>
 
                         <?php }?>
+
+                            </tbody>
+
+                        </table>
 
                     </div>
 
@@ -258,7 +281,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                 <?php if($isThereRejected){ ?>
 
-                                <input type="number" name="amount_to_give"  class="form-control" id="usr" size="5" style="width:250px;">
+                                <input type="number" name="amount_to_give"  class="form-control" id="usr" size="5" style="width:250px;" disabled>
 
                                 <?php }else if($checkForHealthAidApplication['APP_STATUS'] == 2 ){ ?>
 

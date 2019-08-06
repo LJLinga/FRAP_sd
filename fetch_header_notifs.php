@@ -36,7 +36,7 @@ if(isset($_POST['idnum'])){
                     '.date("F j, Y g:i:s A ", strtotime($row["TXN_DATE"])).'
                   </li><br>
                   ';
-            }else if($row['SERVICE_ID'] == 4){
+            }else if($row['SERVICE_ID'] == 4 ){
                 $outputs .= '
                   <li>
                   <span class="label label-info">Loans</span>

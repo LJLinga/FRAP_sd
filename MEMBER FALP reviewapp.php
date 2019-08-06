@@ -34,24 +34,23 @@
 
     if(!empty($row)){
 
-        if($row['LOAN_STATUS'] == 5){
+        if($row['LOAN_STATUS'] == 6){
 
             header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP application.php");
 
-        }
-
-
-        if($row['LOAN_STATUS'] == 1){ //checks if you have a pending loan
+        }else if($row['LOAN_STATUS'] == 1){ //checks if you have a pending loan
 
             header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
 
         } else if($row['LOAN_STATUS'] == 2 ) { //checks if you have a loan that is ongoing.
 
-            if ($row['PAYMENT_TERMS'] > $row['PAYMENTS_MADE']){ //checks if the loan is 50%
 
-                header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
+            header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
 
-            }
+        } else if($row['LOAN_STATUS'] == 3){ // if your loan is matured
+
+            header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP application.php");
+
 
         }
 
@@ -87,7 +86,7 @@
 
     }else if(isset($_POST['deleteApp'])){ //delete was pressed
 
-        $crud->execute("UPDATE loans SET LOAN_STATUS = 5 WHERE LOAN_ID ={$ans['LOAN_ID']}");
+        $crud->execute("UPDATE loans SET LOAN_STATUS = 6 WHERE LOAN_ID ={$ans['LOAN_ID']}");
 
         $queryForDocs = "SELECT rdl.DOC_ID from ref_document_loans rdl
                               JOIN loans l 
@@ -105,11 +104,7 @@
 
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP application.php");
 
-        //delete all the documents or archive it
 
-        //first archve the shit out of the documents
-
-        //then delete the referrences
 
 
     }
@@ -361,33 +356,82 @@
 
                     </div>
 
-                    <div class="row">
+                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 
-                        <div class="col-lg-12">
+                <div class="row">
 
-                            <div align="center">
-<!--                            put an if here that will stop them from accessing the Payment activity UNTIL the shit is accepted.-->
-
-                                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return confirm('Notice: Once you do this action, you cannot undo it.')">
-
-                                    <input type="submit" name="deleteApp" class="btn btn-danger" value="Delete Application" style="margin:10px;">
-
-                                    <input type="submit" name="submitApp" class="btn btn-success" value="Submit Application" style="margin:10px;">
-
-
-
-
-
-                                </form>
-
-
-
-                            </div>
+                        <div class="col-lg-4">
 
                         </div>
 
 
+                        <div class="col-lg-2">
+                            <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#confirmDelete">
+                                Delete Application
+                            </button>
 
+                        </div>
+
+                        <div class="col-lg-2">
+                            <button class="btn btn-success" type="button" data-toggle="modal" data-target="#confirmSubmit">
+                                Submit Application
+                            </button>
+                            <!--                    <input type="submit" name="applyHA" class="btn btn-success" value="Submit Draft">-->
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                        </div>
+
+                        <div id="confirmSubmit" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title"> Confirm Submission </h3>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <p>Are you sure you want to submit this application? Once this is done, you can no longer change your information. </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button class="btn btn-success" type="submit" name="submitApp">Confirm</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="confirmDelete" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title"> Confirm Submission </h3>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <p>Are you sure you want to delete this application? </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button class="btn btn-success" type="submit" name="archiveHA">Confirm</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        </form>
                     </div>
 
 

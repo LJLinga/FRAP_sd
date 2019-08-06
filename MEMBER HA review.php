@@ -36,6 +36,11 @@ if(!empty($checkForHealthAidApplication)){
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
 
 
+    }else if($checkForHealthAidApplication['APP_STATUS'] == 5){
+
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
+
+
     }
 //    else if($checkForHealthAidApplication['APP_STATUS'] == 4){ //for the draft status
 //
@@ -51,7 +56,52 @@ if(!empty($checkForHealthAidApplication)){
 
 
 // put submit code here
+if(isset($_POST['applyHA'])){
+    //Change the status into Approved (APP_STATUS =2)
+    $crud->execute("UPDATE health_aid SET APP_STATUS = 1 WHERE RECORD_ID = {$checkForHealthAidApplication['RECORD_ID']}");
 
+
+    $crud->execute("INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, HA_REF, SERVICE_ID)
+                         VALUES({$_SESSION['idnum']}, 1, 'Health Aid Application Sent!', 0.00 , {$checkForHealthAidApplication['RECORD_ID']}, 2)");
+
+    //update the document types to be Pending.
+    $queryForDocs = "SELECT rdh.DOC_ID from ref_document_healthaid rdh
+                              JOIN health_aid ha
+                              ON rdh.RECORD_ID = ha.RECORD_ID
+                              WHERE rdh.RECORD_ID = {$checkForHealthAidApplication['RECORD_ID']}";
+    $resultDocIDs = mysqli_query($dbc, $queryForDocs);
+
+
+    foreach($resultDocIDs as $resultDocs){
+
+        $crud->execute("UPDATE documents d SET d.statusedById = {$_SESSION['idnum']}, d.stepId = 14, d.statusId = 2 WHERE d.documentId = {$resultDocs['DOC_ID']}");
+
+    }
+
+    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA summary.php");
+
+}else if(isset($_POST['archiveHA'])){
+    //Change the status into Approved (APP_STATUS = 6)
+    $crud->execute("UPDATE health_aid SET APP_STATUS = 6 WHERE RECORD_ID = {$checkForHealthAidApplication['RECORD_ID']}");
+
+    $queryForDocs = "SELECT rdh.DOC_ID from ref_document_healthaid rdh
+                              JOIN health_aid ha
+                              ON rdh.RECORD_ID = ha.RECORD_ID
+                              WHERE rdh.RECORD_ID = {$checkForHealthAidApplication['RECORD_ID']}";
+    $resultDocIDs = mysqli_query($dbc, $queryForDocs);
+
+
+    foreach($resultDocIDs as $resultDocs){
+
+        $crud->execute("UPDATE documents d SET d.statusedById = {$_SESSION['idnum']}, d.stepId = 1, d.statusId = 1 WHERE d.documentId = {$resultDocs['DOC_ID']}");
+
+    }
+
+    //update the status of health aid into archived, then send the user back to the application.
+
+
+    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
+}
 
 
 
@@ -218,6 +268,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
             </div>
 
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 
             <div class="row">
                 <div class="col-lg-4">
@@ -295,7 +346,7 @@ include 'FRAP_USER_SIDEBAR.php';
             </div>
 
         </div>
-
+        </form>
     </div>
 
 

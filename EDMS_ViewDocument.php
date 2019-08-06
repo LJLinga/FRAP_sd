@@ -104,7 +104,7 @@ if(isset($_GET['docId'])){
 
     // Load document
     $query = "SELECT 
-                d.firstAuthorId, d.timeCreated, d.availabilityId, d.versionNo, d.authorId, d.title, d.filePath, d.lastUpdated,
+                d.firstAuthorId, d.timeCreated, d.availabilityId, d.versionNo, d.authorId, d.title, d.filePath, d.lastUpdated, d.typeId,
 		        CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS originalAuthor, dt.type,
                 (SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) FROM employee e WHERE e.EMP_ID = d.authorId) AS currentAuthor,
                 (SELECT CONCAT(e2.LASTNAME,', ',e2.FIRSTNAME) FROM employee e2 WHERE e2.EMP_ID = d.statusedById) AS statusedByName,
@@ -144,6 +144,7 @@ if(isset($_GET['docId'])){
             $statusId = $row['statusId'];
             $stateId = $row['lifecycleStateId'];
             $docType = $row['type'];
+            $docTypeNum = $row['typeId'];
             $statusName = $crud->assignStatusString($statusId);
             $statusUpdaterName = $row['statusedByName'];
             $statusedOn = $row['statusedOn'];
@@ -217,6 +218,43 @@ if(isset($_GET['docId'])){
 
 $page_title = $docType.' > '.$title;
 
+
+/**
+ * This is for my parts christian, just dont touch these, as these will be needed to load data. I will claim this bit of your code.
+ * i used the non crud version as I am only getting one row and it is impractical to for each if you know you are only getting one
+ * row of code.
+ *
+ * I have tested these and these do not affect you. Do not worry brother, we got each others backs!
+ */
+    if($docTypeNum == 2){
+        $loanDetailsQuery = "SELECT l.LOAN_ID, l.MEMBER_ID ,l.AMOUNT,l.PAYMENT_TERMS, l.PER_PAYMENT,l.DATE_APPLIED, l.DATE_APPROVED, ls.STATUS as 'LOAN_STATUS'
+                                                                    FROM ref_document_loans rdl
+                                                                    JOIN loans l 
+                                                                    on rdl.LOAN_ID = l.LOAN_ID
+                                                                    JOIN loan_status ls 
+                                                                    on l.LOAN_STATUS = ls.STATUS_ID
+                                                                    JOIN pickup_status ps 
+                                                                    on l.PICKUP_STATUS = ps.STATUS_ID
+                                                                    WHERE rdl.DOC_ID = {$documentId} ";
+        $loanDetailsResult = mysqli_query($dbc,$loanDetailsQuery);
+        $loanDetails = mysqli_fetch_array($loanDetailsResult);
+    }else if($docTypeNum == 3){
+
+        $healthAidDetailsQuery = "SELECT ha.RECORD_ID, ha.MEMBER_ID as 'MEMBER_ID', ha.AMOUNT_TO_BORROW , aps.STATUS as 'APP_STATUS' , ps.STATUS as 'PICKUP_STATUS', ha.MESSAGE, ha.DATE_APPLIED, ha.DATE_APPROVED
+                                                                FROM ref_document_healthaid rdh
+                                                                JOIN health_aid ha
+                                                                on rdh.RECORD_ID = ha.RECORD_ID
+                                                                JOIN app_status aps
+                                                                on ha.APP_STATUS = aps.STATUS_ID
+                                                                JOIN pickup_status ps 
+                                                                on ha.PICKED_UP_STATUS = ps.STATUS_ID
+                                                                WHERE rdh.DOC_ID = {$documentId}";
+        $healthAidDetailsResult = mysqli_query($dbc,$healthAidDetailsQuery);
+        $healthAidDetails = mysqli_fetch_array($healthAidDetailsResult);
+
+    }
+
+
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
 ?>
@@ -232,7 +270,60 @@ include 'EDMS_SIDEBAR.php';
                         <a href="EDMS_Workspace.php">Workspace</a>
                     </li>
                     <li>
-                        <?php echo $processName;?>
+                        <?php
+                        /**
+                         * BREADCRUMBS CODE - This relies on the queries below the header.
+                         *
+                         * What these do is that it makes the user go back to the link. Or could be used by an admin to quick jump
+                         * back to the user application.
+                         *
+                         * So basically, functional breadcrumbs to. Again, no need to worry about this part brother!
+                         *
+                         * $docTypeNum - What type of document? Is it FALP or Health Aid?  2 For FALP and 3 for Health Aid
+                         *
+                         *
+                         *
+                         */
+                        if($docTypeNum == 2){ //checks if its from FALP
+
+                            if(!empty($loanDetails)) {
+
+                                if ($loanDetails['MEMBER_ID'] == $_SESSION['idnum']) {  //checks if member or admin. Also checks if its the same user that applied for this
+                                    ?>
+
+                                    <a href="MEMBER%20FALP%20summary.php"><?php echo $processName; ?></a>
+
+                                <?php } else if ($loanDetails['MEMBER_ID'] != $_SESSION['idnum'] && $_SESSION['FRAP_ROLE'] == 2){ // meaning you are the secretary
+                                    $_SESSION['showFID'] = $loanDetails['LOAN_ID']; // thjis is jsut for safety purposes so that the admin is redirected back to the application he/she/they were viewing. ?>
+
+                                    <a href="ADMIN%20FALP%20appdetails.php"><?php echo $processName; ?></a>
+
+                                <?php }
+                            }?>
+
+                        <?php }else if($docTypeNum == 3){  //checks if its from health aid
+
+                            if(!empty($healthAidDetails)) {
+
+                                if ($healthAidDetails['MEMBER_ID'] == $_SESSION['idnum']) {  //checks if member or admin. Also checks if its the same user that applied for this
+                                    ?>
+
+                                    <a href="MEMBER%20HA%20summary.php"><?php echo $processName; ?></a>
+
+                                <?php } else if ($healthAidDetails['MEMBER_ID'] != $_SESSION['idnum'] && $_SESSION['FRAP_ROLE'] == 2){ // meaning you are the secretary
+                                    $_SESSION['showHAID'] = $healthAidDetails['RECORD_ID']; // thjis is jsut for safety purposes so that the admin is redirected back to the application he/she/they were viewing. ?>
+
+                                    <a href="ADMIN%20HEALTHAID%20appdetails.php"><?php echo $processName; ?></a>
+
+                                <?php }
+                            }?>
+
+
+                        <?php }else{?>
+
+                            <?php echo $processName;?>
+
+                        <?php }?>
                     </li>
                     <li class="active">
                         <?php echo $title; ?>
@@ -702,60 +793,160 @@ include 'EDMS_SIDEBAR.php';
             </div>
 
             <div class="col-lg-4">
+            <?php /**
+             * LOAN/HEALTH AID DETAILS CODE
+             *
+             * This is where the Table for the Loan details/Health Aid details is. Basically it gets the document type, and adjusts the table
+             * as it sees fit.
+             *
+             *
+             */
 
-                <?php /**
-                 * This is where the Table for the Loan details is. Basically it gets the document type, and adjusts the table
-                 * as it sees fit.
-                 *
-                 *
-                 */
-                        $documentType = $crud->getData("SELECT typeId FROM documents WHERE DOC_ID = '$documentId'");
-
-
-                        if($documentType == 2){ // checks kung FALP
-                            $rows = $crud->getData("SELECT * FROM ref_document_loans WHERE LOAN_ID = {$_SESSION['LOAN_ID']} AND DOC_ID = '$documentId'");
-
-                            ?>
+            if($docTypeNum == 2){ // checks kung FALP
 
 
+                if(!empty($loanDetails)){ ?>
 
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <b>Loan Details</b>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-responsive table-striped table-condensed table-sm">
+                                <tbody>
 
-
-
-
-
-                    <?php    }else if($documentType == 3){ // checks if Health Aid ?>
-
-
-                        }
-
-                        if(!empty($rows)){ ?>
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                        <b>Loan Details</b>
-                    </div>
-                    <div class="panel-body">
-                        <table class="table table-responsive table-striped table-condensed table-sm">
-                            <thead>
-
-                            </thead>
-                            <tbody>
-                            <?php foreach((array) $rows AS $key => $row){ ?>
                                 <tr>
                                     <th>
-
+                                        Amount to be Borrowed
                                     </th>
                                     <td>
-
+                                        ₱ <?php echo number_format($loanDetails['AMOUNT'],2); ?>
                                     </td>
                                 </tr>
-                            <?php } ?>
-                            </tbody>
-                        </table>
+                                <tr>
+                                    <th>
+                                        Payment Terms
+                                    </th>
+                                    <td>
+                                        <?php echo $loanDetails['PAYMENT_TERMS']; ?> Months
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Per Payment Deduction
+                                    </th>
+                                    <td>
+                                        ₱ <?php echo number_format($loanDetails['PER_PAYMENT'],2); ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Monthly Deduction
+                                    </th>
+                                    <td>
+                                        ₱ <?php echo number_format(($loanDetails['PER_PAYMENT']*2),2); ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Date Applied
+                                    </th>
+                                    <td>
+                                        <?php echo date("m/d/y", strtotime($loanDetails['DATE_APPLIED'])); ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Date Approved
+                                    </th>
+                                    <td>
+                                        <?php if(!empty($loanDetails['DATE_APPROVED'])){
+                                        echo  date("m/d/y", strtotime($loanDetails['DATE_APPROVED']));
+                                        }else{
+                                            echo "-------------";
+                                        }?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Loan Status
+                                    </th>
+                                    <td>
+                                        <?php echo $loanDetails['LOAN_STATUS']; ?>
+                                    </td>
+                                </tr>
+
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-                <?php }
-                ?>
+
+
+
+                <?php } ?>
+
+            <?php }else if($docTypeNum == 3){ // checks if Health Aid
+
+                if(!empty($healthAidDetails)){
+                    ?>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <b>Health Aid Details</b>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-responsive table-striped table-condensed table-sm">
+                                <tbody>
+
+                                <tr>
+                                    <th>
+                                        Amount to Borrow
+                                    </th>
+                                    <td>
+                                        ₱ <?php echo number_format($healthAidDetails['AMOUNT_TO_BORROW'],2); ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Message
+                                    </th>
+                                    <td>
+                                        <?php echo $healthAidDetails['MESSAGE']; ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Application Status
+                                    </th>
+                                    <td>
+                                        <?php echo $healthAidDetails['APP_STATUS']; ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Date Applied
+                                    </th>
+                                    <td>
+                                        <?php echo date("m/d/y", strtotime($healthAidDetails['DATE_APPLIED'])); ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Date Approved
+                                    </th>
+                                    <td>
+                                        <?php echo  date("m/d/y", strtotime($healthAidDetails['DATE_APPROVED']));?>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                <?php    }
+            } ?>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <b>Document Details</b>
