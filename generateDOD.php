@@ -156,7 +156,9 @@ $pdf->SetFont('Times','',10);
 
 $result=mysqli_query($dbc,$query2);
 $total1=0;
-
+$totalMFee=0;
+$totalFFee=0;
+$totalHAFee=0;
 while($row=mysqli_fetch_assoc($result)){
 $last = $row['LAST'];
 $first = $row['FIRST'];
@@ -165,19 +167,25 @@ $middle = $row['MIDDLE'];
 $falp =	0;
 $bank = 0;
 $health = 0;
-$mfee = (float)$row['MFee'];
 
+$total= 0.00;
 
 
 $pdf->Cell(40);
 $pdf->Cell(20,5,$row['ID']	,'L,B,R',0,'C');
 $pdf->Cell(70	,5,"$last, $first $middle"	,'L,B,R',0,'L');
-
-$pdf->Cell(30	,5, number_format($mfee,2)	,'L,B,R',0,'R');
-$total= 0.00;	
+if(!empty($row['MFee'])){
+    $mfee = (float)$row['MFee'];
+    $pdf->Cell(30	,5, number_format($mfee,2)	,'L,B,R',0,'R');
+    $totalMFee +=$mfee;
+    	
+}
+else
+    $pdf->Cell(30   ,5,'0.00','L,B,R',0,'R');
 if(!empty($row['FFee'])){
 	$falp =	(float)$row['FFee'];
 	$pdf->Cell(25	,5, number_format($falp,2),'L,B,R',0,'R');
+    $totalFFee +=$falp;
 }
 else
 	$pdf->Cell(25	,5,'0.00','L,B,R',0,'R');
@@ -185,6 +193,7 @@ else
 if(!empty($row['HAFee'])){
 	$health =(float)$row['HAFee'];
 	$pdf->Cell(25	,5,number_format($health,2)	,'L,B,R',0,'R');
+    $totalHAFee +=$health;
 }
 else
 	$pdf->Cell(25	,5,'0.00'	,'L,B,R',0,'R');
@@ -192,7 +201,7 @@ else
 
 
 
-$total = (float)$mfee+(float)$bank+(float)$falp+(float)$health;
+$total = (float)$mfee+(float)$falp+(float)$health;
 
 
 $total = $total;
@@ -204,7 +213,13 @@ $pdf->ln();
 
 }
 $pdf->Cell(40);
-$pdf->Cell(200   ,5, number_format($total1,2) ,'L,B,R',0,'R');
+$pdf->SetFont('Times','B',10);
+$pdf->Cell(90   ,5, 'Totals:' ,'L,B',0,'R');
+$pdf->SetFont('Times','',10);
+$pdf->Cell(30   ,5, number_format($totalMFee,2) ,'B',0,'R');
+$pdf->Cell(25   ,5, number_format($totalFFee,2),'B',0,'R');
+$pdf->Cell(25   ,5, number_format($totalHAFee,2),'B',0,'R');
+$pdf->Cell(30   ,5, number_format($total1,2) ,'B,R',0,'R');
 $pdf->ln();
 
 $pdf->SetFont('Times','B',12);

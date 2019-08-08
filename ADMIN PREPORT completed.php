@@ -63,7 +63,7 @@ on l.member_id = m.member_id
 }
 $result2 = mysqli_query($dbc,$query);
 
-$page_title = 'Loans - Completed Deductions';
+$page_title = 'Loans - Matured Loans';
 include 'GLOBAL_HEADER.php';
 include 'FRAP_ADMIN_SIDEBAR.php';
 
@@ -77,7 +77,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
-                            Completed Deductions
+                            Matured Loans
 
                             
                         </h1>
