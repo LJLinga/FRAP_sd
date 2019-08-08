@@ -4,9 +4,9 @@
     session_start();
     include 'GLOBAL_USER_TYPE_CHECKING.php';
     include 'GLOBAL_FRAP_ADMIN_CHECKING.php';
-
+    include 'GLOBAL_CLASS_CRUD.php';
 if(date('d')==30 || (date('m') == 2 && date('d')==28)){
-    $queryDed = "SELECT m.MEMBER_ID, count(t.txn_id) from member m  
+    /*$queryDed = "SELECT m.MEMBER_ID, count(t.txn_id) from member m  
 left join (SELECT m.MEMBER_ID as 'Member_ID',t.txn_id from member m right join txn_reference t on m.MEMBER_ID=t.MEMBER_ID where date(txn_date) = date(now())) t 
 on m.MEMBER_ID = t.MEMBER_ID 
 where m.membership_status = 2 and m.user_status = 1  
@@ -16,7 +16,7 @@ having count(TXN_ID)=0;";
     while($row = mysqli_fetch_assoc($result)){
         $queryMemDed = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE,TXN_DESC,AMOUNT,TXN_DATE,SERVICE_ID) VALUES({$row['MEMBER_ID']},2,'Deduction for membership',100,date(now()),1);";
         mysqli_query($dbc,$queryMemDed);
-    }
+    }*/
 }
     if(!isset($_POST['select_date'])){
        $query = "SELECT month(max(txn_date)) as 'Month',Year(max(txn_date)) as 'Year' from txn_reference where txn_type = 2";
@@ -42,7 +42,7 @@ having count(TXN_ID)=0;";
        
 
 }
-$page_title = 'Loans - Collected Membership Fees';
+$page_title = 'Loans - Collected Fees';
 include 'GLOBAL_HEADER.php';
 include 'FRAP_ADMIN_SIDEBAR.php';
 ?>
@@ -56,7 +56,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
-                            Collected Membership Fees for <?php if(isset($yearStart)){echo date('F', mktime(0, 0, 0, $monthStart, 10)).' '.$yearStart;
+                            Collected Fees for <?php if(isset($yearStart)){echo date('F', mktime(0, 0, 0, $monthStart, 10)).' '.$yearStart;
                                 if(isset($yearEnd)){
 
                                     echo ' - '.date('F', mktime(0, 0, 0, $monthEnd, 10)).' '.$yearEnd;
@@ -92,24 +92,22 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                   <form action = "ADMIN MREPORT report.php" method = "post">
 
                         <div class="col-lg-12lg-4">
-                            
+                            <div class="form-group">
                                 <label for="event_start">Start Date</label>
                                 <div class="input-group date" id="datetimepicker1">
                                     <input id="event_start" name="event_start" type="text" class="form-control">
-                                    <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
+                                    
+                                            
+                                        
                                 </div>
-                           
+                           </div>
                         </div>
                         <div class="col-lg-12lg-4">
                             <div class="form-group">
                                 <label for="event_start">End Date</label>
                                 <div class="input-group date" id="datetimepicker2">
-                                    <input id="event_start" name="event_end" type="text" class="form-control">
-                                    <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
+                                    <input id="event_end" name="event_end" type="text" class="form-control">
+                                    
                                 </div>
                             </div>
                         </div>
@@ -139,14 +137,24 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                         <div class="panel panel-info">
 
                             <div class="panel-heading">
-
-                                <b>Membership Fees Collected</b>
-
+                                <h3>
+                                <b>Membership</b>
+</h3>
                             </div>
 
                             <div class="panel-body"><p>
                                 <?php
+                                    
+                                    
+
                                     if(!isset($yearEnd)){
+                                        $queryCount ="SELECT count(t.MEMBER_ID) as 'Count'
+                                                    from service_type s
+                                                    left join txn_reference t
+                                                    on t.SERVICE_ID = s.SERVICE_ID
+                                                    join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
+                                                    where $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND TXN_DESC='Membership Application Approved' AND t.TXN_TYPE = 1 AND s.SERVICE_ID = 1 
+                                                    group by t.SERVICE_ID";
                                         $query1 = "SELECT s.SERVICE as 'Type',sum(amount)  as 'Amount',count(amount) as 'Count'
                                                     from service_type s
                                                     left join txn_reference t
@@ -154,8 +162,16 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                     join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
                                                     where $monthStart = Month(txn_date) AND $yearStart = Year(txn_date)  AND t.TXN_TYPE = 2 AND s.SERVICE_ID = 1 
                                                     group by t.SERVICE_ID ";
+
                                     }
                                     else{
+                                       $queryCount ="SELECT count(t.MEMBER_ID) as 'Count'
+                                                    from service_type s
+                                                    left join txn_reference t
+                                                    on t.SERVICE_ID = s.SERVICE_ID
+                                                    join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
+                                                     where (txn_date between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-31 23:59:59') AND TXN_DESC='Membership Application Approved' AND t.TXN_TYPE = 1 AND s.SERVICE_ID = 1 
+                                                    group by t.SERVICE_ID ";
                                         $query1 = "SELECT s.SERVICE as 'Type',sum(amount)  as 'Amount',count(amount) as 'Count'
                                                     from service_type s
                                                     left join txn_reference t
@@ -167,14 +183,21 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                     $result1 = mysqli_query($dbc,$query1);
                                     $row1 = mysqli_fetch_assoc($result1);
+                                    $result2 = mysqli_query($dbc,$queryCount);
+                                    $row2 = mysqli_fetch_assoc($result2);
 
                                 ?>
+                                <b>Newly Accepted Members: <?php if(!empty($row2)){
+                                    echo $row2['Count'];
+
+                                }
+                                else echo "0";?><p>
                                 <b>Total Number of Fees Collected: <?php if(!empty($row1)){
                                     echo $row1['Count'];
 
                                 }
-                                else echo "0"?></b> <p>
-                                <b>Total Amount Collected:₱ <?php if(!empty($row1)){
+                                else echo "0";?></b> <p>
+                                <b>Total Amount Collected: ₱ <?php if(!empty($row1)){
                                     echo number_format($row1['Amount'],2)."<br>";
 
                                 }
@@ -195,14 +218,21 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                         <div class="panel panel-info">
 
                             <div class="panel-heading">
-
-                                <b>Health Aid Fees Collected</b>
-
+                                <h3>
+                                <b>Health Aid</b>
+                            </h3>
                             </div>
 
                             <div class="panel-body"><p>
                                 <?php
                                     if(!isset($yearEnd)){
+                                        $queryCount ="SELECT count(t.MEMBER_ID) as 'Count'
+                                                    from service_type s
+                                                    left join txn_reference t
+                                                    on t.SERVICE_ID = s.SERVICE_ID
+                                                    join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
+                                                    where $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND TXN_DESC='Health Aid Application Accepted!' AND t.TXN_TYPE = 1 AND s.SERVICE_ID = 2 
+                                                    group by t.SERVICE_ID";
                                         $query1 = "SELECT s.SERVICE as 'Type',sum(amount)  as 'Amount',count(amount) as 'Count'
                                                     from service_type s
                                                     left join txn_reference t
@@ -212,6 +242,13 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                     group by t.SERVICE_ID ";
                                     }
                                     else{
+                                        $queryCount ="SELECT count(t.MEMBER_ID) as 'Count'
+                                                    from service_type s
+                                                    left join txn_reference t
+                                                    on t.SERVICE_ID = s.SERVICE_ID
+                                                    join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
+                                                     where (txn_date between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-31 23:59:59') AND TXN_DESC='Health Aid Application Accepted!' AND t.TXN_TYPE = 1 AND s.SERVICE_ID = 2 
+                                                    group by t.SERVICE_ID ";
                                         $query1 = "SELECT s.SERVICE as 'Type',sum(amount)  as 'Amount',count(amount) as 'Count'
                                                 from service_type s
                                                 left join txn_reference t
@@ -222,8 +259,15 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     }
                                     $result1 = mysqli_query($dbc,$query1);
                                     $row1 = mysqli_fetch_assoc($result1);
+                                    $result2 = mysqli_query($dbc,$queryCount);
+                                    $row2 = mysqli_fetch_assoc($result2);
 
                                 ?>
+                                <b> <b>Newly Accepted Health Aid: <?php if(!empty($row2)){
+                                    echo $row2['Count'];
+
+                                }
+                                else echo "0";?><p>
                                 <b>Total Number of Fees Collected: <?php if(!empty($row1)){
                                     echo $row1['Count'];
 
@@ -250,15 +294,22 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                         <div class="panel panel-info">
 
                             <div class="panel-heading">
-
-                                <b>FALP Revenue Collected</b>
-
+                                <h3>
+                                <b>FALP</b>
+                            </h3>
                             </div>
 
                             <div class="panel-body"><p>
 
                                  <?php
                                     if(!isset($yearEnd)){
+                                        $queryCount ="SELECT count(t.MEMBER_ID) as 'Count'
+                                                    from service_type s
+                                                    left join txn_reference t
+                                                    on t.SERVICE_ID = s.SERVICE_ID
+                                                    join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
+                                                    where $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND TXN_DESC ='FALP Approved, now wait for Pickup. ' AND t.TXN_TYPE = 1 AND s.SERVICE_ID = 4 
+                                                    group by t.SERVICE_ID";
                                     $query1 = "SELECT s.SERVICE as 'Type',sum(amount)  as 'Amount',count(amount) as 'Count'
                                                 from service_type s
                                                 left join txn_reference t
@@ -269,6 +320,13 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                     }
                                     else{
+                                        $queryCount ="SELECT count(t.MEMBER_ID) as 'Count'
+                                                    from service_type s
+                                                    left join txn_reference t
+                                                    on t.SERVICE_ID = s.SERVICE_ID
+                                                    join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
+                                                     where (txn_date between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-31 23:59:59') AND TXN_DESC ='FALP Approved, now wait for Pickup. ' AND t.TXN_TYPE = 1 AND s.SERVICE_ID = 4 
+                                                    group by t.SERVICE_ID ";
                                         $query1 = "SELECT s.SERVICE as 'Type',sum(amount)  as 'Amount',count(amount) as 'Count'
                                                 from service_type s
                                                 left join txn_reference t
@@ -279,8 +337,15 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     }
                                     $result1 = mysqli_query($dbc,$query1);
                                     $row1 = mysqli_fetch_assoc($result1);
+                                    $result2 = mysqli_query($dbc,$queryCount);
+                                    $row2 = mysqli_fetch_assoc($result2);
 
                                 ?>
+                                 <b>Newly Accepted FALP: <?php if(!empty($row2)){
+                                    echo $row2['Count'];
+
+                                }
+                                else echo "0";?><p>
                                 <b>Total Number of Fees Collected: <?php if(!empty($row1)){
                                     echo $row1['Count'];
 
@@ -314,12 +379,12 @@ include 'FRAP_ADMIN_SIDEBAR.php';
         //Date Picker script
         $(function () {
                 
-            $('#datetimepicker1').datetimepicker( {
+            $('#event_start').datetimepicker( {
                 locale: moment().local('ph'),
                 maxDate: moment(),
                 format: 'YYYY MMM'
             });
-            $('#datetimepicker2').datetimepicker( {
+            $('#event_end').datetimepicker( {
                 locale: moment().local('ph'),
                 
                 
