@@ -15,6 +15,8 @@ include('GLOBAL_USER_TYPE_CHECKING.php');
 $alertType = '';
 $alertMessage = '';
 
+$page_title = 'Workspace';
+
 include_once 'GLOBAL_ALERTS.php';
 include_once 'GLOBAL_HEADER.php';
 include_once 'EDMS_SIDEBAR.php';
@@ -41,7 +43,7 @@ $userName = $rows[0]['name'];
             <div class="col-lg-12">
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Needs attention</a></li>
-                    <li role="presentation"><a href="#editing" aria-controls="editing" role="tab" data-toggle="tab">I'm currently editing</a></li>
+                    <li role="presentation"><a href="#editing" aria-controls="editing" role="tab" data-toggle="tab">I'm currently processing</a></li>
                     <li role="presentation"><a href="#access" aria-controls="access" role="tab" data-toggle="tab">Active</a></li>
                     <li role="presentation"><a href="#archived" aria-controls="archived" role="tab" data-toggle="tab">Archived</a></li>
                 </ul>
