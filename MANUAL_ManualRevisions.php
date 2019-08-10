@@ -68,6 +68,7 @@ if(!empty($rows)){
     }
 }
 
+$page_title = 'Manual Revisions';
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
 ?>

@@ -433,6 +433,8 @@ include 'EDMS_SIDEBAR.php';
                             $issetLastAction = false;
                             $lastActionPanel = '';
                             $btnLastRemark = '';
+                            $btnPrevContent = '';
+                            $modalLastRemark = '';
 
                             $rows = $crud->getData($query);
 
@@ -440,6 +442,8 @@ include 'EDMS_SIDEBAR.php';
                                 foreach ((array)$rows as $key => $row) {
                                     $actionDisp = '';
                                     $actionPanel = '';
+                                    $btnActionRemark = '';
+                                    $modalActionRemark = '';
 
                                     if($row['audit_action_type'] == 'LOCKED') {
                                         $actionDisp = $crud->coloriseAvailability($row['availabilityId']).' the document.';
@@ -466,11 +470,38 @@ include 'EDMS_SIDEBAR.php';
                                     $actionPanel.=$actionDisp;
                                     $actionPanel.='</div></div>';
 
+                                    $btnActionRemark = '<button class="btn btn-default btn-info btn-sm" data-toggle="modal" data-target="#modalRemark'.$row['versionId'].'" title="Read remarks"><i class="fa fa-quote-left"></i></button>';
+                                    $modalActionRemark = '<div id="modalRemark'.$row['versionId'].'" class="modal fade" role="dialog">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <strong class="modal-title">Remarks</strong>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            '.$actionPanel.'
+                                                                            <div class="panel panel-default">
+                                                                                <div class="panel-body alert-info" style="max-height: 40rem; overflow-y: auto;">
+                                                                                    "<i>'.$row['remarks'].'</i>"
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>';
+
                                     if($issetLastAction == false && $row['audit_action_type'] != 'LOCKED'){
                                         if($row['remarks']!=''){
-                                            $btnLastRemark = '<button class="btn btn-default btn-info btn-sm" data-toggle="modal" data-target="#modalRemarksPreview'.$row['versionId'].'" title="Version remarks"><i class="fa fa-quote-left"></i> Read Remark</button>';
+                                            $btnLastRemark = '<button class="btn btn-default btn-info btn-sm" data-toggle="modal" data-target="#modalRemark'.$row['versionId'].'" title="Read remarks"><i class="fa fa-quote-left"></i> Read remark</button>';
+                                            $modalLastRemark = $modalActionRemark;
                                         }
-                                        $lastActionPanel = $actionPanel.$btnLastRemark;
+                                        $lastActionPanel = $actionPanel.$btnLastRemark.$modalLastRemark;
                                         $issetLastAction = true;
                                     }
                                     ?>
@@ -587,33 +618,7 @@ include 'EDMS_SIDEBAR.php';
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <?php if($row['remarks'] != '') { ?>
-                                                    <button class="btn btn-default btn-info" data-toggle="modal" data-target="#modalRemarksPreview<?php echo $row['versionId'];?>" title="Version remarks"><i class="fa fa-quote-left"></i></button>
-                                                    <div id="modalRemarksPreview<?php echo $row['versionId'];?>" class="modal fade" role="dialog">
-                                                        <div class="modal-dialog">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <strong class="modal-title">Remarks</strong>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <div class="row">
-                                                                        <div class="col-lg-12">
-                                                                            <?php echo $actionPanel;?>
-                                                                            <div class="panel panel-default">
-                                                                                <div class="panel-body alert-info" style="max-height: 40rem; overflow-y: auto;">
-                                                                                    "<i><?php echo $row['remarks'];?></i>"
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                <?php } ?>
+                                                <?php if($row['remarks'] != '') { echo $btnActionRemark.$modalActionRemark; } ?>
                                                 <?php if($write == '2'){ ?>
                                                     <button class="btn btn-warning" data-toggle="modal" data-target="#modalRevert<?php echo $row['versionId'];?>" title="Revert to this version"><i class="fa fa-refresh"></i></button>
                                                     <div id="modalRevert<?php echo $row['versionId'];?>" class="modal fade" role="dialog">

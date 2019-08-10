@@ -13,6 +13,8 @@ session_start();
 include('GLOBAL_USER_TYPE_CHECKING.php');
 include('GLOBAL_EDMS_ADMIN_CHECKING.php');
 
+$page_title = "My Documents";
+
 include 'GLOBAL_ALERTS.php';
 include 'GLOBAL_HEADER.php';
 include 'EDMS_SIDEBAR.php';
@@ -37,7 +39,7 @@ $userName = $rows[0]['name'];
             <div class="col-lg-12">
                 <ul class="nav nav-tabs" role="tablist">
 
-                    <li role="presentation" class="active"><a href="#editing" aria-controls="profile" role="tab" data-toggle="tab">I'm currently editing</a></li>
+                    <li role="presentation" class="active"><a href="#editing" aria-controls="profile" role="tab" data-toggle="tab">Currently checked out by me</a></li>
                     <li role="presentation"><a href="#access" aria-controls="messages" role="tab" data-toggle="tab">All my documents</a></li>
                 </ul>
                 <div class="tab-content">

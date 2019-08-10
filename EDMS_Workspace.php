@@ -43,7 +43,7 @@ $userName = $rows[0]['name'];
             <div class="col-lg-12">
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Needs attention</a></li>
-                    <li role="presentation"><a href="#editing" aria-controls="editing" role="tab" data-toggle="tab">I'm currently processing</a></li>
+                    <li role="presentation"><a href="#editing" aria-controls="editing" role="tab" data-toggle="tab">Checked out by me</a></li>
                     <li role="presentation"><a href="#access" aria-controls="access" role="tab" data-toggle="tab">Active</a></li>
                     <li role="presentation"><a href="#archived" aria-controls="archived" role="tab" data-toggle="tab">Archived</a></li>
                 </ul>
