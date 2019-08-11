@@ -474,7 +474,7 @@ include 'EDMS_SIDEBAR.php';
                                             $actionPanel.=$actionDisp;
                                             $actionPanel.='</div></div>';
 
-                                            $btnActionRemark = '<button class="btn btn-default btn-info btn-sm" data-toggle="modal" data-target="#modalRemark'.$row['versionId'].'" title="Read remarks"><i class="fa fa-quote-left"></i></button>';
+                                            $btnActionRemark = '<button class="btn btn-info fa fa-quote-left" data-toggle="modal" data-target="#modalRemark'.$row['versionId'].'" title="Read remarks"></button>';
                                             $modalActionRemark = '<div id="modalRemark'.$row['versionId'].'" class="modal fade" role="dialog">
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
@@ -502,7 +502,7 @@ include 'EDMS_SIDEBAR.php';
 
                                             if($issetLastAction == false && $row['audit_action_type'] != 'LOCKED'){
                                                 if($row['remarks']!=''){
-                                                    $btnLastRemark = '<button class="btn btn-default btn-info btn-sm" data-toggle="modal" data-target="#modalRemark'.$row['versionId'].'" title="Read remarks"><i class="fa fa-quote-left"></i> Read remark</button>';
+                                                    $btnLastRemark = '<button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalRemark'.$row['versionId'].'" title="Read remarks"><i class="fa fa-quote-left"></i> Read remark</button>';
                                                     $modalLastRemark = $modalActionRemark;
                                                 }
                                                 $lastActionPanel = $actionPanel.$btnLastRemark.$modalLastRemark;
@@ -511,7 +511,7 @@ include 'EDMS_SIDEBAR.php';
                                             ?>
                                             <tr>
                                                 <td>
-                                                    <?php echo date("F j, Y g:i:s A ", strtotime($row['audit_timestamp']));?>
+                                                    <?php echo $row['audit_timestamp'];?>
                                                 </td>
                                                 <td>
                                                     <?php echo $row['versionNo'];?>
@@ -1071,8 +1071,8 @@ include 'EDMS_SIDEBAR.php';
                                                                         </div>
                                                                         <div class="modal-body">
                                                                             <div class="form-group">
-                                                                                <p>Reason I'm moving this to <strong>Step <?php echo $row['stepNo'];?>: <?php echo $row['stepName'];?></strong> <?php echo $dispStat;?> status</p>
-                                                                                <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
+                                                                                <label><input type="checkbox" class="remark_checkbox"> Provide remarks</label>
+                                                                               <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" style="display: none;"></textarea>
                                                                             </div>
                                                                         </div>
                                                                         <div class="modal-footer">
@@ -1107,8 +1107,8 @@ include 'EDMS_SIDEBAR.php';
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <div class="form-group">
-                                                                            <label>Reason I'm archiving this section</label>
-                                                                            <textarea name="remarks" class="form-control" rows="10" required></textarea>
+                                                                            <label><input type="checkbox" class="remark_checkbox"> Provide remarks</label>
+                                                                            <textarea name="remarks" class="form-control" rows="10" style="display: none;"></textarea>
                                                                         </div>
 
                                                                         <div class="alert alert-warning">
@@ -1138,8 +1138,8 @@ include 'EDMS_SIDEBAR.php';
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <div class="form-group">
-                                                                            <label>Reason I'm restoring this section</label>
-                                                                            <textarea name="remarks" class="form-control" rows="10" required></textarea>
+                                                                            <label><input type="checkbox" class="remark_checkbox"> Provide remarks</label>
+                                                                            <textarea name="remarks" class="form-control" rows="10" style="display: none;"></textarea>
                                                                         </div>
 
                                                                         <div class="alert alert-info">
@@ -1309,6 +1309,19 @@ include 'EDMS_SIDEBAR.php';
 
 
             $(".dataTables_filter").hide();
+
+            $('.remark_checkbox').on('change', function () {
+                var ta = $(this).closest('.form-group').find('textarea');
+                if($(this).prop("checked") == true){
+                    ta.show().fadeIn("fast", function(){
+                        ta.attr("required",true);
+                    });
+                }else if($(this).prop("checked") == false){
+                    ta.show().fadeOut("fast", function(){
+                        ta.attr("required",false);
+                    });
+                }
+            });
         });
 
         let tableAddRef = $('#tblAddReferences').DataTable( {

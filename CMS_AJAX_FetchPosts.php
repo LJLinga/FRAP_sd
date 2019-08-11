@@ -52,7 +52,7 @@ if(isset($_POST['userId']) && isset($_POST['cmsRole'])){
                     'title' => $row['title'],
                     'name' => ($row['authorId']==$userId) ? $row['name'].' <b>(Me)</b>' : $row['name'],
                     'status' => $row['status'],
-                    'lastUpdated' => date("F j, Y g:i A ", strtotime($row['lastUpdated'])),
+                    'lastUpdated' => $row['lastUpdated'],
                     'actions'=> '<a href="CMS_EditPost.php?postId='.$row['id'].'" class="btn btn-default">Edit</a>'
                 );
             }
@@ -61,7 +61,7 @@ if(isset($_POST['userId']) && isset($_POST['cmsRole'])){
                 $data[] =  array(
                     'title' => $row['title'],
                     'status' => $row['status'],
-                    'lastUpdated' => date("F j, Y g:i A ", strtotime($row['lastUpdated'])),
+                    'lastUpdated' => $row['lastUpdated'],
                     'actions'=> '<a href="CMS_EditPost.php?postId='.$row['id'].'" class="btn btn-default">Edit</a>'
                 );
             }

@@ -281,9 +281,24 @@ include 'CMS_SIDEBAR.php';
         let postId = "<?php echo $postId?>";
         let content = $('#post_content');
 
+        $('#remark_checkbox').on('change', function () {
+            var ta = $('#remarks');
+            if($(this).prop("checked") == true){
+                ta.show().fadeIn("fast", function(){
+                    ta.attr("required",true);
+                });
+            }else if($(this).prop("checked") == false){
+                ta.show().fadeOut("fast", function(){
+                    ta.attr("required",false);
+                });
+            }
+        });
+
         $('#btnUpdate').attr("disabled",true);
-        $('#form :input').not('#remarks').on('keyup', function(){
+        $('#form :input').not('#remarks, #remark_checkbox').on('keyup', function(){
             $('#btnUpdate').attr("disabled",false);
+            $('#labelRemarks').html("Please describe this update");
+            $('#remarks').show();
         });
 
         $('#btnUpdate').on('click', function(){
@@ -754,8 +769,8 @@ include 'CMS_SIDEBAR.php';
                                             </div>
                                             <div class="modal-body">
                                                 <div class="form-group">
-                                                    <p>Please provide remarks first.</p>
-                                                    <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" required></textarea>
+                                                    <label id="labelRemarks"><input type="checkbox" id="remark_checkbox"> Provide remarks</label>
+                                                    <textarea name="remarks" id="remarks" class="form-control" placeholder="Your remarks..." rows="10" style="display: none;"></textarea>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -767,50 +782,50 @@ include 'CMS_SIDEBAR.php';
                                         </div>
                                     </div>
                                 </div>
-                                <?php echo '<button class="btn btn-primary" data-toggle="modal" data-target="#modalConfirm" id="btnUpdate" hidden>Save</button> ';
+                                <?php echo '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalConfirm" id="btnUpdate" hidden>Save</button> ';
                                 if($cmsRole == '4') {
                                     if($status == '1'){
-                                        echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublish" value="4">Publish</button> ';
-                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
+                                        echo '<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublish" value="4">Publish</button> ';
+                                        echo '<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     }else if ($status == '3') {
-                                        echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublish" value="4">Publish</button> ';
-                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReview" value="2">For Review</button> ';
-                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReject" value="1">Reject</button> ';
-                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
+                                        echo '<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublish" value="4">Publish</button> ';
+                                        echo '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReview" value="2">For Review</button> ';
+                                        echo '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReject" value="1">Reject</button> ';
+                                        echo '<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     } else if ($status == '4') {
-                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnUnpublish" value="3">Unpublish</button> ';
-                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReview" value="2">For Review</button> ';
-                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReject" value="1">Reject</button> ';
-                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
+                                        echo '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnUnpublish" value="3">Unpublish</button> ';
+                                        echo '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReview" value="2">For Review</button> ';
+                                        echo '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReject" value="1">Reject</button> ';
+                                        echo '<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     }
                                 }else if($cmsRole == '3') {
                                     if($status == '1'){
-                                        echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublication" value="3">Submit for Publication</button> ';
-                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
+                                        echo '<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublication" value="3">Submit for Publication</button> ';
+                                        echo '<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     } else if ($status == '2') {
-                                        echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublication" value="3">Submit for Publication</button> ';
-                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReject" value="1">Reject</button> ';
-                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
+                                        echo '<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublication" value="3">Submit for Publication</button> ';
+                                        echo '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReject" value="1">Reject</button> ';
+                                        echo '<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     }
                                 }else if($cmsRole == '2'){
                                     if ($status == '1') {
-                                        echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnReview" value="2">Submit for Review</button> ';
-                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
+                                        echo '<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnReview" value="2">Submit for Review</button> ';
+                                        echo '<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     }
                                 }else if($cmsRole == '5'){
                                     if($status == '1'){
-                                        echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublish" value="4">Publish</button> ';
-                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
+                                        echo '<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublish" value="4">Publish</button> ';
+                                        echo '<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     }else if ($status == '3') {
-                                        echo '<button class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublish" value="4">Publish</button> ';
-                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReview" value="2">For Review</button> ';
-                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReject" value="1">Reject</button> ';
-                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
+                                        echo '<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalConfirm" id="btnPublish" value="4">Publish</button> ';
+                                        echo '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReview" value="2">For Review</button> ';
+                                        echo '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReject" value="1">Reject</button> ';
+                                        echo '<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     } else if ($status == '4') {
-                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnUnpublish" value="3">Unpublish</button> ';
-                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReview" value="2">For Review</button> ';
-                                        echo '<button class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReject" value="1">Reject</button> ';
-                                        echo '<button class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
+                                        echo '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnUnpublish" value="3">Unpublish</button> ';
+                                        echo '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReview" value="2">For Review</button> ';
+                                        echo '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalConfirm" id="btnReject" value="1">Reject</button> ';
+                                        echo '<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm" id="btnTrash" value="5">Trash</button> ';
                                     }
                                 }
                                 echo '<button type="submit" class="btn btn-primary" name="btnUnlock" id="btnUnlock"> Exit </button> ';

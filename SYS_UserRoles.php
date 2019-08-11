@@ -65,7 +65,7 @@ include 'SYS_SIDEBAR.php';
                                             <tr>
                                                 <td>
                                                     <b><?php echo $row['name']?></b>
-                                                    <input type="hidden" class="userId" value="<?php echo $row['EMP_ID']?>">
+                                                    <input type="hidden" class="user_id" value="<?php echo $row['EMP_ID']?>">
                                                 </td>
                                                 <td>
                                                     <select class="form-control select_cms">
@@ -111,24 +111,26 @@ include 'SYS_SIDEBAR.php';
 <script>
     $(document).ready(function(){
         $('#dataTable').DataTable();
-        $('select').select2({
-            placeholder: 'Select or search...'
-        });
+        // $('select').select2({
+        //     placeholder: 'Select or search...'
+        // });
     });
 
     function saveRoles(element){
-        var userId = $(element).closest('tr').find('.userId').val();
-        //var edms = $(element).closest('tr').find('.select_edms').val();
+        var userId = $(element).closest('tr').find('.user_id').val();
         var cms = $(element).closest('tr').find('.select_cms').val();
         var frap = $(element).closest('tr').find('.select_frap').val();
         $(element).closest('tr').children('td, th').css('background-color','#5CB85C');
         $.ajax({
             url:"SYS_AJAX_SaveRoles.php",
             method:"POST",
-            data:{cms: cms, edms: edms, frap:frap, userId: userId},
-            dataType:"JSON",
+            data:{cms: cms, frap:frap, userId: userId},
             success:function(data)
             {
+                alert("CMS "+cms+" FRAP "+frap+" USER_ID "+userId);
+            },
+            error:function(e){
+                alert("error");
             }
         });
     }

@@ -507,7 +507,7 @@ include 'EDMS_SIDEBAR.php';
                                     ?>
                                     <tr>
                                         <td>
-                                            <?php echo date("F j, Y g:i:s A ", strtotime($row['audit_timestamp']));?>
+                                            <?php echo $row['audit_timestamp'];?>
                                         </td>
                                         <td>
                                             <?php echo $row['versionNo'];?>

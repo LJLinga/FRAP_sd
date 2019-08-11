@@ -240,15 +240,6 @@ include 'CMS_SIDEBAR.php';
 
                         <div class="card" style="margin-bottom: 1rem;">
                             <div class="card-body">
-                                No Faculty Manual References
-                            </div>
-                            <div class="card-footer">
-                                <button type="button" class="btn btn-default"><i class="fa fa-fw fa-link"></i> Ref. Existing Section </button>
-                            </div>
-                        </div>
-
-                        <div class="card" style="margin-bottom: 1rem;">
-                            <div class="card-body">
                                 Unsaved
                             </div>
                             <div class="card-footer">

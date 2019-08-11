@@ -59,6 +59,29 @@ include 'SYS_SIDEBAR.php';
         </div>
         <div class="row">
             <div class="col-lg-12">
+                <?php
+                $query = "SELECT COUNT(DISTINCT(ug.userId)) as num, g.id, g.groupName, g.groupDesc FROM groups g
+LEFT JOIN user_groups ug ON g.id = ug.groupId 
+JOIN steps s ON g.id = s.groupId 
+JOIN process pr ON s.processId = pr.id
+WHERE g.isActive = 2
+GROUP BY g.id" ;
+
+                $rows = $crud->getData($query);
+                $text = '';
+                if(!empty($rows)){ ?>
+                <div class="alert alert-warning">
+                    The following active groups still has no members, please assign at least a group admin in each one:
+                <?php
+                    foreach((array) $rows AS $key => $row){
+                        if($row['num'] == '0'){ ?>
+                            <br><strong><?php echo $row['groupDesc'].' ('.$row['groupName'].')';?></strong> <a class="btn btn-sm btn-primary fa fa-gear" href="SYS_Group_Settings.php?id=<?php echo $row['id'];?>"></a>
+                        <?php }
+                    }
+                    ?>
+                </div>
+                <?php }
+                ?>
                 <div class="panel panel-default">
                     <div class="panel-heading" style="position:relative;">
                         <div class="row">
