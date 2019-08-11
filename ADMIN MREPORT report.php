@@ -56,7 +56,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
-                            Collected Fees for <?php if(isset($yearStart)){echo date('F', mktime(0, 0, 0, $monthStart, 10)).' '.$yearStart;
+                            Performance for <?php if(isset($yearStart)){echo date('F', mktime(0, 0, 0, $monthStart, 10)).' '.$yearStart;
                                 if(isset($yearEnd)){
 
                                     echo ' - '.date('F', mktime(0, 0, 0, $monthEnd, 10)).' '.$yearEnd;
@@ -187,21 +187,21 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     $row2 = mysqli_fetch_assoc($result2);
 
                                 ?>
-                                <b>Newly Accepted Members: <?php if(!empty($row2)){
+                                <b>Newly Accepted Members:</b> <?php if(!empty($row2)){
                                     echo $row2['Count'];
 
                                 }
                                 else echo "0";?><p>
-                                <b>Total Number of Fees Collected: <?php if(!empty($row1)){
+                                <b>Total Number of Fees Collected:</b> <?php if(!empty($row1)){
                                     echo $row1['Count'];
 
                                 }
-                                else echo "0";?></b> <p>
-                                <b>Total Amount Collected: ₱ <?php if(!empty($row1)){
+                                else echo "0";?> <p>
+                                <b>Total Amount Collected:</b> ₱ <?php if(!empty($row1)){
                                     echo number_format($row1['Amount'],2)."<br>";
 
                                 }
-                                else echo "0.00";?></b> <p>
+                                else echo "0.00";?> <p>
                                 
                             </div>
 
@@ -263,21 +263,21 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     $row2 = mysqli_fetch_assoc($result2);
 
                                 ?>
-                                <b> <b>Newly Accepted Health Aid: <?php if(!empty($row2)){
+                                <b> <b>Newly Accepted Health Aid:</b> <?php if(!empty($row2)){
                                     echo $row2['Count'];
 
                                 }
                                 else echo "0";?><p>
-                                <b>Total Number of Fees Collected: <?php if(!empty($row1)){
+                                <b>Total Number of Fees Collected:</b> <?php if(!empty($row1)){
                                     echo $row1['Count'];
 
                                 }
-                                else echo "0"?></b> <p>
-                                <b>Total Amount Collected:₱ <?php if(!empty($row1)){
+                                else echo "0"?> <p>
+                                <b>Total Amount Collected:</b>₱ <?php if(!empty($row1)){
                                     echo number_format($row1['Amount'],2)."<br>";
 
                                 }
-                                else echo "0.00";?></b> <p>
+                                else echo "0.00";?> <p>
                                             
                             </div>
 
@@ -341,21 +341,21 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     $row2 = mysqli_fetch_assoc($result2);
 
                                 ?>
-                                 <b>Newly Accepted FALP: <?php if(!empty($row2)){
+                                 <b>Newly Accepted FALP:</b> <?php if(!empty($row2)){
                                     echo $row2['Count'];
 
                                 }
                                 else echo "0";?><p>
-                                <b>Total Number of Fees Collected: <?php if(!empty($row1)){
+                                <b>Total Number of Fees Collected:</b> <?php if(!empty($row1)){
                                     echo $row1['Count'];
 
                                 }
-                                else echo "0"?></b> <p>
-                                <b>Total Amount Collected:₱ <?php if(!empty($row1)){
+                                else echo "0"?> <p>
+                                <b>Total Amount Collected:</b> ₱ <?php if(!empty($row1)){
                                     echo number_format($row1['Amount'],2)."<br>";
 
                                 }
-                                else echo "0.00";?></b> <p>
+                                else echo "0.00";?> <p>
                                             
                             </div>
 
