@@ -87,11 +87,12 @@ function submitModal() {
         "<b>Business Number:</b> "+bunum+
         "<b>Home Address:</b> "+haddress+
         "<b>Business Address:</b> "+baddress
-        +lifeInfo
+        +lifeInfo+
+        "</br> <input type = 'checkbox' required><b>In consideration of the data privacy law, by sending this application, I allow AFED Inc to keep my personal information solely for contacting purposes and for services of AFED that you will be availing.</input>"
            
         ;
         
-        document.getElementById('dialogboxfoot1').innerHTML += 'Is the information correct? <button type = button onclick="closeModal()" class = "btn btn-danger">No</button> <button class = "btn btn-success" name = "submit" id = "submit">Yes</button>';
+        document.getElementById('dialogboxfoot1').innerHTML = 'Click <a href="forms/Affidavit-of-Assignment.pdf" download>here</a> to download affidavit to be submitted when applying</br> Is the information correct? <button type = button onclick="closeModal()" class = "btn btn-danger">No</button> <button class = "btn btn-success" name = "submit" id = "submit">Yes</button>';
 
 $('#exampleModalScrollable').modal('show',$(this));  
 
@@ -1144,8 +1145,8 @@ $success = null;
         
       </div>
       <div class="modal-footer" id="dialogboxfoot1" style = "background: #47d147;">
-       
-            Click <a href="forms/Affidavit-of-Assignment.pdf" download>here</a> to download affidavit to be submitted when applying</br>
+            
+            
         </br>
       </div>
     </div>
@@ -1153,6 +1154,7 @@ $success = null;
 </div>
 
 <div style = "position:relative;top:30px;left:50%">
+
 <button type = "button" class = "btn btn-success" onclick="submitModal()" >Submit</button>
 
                             <!--<input id = "submit"  type="submit" name="submit" value="Sumbit"></p>-->

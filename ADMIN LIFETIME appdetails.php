@@ -229,8 +229,8 @@
 
                                         <div class="panel-body"><p>
 
-                                            <input type="submit" class="btn btn-success" name="accept" value="Accept Application">
-                                            <input type="submit" class="btn btn-danger" name="reject" value="Reject Application">
+                                            <input type="submit" class="btn btn-success" name="accept" value="Add lifetime to account">
+                                            
 
                                         </div>
 
