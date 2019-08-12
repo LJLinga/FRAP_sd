@@ -147,7 +147,7 @@ $pdf->Cell(40);
 $pdf->Cell(20,5,'ID Number '	,'L,B,R',0,'C');
 $pdf->Cell(70	,5,'Full Name'	,'L,B,R',0,'L');
 $pdf->Cell(30	,5,'Membership Fee'	,'L,B,R',0,'R');
-$pdf->Cell(25	,5,'FALP','L,B,R',0,'R');
+$pdf->Cell(25	,5,'FAP','L,B,R',0,'R');
 $pdf->Cell(25	,5,'Health Aid'	,'L,B,R',0,'R');
 
 $pdf->Cell(30	,5,'Deduction(P)'	,'L,B,R',0,'R');

@@ -50,13 +50,14 @@ function Footer()
 }
 if(!isset($_SESSION['event_start'])){
    
-        $query="SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',l.per_payment as 'Amount'
+        $query="SELECT m.member_ID as 'ID', m.firstname as 'First',m.lastname as 'Last',m.middlename as 'Middle',t.txn_desc as 'Description',t.txn_type as 'Type',t.loan_ref as 'Ref',m.emp_type as 'Employee Type', l.per_payment as 'Per Deduction'
         from member m
-        join loans l
-        on l.member_id = m.member_id
-        join (SELECT max(date_applied) as 'Date' from loans) latest
-        where  date(latest.Date) = date(l.DATE_APPLIED)
-        group by m.member_ID";
+        join txn_reference t
+        on t.member_id = m.member_id
+        left join loans l
+        on l.loan_id = t.loan_ref
+                    where $monthStart = Month(t.txn_date) AND $yearStart = Year(t.txn_date) && (t.txn_desc = 'Membership Application Approved'||t.txn_desc ='Loan has been Picked up! Deductions will start now.'||t.txn_type = '3')
+                    order by m.member_id";
 
 }
 else {
@@ -70,20 +71,24 @@ else {
                 $monthEnd = date('m', strtotime(substr($dateEnd,strpos($dateEnd," ")+1)));
             }
     if(!isset($yearEnd)){
-        $query = "SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',l.per_payment as 'Amount'
+        $query = "SELECT m.member_ID as 'ID', m.firstname as 'First',m.lastname as 'Last',m.middlename as 'Middle',t.txn_desc as 'Description',t.txn_type as 'Type',t.loan_ref as 'Ref',m.emp_type as 'Employee Type', l.per_payment as 'Per Deduction'
         from member m
-        join loans l
-        on l.member_id = m.member_id
-                    where $monthStart = Month(l.date_applied) AND $yearStart = Year(l.date_applied) 
-                    group by m.member_ID";
+        join txn_reference t
+        on t.member_id = m.member_id
+        left join loans l
+        on l.loan_id = t.loan_ref
+                    where $monthStart = Month(t.txn_date) AND $yearStart = Year(t.txn_date) && (t.txn_desc = 'Membership Application Approved'||t.txn_desc ='Loan has been Picked up! Deductions will start now.'||t.txn_type = '3')
+                    order by m.member_id;";
     }
     else{
-        $query = "SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',l.per_payment as 'Amount'
+        $query = "SELECT m.member_ID as 'ID', m.firstname as 'First',m.lastname as 'Last',m.middlename as 'Middle',t.txn_desc as 'Description',t.txn_type as 'Type',t.loan_ref as 'Ref',m.emp_type as 'Employee Type',l.PER_PAYMENT as 'Per Deduction'
         from member m
-        join loans l
-        on l.member_id = m.member_id
-                    where (l.date_applied between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-31 23:59:59') 
-                    group by m.member_ID ";
+        join txn_reference t
+        on t.member_id = m.member_id
+        left join loans l
+        on l.loan_id = t.loan_ref
+                    where t.txn_date between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-31 23:59:59' && (t.txn_desc = 'Membership Application Approved'||t.txn_desc ='Loan has been Picked up! Deductions will start now.'||t.txn_type = '3')
+        order by m.member_id;";
     }
 
 }
@@ -124,7 +129,7 @@ $flag=0;
 
 	
 $result=mysqli_query($dbc,$query);
-
+$total=0;
 
 while($row=mysqli_fetch_assoc($result)){
 $last = $row['Last'];
@@ -133,27 +138,55 @@ $middle = $row['Middle'];
 
 
 
-
+if($row['Description']=='Membership Application Approved'){
 
 $pdf->Cell(15);
 $pdf->Cell(20,5,$row['ID']	,'L,B,R',0,'C');
 $pdf->Cell(50	,5,"$last, $first $middle"	,'L,B,R',0,'L');
+$pdf->Cell(30   ,5,"Membership",'L,B,R',0,'L');
+if($row['Type']==1) 
+    $cost = 183.00; 
+else 
+    $cost = 91.67;
+$total+=$cost;
+$pdf->Cell(30  ,5,number_format((float)$cost,2),'L,B,R',0,'R');
+$pdf->Cell(35   ,5,"Per Term" ,'L,B,R',0,'L');
+}
+
+
+if($row['Description']=='Loan has been Picked up! Deductions will start now.'){
+$pdf->Cell(15);
+$pdf->Cell(20,5,$row['ID']  ,'L,B,R',0,'C');
+$pdf->Cell(50   ,5,"$last, $first $middle"  ,'L,B,R',0,'L');
 $pdf->Cell(30   ,5,"FALP",'L,B,R',0,'L');
-$pdf->Cell(30  ,5,number_format((float)$row['Amount'],2),'L,B,R',0,'R');
+$total+=(float)$row['Per Deduction'];
+$pdf->Cell(30  ,5,number_format((float)$row['Per Deduction'],2),'L,B,R',0,'R');
+$pdf->Cell(35   ,5,"Per Payday" ,'L,B,R',0,'L');
+}
 
-
-
-        $pdf->Cell(35   ,5,"Per Payday" ,'L,B,R',0,'L');
-        
-
-$total= 0.00;	
+if($row['Type']=='3'){
+$pdf->Cell(15);
+$pdf->Cell(20,5,$row['ID']  ,'L,B,R',0,'C');
+$pdf->Cell(50   ,5,"$last, $first $middle"  ,'L,B,R',0,'L');
+$pdf->Cell(30   ,5,"FAP",'L,B,R',0,'L');
+$total+=100;
+$pdf->Cell(30  ,5,'100.00','L,B,R',0,'R');
+$pdf->Cell(35   ,5,"Per Term" ,'L,B,R',0,'L');
+}
 
 $pdf->ln();
 
 
 
-}
 
+}
+$pdf->Cell(15);
+$pdf->Cell(20,5,''  ,'L,B,R',0);
+$pdf->Cell(50   ,5,' '  ,'L,B,R',0);
+$pdf->Cell(30   ,5,''   ,'L,B,R',0);
+$pdf->Cell(30   ,5,number_format($total,2)   ,'L,B,R',0,'R');
+$pdf->Cell(35   ,5,''   ,'L,B,R',0);
+$pdf->ln();
 $pdf->SetFont('Times','B',12);
 
 
