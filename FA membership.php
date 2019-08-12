@@ -87,11 +87,12 @@ function submitModal() {
         "<b>Business Number:</b> "+bunum+
         "<b>Home Address:</b> "+haddress+
         "<b>Business Address:</b> "+baddress
-        +lifeInfo
+        +lifeInfo+
+        "</br> <input type = 'checkbox' required><b>In consideration of the data privacy law, by sending this application, I allow AFED Inc to keep my personal information solely for contacting purposes and for services of AFED that you will be availing.</input>"
            
         ;
         
-        document.getElementById('dialogboxfoot1').innerHTML += 'Is the information correct? <button type = button onclick="closeModal()" class = "btn btn-danger">No</button> <button class = "btn btn-success" name = "submit" id = "submit">Yes</button>';
+        document.getElementById('dialogboxfoot1').innerHTML = 'Click <a href="forms/Affidavit-of-Assignment.pdf" download>here</a> to download affidavit to be submitted when applying</br> Is the information correct? <button type = button onclick="closeModal()" class = "btn btn-danger">No</button> <button class = "btn btn-success" name = "submit" id = "submit">Yes</button>';
 
 $('#exampleModalScrollable').modal('show',$(this));  
 
@@ -325,7 +326,17 @@ $success = null;
                  $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS,  MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, HOME_ADDRESS, DEPT_ID, USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,EMAIL,EMP_TYPE,TYPE,EMP_STATUS) 
                         VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}','{$sex}','{$birthdate}','{$datehired}','{$honum}','{$haddress}',{$dept},{$_POST['empStat']},1,'{$dateappl}','{$dateapp}','99999999','{$_POST['email']}',{$_POST['empStat']},'{$empType}','{$empStatus}')"; 
 
-                    $result = mysqli_query($dbc,$query1); 
+                    $result = mysqli_query($dbc,$query1);
+
+
+
+                $queryInsertTXN ="INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, SERVICE_ID)
+                         VALUES({$idNum}, 1, 'Membership Application Sent!', 0.00 , 1)";
+                mysqli_query($dbc, $queryInsertTXN);
+
+
+                    //insert into Transaction table for member, but we need the inserted one first
+
 
 
                 if(isset($_POST['hasFALP'])){
@@ -1144,8 +1155,8 @@ $success = null;
         
       </div>
       <div class="modal-footer" id="dialogboxfoot1" style = "background: #47d147;">
-       
-            Click <a href="forms/Affidavit-of-Assignment.pdf" download>here</a> to download affidavit to be submitted when applying</br>
+            
+            
         </br>
       </div>
     </div>
@@ -1153,6 +1164,7 @@ $success = null;
 </div>
 
 <div style = "position:relative;top:30px;left:50%">
+
 <button type = "button" class = "btn btn-success" onclick="submitModal()" >Submit</button>
 
                             <!--<input id = "submit"  type="submit" name="submit" value="Sumbit"></p>-->

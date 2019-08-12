@@ -40,6 +40,10 @@ if(isset($_POST['submit'])){
     $query = "UPDATE member SET HA_STATUS = 2,HA_CONSENT_TIMESTAMP = NOW() where MEMBER_ID = {$_SESSION['idnum']}";
     mysqli_query($dbc,$query);
 
+    $query = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, SERVICE_ID)
+                         VALUES({$_SESSION['idnum']}, 3, 'Health Aid Application Approved!', 0.00 , 2)";
+    mysqli_query($dbc,$query);
+
     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
 
 }
