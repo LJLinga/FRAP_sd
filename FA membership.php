@@ -325,7 +325,17 @@ $success = null;
                  $query1 = "INSERT INTO MEMBER (MEMBER_ID, FIRSTNAME, LASTNAME, CIV_STATUS,  MIDDLENAME,SEX, BIRTHDATE ,DATE_HIRED, HOME_NUM, HOME_ADDRESS, DEPT_ID, USER_STATUS,MEMBERSHIP_STATUS,DATE_APPLIED,DATE_APPROVED,EMP_ID_APPROVE,EMAIL,EMP_TYPE,TYPE,EMP_STATUS) 
                         VALUES ('{$idNum}','{$fName}','{$lName}',{$civStat}, '{$mName}','{$sex}','{$birthdate}','{$datehired}','{$honum}','{$haddress}',{$dept},{$_POST['empStat']},1,'{$dateappl}','{$dateapp}','99999999','{$_POST['email']}',{$_POST['empStat']},'{$empType}','{$empStatus}')"; 
 
-                    $result = mysqli_query($dbc,$query1); 
+                    $result = mysqli_query($dbc,$query1);
+
+
+
+                $queryInsertTXN ="INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, SERVICE_ID)
+                         VALUES({$idNum}, 1, 'Membership Application Sent!', 0.00 , 1)";
+                mysqli_query($dbc, $queryInsertTXN);
+
+
+                    //insert into Transaction table for member, but we need the inserted one first
+
 
 
                 if(isset($_POST['hasFALP'])){
