@@ -38,7 +38,7 @@ else {
             if(!empty($_POST['event_end'])){
                 $dateEnd = $_POST['event_end'];
                 $yearEnd = substr($dateEnd,0,strpos($dateEnd," "));
-                $monthEnd = date('m', strtotime($monthsubstr($dateEnd,strpos($dateEnd," ")+1)));
+                $monthEnd = date('m', strtotime(substr($dateEnd,strpos($dateEnd," ")+1)));
             }
     if(!isset($yearEnd)){
         $query = "SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',l.per_payment as 'Amount'
@@ -74,7 +74,22 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                     <div class="col-lg-6">
 
                         <h1 class="page-header">
-                           New Deductions 
+                           New Deductions for <?php if(isset($yearStart)){echo date('F', strtotime($dateStart))." ".$yearStart;
+                                if(isset($yearEnd)){
+
+                                    echo " - ".date('F', strtotime($dateEnd))." ".$yearEnd;
+
+                                }}else{
+                                    $latestQuery = "SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2";
+                                    $resultLatest = mysqli_query($dbc,$latestQuery);
+
+                                    if(!empty($resultLatest)){
+                                    $latest = mysqli_fetch_assoc($resultLatest);
+                                    $date = $latest['Date'];
+                                    
+                                    echo date('F Y', strtotime($date));
+                                }else echo "Latest";
+                                }?>
                         </h1>
                     
                     </div>
@@ -90,14 +105,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                             <div class="panel-heading">
 
-                                <b>View Report for <?php if(isset($yearStart)){echo $monthStart." ".$yearStart;
-                                if(isset($yearEnd)){
-
-                                    echo " - ".$monthEnd." ".$yearEnd;
-
-                                }}else{
-                                    echo "Latest Date";
-                                }?></b>
+                                <b>View Report for:</b>
 
                             </div>
 

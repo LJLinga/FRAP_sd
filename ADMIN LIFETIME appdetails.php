@@ -12,7 +12,7 @@
                  ON M.DEPT_ID = D.DEPT_ID
                  JOIN CIV_STATUS AS C
                  ON M.CIV_STATUS = C.STATUS_ID
-                 WHERE M.MEMBER_ID = '{$_SESSION['lifetime_selected_id']}';";
+                 WHERE M.MEMBER_ID = '{$_SESSION['currID']}';";
 
     $resultMem = mysqli_query($dbc, $queryMem);
     $rowMem = mysqli_fetch_array($resultMem);

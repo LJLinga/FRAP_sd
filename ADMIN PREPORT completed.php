@@ -26,9 +26,9 @@ from loans l
 
 join member m
 on l.member_id = m.member_id
-join (SELECT max(date_applied) as 'Date' from loans) latest
-        where  l.LOAN_STATUS = 3 AND date(latest.Date) = date(l.DATE_APPLIED)
-        group by m.member_ID";
+join (SELECT max(txn_date) as 'Date' from txn_reference) latest
+        where  l.LOAN_STATUS = 3 AND month(latest.Date) = month(l.DATE_MATURED) AND year(latest.Date) =  year(l.DATE_MATURED)
+       ";
 
 }
 else {
@@ -77,7 +77,22 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
-                            Matured Loans
+                            Matured Loans for <?php if(isset($yearStart)){echo date('F', strtotime($dateStart))." ".$yearStart;
+                                if(isset($yearEnd)){
+
+                                    echo " - ".date('F', strtotime($dateEnd))." ".$yearEnd;
+
+                                }}else{
+                                    $latestQuery = "SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2";
+                                    $resultLatest = mysqli_query($dbc,$latestQuery);
+
+                                    if(!empty($resultLatest)){
+                                    $latest = mysqli_fetch_assoc($resultLatest);
+                                    $date = $latest['Date'];
+                                    
+                                    echo date('F Y', strtotime($date));
+                                }else echo "Latest";
+                                }?>
 
                             
                         </h1>
@@ -95,14 +110,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                             <div class="panel-heading">
 
-                                <b>View Report for <?php if(isset($yearStart)){echo $monthStart." ".$yearStart;
-                                if(isset($yearEnd)){
-
-                                    echo " - ".$monthEnd." ".$yearEnd;
-
-                                }}else{
-                                    echo "Latest Date";
-                                }?></b>
+                                <b>View Report for:</b>
 
                             </div>
 
@@ -191,7 +199,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                         <td align="center"><?php echo $ans['ID'];?></td>
                                         <td align="left"><?php echo $ans['First']." ".$ans['Middle']." ".$ans['Last'];?></td>
-                                        <td align="right"><?php echo number_format($ans['amount'],2);?></td>
+                                        <td align="right"><?php echo number_format($ans['Amount'],2);?></td>
                                         
 
                                         </tr>

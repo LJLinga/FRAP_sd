@@ -91,7 +91,7 @@ function submitModal() {
            
         ;
         
-        document.getElementById('dialogboxfoot1').innerHTML = 'Is the information correct? <button type = button onclick="closeModal()" class = "btn btn-danger">No</button> <button class = "btn btn-success" name = "submit" id = "submit">Yes</button>';
+        document.getElementById('dialogboxfoot1').innerHTML += 'Is the information correct? <button type = button onclick="closeModal()" class = "btn btn-danger">No</button> <button class = "btn btn-success" name = "submit" id = "submit">Yes</button>';
 
 $('#exampleModalScrollable').modal('show',$(this));  
 
@@ -388,7 +388,7 @@ $success = null;
             <div class="navbar-header">
 
                 <a href = "index.php" >
-                    <img src="images/I-FA Logo Edited.png" id="ifalogo">
+                    <img src="images/iafedlogo normal Edited.png" id="ifalogo">
                 </a>
             </div>
 
@@ -1144,7 +1144,9 @@ $success = null;
         
       </div>
       <div class="modal-footer" id="dialogboxfoot1" style = "background: #47d147;">
-        
+       
+            Click <a href="forms/Affidavit-of-Assignment.pdf" download>here</a> to download affidavit to be submitted when applying</br>
+        </br>
       </div>
     </div>
   </div>

@@ -109,12 +109,12 @@ $pdf->SetFont('Times','B',10);
 $pdf->Cell(45);
 $pdf->Cell(20,5,''	,'L,T,R',0);
 $pdf->Cell(50	,5,' '	,'L,T,R',0);
-$pdf->Cell(30	,5,''	,'L,T,R',0);
+$pdf->Cell(35	,5,''	,'L,T,R',0);
 $pdf->ln();
 $pdf->Cell(45);
 $pdf->Cell(20,5,'ID Number '	,'L,B,R',0,'C');
 $pdf->Cell(50	,5,'Full Name'	,'L,B,R',0,'L');
-$pdf->Cell(30	,5,'Loan Completed(P)'	,'L,B,R',0,'R');
+$pdf->Cell(35	,5,'Loan Completed(P)'	,'L,B,R',0,'R');
 $pdf->ln();
 $pdf->SetFont('Times','',10);
 
@@ -135,7 +135,7 @@ $pdf->Cell(45);
 $pdf->Cell(20,5,$row['ID']	,'L,B,R',0,'C');
 $pdf->Cell(50	,5,"$last, $first $middle"	,'L,B,R',0,'L');
 
-    $pdf->Cell(30   ,5, number_format($row['Amount'],2)    ,'L,B,R',0,'R');
+    $pdf->Cell(35   ,5, number_format($row['Amount'],2)    ,'L,B,R',0,'R');
 
 
 

@@ -93,7 +93,21 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                     <div class="col-lg-12">
 
                         <h1 class="page-header">
-                            General Deductions Report
+                            General Deductions Report for <?php if(isset($yearStart)){echo date('d F', mktime(0, 0, 0, $monthStart, $dayStart)).' '.$yearStart;
+                                if(isset($yearEnd)){
+
+                                    echo ' - '.date('d F', mktime(0, 0, 0, $monthEnd, $dayEnd)).' '.$yearEnd;
+
+                                }} else{ 
+                                    $latestQuery = "SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2";
+                                    $resultLatest = mysqli_query($dbc,$latestQuery);
+
+                                    if(!empty($resultLatest)){
+                                    $latest = mysqli_fetch_assoc($resultLatest);
+                                    $date = $latest['Date'];
+                                    
+                                    echo date('d F Y', strtotime($date));}else echo "Latest";
+                                }?>
                             
                             
                         </h1>
@@ -111,21 +125,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                             <div class="panel-heading">
 
-                                <b>View Report for <?php if(isset($yearStart)){echo date('d F', mktime(0, 0, 0, $monthStart, $dayStart)).' '.$yearStart;
-                                if(isset($yearEnd)){
-
-                                    echo ' - '.date('d F', mktime(0, 0, 0, $monthEnd, $dayEnd)).' '.$yearEnd;
-
-                                }} else{ 
-                                    $latestQuery = "SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2";
-                                    $resultLatest = mysqli_query($dbc,$latestQuery);
-
-                                    if(!empty($resultLatest)){
-                                    $latest = mysqli_fetch_assoc($resultLatest);
-                                    $date = $latest['Date'];
-                                    
-                                    echo date('d F Y', strtotime($date));}
-                                }?></b>
+                                <b>View Report </b>
 
                             </div>
 

@@ -23,6 +23,9 @@
         mysqli_query($dbc,$query1);
 
     }
+    if(isset($_POST['lifetime'])){
+         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN LIFETIME appdetails.php");
+    }
     $query = "SELECT * FROM member m join ref_department d
               on m.dept_id = d.dept_id 
               join civ_status c
@@ -123,7 +126,32 @@
                                         </div>
 
                                     </div>
+                                                <?php   $queryLife = "SELECT * FROM lifetime
+                                                
+                                                          where member_id = {$_SESSION['currID']} AND APP_STATUS = '2'";
+                                                $resultLife = mysqli_query($dbc,$query);
+                                                $ansLife = mysqli_fetch_assoc($result);
+                                                if(!empty($ansLife)){;?>
 
+                                    <div class="panel panel-green">
+
+                                        <div class="panel-heading">
+
+                                            <b>Lifetime Information</b>
+
+                                        </div>
+                                        
+                                        <div class="panel-body"><p>
+
+                                            <b>Primary: <?php echo $ansLife['PRIMARY']?></b> <p>
+                                            <b>Secondary: <?php echo $ansLife['SECONDARY']?></b> <p>
+                                            <b>Orgnization: <?php echo $ansLife['ORG']?></b> <p>
+                                            <b>Date Added: <?php echo $ansLife['DATE_ADDED']?></b> <p>
+                                            
+                                        </div>
+
+                                    </div>
+<?php }?>
                                     <div class="panel panel-primary">
 
                                         <div class="panel-heading">
@@ -140,6 +168,8 @@
                                                 echo '<input id="action" type="submit" name="action" value="Deactivate Account" hidden>';
                                                 echo '<button id="modalTrigger" type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirm-submit">Deactivate Account</button>';
                                              }?>
+                                             
+                                                <button id="lifetime" name = "lifetime" type="submit" class="btn btn-default" value = "lifetime">Add Lifetime to Account</button>
                                         </div>
 
                                     </div>

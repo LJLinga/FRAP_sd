@@ -16,7 +16,14 @@ having count(TXN_ID)=0;";
     while($row = mysqli_fetch_assoc($result)){
         $queryMemDed = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE,TXN_DESC,AMOUNT,TXN_DATE,SERVICE_ID) VALUES({$row['MEMBER_ID']},2,'Deduction for membership',100,date(now()),1);";
         mysqli_query($dbc,$queryMemDed);
-    }*/
+    }*/}
+    if(isset($_POST['print'])){
+    $_SESSION['event_start'] = null;
+    $_SESSION['event_start']=$_POST['event_start'];
+    $_SESSION['event_end'] = null;
+    if(!empty($_POST['event_end']))
+    $_SESSION['event_end'] = $_POST['event_end'];
+    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/generatePerf.php");
 }
     if(!isset($_POST['select_date'])){
        $query = "SELECT month(max(txn_date)) as 'Month',Year(max(txn_date)) as 'Year' from txn_reference where txn_type = 2";
@@ -117,6 +124,9 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     <div class="col-lg-12" align="left">
 
                                         <input type="submit" class="btn btn-success" name="select_date" value="Generate Report">
+
+
+                                        <input onclick="$('form').attr('target', '_blank')" type="submit" class="btn btn-default" name="print" value="Print Report">
                                         </form>
                                     </div>
                                     
@@ -201,7 +211,8 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     echo number_format($row1['Amount'],2)."<br>";
 
                                 }
-                                else echo "0.00";?> <p>
+                                else echo "0.00";
+                                $memInfo = array(intval($row2['Count']),number_format($row1['Count']),$row1['Amount']);?> <p>
                                 
                             </div>
 
@@ -263,7 +274,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     $row2 = mysqli_fetch_assoc($result2);
 
                                 ?>
-                                <b> <b>Newly Accepted Health Aid:</b> <?php if(!empty($row2)){
+                                <b> Newly Accepted Health Aid:</b> <?php if(!empty($row2)){
                                     echo $row2['Count'];
 
                                 }
@@ -277,8 +288,9 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     echo number_format($row1['Amount'],2)."<br>";
 
                                 }
-                                else echo "0.00";?> <p>
-                                            
+                                else echo "0.00";
+                                $haInfo = array(intval($row2['Count']),intval($row1['Count']),$row1['Amount']);?> <p>
+                                           
                             </div>
 
                         </div>
@@ -355,8 +367,12 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                     echo number_format($row1['Amount'],2)."<br>";
 
                                 }
-                                else echo "0.00";?> <p>
-                                            
+                                else echo "0.00";
+                                $falpInfo = array(intval($row2['Count']),intval($row1['Count']),$row1['Amount']);?> <p>
+                                            <?php
+                                                $_SESSION['passMem'] = $memInfo;
+                                                $_SESSION['passHA'] = $haInfo;
+                                                $_SESSION['passFALP'] = $falpInfo;?>
                             </div>
 
                         </div>
