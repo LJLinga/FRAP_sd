@@ -154,12 +154,13 @@
                 </li>
                 <li class="dropdown sideicons">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-globe"><span id="notificationsCount" class="label label-danger"></span></i></a>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        <li id="notificationsDisplay" style=""></li>
-                        <li>
-                            <a href="notifications.php">View All</a>
-                        </li>
+                        <i class="fa fa-folder-o"><span id="notificationsDocumentsCount" class="label label-danger"></span></i></a>
+                    <ul class="dropdown-menu dropdown-menu-right" style="font-size: 12px;">
+                        <li id="notificationsDocuments">No document notifications.</li>
+                        <li class="divider"></li>
+                        <li><a href="EDMS_Workspace.php"><span id="notificationsDocumentsCountPending" class="label label-danger"></span> workspace documents are in need of attention.</a></li>
+                        <li class="divider"></li>
+                        <li><a href="EDMS_Workspace.php"><span id="notificationsDocumentsCountInProcess" class="label label-danger"></span> workspace documents are checked out by you.</a></li>
                     </ul>
                 </li>
                 <li class="dropdown sideicons">
@@ -191,15 +192,6 @@
                 </li>
 
             </ul>
-
-            <div id="notif_alert" class="alert alert-info" style="position:fixed;
-                                top: 8%;
-                                right: 2%;
-                                 font-size: 10pt;">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-                <span id="spanMsg"></span>
-
-            </div>
 
             <script>
                 $(document).ready(function(){
@@ -241,33 +233,45 @@
 
                     $("#notif_alert").hide();
 
-                    function load_notifications() {
+                    function load_notifications_documents() {
                         $.ajax({
                             url: "GLOBAL_AJAX_Notifications.php",
                             method: "POST",
-                            data: '',
+                            data: {typeId: '3'},
                             dataType: "json",
                             success: function (data) {
-                                $('#spanMsg').html(data.notifications[1]);
+                                $('#notificationsDocuments').html(data.notifications);
                                 if (data.count > 0) {
-                                    $('#notificationsCount').html(data.count);
-                                    $.each(data.notifications, function(key, value){
-                                        $('#spanMsg').html(value);
-                                        $("#notif_alert").slideDown();
-                                        $("#notif_alert").fadeTo(5000, 5000).slideUp(5000, function(){});
-                                    });
+                                    $('#notificationsDocumentsCount').html(data.count);
                                 }
+                            }
+                        });
+                        $.ajax({
+                            url: "GLOBAL_AJAX_Notifications.php",
+                            method: "POST",
+                            data: {count: 'DOC_PENDING'},
+                            success: function (data) {
+                                $('#notificationsDocumentsCountPending').html(data);
+                            }
+                        });
+                        $.ajax({
+                            url: "GLOBAL_AJAX_Notifications.php",
+                            method: "POST",
+                            data: {count: 'DOC_IN_PROCESS'},
+                            success: function (data) {
+                                $('#notificationsDocumentsCountInProcess').html(data);
                             }
                         });
                     }
 
-                    load_notifications();
+
+                    load_notifications_documents();
                     load_cms_notifications(temp);
                     load_unseen_notification(temp);
 
                     setInterval(function(){
 
-                        load_notifications();
+                        load_notifications_documents();
                         load_cms_notifications(temp);
                         load_unseen_notification(temp); // this will run after every 1 second
                     }, 5000);

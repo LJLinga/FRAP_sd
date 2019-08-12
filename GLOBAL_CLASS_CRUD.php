@@ -837,6 +837,40 @@ class GLOBAL_CLASS_CRUD extends GLOBAL_CLASS_Database {
         return $this->getData("SELECT * FROM notifications WHERE receiverId = '$userId'");
     }
 
+    public function displayUserNotificationsByType($userId, $typeId){
+        return $this->getData("SELECT n1.* FROM notifications n1 WHERE n1.notification_type = '$typeId' AND n1.receiverId = '$userId' AND n1.seen = '1' 
+                        AND n1.timestamp = (SELECT MAX(n2.timestamp) FROM notifications n2 WHERE n2.artifactId = n1.artifactId ) 
+                        GROUP BY n1.artifactId ORDER BY n1.timestamp DESC LIMIT 10;");
+    }
+
+    public function displayPendingDocumentsCount($userId){
+        return $this->getData("SELECT COUNT(d.documentId) AS count
+                FROM documents d 
+                JOIN doc_type t ON t.id = d.typeId
+                WHERE t.isActive = 2 
+                AND d.lifecycleStateId = 1
+                AND d.statusId = 2
+                AND d.stepId IN (SELECT s.id FROM user_groups ug
+                                                    JOIN groups g ON ug.groupId = g.id
+                                                    JOIN steps s ON g.id = s.groupId
+                                                    WHERE (ug.userId = '$userId' AND (s.groute = 2 OR s.gwrite = 2))
+                                                    OR (s.route = 2 OR s.`write` = 2 AND d.firstAuthorId = '$userId'));");
+    }
+
+    public function displayInProcessDocumentsCount($userId){
+        return $this->getData("SELECT COUNT(d.documentId) AS 'count'
+                FROM documents d 
+                JOIN doc_type t ON t.id = d.typeId
+                WHERE t.isActive = 2 
+                AND d.lifecycleStateId = 1
+                AND d.stepId IN (SELECT s.id FROM user_groups ug
+                                                    JOIN groups g ON ug.groupId = g.id
+                                                    JOIN steps s ON g.id = s.groupId
+                                                    WHERE (ug.userId = '$userId' AND (s.gwrite = 2 OR s.gcycle = 2 OR s.groute = 2)))
+                AND d.availabilityId = '2' AND d.availabilityById = '$userId'
+                ORDER BY d.lastUpdated DESC;");
+    }
+
     public function displayUnseenUserNotifications($userId){
         return $this->getData("SELECT * FROM notifications WHERE receiverId = '$userId' AND seen = '1';");
     }

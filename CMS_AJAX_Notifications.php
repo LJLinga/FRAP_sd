@@ -21,8 +21,8 @@ if(isset($_POST['userId']) && isset($_POST['limit'])){
     $query = "SELECT a1.postId, a1.message, a1.timeStamp FROM post_activity a1 WHERE a1.displayToId = $userId AND a1.timeStamp =
                 (SELECT MAX(a2.timeStamp)
                     FROM post_activity a2 WHERE a2.postId = a1.postId
-                    GROUP BY a2.postId 
                 ) 
+                GROUP BY a1.postId
                 ORDER BY a1.timeStamp DESC $limit;";
 
     $rows = $crud->getData($query);

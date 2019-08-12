@@ -1329,7 +1329,7 @@ include 'EDMS_SIDEBAR.php';
                 contentType: false,
                 data: new FormData(this),
                 success: function(response){
-                    if(JSON.parse(response).success == '1'){ location.href = 'EDMS_ViewDocument.php?docId='+documentId+'&alert=DOC_UPDATE_SUCCESS'; }
+                    if(JSON.parse(response).success == '1'){ location.href = 'EDMS_ViewDocument.php?docId='+documentId; }
                     else { $("#err").html('<div class="alert alert-info">'+JSON.parse(response).html+'</div>'); };
                 },
                 error: function(){
