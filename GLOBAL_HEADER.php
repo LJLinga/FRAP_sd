@@ -96,7 +96,7 @@
                 </li>
 
                 <li>
-                    <a href="MEMBER%20dashboard.php"> Loans </a>
+                    <a href="MEMBER%20dashboard.php">Services </a>
                 </li>
                 <?php
 
@@ -111,9 +111,9 @@
 
 
                     if($_SESSION['FRAP_ROLE'] > 1 || $_SESSION['EDMS_ROLE'] > 1 || $_SESSION['CMS_ROLE'] > 1) {
-                        echo '<li class="dropdown sideicons"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> Admin Tools <b class="caret"></b></a><ul class="dropdown-menu alert-dropdown">';
+                        echo '<li class="dropdown sideicons"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> More <b class="caret"></b></a><ul class="dropdown-menu alert-dropdown">';
                         if($_SESSION['FRAP_ROLE'] > 1) {
-                            echo '<li><a href="ADMIN%20Deductions.php"> <i class="fa fa-money" aria-hidden="true"></i> Loans </a></li>';
+                            echo '<li><a href="ADMIN%20Assoc%20Dashboard.php"> <i class="fa fa-users" aria-hidden="true"></i> Manage Association </a></li>';
                         }
                         if($_SESSION['CMS_ROLE'] > 1) {
                             echo '<li><a href="CMS_PostsDashboard.php"> <i class="fa fa-newspaper-o" aria-hidden="true"></i> Santinig Content </a></li>';
@@ -130,7 +130,7 @@
                     ?>
                 <li class="dropdown sideicons">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-money"><span id="frap_count" class="label label-danger"></span></i></a>
+                        <i class="fa fa-users"><span id="frap_count" class="label label-danger"></span></i></a>
                     <ul class="dropdown-menu alert-dropdown">
                         <li  id ="frap_notifs" ></li>
                         <li class="divider"></li>

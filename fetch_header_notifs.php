@@ -36,6 +36,22 @@ if(isset($_POST['idnum'])){
                     '.date("F j, Y g:i:s A ", strtotime($row["TXN_DATE"])).'
                   </li><br>
                   ';
+            }else if($row['SERVICE_ID'] == 4 && $row['MEMBER_ID'] != $_SESSION['idnum'] && $row['TXN_TYPE'] == 2){
+                $outputs .= '
+                  <li>
+                  <span class="label label-info">Loans</span>
+                    <a href="MEMBER%20FALP%20summary.php">'."Sucessfully Deducted".' </a>
+                    '.date("F j, Y g:i:s A ", strtotime($row["TXN_DATE"])).'
+                  </li><br>
+                  ';
+            }else if($row['SERVICE_ID'] == 2 && $row['MEMBER_ID'] != $_SESSION['idnum'] && $row['TXN_TYPE'] == 2){
+                $outputs .= '
+                  <li>
+                  <span class="label label-info">Loans</span>
+                    <a href="MEMBER%20FALP%20summary.php">'.$row["TXN_DESC"].' </a>
+                    '.date("F j, Y g:i:s A ", strtotime($row["TXN_DATE"])).'
+                  </li><br>
+                  ';
             }else if($row['SERVICE_ID'] == 4 ){
                 $outputs .= '
                   <li>

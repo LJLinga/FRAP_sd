@@ -36,7 +36,7 @@
 
     //then check if the guy has paid 50% of the Loan.... shit. we actually have a screen that keeps track of TWO Loans at the fucking same time jesus fucking christ
 
-    $page_title = 'Loans - FALP Summary';
+    $page_title = 'Services - FAP Summary';
     include 'GLOBAL_HEADER.php';
     include 'FRAP_USER_SIDEBAR.php';
 

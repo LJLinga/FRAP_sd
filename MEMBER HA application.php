@@ -5,6 +5,21 @@ include 'GLOBAL_USER_TYPE_CHECKING.php';
 
 $_SESSION['errorsFromHAUpload'] = null;
 
+//add a check if the user has agreed to be deducted, basically their consent. Check HA_STATUS from members table
+
+$checkIfConsentedQuery = "SELECT HA_STATUS FROM member where MEMBER_ID = {$_SESSION['idnum']}";
+$checkIfConsentedResult = mysqli_query($dbc,$checkIfConsentedQuery);
+$checkIfConsented = mysqli_fetch_array($checkIfConsentedResult);
+
+if($checkIfConsented['HA_STATUS'] == 1){ //meaning has not consented to be deducted yet
+
+    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER Health Aid Benefit.php");
+
+}
+
+
+
+
 
 
 //gets the latest addition if the member has applied for this shit already.
