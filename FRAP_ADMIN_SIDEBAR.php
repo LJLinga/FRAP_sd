@@ -88,7 +88,7 @@
 
                         <ul id="mTools" class="collapse">
                             <li>
-                                <a href="ADMIN%20Upload%20Excel.php"><i class="fa fa-group" aria-hidden="true"></i> Import Member List </a>
+                                <a href="ADMIN%20Upload%20Excel.php"><i class="fa fa-group" aria-hidden="true"></i> Import Member Reference List </a>
                             </li>
                             <li>
                                 <a href="ADMIN%20FALP%20addtomember.php"><i class="fa fa-dollar" aria-hidden="true"></i> Add FALP to Member </a>

@@ -90,7 +90,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                     <div class="container">
 
                         <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#home">All Applications</a></li>
+                            <li class="active"><a data-toggle="tab" href="#home">Recent Deductions</a></li>
                             <li><a data-toggle="tab" href="#membership">Membership</a></li>
                             <li><a data-toggle="tab" href="#fap">Faculty Assistance Program</a></li>
                             <li><a data-toggle="tab" href="#healthaid">Health Aid</a></li>
@@ -102,7 +102,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                             <div id="home" class="tab-pane fade in active">
 
-                                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST"> <!-- SERVER SELF -->
+                                <form action="ADMIN%20DREPORT%20general.php" method="POST"> <!-- SERVER SELF -->
 
                                     <table id="table" class="table table-bordered table-striped">
 
@@ -112,8 +112,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                             <td align="center"><b>ID Number</b></td>
                                             <td align="center"><b>Name</b></td>
-                                            <td align="center"><b>Date of Deduction</b></td>
-                                            <td align="center"><b>Amount to Deduct</b></td>
+                                            <td align="center"><b>Amount Deducted</b></td>
                                             <td align="center"><b>Action</b></td>
 
                                         </tr>

@@ -19,6 +19,8 @@
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="css/select2.min.css" rel="stylesheet" />
 
+
+
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <script src="js/jquery.js"></script>
@@ -111,9 +113,8 @@
 
 
                     if($_SESSION['FRAP_ROLE'] > 1 || $_SESSION['EDMS_ROLE'] > 1 || $_SESSION['CMS_ROLE'] > 1) {
-                        echo '<li class="dropdown sideicons"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> More <b class="caret"></b></a><ul class="dropdown-menu alert-dropdown">';
                         if($_SESSION['FRAP_ROLE'] > 1) {
-                            echo '<li><a href="ADMIN%20Assoc%20Dashboard.php"> <i class="fa fa-users" aria-hidden="true"></i> Manage Association </a></li>';
+                            echo '<li><a href="ADMIN%20MEMBERS%20viewmembers.php"> <i class="fa fa-users" aria-hidden="true"></i> Manage Association </a></li>';
                         }
                         if($_SESSION['CMS_ROLE'] > 1) {
                             echo '<li><a href="CMS_PostsDashboard.php"> <i class="fa fa-newspaper-o" aria-hidden="true"></i> Santinig Content </a></li>';
@@ -121,10 +122,9 @@
                         if($_SESSION['EDMS_ROLE'] >= 1){
                             echo '<li><a href="EDMS_Workspace.php"> <i class="fa fa-file-text" aria-hidden="true"></i> Documents</a></li>';
                         }
-                        if($_SESSION['SYS_ROLE'] >= 1){
+                        if($_SESSION['SYS_ROLE'] > 1){
                             echo '<li><a href="SYS_UserRoles.php"> <i class="fa fa-wrench" aria-hidden="true"></i> Configurations </a></li>';
                         }
-                        echo '</ul></li>';
                     }
 
                     ?>
@@ -135,7 +135,7 @@
                         <li  id ="frap_notifs" ></li>
                         <li class="divider"></li>
                         <li>
-                            <a href="FRAP_ALL_NOTIFS.php">View All</a>
+                            <a href="#">View All</a>
                         </li>
                     </ul>
                 </li>

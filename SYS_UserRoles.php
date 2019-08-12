@@ -127,7 +127,7 @@ include 'SYS_SIDEBAR.php';
             data:{cms: cms, frap:frap, userId: userId},
             success:function(data)
             {
-                alert("CMS "+cms+" FRAP "+frap+" USER_ID "+userId);
+                //alert("CMS "+cms+" FRAP "+frap+" USER_ID "+userId);
             },
             error:function(e){
                 alert("error");

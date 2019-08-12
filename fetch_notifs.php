@@ -5,8 +5,14 @@ include('mysql_connect_FA.php');
 if(isset($_POST['idnum'])){
 
     //$lastTimeStamp = $_POST['date'];
+    $query ='';
 
-    $query = "SELECT * FROM txn_reference WHERE MEMBER_ID = {$_POST['idnum']} ORDER BY TXN_ID  DESC";
+    if($_SESSION['FRAP_ROLE'] == 1){
+        $query = "SELECT * FROM txn_reference WHERE MEMBER_ID = {$_POST['idnum']} ORDER BY TXN_ID  ";
+    }else{
+        $query = "SELECT * FROM txn_reference ORDER BY TXN_ID  DESC LIMIT 5 ";
+    }
+
     $result = mysqli_query($dbc, $query);
     $output = '';
 
@@ -15,38 +21,39 @@ if(isset($_POST['idnum'])){
         {
             if($row['SERVICE_ID'] == 4){
                 $output .= '
-
+                 <a href="MEMBER%20FALP%20activity.php">
                  <div class="card">
                     <div class="card-header">
                         <span class="label label-info">FALP</span>
                     </div>
                     <div class="card-body">
-                        <a href="MEMBER%20FALP%20activity.php">'.$row["TXN_DESC"].' </a>
+                     '.$row["TXN_DESC"].' 
                     </div>
                     <div class="card-footer">
                         '.date("F j, Y g:i:s A ", strtotime($row["TXN_DATE"])).'
                     </div>
                 </div>
+                </a>
                 <br><br>
                   ';
+
             }else if($row['SERVICE_ID'] == 2){
                 $output .= '
-
-                
+                 <a href="MEMBER%20HA%20summary.php">
                  <div class="card">
                     <div class="card-header">
-                        <span class="label label-info">Health Aid</span>
+                        <span class="label label-info">FALP</span>
                     </div>
                     <div class="card-body">
-                        <a href="MEMBER%20HA%20summary.php">'.$row["TXN_DESC"].' </a>
+                     '.$row["TXN_DESC"].' 
                     </div>
                     <div class="card-footer">
                         '.date("F j, Y g:i:s A ", strtotime($row["TXN_DATE"])).'
                     </div>
                 </div>
+                </a>
                 <br><br>
-           
-                  ';
+                 ';
             }
 
             //$lastTimeStamp = $row["TXN_DATE"];

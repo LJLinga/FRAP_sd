@@ -69,10 +69,17 @@ GROUP BY g.id" ;
 
                 $rows = $crud->getData($query);
                 $text = '';
+                $ctr = 0;
                 if(!empty($rows)){ ?>
-                <div class="alert alert-warning">
-                    The following active groups still has no members, please assign at least a group admin in each one:
+
                 <?php
+                    foreach((array) $rows AS $key => $row){
+                        if($row['num'] == '0'){ $ctr++; }
+                    }
+                    if($ctr>0){ ?>
+                        <div class="alert alert-warning">
+                        The following active groups still has no members, please assign at least a group admin in each one:
+                   <?php }
                     foreach((array) $rows AS $key => $row){
                         if($row['num'] == '0'){ ?>
                             <br><strong><?php echo $row['groupDesc'].' ('.$row['groupName'].')';?></strong> <a class="btn btn-sm btn-primary fa fa-gear" href="SYS_Group_Settings.php?id=<?php echo $row['id'];?>"></a>

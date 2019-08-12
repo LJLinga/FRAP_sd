@@ -52,9 +52,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 <html>
 <head>
     <title>Import Excel to Mysql using PHPExcel in PHP</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+
     <style>
         body
         {

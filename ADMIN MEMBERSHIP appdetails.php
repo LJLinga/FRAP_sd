@@ -137,6 +137,55 @@ $mail->AddAddress($rowMem['email']);
 header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN MEMBERSHIP applications.php");
 
 
+    }else if (isset($_POST['compare'])) {
+
+        //first checks if the excel is empty
+
+        //after checking and if its not empty, compare if the value exists in the goddamn id row.
+
+
+        $queryCompare = "select count(ID) as 'num' from excel_members;";
+        $queryCompareResult = mysqli_query($dbc, $queryCompare);
+        $queryCompareRow = mysqli_fetch_array($queryCompareResult);
+
+
+
+        if($queryCompareRow['num'] == 0){
+
+            echo '<script language="javascript">';
+
+            echo 'alert(" You have not filled up the Database yet! Upload an excel sheet for reference first. Head to Migration Tools, and click on Import Members Referrence")';
+
+            echo '</script>';
+
+        }else {
+
+            $queryCompare = "SELECT * from excel_members where DLSU_ID = {$rowMem['MEMBER_ID']} ";
+            $queryCompareResult = mysqli_query($dbc, $queryCompare);
+            $queryCompareRow = mysqli_fetch_array($queryCompareResult);
+
+            if(!empty($queryCompareRow)){ //meaning they matched!
+
+                $message = "ID Number was found in the excel sheet! Name associated with it is ".$queryCompareRow['DLSU_NAME'];
+
+                echo '<script type="text/javascript">alert("'.$message.'");</script>';
+
+            }else{
+
+                echo '<script language="javascript">';
+
+                echo 'alert("User was not found in the Member List.")';
+
+                echo '</script>';
+
+            }
+
+        }
+
+
+
+
+
     }
 
 $page_title = 'Loans - Membership Application Details';
@@ -247,6 +296,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                             <input type="submit" class="btn btn-success" name="accept" value="Accept Application">
                                             <input type="submit" class="btn btn-danger" name="reject" value="Reject Application">
+                                                <input type="submit" class="btn btn-info" name="compare" value="Check Applicant ID">
 
                                         </div>
 
