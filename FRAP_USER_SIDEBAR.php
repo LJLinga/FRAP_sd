@@ -44,25 +44,37 @@
                         <a href="MEMBER FALP application.php"><i class="fa fa-institution" aria-hidden="true"></i>&nbsp;&nbsp;FALP Application</a>
                     </li>
 
+                    <?php
+                    /**
+                     * This query checks if this person has already consented to be deducted.
+                     */
+                    $checkIfConsentedQuery = "SELECT HA_STATUS FROM member where MEMBER_ID = {$_SESSION['idnum']}";
+                    $checkIfConsentedResult = mysqli_query($dbc,$checkIfConsentedQuery);
+                    $checkIfConsented = mysqli_fetch_array($checkIfConsentedResult);
+
+                    if($checkIfConsented['HA_STATUS'] == 1){ // if the user has not consented
+
+                    ?>
+
                     <li>
-                        <a href="MEMBER HA application.php"><i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;&nbsp;Health Aid Application</a>
+                        <a href="MEMBER%20Health%20Aid%20Benefit.php"><i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;&nbsp;Health Aid Application</a>
                     </li>
+
+                    <?php }else if($checkIfConsented['HA_STATUS'] == 2){  // if the user has consented ?>
+
+                    <li>
+
+                        <a href="MEMBER HA application.php"><i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;&nbsp;Health Aid Acquisition</a>
+
+                    </li>
+
+                    <?php } ?>
 
                     <li>
                         <a href="MEMBER LIFETIME form.php"><i class="fa fa-handshake-o" aria-hidden="true"></i>&nbsp;&nbsp;Lifetime Member Application</a>
                     </li>
 
                 </ul>
-                <?php 
-                if($_SESSION['FRAP_ROLE']==5){?>
-
-        
-
-                    <li>
-                        <a href="ADMIN HEALTHAID applications.php"><i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;&nbsp;Health Aid Application</a>
-                    </li>
-               
-            <?php }?>
 
             </li>
 
@@ -72,19 +84,6 @@
 
             </li>
 
-            <li>
-
-                <a href="javascript:" data-toggle="collapse" data-target="#loantrackingdd"><i class="fa fa-money" aria-hidden="true"></i> Loan Tracking <i class="fa fa-fw fa-caret-down"></i></a>
-
-                <ul id="loantrackingdd" class="collapse">
-
-                    <li>
-                        <a href="MEMBER FALP summary.php"><i class="fa fa-institution" aria-hidden="true"></i>&nbsp;&nbsp;FALP Loan</a>
-                    </li>
-
-                </ul>
-
-            </li>
 
             <li>
 
@@ -93,7 +92,11 @@
                 <ul id="servicessummarydd" class="collapse">
 
                     <li>
-                        <a href="MEMBER HA summary.php"><i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;&nbsp;Health Aid Summary</a>
+                        <a href="MEMBER FALP summary.php"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;FAP Loan Summary</a>
+                    </li>
+
+                    <li>
+                        <a href="MEMBER HA summary.php"><i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;&nbsp;Health Aid Acquisition Summary</a>
                     </li>
 
 

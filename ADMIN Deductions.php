@@ -28,7 +28,7 @@
                     </div>
                     <div class="col-lg-12">
 
-                        <div class="well">The Deductions button is only available during the 10th and 25th of the month to signify the cutoff dates of the AFED Inc. This can be changed however, simply contact your website administrator.</div>
+                        <div class="well">The Deductions button is only available during the 8th and 23rd of the month to signify the cutoff dates of the AFED Inc. This can be changed however, simply contact your website administrator.</div>
                     </div>
 
                 </div>
@@ -146,7 +146,6 @@
 
                                         $today = date("d");
 
-                                            
                                             foreach ($result as $resultRow) {
                                         ?>
 
@@ -156,9 +155,9 @@
                                         <td align="center"><?php echo $resultRow['FIRSTNAME'] ." ". $resultRow['LASTNAME'];  ?> </td>
                                         <td align="center"><?php echo date('Y, M d', strtotime($resultRow['DEDUCTION_DATE'])); ?></td>
                                         <td align="center">₱ <?php echo number_format($resultRow['PER_PAYMENT'],2)."<br>"; ?></td>
-                                            <?php if($today == '10' || $today == '25'){ //this is for when the date is not the same as the Deduction Periods?>
+                                            <?php if($today == '8' || $today == '23'){ //this is for when the date is the same as the Deduction Periods?>
                                         <td align="center"><button type='submit' class='btn btn-warning' name='toDeductID' value='<?php echo $resultRow['ID']; ?>'>Deduct  </button>&nbsp;&nbsp;&nbsp;</td>
-                                                <?php }else{ //this is when the date is the deduction period?>
+                                                <?php }else{ //this is when the date is  not the deduction period?>
                                                 <td align="center"><button type='submit' class='btn btn-warning' name='toDeductID' value='<?php echo $resultRow['ID']; ?>' disabled>Deduct </button>&nbsp;&nbsp;&nbsp;</td>
 
                                             <?php } ?>

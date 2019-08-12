@@ -114,7 +114,7 @@
     //update APP_STATUS from Draft to Passed.
 
 
-    $page_title = 'Loans - FALP Summary';
+    $page_title = 'Services - FAP Summary';
     include 'GLOBAL_HEADER.php';
     include 'FRAP_USER_SIDEBAR.php';
 

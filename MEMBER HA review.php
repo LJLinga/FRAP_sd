@@ -9,6 +9,17 @@ $crud = new GLOBAL_CLASS_CRUD();
 
 $_SESSION['errorsFromHAUpload'] = null;
 
+$checkIfConsentedQuery = "SELECT HA_STATUS FROM member where MEMBER_ID = {$_SESSION['idnum']}";
+$checkIfConsentedResult = mysqli_query($dbc,$checkIfConsentedQuery);
+$checkIfConsented = mysqli_fetch_array($checkIfConsentedResult);
+
+if($checkIfConsented['HA_STATUS'] == 1){ //meaning has not consented to be deducted yet
+
+    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER Health Aid Benefit.php");
+
+}
+
+
 
 
 //gets the latest addition if the member has applied for this shit already.
@@ -106,7 +117,7 @@ if(isset($_POST['applyHA'])){
 
 
 
-$page_title = 'Loans - Health Aid Application';
+$page_title = 'Services - Health Aid Application';
 include 'GLOBAL_HEADER.php';
 include 'FRAP_USER_SIDEBAR.php';
 
@@ -161,7 +172,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                 <div class="col-lg-12">
 
-                    <h1 class="page-header">Review your Health Aid application</h1>
+                    <h1 class="page-header">Review your Health Aid Acquisition Application</h1>
                     <ol class="breadcrumb">
                         <li>
                             Application

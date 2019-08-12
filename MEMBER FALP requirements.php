@@ -42,7 +42,7 @@
 
             } else if($row['LOAN_STATUS'] == 2 ) { //checks if you have a loan that is ongoing.
 
-                if ($row['PAYMENT_TERMS'] > $row['PAYMENTS_MADE']){ //checks if the loan is 50%
+                if ($row['PAYMENT_TERMS']/2 > $row['PAYMENTS_MADE']){ //checks if the loan is 50%
 
                     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER FALP summary.php");
 

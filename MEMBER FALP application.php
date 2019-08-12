@@ -56,7 +56,7 @@
 
     }
 
-    $page_title = 'Loans - FALP Application';
+    $page_title = 'Services - FAP Application';
     include 'GLOBAL_HEADER.php';
     include 'FRAP_USER_SIDEBAR.php';
 ?>

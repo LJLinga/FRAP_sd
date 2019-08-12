@@ -52,7 +52,7 @@
     $query2 = "SELECT * FROM txn_reference where LOAN_REF = {$ans['LOAN_ID']} AND txn_type = 2";
     $result2 = mysqli_query($dbc,$query2);
 
-    $page_title = 'Loans - FALP Activity';
+    $page_title = 'Services - FAP Activity';
     include 'GLOBAL_HEADER.php';
     include 'FRAP_USER_SIDEBAR.php';
 ?>

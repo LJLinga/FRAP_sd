@@ -5,6 +5,19 @@ $crud = new GLOBAL_CLASS_CRUD();
 session_start();
 include 'GLOBAL_USER_TYPE_CHECKING.php';
 
+$checkIfConsentedQuery = "SELECT HA_STATUS FROM member where MEMBER_ID = {$_SESSION['idnum']}";
+$checkIfConsentedResult = mysqli_query($dbc,$checkIfConsentedQuery);
+$checkIfConsented = mysqli_fetch_array($checkIfConsentedResult);
+
+if($checkIfConsented['HA_STATUS'] == 1){ //meaning has not consented to be deducted yet
+
+    header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER Health Aid Benefit.php");
+
+}
+
+
+$yearNOW = date('Y');
+
 
 //checks the status of the application that you have sent
 $checkForHealthAidApplicationQuery = "SELECT * FROM health_aid where MEMBER_ID = {$_SESSION['idnum']} ORDER BY RECORD_ID DESC LIMIT 1";
@@ -37,6 +50,7 @@ include 'FRAP_USER_SIDEBAR.php';
         <div class="container-fluid">
 
                 <div class="row"> <!-- Title & Breadcrumb -->
+
 
                     <div class="col-lg-12">
 
