@@ -372,7 +372,6 @@ include 'EDMS_SIDEBAR.php';
                                 </div>
                             </div>
                         <?php } ?>
-
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <div class="row">
@@ -421,7 +420,7 @@ include 'EDMS_SIDEBAR.php';
                                         </div>
                                     </div>
                                 </div>
-                                <table id="tblHistory" class="table table-condensed table-sm table-striped" cellspacing="0" width="100%">
+                                <table id="tblHistory" class="table table-condensed table-striped" cellspacing="0" width="100%">
                                     <thead>
                                     <th>Timestamp</th>
                                     <th>Ver. No.</th>
@@ -439,8 +438,9 @@ include 'EDMS_SIDEBAR.php';
                                     $issetLastAction = false;
                                     $lastActionPanel = '';
                                     $btnLastRemark = '';
-                                    $btnPrevContent = '';
+                                    $btnLastComparison = '';
                                     $modalLastRemark = '';
+                                    $modalLastComparison = '';
 
                                     $rows = $crud->getData($query);
 
@@ -448,6 +448,10 @@ include 'EDMS_SIDEBAR.php';
                                         foreach ((array)$rows as $key => $row) {
                                             $actionDisp = '';
                                             $actionPanel = '';
+                                            $modalActionRemark = '';
+                                            $modalActionComparison = '';
+                                            $btnActionRemark = '';
+                                            $btnActionComparison = '';
 
                                             if($row['audit_action_type'] == 'LOCKED') {
                                                 $actionDisp = $crud->coloriseAvailability($row['availabilityId']).' the document.';
@@ -467,15 +471,18 @@ include 'EDMS_SIDEBAR.php';
                                                             <span class="label label-default">CHECKED IN</span> the document.';
                                             }
 
-                                            $actionPanel = '<div class="panel panel-default">
-                                        <div class="panel-body">
-                                        <strong>'.$crud->getUserName($row['audit_user_id']).'</strong> on
-                                        <i>'.date("F j, Y g:i:s A ", strtotime($row['audit_timestamp'])).'</i><br>';
-                                            $actionPanel.=$actionDisp;
-                                            $actionPanel.='</div></div>';
+                                            if($row['audit_action_type'] != 'LOCKED') {
 
-                                            $btnActionRemark = '<button class="btn btn-info fa fa-quote-left" data-toggle="modal" data-target="#modalRemark'.$row['versionId'].'" title="Read remarks"></button>';
-                                            $modalActionRemark = '<div id="modalRemark'.$row['versionId'].'" class="modal fade" role="dialog">
+
+                                                $actionPanel = '<div class="panel panel-default">
+                                        <div class="panel-body">
+                                        <strong>' . $crud->getUserName($row['audit_user_id']) . '</strong> on
+                                        <i>' . date("F j, Y g:i:s A ", strtotime($row['audit_timestamp'])) . '</i><br>';
+                                                $actionPanel .= $actionDisp;
+                                                $actionPanel .= '</div></div>';
+
+                                                $btnActionRemark = '<button class="btn btn-info fa fa-quote-left" data-toggle="modal" data-target="#modalRemark' . $row['versionId'] . '" title="Read remarks"></button>';
+                                                $modalActionRemark = '<div id="modalRemark' . $row['versionId'] . '" class="modal fade" role="dialog">
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
@@ -484,10 +491,10 @@ include 'EDMS_SIDEBAR.php';
                                                                 <div class="modal-body">
                                                                     <div class="row">
                                                                         <div class="col-lg-12">
-                                                                            '.$actionPanel.'
+                                                                            ' . $actionPanel . '
                                                                             <div class="panel panel-default">
                                                                                 <div class="panel-body alert-info" style="max-height: 40rem; overflow-y: auto;">
-                                                                                    "<i>'.$row['remarks'].'</i>"
+                                                                                    "<i>' . $row['remarks'] . '</i>"
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -500,13 +507,79 @@ include 'EDMS_SIDEBAR.php';
                                                         </div>
                                                     </div>';
 
-                                            if($issetLastAction == false && $row['audit_action_type'] != 'LOCKED'){
-                                                if($row['remarks']!=''){
-                                                    $btnLastRemark = '<button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalRemark'.$row['versionId'].'" title="Read remarks"><i class="fa fa-quote-left"></i> Read remark</button>';
-                                                    $modalLastRemark = $modalActionRemark;
+                                                if($row['old_versionNo'] != ''){
+                                                    $btnActionComparison = '<button class="btn btn-primary fa fa-file-text" title="Content comparison" data-toggle="modal" data-target="#modalContentComparison'.$row['versionId'].'"></button>';
+                                                    $modalActionComparison = '<div id="modalContentComparison'.$row['versionId'].'" class="modal fade" role="dialog">
+                                                                <div class="modal-dialog modal-lg">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <strong class="modal-title">Content Changes</strong>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-6">
+                                                                                    <div class="panel panel-default">
+                                                                                        <div class="panel-body">
+                                                                                            <table class="table-striped table-condensed table-responsive table-sm" cellspacing="0" width="100%">
+                                                                                                <thead>
+                                                                                                <td></td>
+                                                                                                <td><i>Previous Version</i></td>
+                                                                                                <td><i>This Version</i></td>
+                                                                                                </thead>
+                                                                                                <tbody>
+                                                                                                <tr><th>Ver.No.</th><th>'.$row['old_versionNo'].'</th><th>'.$row['versionNo'].'</th></tr>
+                                                                                                <tr><th>Section No.</th><td>'.$row['old_sectionNo'].'</td><td>'.$row['sectionNo'].'</td></tr>
+                                                                                                <tr><th>Title</th><td>'.$row['old_title'].'</td><td>'.$row['title'].'</td></tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-6">
+                                                                                    <div class="panel panel-default">
+                                                                                        <div class="panel-heading">
+                                                                                            <strong>Legend</strong>
+                                                                                        </div>
+                                                                                        <div class="panel-body">
+                                                                                            <span class="removed-text">Old content</span>
+                                                                                            <br><span class="added-text">New content</span>
+                                                                                            <br><span class="unmodified-text">Unchanged content</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="col-lg-12">
+                                                                                    <div class="panel panel-default">
+                                                                                        <div class="panel-body" style="max-height: 40rem; overflow-y: auto;">';
+                                                                                           $modalActionComparison.= Diff::toHTML(Diff::compare(nl2br($row['old_content']), nl2br($row['content'])));
+                                                                                        $modalActionComparison.='</div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>';
+
                                                 }
-                                                $lastActionPanel = $actionPanel.$btnLastRemark.$modalLastRemark;
-                                                $issetLastAction = true;
+
+                                                if ($issetLastAction == false) {
+                                                    if ($row['remarks'] != '') {
+                                                        $btnLastRemark = '<button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalRemark' . $row['versionId'] . '" title="Read remarks"><i class="fa fa-quote-left"></i> Read remark</button>';
+                                                        $modalLastRemark = $modalActionRemark;
+                                                    }
+                                                    if($row['audit_action_type'] == 'UPDATED'){
+                                                        $btnLastComparison = '<button class="btn btn-primary btn-sm" title="Content comparison" data-toggle="modal" data-target="#modalContentComparison'.$row['versionId'].'"><i class="fa fa-file-text"></i> Content comparison</button>';
+                                                        $modalLastComparison = $modalActionComparison;
+                                                    }
+                                                    $lastActionPanel = $actionPanel . $btnLastRemark . $modalLastRemark. $btnLastComparison . $modalLastComparison;
+                                                    $issetLastAction = true;
+                                                }
+
                                             }
                                             ?>
                                             <tr>
@@ -520,13 +593,13 @@ include 'EDMS_SIDEBAR.php';
                                                     <?php echo $crud->getUserName($row['audit_user_id']);?>
                                                 </td>
                                                 <td>
-                                                    <?php
-                                                    echo $actionDisp;
-                                                    ?>
+                                                    <?php echo $actionDisp; ?>
                                                 </td>
                                                 <td>
                                                     <?php if($row['audit_action_type'] != 'LOCKED'){ ?>
                                                         <div class="btn-group btn-sm">
+                                                            <?php if($row['remarks'] != ''){ echo $btnActionRemark.$modalActionRemark; }?>
+                                                            <?php echo $btnActionComparison.$modalActionComparison;?>
                                                         <button class="btn btn-default fa fa-eye" data-toggle="modal" title="Version details" data-target="#modalVersionPreview<?php echo $row['versionId'];?>"></button>
                                                         <div id="modalVersionPreview<?php echo $row['versionId'];?>" class="modal fade" role="dialog">
                                                             <div class="modal-dialog">
@@ -618,65 +691,6 @@ include 'EDMS_SIDEBAR.php';
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <?php if($row['remarks'] != ''){ echo $btnActionRemark.$modalActionRemark; }?>
-                                                        <?php if($row['old_versionNo'] != ''){?>
-                                                            <button class="btn btn-primary fa fa-file-text" title="Content comparison" data-toggle="modal" data-target="#modalContentComparison<?php echo $row['versionId'];?>"></button>
-                                                            <div id="modalContentComparison<?php echo $row['versionId'];?>" class="modal fade" role="dialog">
-                                                                <div class="modal-dialog modal-lg" >
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <strong class="modal-title">Content Changes</strong>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            <div class="row">
-                                                                                <div class="col-lg-6">
-                                                                                    <div class="panel panel-default">
-                                                                                        <div class="panel-body">
-                                                                                            <table class="table-striped table-condensed table-responsive table-sm" cellspacing="0" width="100%">
-                                                                                                <thead>
-                                                                                                <td></td>
-                                                                                                <td><i>Previous Version</i></td>
-                                                                                                <td><i>This Version</i></td>
-                                                                                                </thead>
-                                                                                                <tbody>
-                                                                                                <tr><th>Ver.No.</th><th><?php echo $row['old_versionNo']?></th><th><?php echo $row['versionNo']?></th></tr>
-                                                                                                <tr><th>Section No.</th><td><?php echo $row['old_sectionNo']?></td><td><?php echo $row['sectionNo']?></td></tr>
-                                                                                                <tr><th>Title</th><td><?php echo $row['old_title']?></td><td><?php echo $row['title']?></td></tr>
-                                                                                                </tbody>
-                                                                                            </table>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-lg-6">
-                                                                                    <div class="panel panel-default">
-                                                                                        <div class="panel-heading">
-                                                                                            <strong>Legend</strong>
-                                                                                        </div>
-                                                                                        <div class="panel-body">
-                                                                                            <span class="removed-text">Old content</span>
-                                                                                            <br><span class="added-text">New content</span>
-                                                                                            <br><span class="unmodified-text">Unchanged content</span>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col-lg-12">
-                                                                                    <div class="panel panel-default">
-                                                                                        <div class="panel-body" style="max-height: 40rem; overflow-y: auto;">
-                                                                                            <?php echo Diff::toHTML(Diff::compare(nl2br($row['old_content']), nl2br($row['content']))); ?>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        <?php }?>
                                                         <?php if($write == '3'){ ?>
                                                         <button class="btn btn-warning fa fa-refresh" data-toggle="modal" data-target="#modalRevert<?php echo $row['versionId'];?>"></button>
                                                         <div id="modalRevert<?php echo $row['versionId'];?>" class="modal fade" role="dialog">

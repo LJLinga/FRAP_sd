@@ -346,7 +346,11 @@
 
                                         <div align="center">
 
-
+                                        <input type ="checkbox" required><b>In consideration of the data privacy law, by sending this application, I allow AFED Inc to secure a copy of my ITR, payslip, and government ID for compliance and requirement purposes of this loan.
+                                       </b></input>
+                                    </div>
+                                    <div align="center">
+                                        </br>
                                         <input type="submit" name="apply" class="btn btn-success" value="Submit" id="submitCheck" >
                                         <a href="MEMBER dashboard.php" class="btn btn-default" role="button">Go Back</a>
 

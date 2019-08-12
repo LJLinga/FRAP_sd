@@ -104,7 +104,7 @@ if(isset($_GET['docId'])){
 
     // Load document
     $query = "SELECT 
-                d.firstAuthorId, d.timeCreated, d.availabilityId, d.versionNo, d.authorId, d.title, d.filePath, d.lastUpdated, d.typeId,
+                d.firstAuthorId, d.timeCreated, d.availabilityId, d.versionNo, d.authorId, d.title, d.filePath, d.lastUpdated, d.typeId, d.old_versionNo,
 		        CONCAT(e.LASTNAME,', ',e.FIRSTNAME) AS originalAuthor, dt.type,
                 (SELECT CONCAT(e.LASTNAME,', ',e.FIRSTNAME) FROM employee e WHERE e.EMP_ID = d.authorId) AS currentAuthor,
                 (SELECT CONCAT(e2.LASTNAME,', ',e2.FIRSTNAME) FROM employee e2 WHERE e2.EMP_ID = d.statusedById) AS statusedByName,
@@ -158,6 +158,7 @@ if(isset($_GET['docId'])){
             $remarks = $row['remarks'];
             $remarkedOn = $row['remark_timestamp'];
             $remarkType = $row['remark_action_type'];
+            $old_versionNo = $row['old_versionNo'];
         }
 
         $rows = $crud->getStep($currentStepId);
@@ -333,7 +334,7 @@ include 'EDMS_SIDEBAR.php';
                 <?php
                 $ext = pathinfo($filePath, PATHINFO_EXTENSION);
                 if($ext == 'pdf' || $ext == 'jpg'){?>
-                    <iframe src="/ViewerJS/../FRAP_sd/<?php echo $filePath; ?>" width="850" style="height:80vh;" allowfullscreen webkitallowfullscreen></iframe>
+                    <iframe src="/ViewerJS/../FRAP_sd/<?php echo $filePath; ?>" style="width: 100%; height:70rem;" allowfullscreen webkitallowfullscreen></iframe>
                 <?php }else{ ?>
                     <div class="panel-heading"><b>Document File</b></div>
                     <div class="panel-body">
@@ -397,15 +398,21 @@ include 'EDMS_SIDEBAR.php';
                             <th>Ver. No.</th>
                             <th>User</th>
                             <th>Description</th>
-                            <th width="120px">Action</th>
+                            <th width="150px">Action</th>
                             </thead>
                             <tbody>
                             <?php
                             $query = "SELECT v.audit_action_type, v.versionId,
                                                 v.audit_timestamp, 
                                                 v.versionNo, 
+                                                v.old_versionNo,
                                                 v.title, 
+                                                v.old_title,
                                                 v.filePath, 
+                                                v.old_filePath,
+                                                v.old_authorId,
+                                                v.old_lastUpdated,
+                                                v.authorId,
                                                 v.remarks,
                                                 v.lifecycleStateId, v.statusedById, v.lifecycleStatedById, v.availabilityById,
                                                 v.availabilityId, dt.type AS docType, v.lastUpdated,
@@ -433,8 +440,9 @@ include 'EDMS_SIDEBAR.php';
                             $issetLastAction = false;
                             $lastActionPanel = '';
                             $btnLastRemark = '';
-                            $btnPrevContent = '';
+                            $btnLastComparison = '';
                             $modalLastRemark = '';
+                            $modalLastComparison = '';
 
                             $rows = $crud->getData($query);
 
@@ -443,7 +451,9 @@ include 'EDMS_SIDEBAR.php';
                                     $actionDisp = '';
                                     $actionPanel = '';
                                     $btnActionRemark = '';
+                                    $btnActionComparison = '';
                                     $modalActionRemark = '';
+                                    $modalActionComparison = '';
 
                                     if($row['audit_action_type'] == 'LOCKED') {
                                         $actionDisp = $crud->coloriseAvailability($row['availabilityId']).' the document.';
@@ -463,15 +473,17 @@ include 'EDMS_SIDEBAR.php';
                                                             <span class="label label-default">CHECKED IN</span> the document.';
                                     }
 
-                                    $actionPanel = '<div class="panel panel-default">
-                                        <div class="panel-body">
-                                        <strong>'.$row['name'].'</strong> on
-                                        <i>'.date("F j, Y g:i:s A ", strtotime($row['audit_timestamp'])).'</i><br>';
-                                    $actionPanel.=$actionDisp;
-                                    $actionPanel.='</div></div>';
+                                    if($row['audit_action_type'] != 'LOCKED') {
 
-                                    $btnActionRemark = '<button class="btn btn-default btn-info btn-sm" data-toggle="modal" data-target="#modalRemark'.$row['versionId'].'" title="Read remarks"><i class="fa fa-quote-left"></i></button>';
-                                    $modalActionRemark = '<div id="modalRemark'.$row['versionId'].'" class="modal fade" role="dialog">
+                                        $actionPanel = '<div class="panel panel-default">
+                                        <div class="panel-body">
+                                        <strong>' . $row['name'] . '</strong> on
+                                        <i>' . date("F j, Y g:i:s A ", strtotime($row['audit_timestamp'])) . '</i><br>';
+                                        $actionPanel .= $actionDisp;
+                                        $actionPanel .= '</div></div>';
+
+                                        $btnActionRemark = '<button class="btn btn-default btn-info btn-sm" data-toggle="modal" data-target="#modalRemark' . $row['versionId'] . '" title="Read remarks"><i class="fa fa-quote-left"></i></button>';
+                                        $modalActionRemark = '<div id="modalRemark' . $row['versionId'] . '" class="modal fade" role="dialog">
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
@@ -480,10 +492,10 @@ include 'EDMS_SIDEBAR.php';
                                                                 <div class="modal-body">
                                                                     <div class="row">
                                                                         <div class="col-lg-12">
-                                                                            '.$actionPanel.'
+                                                                            ' . $actionPanel . '
                                                                             <div class="panel panel-default">
                                                                                 <div class="panel-body alert-info" style="max-height: 40rem; overflow-y: auto;">
-                                                                                    "<i>'.$row['remarks'].'</i>"
+                                                                                    "<i>' . $row['remarks'] . '</i>"
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -496,13 +508,88 @@ include 'EDMS_SIDEBAR.php';
                                                         </div>
                                                     </div>';
 
-                                    if($issetLastAction == false && $row['audit_action_type'] != 'LOCKED'){
-                                        if($row['remarks']!=''){
-                                            $btnLastRemark = '<button class="btn btn-default btn-info btn-sm" data-toggle="modal" data-target="#modalRemark'.$row['versionId'].'" title="Read remarks"><i class="fa fa-quote-left"></i> Read remark</button>';
-                                            $modalLastRemark = $modalActionRemark;
+                                        if($row['old_versionNo'] != ''){
+                                            $btnActionComparison = '<button class="btn btn-primary fa fa-file-text" title="Version comparison" data-toggle="modal" data-target="#modalComparison'.$row['versionId'].'"></button>';
+                                            $modalActionComparison = '<div id="modalComparison'.$row['versionId'].'" class="modal fade" role="dialog">
+                                                            <div class="modal-dialog modal-lg">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <strong class="modal-title">Content Comparison</strong>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <ul class="nav nav-tabs" role="tablist">
+                                                                            <li role="presentation" class="active"><a href="#current" aria-controls="current" role="tab" data-toggle="tab">Current</a></li>
+                                                                            <li role="presentation"><a href="#previous" aria-controls="previous" role="tab" data-toggle="tab">Previous</a></li>
+                                                                        </ul>
+                                                                        <div class="tab-content">
+                                                                            <div role="tabpanel" class="tab-pane active" id="current">
+                                                                                <div class="panel panel-default">
+                                                                                    <div class="panel-body">
+                                                                                        <div class="panel panel-default" style="height:50rem; max-height: 50rem;">
+                                                                                            <div class="panel-heading">
+                                                                                                <strong>Ver. No.: </strong> '.$row['versionNo'].' <strong>Title: </strong> '.$row['title'].'<br>
+                                                                                                <strong>Updated by:</strong> '.$crud->getUserName($row['authorId']).' <strong>Updated on: </strong>'.$crud->friendlyDate($row['lastUpdated']).'
+                                                                                            </div>
+                                                                                            ';
+
+                                            $ext = pathinfo($filePath, PATHINFO_EXTENSION);
+                                            if($ext == 'pdf' || $ext == 'jpg') {
+                                                $modalActionComparison.= '<iframe src="/ViewerJS/../FRAP_sd/' . $row['filePath'] . '" style="width: 100%; height:45rem;" allowfullscreen webkitallowfullscreen></iframe>';
+                                            }else{
+                                                $modalActionComparison.='<p>Viewer does not support format : <b>'.$ext.'</b></p>
+                                                                         <a class="btn fa fa-download"  href="'.$row['filePath'].'" download="'.$title.'_ver'.$versionNo.'_'.basename($filePath).'"> Download </a>';
+
+                                                }
+                                            $modalActionComparison.= '
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div role="tabpanel" class="tab-pane" id="previous">
+                                                                                <div class="panel panel-default">
+                                                                                    <div class="panel-body">
+                                                                                        <div class="panel panel-default" style="height:50rem; max-height: 50rem;">
+                                                                                            <div class="panel-heading">
+                                                                                                <strong>Ver. No.: </strong> '.$row['old_versionNo'].' <strong>Title: </strong> '.$row['old_title'].'<br>
+                                                                                                <strong>Updated by:</strong> '.$crud->getUserName($row['old_authorId']).' <strong>Updated on: </strong>'.$crud->friendlyDate($row['old_lastUpdated']).'
+                                                                                            </div>';
+
+                                            $ext = pathinfo($filePath, PATHINFO_EXTENSION);
+                                            if($ext == 'pdf' || $ext == 'jpg') {
+                                                $modalActionComparison.= '<iframe src="/ViewerJS/../FRAP_sd/' . $row['old_filePath'] .'" style="width: 100%; height:45rem;" allowfullscreen webkitallowfullscreen></iframe>';
+                                            }else{
+                                                $modalActionComparison.='<p>Viewer does not support format : <b>'.$ext.'</b></p>
+                                                                         <a class="btn fa fa-download"  href="'.$row['old_filePath'].'" download="'.$title.'_ver'.$versionNo.'_'.basename($filePath).'"> Download </a>';
+
+                                                }
+                                            $modalActionComparison.= '</div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>';
                                         }
-                                        $lastActionPanel = $actionPanel.$btnLastRemark.$modalLastRemark;
-                                        $issetLastAction = true;
+
+                                        if ($issetLastAction == false) {
+                                            if ($row['remarks'] != '') {
+                                                $btnLastRemark = '<button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalRemark'.$row['versionId'].'" title="Read remarks"><i class="fa fa-quote-left"></i> Read remark</button>';
+                                                $modalLastRemark = $modalActionRemark;
+                                            }
+                                            if ($row['audit_action_type'] == 'UPDATED') {
+                                                $btnLastComparison = '<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalComparison'.$row['versionId'].'" title="Content comparison"><i class="fa fa-file-text"></i> Content comparison</button>';
+                                                $modalLastComparison = $modalActionComparison;
+                                            }
+                                            $lastActionPanel = $actionPanel . $btnLastRemark . $modalLastRemark .$btnLastComparison .$modalLastComparison;
+                                            $issetLastAction = true;
+                                        }
+
                                     }
                                     ?>
                                     <tr>
@@ -519,8 +606,12 @@ include 'EDMS_SIDEBAR.php';
                                             <?php echo $actionDisp; ?>
                                         </td>
                                         <td>
+
                                             <?php if($row['audit_action_type'] != 'LOCKED'){ ?>
                                                 <div class="btn-group btn-group-sm" role="group">
+                                                    <?php if($row['remarks'] != '') { echo $btnActionRemark.$modalActionRemark; } ?>
+                                                    <?php if($row['old_versionNo'] != ''){ echo $btnActionComparison.$modalActionComparison; } ?>
+                                                    <?php if($row['versionNo'] != $versionNo) { ?>
                                                 <button class="btn btn-default" data-toggle="modal" data-target="#modalVersionPreview<?php echo $row['versionId'];?>" title="Version details"><i class="fa fa-eye"></i></button>
                                                 <div id="modalVersionPreview<?php echo $row['versionId'];?>" class="modal fade" role="dialog">
                                                     <div class="modal-dialog">
@@ -597,14 +688,16 @@ include 'EDMS_SIDEBAR.php';
                                                                                         <th>Created on</th>
                                                                                         <td><?php echo date("F j, Y g:i:s A ", strtotime($timeFirstPosted)); ?></td>
                                                                                     </tr>
-                                                                                    <tr>
-                                                                                        <th>Content updated by</th>
-                                                                                        <td><?php echo $row['authorName']; ?></td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <th>Content updated on</th>
-                                                                                        <td><?php echo date("F j, Y g:i:s A ", strtotime($row['lastUpdated']));?></td>
-                                                                                    </tr>
+                                                                                    <?php if($old_versionNo != ''){ ?>
+                                                                                        <tr>
+                                                                                            <th>Content updated by</th>
+                                                                                            <td><?php echo $row['authorName']; ?></td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th>Content updated on</th>
+                                                                                            <td><?php echo date("F j, Y g:i:s A ", strtotime($row['lastUpdated']));?></td>
+                                                                                        </tr>
+                                                                                    <?php } ?>
                                                                                     </tbody>
                                                                                 </table>
                                                                             </div>
@@ -618,7 +711,6 @@ include 'EDMS_SIDEBAR.php';
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <?php if($row['remarks'] != '') { echo $btnActionRemark.$modalActionRemark; } ?>
                                                 <?php if($write == '2'){ ?>
                                                     <button class="btn btn-warning" data-toggle="modal" data-target="#modalRevert<?php echo $row['versionId'];?>" title="Revert to this version"><i class="fa fa-refresh"></i></button>
                                                     <div id="modalRevert<?php echo $row['versionId'];?>" class="modal fade" role="dialog">
@@ -674,6 +766,7 @@ include 'EDMS_SIDEBAR.php';
                                                     </div>
                                                 <?php } ?>
                                                 <a class="btn btn-sm btn-success" href="<?php echo $filePath;?>" target="_blank" download="<?php echo $row['title'].'_ver'.$row['versionNo'].'_'.basename($row['filePath']);?>" title="Download version"><i class="fa fa-download"></i></a>
+                                                    <?php } ?>
                                                 </div>
                                             <?php }?>
                                         </td>
@@ -925,17 +1018,6 @@ include 'EDMS_SIDEBAR.php';
                                 <th>Content updated on</th>
                                 <td><?php echo date("F j, Y g:i:s A ", strtotime($timeUpdated));?></td>
                             </tr>
-                            <?php if($availabilityByName != '' && $availability == '2') {  ?>
-                            <tr>
-                                <th>Currently checked out by</th>
-                                <td><?php echo $availabilityByName; ?></td>
-                            </tr>
-                            <tr>
-                                <th>Checked out on </th>
-                                <td><?php echo date("F j, Y g:i:s A ", strtotime($availabilityOn)); ?></td>
-                            </tr>
-                            <tr>
-                            <?php } ?>
                             </tbody>
                         </table>
                     </div>
