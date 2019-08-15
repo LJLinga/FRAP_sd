@@ -158,6 +158,22 @@ if(isset($_POST['idnum'])){
                 $outputs .=  date("F j, Y g:i:s A ", strtotime($row["TXN_DATE"]));
                 $outputs .= '</li>';
                 $outputs .= '</a>';
+            }else  if($row['SERVICE_ID'] == 6 ){
+//                $outputs .= '
+//                  <li>
+//                  <span class="label label-info">Health Aid</span>
+//                    <a href="MEMBER%20HA%20summary.php">'.$row["TXN_DESC"].' </a>
+//                    '.date("F j, Y g:i:s A ", strtotime($row["TXN_DATE"])).'
+//                  </li><br>
+//                  ';
+
+                $outputs .= '<a href="MEMBER%20LIFETIME%20form.php">';
+                $outputs .= '<li>';
+                $outputs .= '<span class="label label-info">Services</span>';
+                $outputs .= $row["TXN_DESC"];
+                $outputs .=  date("F j, Y g:i:s A ", strtotime($row["TXN_DATE"]));
+                $outputs .= '</li>';
+                $outputs .= '</a>';
             }
 
 

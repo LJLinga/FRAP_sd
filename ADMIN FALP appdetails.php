@@ -44,6 +44,58 @@ include 'FRAP_ADMIN_SIDEBAR.php';
         $memName = mysqli_fetch_assoc($resultMemName);
 
 
+        /**
+         * Heres my Message to you Christian!
+         * -----FOR MEMBERS----
+         * So right now everything is contained by the member itself, most of the statuses and all.
+         * If you want to know what department a dood is from, get the DEPT_ID, join with ref_department id.
+         *
+         * -----FOR HEALTH AID----
+         * In order for you to know which are the eligible members or members that actually applied for health aid, you
+         * would need to go back to the member table. The member table contains two columns named HA_STATUS and HA_TIMESTAMP.
+         * HA_STATUS are basically just 1 and 2. 1 - not applied, 2 - applied.  HA_TIMESTAMP is needed because of the
+         * 1 year for health aid thing.
+         *
+         * For the Health Aid Table itself,
+         *
+         * Then you just check the Health Aid table where the relevant details are there, Date Applied(for Acquisition),
+         * Amount Requested, and so on and so forth. Just take a look at the table and jsut tell me if you have any questions.
+         *
+         * ----FOR FAP--------
+         * Important details here:
+         *Member ID - you know what this is for
+         *  Amount - how much these d00ds loan
+         *  Payment Terms - How much months will they get deducted for this loan.
+         *  Per Payment - How much is deducted per pay period (x2 this value if you want to get monthly deduction)
+         *  Loan Status - To see the status of the loan (1 - Pending, 2 - Active, 3 - Matured, 4- Draft, 5- For Reupload, 6 - Archived)
+         *  Date Applied and Approved - Self Explanatory
+         *
+         * -----FOR TRANSACTIONS----------
+         * This will be the bread and butter of the table I guess? Because the transactions table is where the deductions
+         * are recorded and the applications that gets passed around, morely for notifying and all.
+         *
+         * So the important details are there, the
+         * MEMBER_ID(The target destination for this transaction),
+         * TXN_TYPE (The Transaction Type, which the Types are 1 - Application, 2 - Deduction(from services), 3 - Consent for deduction
+         *  for health aid and 4 - Notification.) I think the more important parts here are 1 and 2 transaction types?,
+         * TXN_DATE(When did this transaction happen),
+         * LOAN_REF - if it is Loans, the Loan ID should be here, if not, this should be blank.
+         *  HA_REF - If its health aid, the record ID should be here, if not health aid, this is blank.
+         *  SERVICE ID - Basically to know what service is this transaction is. ( 1- Membership, 2  - HA, 3 - Bank Loan(defunct),
+         * 4 - FAP loan, 5 - System Notif, and 6 - LIfetime.
+         *
+         *
+         */
+//
+//        $queryGetTheDeets = "SELECT COUNT(m.MEMBER_ID) as 'Members Applied', COUNT(l.LOAN_ID) as 'Loans Applied for'
+//                             from member m
+//                             join ref_department d
+//                             on m.DEPT_ID = d.DEPT_ID
+//                             join loans l
+//                             on l.MEMBER_ID = m.MEMBER_ID
+//                             WHERE m.USER_STATUS = 1;";  /** Here, you insert the filter that you need, date range, department, etc. */
+//                            /** ^ What this query means is that it */
+
         ?>
 
 
