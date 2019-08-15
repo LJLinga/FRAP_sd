@@ -791,7 +791,7 @@ $success = null;
 
                                         <div class="col-lg-12">
 
-                                                <p id="dbirthlabel"><b>Term Hired</b></p>
+                                                <p id="dbirthlabel"><b>Date Hired</b></p>
 
 
                                                 <label class="memfieldlabel">Year</label>

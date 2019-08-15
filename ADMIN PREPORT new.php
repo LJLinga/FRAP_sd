@@ -21,13 +21,19 @@ if(isset($_POST['print'])){
 }
 if(!isset($_POST['event_start'])){
    
-        $query="SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',l.per_payment as 'Amount'
+        $query="SELECT m.member_ID as 'ID', m.firstname as 'First',m.lastname as 'Last',m.middlename as 'Middle',t.txn_desc as 'Description',t.txn_type as 'Type',t.loan_ref as 'Ref',m.emp_type as 'Employee Type',l.per_payment as 'Per Deduction'
         from member m
-        join loans l
-        on l.member_id = m.member_id
-        join (SELECT max(date_applied) as 'Date' from loans) latest
-        where  date(latest.Date) = date(l.DATE_APPLIED)
-        group by m.member_ID";
+        join txn_reference t
+        on t.member_id = m.member_id
+        left join loans l
+        on l.loan_id = t.loan_ref
+        join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type =1) latest
+        where  (date(latest.Date) = date(t.txn_date )) && (t.txn_desc = 'Membership Application Approved'||t.txn_desc ='Loan has been Picked up! Deductions will start now.'||t.txn_type = 3)
+        order by m.member_id,t.loan_ref;
+        
+
+        ";
+
 
 }
 else {
@@ -41,20 +47,26 @@ else {
                 $monthEnd = date('m', strtotime(substr($dateEnd,strpos($dateEnd," ")+1)));
             }
     if(!isset($yearEnd)){
-        $query = "SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',l.per_payment as 'Amount'
+        $query = "SELECT m.member_ID as 'ID', m.firstname as 'First',m.lastname as 'Last',m.middlename as 'Middle',t.txn_desc as 'Description',t.txn_type as 'Type',t.loan_ref as 'Ref',m.emp_type as 'Employee Type', l.per_payment as 'Per Deduction'
         from member m
-        join loans l
-        on l.member_id = m.member_id
-                    where $monthStart = Month(l.date_applied) AND $yearStart = Year(l.date_applied) 
-                    group by m.member_ID";
+        join txn_reference t
+        on t.member_id = m.member_id
+        left join loans l
+        on l.loan_id = t.loan_ref
+                    where $monthStart = Month(t.txn_date) AND $yearStart = Year(t.txn_date) && (t.txn_desc = 'Membership Application Approved'||t.txn_desc ='Loan has been Picked up! Deductions will start now.'||t.txn_type = '3')
+                    order by m.member_id;
+                    ";
     }
     else{
-        $query = "SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',l.per_payment as 'Amount'
+        $query = "SELECT m.member_ID as 'ID', m.firstname as 'First',m.lastname as 'Last',m.middlename as 'Middle',t.txn_desc as 'Description',t.txn_type as 'Type',t.loan_ref as 'Ref',m.emp_type as 'Employee Type',l.PER_PAYMENT as 'Per Deduction'
         from member m
-        join loans l
-        on l.member_id = m.member_id
-                    where (l.date_applied between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-31 23:59:59') 
-                    group by m.member_ID ";
+        join txn_reference t
+        on t.member_id = m.member_id
+        left join loans l
+        on l.loan_id = t.loan_ref
+                    where t.txn_date between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-31 23:59:59' && (t.txn_desc = 'Membership Application Approved'||t.txn_desc ='Loan has been Picked up! Deductions will start now.'||t.txn_type = '3')
+        order by m.member_id;
+                    ";
     }
 
 }
@@ -105,7 +117,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                             <div class="panel-heading">
 
-                                <b>View Report for:</b>
+                                <b>View Report for: </b>
 
                             </div>
 
@@ -172,7 +184,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                         <td align="center" width="200px"><b>ID Number</b></td>
                                         <td align="center" width="250px"><b>Name</b></td>
-                                        <td align="center" width="200px"><b>Loan Type</b></td>
+                                        <td align="center" width="200px"><b>Deduction Type</b></td>
                                         <td align="center" width="200px"><b>Deduction Amount(₱)</b></td>
                                         <td align="center" width="200px"><b>Deduction Frequency</b></td>
 
@@ -182,21 +194,50 @@ include 'FRAP_ADMIN_SIDEBAR.php';
 
                                     <tbody>
                                         <?php 
+                                        $repeat = 0;
+                                        $old = 'qweqwe';
                                         while($ans = mysqli_fetch_assoc($result2)){
+                                       
+                                            if($ans['Description']=='Membership Application Approved'){
 
+                                                ?>
+                                        <tr>
 
+                                        <td align="center"><?php echo $ans['ID'];?></td>
+                                        <td align="left"><?php echo $ans['First']." ".$ans['Middle']." ".$ans['Last'];?></td>
+                                        <td align="left"> Membership</td>
+                                        <td align="right"><?php if($ans['Type']==1) echo '183.00'; else echo '91.67'; ?></td>
+                                        <td align="left"> Per Term</td>
+
+                                        </tr>
+                                            <?php }
+
+                                        if($ans['Description']=='Loan has been Picked up! Deductions will start now.'){
                                         ?>
                                         <tr>
 
                                         <td align="center"><?php echo $ans['ID'];?></td>
                                         <td align="left"><?php echo $ans['First']." ".$ans['Middle']." ".$ans['Last'];?></td>
                                         <td align="left"> FALP Loan</td>
-                                        <td align="right"> <?php echo number_format($ans['Amount'],2)."<br>";?></td>
+                                        <td align="right"> <?php echo number_format($ans['Per Deduction'],2)."<br>";?></td>
                                         <td align="left"> Per Payday</td>
 
                                         </tr>
+                                            <?php }
+                                            
+                                        if($ans['Type']=='3'){?>
+                                                 <tr>
 
-                                        <?php }?>
+                                        <td align="center"><?php echo $ans['ID'];?></td>
+                                        <td align="left"><?php echo $ans['First']." ".$ans['Middle']." ".$ans['Last'];?></td>
+                                        <td align="left"> Health Aid</td>
+                                        <td align="right"> 100.00 </td>
+                                        <td align="left"> Per Term</td>
+
+                                        </tr>
+                                        <?php }
+                                    }
+                                ?>
 
                                     </tbody>
 

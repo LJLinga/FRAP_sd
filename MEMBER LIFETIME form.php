@@ -18,21 +18,16 @@
 
         if(isset($_POST['download'])){
 
+            $lifetimeCheck = "UPDATE member set LIFETIME_STATUS = 2 where MEMBER_ID = {$_SESSION['MEMBER_ID']}";
+            mysqli_query($dbc,$lifetimeCheck);
 
-            if(($yearNOW - $yearHired) >= 10 ){
 
-                $ITR = "Lifetime_Document/Lifetime_Membership_Application_Form.pdf";
+            $query = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE, TXN_DESC, AMOUNT, SERVICE_ID)
+                                  values({$member['MEMBER_ID']}, 2, 'Membership Fee has been deducted from your salary.' , 183.33, 1);";
 
-                header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadLifetime.php?loanID=".urlencode(''.$ITR) );
-
-            }else{
-
-                echo '<script language="javascript">';
-
-                echo 'alert("You cannot as you have to serve for at least 10 years in the faculty association. ")';
-
-                echo '</script>';
-
+            if (!mysqli_query($dbc,$query))
+            {
+                echo("Error description: " . mysqli_error($dbc));
             }
 
 

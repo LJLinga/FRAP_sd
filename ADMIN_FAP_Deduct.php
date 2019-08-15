@@ -51,4 +51,28 @@ foreach ($getLoanDetailsResult as $getLoanDetails) {
     }
 }
 
+
+// FINISH THIS LATER!!!!!
+$today = date("d");
+
+if($today == 8){
+    $queryReminder = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE, TXN_DESC, AMOUNT, SERVICE_ID)
+                                      values(99999999, 2, 'Please be Reminded that you are to pass the Deductions before or by 14th of this month. ' , 0.00,  4);";
+
+
+    mysqli_query($dbc, $queryReminder);
+
+
+}else if($today == 23){
+
+    $queryReminder = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE, TXN_DESC, AMOUNT, SERVICE_ID)
+                                      values(99999999, 2, 'Please be Reminded that you are to pass the Deductions before or by 28th of this month. ' , 0.00,  4);";
+
+
+    mysqli_query($dbc, $queryReminder);
+}
+
+
+
+
 ?>

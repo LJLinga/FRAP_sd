@@ -64,7 +64,8 @@ on m.MEMBER_ID = f.member_id
 join txn_reference t
 on t.member_id = m.member_id
 join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
-where DATE(latest.Date) = date(TXN_DATE) group by m.member_ID";
+where DATE(latest.Date) = date(TXN_DATE) group by m.member_ID
+                    order by m.lastname,m.middlename,m.firstname";
 
 }
 else {
@@ -94,7 +95,8 @@ on m.MEMBER_ID = f.member_id
 join txn_reference t
         on t.MEMBER_ID = m.MEMBER_ID
         where TXN_TYPE =2 and $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date)
-group by m.member_ID";
+group by m.member_ID
+                    order by m.lastname,m.middlename,m.firstname";
         }
         else{
              $query2 = "SELECT m.member_ID as 'ID', firstname as 'FIRST',lastname as 'LAST',middlename as 'MIDDLE',DEPT_NAME,mf.amount  as 'MFee',ha.amount as 'HAFee',f.amount as 'FFee'
@@ -111,7 +113,8 @@ on m.MEMBER_ID = f.member_id
 join txn_reference t
         on t.MEMBER_ID = m.MEMBER_ID
         where TXN_TYPE =2 and (txn_date between '$yearStart-$monthStart-$dayStart 00:00:00' AND '$yearEnd-$monthEnd-$dayEnd 23:59:59')
-group by m.member_ID";
+group by m.member_ID
+                    order by m.lastname,m.middlename,m.firstname";
         }
     
 }
@@ -147,7 +150,7 @@ $pdf->Cell(40);
 $pdf->Cell(20,5,'ID Number '	,'L,B,R',0,'C');
 $pdf->Cell(70	,5,'Full Name'	,'L,B,R',0,'L');
 $pdf->Cell(30	,5,'Membership Fee'	,'L,B,R',0,'R');
-$pdf->Cell(25	,5,'FALP','L,B,R',0,'R');
+$pdf->Cell(25	,5,'FAP','L,B,R',0,'R');
 $pdf->Cell(25	,5,'Health Aid'	,'L,B,R',0,'R');
 
 $pdf->Cell(30	,5,'Deduction(P)'	,'L,B,R',0,'R');
@@ -163,7 +166,7 @@ while($row=mysqli_fetch_assoc($result)){
 $last = $row['LAST'];
 $first = $row['FIRST'];
 $middle = $row['MIDDLE'];
-
+$mfee=0;
 $falp =	0;
 $bank = 0;
 $health = 0;
