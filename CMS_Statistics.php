@@ -236,12 +236,17 @@ $userId = $_SESSION['idnum'];
             parseTime : true,
             data: [{ xmin: '0', count: 0, unique_count:0}],
             xkey: 'xmin',
+            //xkey --> the values of the x-axis/width/usually TIME set in "data"
             ykeys: ['count','unique_count'],
+            //ykey --> the values of the y-axis/height/usually COUNT set in "data"
             labels: ['Previews', 'Unique Previews'],
+            //labels --> the labels of the line/bar produced by y-axis values
             xLabelAngle: 45,
+            //angle of the x-axis/height/usually TIME labels
             pointFillColors: ['#707f9b'],
             pointStrokeColors: ['#ffaaab'],
             lineColors: ['#f26c4f', '#00a651'],
+            //lineColors --> colors of each of the lines produced by y-axis
             redraw: true,
         });
 
