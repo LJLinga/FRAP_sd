@@ -57,7 +57,8 @@ if(!isset($_SESSION['event_start'])){
         on t.MEMBER_ID = m.MEMBER_ID
         join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type = 2) latest
         where TXN_TYPE =2 and DATE(latest.Date) = DATE(txn_date)
-        group by m.member_ID";
+        group by m.member_ID
+                    order by m.lastname,m.middlename,m.firstname";
 
 }
 else {
@@ -82,7 +83,8 @@ else {
         join txn_reference t
         on t.MEMBER_ID = m.MEMBER_ID
         where TXN_TYPE =2 and $monthStart = Month(txn_date) AND $yearStart = Year(txn_date) AND $dayStart = DAY(txn_date)
-        group by m.member_ID";
+        group by m.member_ID
+                    order by m.lastname,m.middlename,m.firstname";
     }
     else{
         $query2="SELECT m.member_ID as 'ID', firstname as 'First',lastname as 'Last',middlename as 'Middle',DEPT_NAME,sum(t.amount) as 'Total'
@@ -92,7 +94,8 @@ else {
         join txn_reference t
         on t.MEMBER_ID = m.MEMBER_ID
         where TXN_TYPE =2 and (txn_date between '$yearStart-$monthStart-$dayStart 00:00:00' AND '$yearEnd-$monthEnd-$dayEnd 23:59:59')
-        group by m.member_ID";
+        group by m.member_ID
+                    order by m.lastname,m.middlename,m.firstname";
     }
     
         
