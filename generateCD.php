@@ -98,7 +98,7 @@ $pdf = new PDF();
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetFont('Times','B',10);
-$pdf->Cell(0	,5,"Completed Deductions ",0,1,'C');
+$pdf->Cell(0	,5,"Matured Loans",0,1,'C');
 date_default_timezone_set('Singapore');
 $pdf->SetFont('Times','',10);
 $range = "For ".date('M', strtotime(substr($dateStart,strpos($dateStart," ")+1)))." ".$yearStart;
