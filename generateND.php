@@ -143,17 +143,23 @@ $middle = $row['Middle'];
 
 if($row['Description']=='Membership Application Approved'){
 
-$pdf->Cell(15);
-$pdf->Cell(20,5,$row['ID']	,'L,B,R',0,'C');
-$pdf->Cell(50	,5,"$last, $first $middle"	,'L,B,R',0,'L');
-$pdf->Cell(30   ,5,"Membership",'L,B,R',0,'L');
-if($row['Type']==1) 
-    $cost = 183.00; 
-else 
-    $cost = 91.67;
-$total+=$cost;
-$pdf->Cell(30  ,5,number_format((float)$cost,2),'L,B,R',0,'R');
-$pdf->Cell(35   ,5,"Per Term" ,'L,B,R',0,'L');
+    $pdf->Cell(15);
+    $pdf->Cell(20,5,$row['ID']	,'L,B,R',0,'C');
+    $pdf->Cell(50	,5,"$last, $first $middle"	,'L,B,R',0,'L');
+    $pdf->Cell(30   ,5,"Membership",'L,B,R',0,'L');
+    if($row['Type']==1) {
+        $cost = 183.00; 
+        $pdf->Cell(30  ,5,number_format((float)$cost,2),'L,B,R',0,'R');
+        $pdf->Cell(35   ,5,"Per Year" ,'L,B,R',0,'L');
+    }
+
+    else {
+        $cost = 91.67;
+        $pdf->Cell(30  ,5,number_format((float)$cost,2),'L,B,R',0,'R');
+        $pdf->Cell(35   ,5,"Per Term" ,'L,B,R',0,'L');
+    }
+    $total+=$cost;
+
 }
 
 
