@@ -49,15 +49,7 @@ use PHPMailer\PHPMailer\Exception;
 
     if (isset($_POST['accept'])) {
 
-        $queryAccept = "UPDATE MEMBER SET MEMBERSHIP_STATUS = 2, DATE_APPROVED = DATE(NOW()), EMP_ID_APPROVE = {$_SESSION['idnum']}
-                        WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
-
-        $resultAccept = mysqli_query($dbc, $queryAccept);
-
-        $queryTxn = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, EMP_ID, SERVICE_ID) 
-                     VALUES ('{$_SESSION['memapp_selected_id']}', 1, 'Membership Application Approved', 0, DATE(NOW()), '{$_SESSION['idnum']}', 1);";
-
-        $resultAccept = mysqli_query($dbc, $queryTxn);
+       
          
 
          // Import PHPMailer classes into the global namespace
@@ -88,27 +80,26 @@ $mail->Body = 'THIS IS AN AUTO-GENERATED MESSAGE PLEASE DO NOT REPLY.<br>-------
 $mail->AddAddress($ans['EMAIL']);
 
  if(!$mail->Send()) {
-     ;
+    ;
  } else {
-    echo Alert("Message has been sent");
+     $queryAccept = "UPDATE MEMBER SET MEMBERSHIP_STATUS = 2, DATE_APPROVED = DATE(NOW()), EMP_ID_APPROVE = {$_SESSION['idnum']}
+                        WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
+
+        $resultAccept = mysqli_query($dbc, $queryAccept);
+
+        $queryTxn = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, EMP_ID, SERVICE_ID) 
+                     VALUES ('{$_SESSION['memapp_selected_id']}', 1, 'Membership Application Approved', 0, DATE(NOW()), '{$_SESSION['idnum']}', 1);";
+
+        $resultAccept = mysqli_query($dbc, $queryTxn);;
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN MEMBERSHIP applications.php");
  }
-header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN MEMBERSHIP applications.php");
+
 
     }
 
     else if (isset($_POST['reject'])) {
 
-        $queryReject = "DELETE FROM MEMBER_ACCOUNT WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
-
-        $resultReject = mysqli_query($dbc, $queryReject);
-
-        $queryReject = "DELETE FROM MEMBER WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
-
-        $resultReject = mysqli_query($dbc, $queryReject);
-        $queryTxn = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, EMP_ID, SERVICE_ID) 
-                     VALUES ('{$_SESSION['memapp_selected_id']}', 1, 'Membership Application Rejected', 0, DATE(NOW()), '{$_SESSION['idnum']}', 1);";
-
-        $resultAccept = mysqli_query($dbc, $queryTxn);
+        
          
          // Load Composer's autoloader
 require 'vendor/autoload.php';
@@ -116,7 +107,7 @@ require 'vendor/autoload.php';
 // Instantiation and passing `true` enables exceptions
 $mail = new PHPMailer(); // create a new object
 $mail->IsSMTP(); // enable SMTP
-$mail->SMTPDebug = 2; // debugging: 1 = errors and messages, 2 = messages only
+$mail->SMTPDebug = 0; // debugging: 1 = errors and messages, 2 = messages only
 $mail->SMTPAuth = true; // authentication enabled
 $mail->SMTPSecure = 'ssl'; // secure transfer enabled REQUIRED for Gmail
 $mail->Host = "smtp.gmail.com";
@@ -132,9 +123,20 @@ $mail->AddAddress($rowMem['email']);
  if(!$mail->Send()) {
     ;
  } else {
-    echo "Message has been sent";
+    $queryReject = "DELETE FROM MEMBER_ACCOUNT WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
+
+        $resultReject = mysqli_query($dbc, $queryReject);
+
+        $queryReject = "DELETE FROM MEMBER WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
+
+        $resultReject = mysqli_query($dbc, $queryReject);
+        $queryTxn = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, EMP_ID, SERVICE_ID) 
+                     VALUES ('{$_SESSION['memapp_selected_id']}', 1, 'Membership Application Rejected', 0, DATE(NOW()), '{$_SESSION['idnum']}', 1);";
+
+        $resultAccept = mysqli_query($dbc, $queryTxn);;
+        header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN MEMBERSHIP applications.php");
  }
-header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN MEMBERSHIP applications.php");
+
 
 
     }else if (isset($_POST['compare'])) {
@@ -232,6 +234,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                             <b>First Name: </b><?php echo $rowMem['FIRSTNAME']; ?> <p>
                                             <b>Last Name: </b><?php echo $rowMem['LASTNAME']; ?> <p>
                                             <b>Middle Name: </b><?php echo $rowMem['MIDDLENAME']; ?> <p>
+                                            <b>Email: </b><?php echo $rowMem['EMAIL']; ?> <p>
                                             <b>Civil Status: </b><?php echo $rowMem['STATUS']; ?> <p>
                                             <b>Date of Birth: </b><?php echo date('Y, M d', strtotime($rowMem['BIRTHDATE'])); ?> <p>
                                             <b>Sex: </b><?php echo $sex; ?> <p>
