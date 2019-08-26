@@ -50,7 +50,7 @@ function Footer()
 }
 if(!isset($_SESSION['event_start'])){
    
-        $query="SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID,l.amount as 'Amount'
+        $query="SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID,l.PER_PAYMENT as 'Amount'
 from loans l  
 
 join member m
@@ -72,7 +72,7 @@ else {
                 $monthEnd = date('m', strtotime(substr($dateEnd,strpos($dateEnd," ")+1)));
             }
     if(!isset($yearEnd)){
-        $query = "SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID,l.AMOUNT as 'Amount'
+        $query = "SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID,l.PER_PAYMENT as 'Amount'
 from loans l  
 
 join member m
@@ -82,7 +82,7 @@ on l.member_id = m.member_id
                     order by m.lastname,m.middlename,m.firstname";
     }
     else{
-        $query = "SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID,l.amount as 'Amount'
+        $query = "SELECT m.member_id as 'ID',m.firstName as 'First',m.middlename as 'Middle', m.lastname as 'Last',l.LOAN_ID,l.PER_PAYMENT as 'Amount'
 from loans l  
 
 join member m
