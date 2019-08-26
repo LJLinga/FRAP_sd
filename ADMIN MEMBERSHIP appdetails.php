@@ -80,7 +80,11 @@ $mail->Body = 'THIS IS AN AUTO-GENERATED MESSAGE PLEASE DO NOT REPLY.<br>-------
 $mail->AddAddress($ans['EMAIL']);
 
  if(!$mail->Send()) {
-    ;
+    echo '<script language="javascript">';
+
+                echo 'alert("Was not able to send email. Please check if email is valid")';
+
+                echo '</script>';;;
  } else {
      $queryAccept = "UPDATE MEMBER SET MEMBERSHIP_STATUS = 2, DATE_APPROVED = DATE(NOW()), EMP_ID_APPROVE = {$_SESSION['idnum']}
                         WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
@@ -97,9 +101,20 @@ $mail->AddAddress($ans['EMAIL']);
 
     }
 
+
     else if (isset($_POST['reject'])) {
 
-        
+        $queryReject = "DELETE FROM MEMBER_ACCOUNT WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
+
+        $resultReject = mysqli_query($dbc, $queryReject);
+
+        $queryReject = "DELETE FROM MEMBER WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
+
+        $resultReject = mysqli_query($dbc, $queryReject);
+        $queryTxn = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, EMP_ID, SERVICE_ID) 
+                     VALUES ('{$_SESSION['memapp_selected_id']}', 1, 'Membership Application Rejected', 0, DATE(NOW()), '{$_SESSION['idnum']}', 1);";
+
+        $resultAccept = mysqli_query($dbc, $queryTxn);;
          
          // Load Composer's autoloader
 require 'vendor/autoload.php';
@@ -121,19 +136,13 @@ $mail->Body = 'THIS IS AN AUTO-GENERATED MESSAGE PLEASE DO NOT REPLY.<br>-------
 $mail->AddAddress($rowMem['email']);
 
  if(!$mail->Send()) {
-    ;
+    echo '<script language="javascript">';
+
+                echo 'alert("Was not able to send email. Please remind the member for rejection")';
+
+                echo '</script>';;
  } else {
-    $queryReject = "DELETE FROM MEMBER_ACCOUNT WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
-
-        $resultReject = mysqli_query($dbc, $queryReject);
-
-        $queryReject = "DELETE FROM MEMBER WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
-
-        $resultReject = mysqli_query($dbc, $queryReject);
-        $queryTxn = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, EMP_ID, SERVICE_ID) 
-                     VALUES ('{$_SESSION['memapp_selected_id']}', 1, 'Membership Application Rejected', 0, DATE(NOW()), '{$_SESSION['idnum']}', 1);";
-
-        $resultAccept = mysqli_query($dbc, $queryTxn);;
+    
         header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/ADMIN MEMBERSHIP applications.php");
  }
 
