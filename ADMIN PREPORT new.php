@@ -28,7 +28,7 @@ if(!isset($_POST['event_start'])){
         left join loans l
         on l.loan_id = t.loan_ref
         join (SELECT max(txn_date) as 'Date' from txn_reference where txn_type =1) latest
-        where  (date(latest.Date) = date(t.txn_date )) && (t.txn_desc = 'Membership Application Approved'||t.txn_desc ='Loan has been Picked up! Deductions will start now.'||t.txn_type = 3)
+        where  (date(latest.Date) = date(t.txn_date )) && (t.txn_desc = 'Membership Application Approved'||(t.txn_desc ='Loan has been Picked up! Deductions will start now.' && t.loan_ref IS NOT NULL)||t.txn_type = 3)
         order by m.member_id,t.loan_ref;
         
 
@@ -53,7 +53,7 @@ else {
         on t.member_id = m.member_id
         left join loans l
         on l.loan_id = t.loan_ref
-                    where $monthStart = Month(t.txn_date) AND $yearStart = Year(t.txn_date) && (t.txn_desc = 'Membership Application Approved'||t.txn_desc ='Loan has been Picked up! Deductions will start now.'||t.txn_type = '3')
+                    where $monthStart = Month(t.txn_date) AND $yearStart = Year(t.txn_date) && (t.txn_desc = 'Membership Application Approved'||(t.txn_desc ='Loan has been Picked up! Deductions will start now.' && t.loan_ref IS NOT NULL)||t.txn_type = '3')
                     order by m.member_id;
                     ";
     }
@@ -64,7 +64,7 @@ else {
         on t.member_id = m.member_id
         left join loans l
         on l.loan_id = t.loan_ref
-                    where t.txn_date between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-31 23:59:59' && (t.txn_desc = 'Membership Application Approved'||t.txn_desc ='Loan has been Picked up! Deductions will start now.'||t.txn_type = '3')
+                    where t.txn_date between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-31 23:59:59' && (t.txn_desc = 'Membership Application Approved'||(t.txn_desc ='Loan has been Picked up! Deductions will start now.' && t.loan_ref IS NOT NULL)||t.txn_type = '3')
         order by m.member_id;
                     ";
     }

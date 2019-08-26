@@ -56,7 +56,7 @@ if(!isset($_SESSION['event_start'])){
         on t.member_id = m.member_id
         left join loans l
         on l.loan_id = t.loan_ref
-                    where $monthStart = Month(t.txn_date) AND $yearStart = Year(t.txn_date) && (t.txn_desc = 'Membership Application Approved'||t.txn_desc ='Loan has been Picked up! Deductions will start now.'||t.txn_type = '3')
+                    where $monthStart = Month(t.txn_date) AND $yearStart = Year(t.txn_date) && (t.txn_desc = 'Membership Application Approved'||(t.txn_desc ='Loan has been Picked up! Deductions will start now.' && t.loan_ref IS NOT NULL)||t.txn_type = '3')
                     
                     order by m.lastname,m.middlename,m.firstname";
 
@@ -78,7 +78,7 @@ else {
         on t.member_id = m.member_id
         left join loans l
         on l.loan_id = t.loan_ref
-                    where $monthStart = Month(t.txn_date) AND $yearStart = Year(t.txn_date) && (t.txn_desc = 'Membership Application Approved'||t.txn_desc ='Loan has been Picked up! Deductions will start now.'||t.txn_type = '3')
+                    where $monthStart = Month(t.txn_date) AND $yearStart = Year(t.txn_date) && (t.txn_desc = 'Membership Application Approved'||(t.txn_desc ='Loan has been Picked up! Deductions will start now.' && t.loan_ref IS NOT NULL)||t.txn_type = '3')
                     
                     order by m.lastname,m.middlename,m.firstname;";
     }
@@ -89,7 +89,7 @@ else {
         on t.member_id = m.member_id
         left join loans l
         on l.loan_id = t.loan_ref
-                    where t.txn_date between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-31 23:59:59' && (t.txn_desc = 'Membership Application Approved'||t.txn_desc ='Loan has been Picked up! Deductions will start now.'||t.txn_type = '3')
+                    where t.txn_date between '$yearStart-$monthStart-01 00:00:00' AND '$yearEnd-$monthEnd-31 23:59:59' && (t.txn_desc = 'Membership Application Approved'||(t.txn_desc ='Loan has been Picked up! Deductions will start now.' && t.loan_ref IS NOT NULL)||t.txn_type = '3')
         
                     order by m.lastname,m.middlename,m.firstname;";
     }
