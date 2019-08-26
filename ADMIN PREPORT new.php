@@ -206,10 +206,9 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                         <td align="center"><?php echo $ans['ID'];?></td>
                                         <td align="left"><?php echo $ans['First']." ".$ans['Middle']." ".$ans['Last'];?></td>
                                         <td align="left"> Membership</td>
-                                        <td align="right"><?php if($ans['Type']==1) echo '183.00 </td>
+                                        <td align="right"><?php if($ans['Employee Type']==1) echo '183.00 </td>
                                         <td align="left"> Per Year</td>'; else echo '91.67 </td>
-                                        <td align="left"> Per Term</td>'; ?></td>
-                                        <td align="left"> Per Term</td>
+                                        <td align="left"> Per Term</td>'; ?>    
 
                                         </tr>
                                             <?php }

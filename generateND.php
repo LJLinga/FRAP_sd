@@ -147,7 +147,7 @@ if($row['Description']=='Membership Application Approved'){
     $pdf->Cell(20,5,$row['ID']	,'L,B,R',0,'C');
     $pdf->Cell(50	,5,"$last, $first $middle"	,'L,B,R',0,'L');
     $pdf->Cell(30   ,5,"Membership",'L,B,R',0,'L');
-    if($row['Type']==1) {
+    if($row['Employee Type']==1) {
         $cost = 183.00; 
         $pdf->Cell(30  ,5,number_format((float)$cost,2),'L,B,R',0,'R');
         $pdf->Cell(35   ,5,"Per Year" ,'L,B,R',0,'L');
@@ -167,7 +167,7 @@ if($row['Description']=='Loan has been Picked up! Deductions will start now.'){
 $pdf->Cell(15);
 $pdf->Cell(20,5,$row['ID']  ,'L,B,R',0,'C');
 $pdf->Cell(50   ,5,"$last, $first $middle"  ,'L,B,R',0,'L');
-$pdf->Cell(30   ,5,"FALP",'L,B,R',0,'L');
+$pdf->Cell(30   ,5,"FAP",'L,B,R',0,'L');
 $total+=(float)$row['Per Deduction'];
 $pdf->Cell(30  ,5,number_format((float)$row['Per Deduction'],2),'L,B,R',0,'R');
 $pdf->Cell(35   ,5,"Per Payday" ,'L,B,R',0,'L');
@@ -177,7 +177,7 @@ if($row['Type']=='3'){
 $pdf->Cell(15);
 $pdf->Cell(20,5,$row['ID']  ,'L,B,R',0,'C');
 $pdf->Cell(50   ,5,"$last, $first $middle"  ,'L,B,R',0,'L');
-$pdf->Cell(30   ,5,"FAP",'L,B,R',0,'L');
+$pdf->Cell(30   ,5,"Health Aid",'L,B,R',0,'L');
 $total+=100;
 $pdf->Cell(30  ,5,'100.00','L,B,R',0,'R');
 $pdf->Cell(35   ,5,"Per Term" ,'L,B,R',0,'L');
