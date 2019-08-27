@@ -133,7 +133,7 @@ $mail->Password = "rewq/4321";
 $mail->SetFrom("duminacc@gmail.com");
 $mail->Subject = "RE: Membership account for Faculty Association";
 $mail->Body = 'THIS IS AN AUTO-GENERATED MESSAGE PLEASE DO NOT REPLY.<br>------------<br>Your account has been Rejected. Please send the correct or missing information when applying again';
-$mail->AddAddress($rowMem['EMAIL']);
+$mail->AddAddress($ans['EMAIL']);
 
  if(!$mail->Send()) {
     echo '<script language="javascript">';
