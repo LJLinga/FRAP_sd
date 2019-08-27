@@ -104,17 +104,7 @@ $mail->AddAddress($ans['EMAIL']);
 
     else if (isset($_POST['reject'])) {
 
-        $queryReject = "DELETE FROM MEMBER_ACCOUNT WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
-
-        $resultReject = mysqli_query($dbc, $queryReject);
-
-        $queryReject = "DELETE FROM MEMBER WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
-
-        $resultReject = mysqli_query($dbc, $queryReject);
-        $queryTxn = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, EMP_ID, SERVICE_ID) 
-                     VALUES ('{$_SESSION['memapp_selected_id']}', 1, 'Membership Application Rejected', 0, DATE(NOW()), '{$_SESSION['idnum']}', 1);";
-
-        $resultAccept = mysqli_query($dbc, $queryTxn);;
+        
          
          // Load Composer's autoloader
 require 'vendor/autoload.php';
@@ -133,8 +123,18 @@ $mail->Password = "rewq/4321";
 $mail->SetFrom("duminacc@gmail.com");
 $mail->Subject = "RE: Membership account for Faculty Association";
 $mail->Body = 'THIS IS AN AUTO-GENERATED MESSAGE PLEASE DO NOT REPLY.<br>------------<br>Your account has been Rejected. Please send the correct or missing information when applying again';
-$mail->AddAddress($ans['EMAIL']);
+$mail->AddAddress($rowMem['EMAIL']);
+$queryReject = "DELETE FROM MEMBER_ACCOUNT WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
 
+        $resultReject = mysqli_query($dbc, $queryReject);
+
+        $queryReject = "DELETE FROM MEMBER WHERE MEMBER_ID = {$_SESSION['memapp_selected_id']};";
+
+        $resultReject = mysqli_query($dbc, $queryReject);
+        $queryTxn = "INSERT INTO TXN_REFERENCE (MEMBER_ID, TXN_TYPE, TXN_DESC, AMOUNT, TXN_DATE, EMP_ID, SERVICE_ID) 
+                     VALUES ('{$_SESSION['memapp_selected_id']}', 1, 'Membership Application Rejected', 0, DATE(NOW()), '{$_SESSION['idnum']}', 1);";
+
+        $resultAccept = mysqli_query($dbc, $queryTxn);;
  if(!$mail->Send()) {
     echo '<script language="javascript">';
 
