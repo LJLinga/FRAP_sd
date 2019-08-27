@@ -82,7 +82,7 @@ $mail->AddAddress($ans['EMAIL']);
  if(!$mail->Send()) {
     echo '<script language="javascript">';
 
-                echo 'alert("Was not able to send email. Please check if email is valid")';
+                echo 'alert("Was not able to send email. Please check if email is valid or if you are online")';
 
                 echo '</script>';;;
  } else {
@@ -133,12 +133,12 @@ $mail->Password = "rewq/4321";
 $mail->SetFrom("duminacc@gmail.com");
 $mail->Subject = "RE: Membership account for Faculty Association";
 $mail->Body = 'THIS IS AN AUTO-GENERATED MESSAGE PLEASE DO NOT REPLY.<br>------------<br>Your account has been Rejected. Please send the correct or missing information when applying again';
-$mail->AddAddress($rowMem['email']);
+$mail->AddAddress($rowMem['EMAIL']);
 
  if(!$mail->Send()) {
     echo '<script language="javascript">';
 
-                echo 'alert("Was not able to send email. Please remind the member for rejection")';
+                echo 'alert("User was rejected but was not able to send email. Please remind the member for rejection")';
 
                 echo '</script>';;
  } else {
