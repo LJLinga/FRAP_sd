@@ -24,6 +24,8 @@ include_once 'FRAP_ADMIN_SIDEBAR.php';
 $userId = $_SESSION['idnum'];
 $dateNotSet = false;
 
+
+
 function setGrouping($start, $end, $variableName){
     $groupBy = "";
     $diff=date_diff(date_create($start),date_create($end));
@@ -45,7 +47,9 @@ function setInterval($start, $end, $variableName){
 }
 
 if(isset($_POST['btnLoad'])){
-    if(isset($_POST['start']) && isset($_POST['end'])){
+    if(isset($_POST['event_start']) && isset($_POST['event_end'])){
+        $start = $_POST['event_start'];
+        $end = $_POST['event_end'];
     }else{
        $dateNotSet = true;
     }
@@ -68,6 +72,7 @@ if(isset($_POST['btnLoad'])){
                         Date not set. Please set dates.
                     </div>
                 <?php } ?>
+                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="row">
@@ -119,7 +124,7 @@ if(isset($_POST['btnLoad'])){
                         <div class="row">
                             <div class="col-lg-4">
                                 <button type="button" class="btn btn-default" name="btnPrint" onclick="printDiv('printable')"> Print </button>
-                                <button type="button" class="btn btn-primary" name="timeSubmit" id="timeSubmit"> Load </button>
+                                <button type="button" class="btn btn-primary" name="btnLoad" id="timeSubmit"> Load </button>
                             </div>
                         </div>
                     </div>
@@ -249,7 +254,7 @@ if(isset($_POST['btnLoad'])){
                     </div>
                 </div>
 
-
+                </form>
             </div>
         </div>
     </div>

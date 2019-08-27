@@ -83,6 +83,9 @@
                     <li>
                         <a href="ADMIN MREPORT report.php"><i class="fa fa-table" aria-hidden="true"></i> Monthly Report</a>
                     </li>
+                    <li>
+                        <a href="ADMIN%20Excepption%20Reports.php"><i class="fa fa-table" aria-hidden="true"></i> Exception Reports </a>
+                    </li>
                      <li>
                         <a href="javascript:" data-toggle="collapse" data-target="#mTools"><i class="fa fa-minus" aria-hidden="true"></i>&nbsp;Migration Tools<i class="fa fa-fw fa-caret-down"></i></a>
 

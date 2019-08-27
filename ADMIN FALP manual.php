@@ -538,7 +538,7 @@ $('#exampleModalScrollable').modal('show',$(this));
                                         <div class="col-lg-12">
 
                                             <p id="glabel"><b>Sex</b></p>
-                                            <div class="radio">
+                                            <div class="radio" aria-required="true">
                                                 <label><input type="radio" name="sex" value = "male">Male</label>
                                             </div>
 

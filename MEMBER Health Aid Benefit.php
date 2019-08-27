@@ -18,20 +18,6 @@ if($checkIfConsented['HA_STATUS'] == 2){ //meaning this dude has already consent
     header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/MEMBER HA application.php");
 
 }
-// this is for the part time
-
-$dateApproved = new DateTime($checkIfConsented['DATE_APPROVED']); //
-
-$dateNow = new DateTime();
-
-$dateNow->diff($dateApproved)->format("%m");//returns and converts the format to months I guess?
-
-
-// this is for the full time
-
-$yearApproved = date('Y',strtotime($checkIfConsented['DATE_APPROVED']));
-
-$yearNOW = date('Y');
 
 
 
@@ -66,39 +52,6 @@ include 'FRAP_USER_SIDEBAR.php';
             <br>
             <div class="row"> <!-- Title & Breadcrumb -->
 
-                <div class ="row">
-                    <?php if(!($yearApproved - $yearNOW) >= 1 && $userStatus == 1){ //pag full time ka at hindi ka pa nakakapag 1 year residency
-                        $noResidency = true; // to make things easier for checking later.
-
-                        ?>
-
-                        <div class="col-lg-12" id="alertLocation" >
-
-                            <div id="message" class="alert alert-danger">
-                                <strong>
-                                    <span id="messageAlert">Sorry! You cannot apply just yet, you have not completed your one year of residency.</span>
-                                </strong>
-
-                            </div>
-
-                        </div>
-                    <?php }else if(!$dateNow < 4 && $userStatus == 2){
-                        $noResidency = true; // to make things easier for checking later.
-
-                        ?>
-                    <div class="col-lg-12" id="alertLocation" >
-                        <div id="message" class="alert alert-danger">
-                            <strong>
-                                <span id="messageAlert">Sorry! You cannot apply just yet, you have not completed your 4 Months of residency.</span>
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-
-                    <?php } ?>
-                </div>
 
                 <div class="col-lg-12">
 

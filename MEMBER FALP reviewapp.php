@@ -423,7 +423,7 @@
                                     <div class="modal-footer">
                                         <div class="form-group">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                            <button class="btn btn-success" type="submit" name="archiveHA">Confirm</button>
+                                            <button class="btn btn-success" type="submit" name="deleteApp">Confirm</button>
                                         </div>
                                     </div>
                                 </div>
