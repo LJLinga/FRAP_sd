@@ -638,7 +638,7 @@ include 'FRAP_USER_SIDEBAR.php';
 
                                         <div class="col-lg-2">
                                                 <label class="memfieldlabel">Employment Category</label>
-                                                <select class="form-control" name ="empStat" >
+                                                <select class="form-control" name ="empStat" disabled>
 
                                                     <?php 
                                                     $selected = $rowMember['EMP_TYPE'];

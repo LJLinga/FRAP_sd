@@ -243,7 +243,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                             <b>First Name: </b><?php echo $rowMem['FIRSTNAME']; ?> <p>
                                             <b>Last Name: </b><?php echo $rowMem['LASTNAME']; ?> <p>
                                             <b>Middle Name: </b><?php echo $rowMem['MIDDLENAME']; ?> <p>
-                                            <b>Email: </b><?php echo $ans['EMAIL']; ?> <p>
+                                            <b>Email: </b><?php echo $rowMem['EMAIL']; ?> <p>
                                             <b>Civil Status: </b><?php echo $rowMem['STATUS']; ?> <p>
                                             <b>Date of Birth: </b><?php echo date('Y, M d', strtotime($rowMem['BIRTHDATE'])); ?> <p>
                                             <b>Sex: </b><?php echo $sex; ?> <p>
@@ -267,8 +267,8 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                                     else
                                                         echo "Part Time";
                                             ?> <p>
-                                            <b>Employee TYPE:</b> <?php echo $rowMem['TYPE']?> <p>
-                                            <b>Employee Status:</b> <?php echo $rowMem['EMP_STATUS']?> <p>
+                                            <b>Employee TYPE:</b> <?php echo $rowMem['TYPE'];?> <p>
+                                            <b>Employee Status:</b> <?php echo $rowMem['EMP_STATUS'];?> <p>
                                             
                                             <b>Date of Hiring: </b><?php echo date('Y, M d', strtotime($rowMem['DATE_HIRED'])); ?> <p>
                                             <b>Department: </b><?php echo $rowMem['DEPT_NAME']; ?> <p>
