@@ -133,7 +133,7 @@ $mail->Password = "rewq/4321";
 $mail->SetFrom("duminacc@gmail.com");
 $mail->Subject = "RE: Membership account for Faculty Association";
 $mail->Body = 'THIS IS AN AUTO-GENERATED MESSAGE PLEASE DO NOT REPLY.<br>------------<br>Your account has been Rejected. Please send the correct or missing information when applying again';
-$mail->AddAddress($rowMem['EMAIL']);
+$mail->AddAddress($ans['EMAIL']);
 
  if(!$mail->Send()) {
     echo '<script language="javascript">';
@@ -243,7 +243,7 @@ include 'FRAP_ADMIN_SIDEBAR.php';
                                             <b>First Name: </b><?php echo $rowMem['FIRSTNAME']; ?> <p>
                                             <b>Last Name: </b><?php echo $rowMem['LASTNAME']; ?> <p>
                                             <b>Middle Name: </b><?php echo $rowMem['MIDDLENAME']; ?> <p>
-                                            <b>Email: </b><?php echo $rowMem['EMAIL']; ?> <p>
+                                            <b>Email: </b><?php echo $ans['EMAIL']; ?> <p>
                                             <b>Civil Status: </b><?php echo $rowMem['STATUS']; ?> <p>
                                             <b>Date of Birth: </b><?php echo date('Y, M d', strtotime($rowMem['BIRTHDATE'])); ?> <p>
                                             <b>Sex: </b><?php echo $sex; ?> <p>
