@@ -46,7 +46,10 @@ use PHPMailer\PHPMailer\Exception;
     else {
          $businessadd = "No business address";
     }
-
+ $query = "SELECT * FROM member m 
+              where m.member_id = {$_SESSION['memapp_selected_id']}";
+    $result = mysqli_query($dbc,$query);
+    $ans = mysqli_fetch_assoc($result);
     if (isset($_POST['accept'])) {
 
        
@@ -54,10 +57,7 @@ use PHPMailer\PHPMailer\Exception;
 
          // Import PHPMailer classes into the global namespace
 // These must be at the top of your script, not inside a function
-         $query = "SELECT * FROM member m 
-              where m.member_id = {$_SESSION['memapp_selected_id']}";
-    $result = mysqli_query($dbc,$query);
-    $ans = mysqli_fetch_assoc($result);
+         
 
 
 // Load Composer's autoloader
