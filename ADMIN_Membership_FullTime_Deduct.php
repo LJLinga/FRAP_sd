@@ -13,18 +13,9 @@ $allMemberIdResult = mysqli_query($dbc,$allMemberIdQuery);
 foreach ($allMemberIdResult as $member) {
 
     if($member['USER_STATUS'] == 1){ // means full time
-        $query = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE, TXN_DESC, AMOUNT, SERVICE_ID)
-                                  values({$member['MEMBER_ID']}, 2, 'Membership Fee has been deducted from your salary.' , 183.33, 1);";
-
-        if (!mysqli_query($dbc,$query))
-        {
-            echo("Error description: " . mysqli_error($dbc));
-        }
-
-    }else if($member['USER_STATUS'] == 2){ //means part time
 
         $query = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE, TXN_DESC, AMOUNT, SERVICE_ID)
-                                  values({$member['MEMBER_ID']}, 2, 'Membership Fee has been deducted from your salary.' , 91.67, 1);";
+                                  values({$member['MEMBER_ID']}, 2, 'Membership Fee has been deducted from your salary.' , 550.00, 1);";
 
         if (!mysqli_query($dbc,$query))
         {

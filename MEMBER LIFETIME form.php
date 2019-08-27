@@ -7,40 +7,37 @@
 
     // compute the date first 
 
-        $query1 = "SELECT YEAR(DATE_APPROVED) as 'year' from member where member_id = ".$_SESSION['idnum']." ";
+        $query1 = "SELECT DATE_APPROVED from member where MEMBER_ID ={$_SESSION['idnum']} ";
+        $query1result = mysqli_query($dbc,$query1);
 
-        $hireDate = mysqli_fetch_assoc(mysqli_query($dbc,$query1));
+        $hireDate= mysqli_fetch_array($query1result);
 
-        $yearHired = $hireDate['year'];
 
-        $yearNOW = date('Y');
+        $dateApproved = date('Y-m-d',strtotime($hireDate['DATE_APPROVED'])); //
+
+        $dateNow = date('Y-m-d'); //gts current Date
+
+        $dateApprovedPlus10 = date('Y-m-d', strtotime(date("Y-m-d", strtotime($dateApproved)). "+ 10 years"));
 
 
         if(isset($_POST['download'])){
 
-            $lifetimeCheck = "UPDATE member set LIFETIME_STATUS = 2 where MEMBER_ID = {$_SESSION['MEMBER_ID']}";
+            $lifetimeCheck = "UPDATE member set LIFETIME_STATUS = 3 where MEMBER_ID = {$_SESSION['idnum']}";
             mysqli_query($dbc,$lifetimeCheck);
 
+            $ITR = "Lifetime_Document/Lifetime_Membership_Application_Form.pdf";
 
-            $query = "INSERT INTO txn_reference(MEMBER_ID,TXN_TYPE, TXN_DESC, AMOUNT, SERVICE_ID)
-                                  values({$member['MEMBER_ID']}, 2, 'Membership Fee has been deducted from your salary.' , 183.33, 1);";
+            header("Location:http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/downloadLifetime.php?loanID=".urlencode(''.$ITR) );
 
-            if (!mysqli_query($dbc,$query))
-            {
-                echo("Error description: " . mysqli_error($dbc));
-            }
 
 
         }
 
 
-        
-
-
     // then once the download has been clicked g it my amigo 
 
     // 
-$page_title = 'Loans - Lifetime Membership Form';
+$page_title = 'Services - Lifetime Membership Form';
 include 'GLOBAL_HEADER.php';
 include 'FRAP_USER_SIDEBAR.php';
 ?>
@@ -50,6 +47,24 @@ include 'FRAP_USER_SIDEBAR.php';
             <div class="container-fluid">
 
                 <!-- Page Heading -->
+                <?php if($dateNow < $dateApprovedPlus10 ){ // wala ka pang 10 years
+
+                    ?>
+                    <br>
+
+                    <div class="col-lg-12" id="alertLocation" >
+
+                        <div id="message" class="alert alert-danger">
+                            <strong>
+                                <span id="messageAlert">Sorry! You cannot apply just yet, you have not completed your 10 years in DLSU.</span>
+                            </strong>
+
+                        </div>
+
+                    </div>
+                <?php }
+                ?>
+
                 <div class="row">
                 
                     <div class="col-lg-12">
@@ -104,9 +119,11 @@ include 'FRAP_USER_SIDEBAR.php';
                         <form action="#" method="POST" > 
 
                         <img class="pdficon10" src="images/pdficon.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                         <input type = "submit" class="btn btn-info  btn-md" name="download" value = "Download Lifetime Application Form">
-
+                        <?php if($dateNow < $dateApprovedPlus10 ){ ?>
+                         <input type = "submit" class="btn btn-info  btn-md" name="download" value = "Download Lifetime Application Form" disabled>
+                        <?php }else{ ?>
+                            <input type = "submit" class="btn btn-info  btn-md" name="download" value = "Download Lifetime Application Form" >
+                        <?php } ?>
                          </form>
 
 

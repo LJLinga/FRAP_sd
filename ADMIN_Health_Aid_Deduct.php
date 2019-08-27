@@ -20,11 +20,4 @@ foreach ($allActiveHealthAidResult as $healthAidMember) {
     }
 
 }
-
-
-
-
-
-
-
 ?>

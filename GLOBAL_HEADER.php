@@ -94,11 +94,11 @@
 
             <ul class="nav navbar-right top-nav"> <!-- Top Menu Items / Notifications area -->
                 <li>
-                    <a href="feed.php"> Home </a>
+                    <a href="feed.php"> <i class="fa fa-home"></i> Home </a>
                 </li>
 
                 <li>
-                    <a href="MEMBER%20dashboard.php">Services </a>
+                    <a href="MEMBER%20dashboard.php"> <i class="fa fa-cogs"></i> Services  </a>
                 </li>
                 <?php
 

@@ -7,7 +7,7 @@ $_SESSION['errorsFromHAUpload'] = null;
 
 //add a check if the user has agreed to be deducted, basically their consent. Check HA_STATUS from members table
 
-$checkIfConsentedQuery = "SELECT HA_STATUS FROM member where MEMBER_ID = {$_SESSION['idnum']}";
+$checkIfConsentedQuery = "SELECT HA_STATUS,HA_CONSENT_TIMESTAMP,USER_STATUS FROM member where MEMBER_ID = {$_SESSION['idnum']}";
 $checkIfConsentedResult = mysqli_query($dbc,$checkIfConsentedQuery);
 $checkIfConsented = mysqli_fetch_array($checkIfConsentedResult);
 
@@ -62,6 +62,39 @@ if(!empty($checkForHealthAidApplication)){
 
 }
 
+
+
+
+
+//This is for Checking if the D00D has finally paid sum for the application of the Health Aid
+/**
+ * This code checking is for checking if the member has finally paid enough all year to warrant a goddamn application.d
+ */
+
+$dateApproved = date('Y-m-d',strtotime($checkIfConsented['HA_CONSENT_TIMESTAMP'])); //
+
+$dateNow = date('Y-m-d'); //gts current Date
+
+$dateApprovedPlusYear = date('Y-m-d', strtotime(date("Y-m-d", strtotime($dateApproved)). "+ 1 year")); //gets the consented date + 1 Year Full Time
+
+$dateApprovedPlus4Months = date('Y-m-d', strtotime(date("Y-m-d", strtotime($dateApproved)). "+ 4 months"));//gets the consented date + 4 Months - Part tme
+
+$noResidency = false; // its a suprise bariable that will help us later
+
+$userStatus = $checkIfConsented['USER_STATUS'];
+
+if($dateNow <= $dateApprovedPlusYear  && $checkIfConsented['USER_STATUS'] == 1){ // meaning eligible na yung full time member for health aid
+    $noResidency = true;
+
+}else if($dateNow <= $dateApprovedPlus4Months  && $checkIfConsented['USER_STATUS'] ==2){ //part time shenanigans, meaning you aint fulfilled shit
+
+    $noResidency = true;
+}
+
+
+
+
+//str to timeq
 
 
 
@@ -132,6 +165,26 @@ include 'FRAP_USER_SIDEBAR.php';
                         </div>
 
                         <?php }?>
+
+                        <div class ="row">
+                            <?php if($noResidency && $userStatus == 1 || $userStatus == 2){ //pag full time ka at hindi ka pa nakakapag 1 year residency
+                                ?>
+                                <br>
+                                <div class="col-lg-12" id="alertLocation" >
+
+                                    <div id="message" class="alert alert-success">
+                                        <strong>
+                                            <span id="messageAlert"> Welcome to the Health aid Fund! However,  You cannot acquire the benefitt just yet, you have not completed your one year of residency. This service will be available by
+                                                <?php echo $dateApprovedPlusYear; ?>.</span>
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            <?php } ?>
+                        </div>
+
 
                         <h1 class="page-header">Health Aid Application Form</h1>
                         <ol class="breadcrumb">
@@ -237,7 +290,13 @@ include 'FRAP_USER_SIDEBAR.php';
 
                 <div class="row">
                     <div class="col-lg-1">
-                        <input type="submit" name="applyHA" class="btn btn-success" value="Submit Application">
+                        <?php if($noResidency){ ?>
+                            <input type="submit" name="applyHA" class="btn btn-success" value="Submit Application" disabled>
+                        <?php }else { ?>
+
+                            <input type="submit" name="applyHA" class="btn btn-success" value="Submit Application">
+
+                        <?php } ?>
                     </div>
                 </div>
 
